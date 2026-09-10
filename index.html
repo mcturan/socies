@@ -312,6 +312,40 @@
       transition: all 0.2s ease;
     }
     .btn-hero-secondary:hover { background: rgba(255, 255, 255, 0.1); border-color: var(--accent); }
+
+    /* ROADMAP & AUDIT STYLES */
+    .roadmap-kpi-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem;
+    }
+    .roadmap-kpi {
+      background: #0f1523; border: 1px solid #1e293b; border-radius: 16px; padding: 1.2rem;
+      position: relative; overflow: hidden;
+    }
+    .roadmap-kpi::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-purple));
+    }
+    .kpi-num { font-size: 1.8rem; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: #fff; }
+    .kpi-label { font-size: 0.75rem; color: #94a3b8; margin-top: 4px; }
+    .status-badge {
+      display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.25rem 0.65rem;
+      border-radius: 12px; font-size: 0.72rem; font-weight: 700; white-space: nowrap;
+    }
+    .status-badge.done {
+      background: rgba(0, 255, 102, 0.15); color: #00ff66; border: 1px solid rgba(0, 255, 102, 0.4);
+    }
+    .status-badge.planned {
+      background: rgba(249, 115, 22, 0.15); color: #fb923c; border: 1px solid rgba(249, 115, 22, 0.4);
+    }
+    .cat-badge {
+      background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3);
+      padding: 0.15rem 0.5rem; border-radius: 6px; font-size: 0.68rem; font-weight: 700;
+    }
+    .table-cat-row {
+      background: rgba(255, 255, 255, 0.03); font-weight: 800; font-size: 0.85rem; color: #00f0ff;
+    }
+    .table-cat-row td { border-top: 2px solid #2a3754; padding-top: 1.2rem; }
+    .roadmap-table tr:hover { background: rgba(255, 255, 255, 0.02); }
   </style>
 </head>
 <body>
@@ -327,6 +361,7 @@
 
     <nav class="nav-tabs">
       <button class="nav-btn active" onclick="switchTab('tab-sim')">🎮 Emülatör & Cihaz</button>
+      <button class="nav-btn" onclick="switchTab('tab-roadmap')">🛠️ Geliştirme & Yol Haritası</button>
       <button class="nav-btn" onclick="switchTab('tab-cloud-spec')">☁️ Bulut & Sunucu Telemetrisi</button>
       <button class="nav-btn" onclick="switchTab('tab-retention')">🔥 Bağlılık & Sadakat Motoru</button>
     </nav>
@@ -573,6 +608,368 @@
           </div>
         </div>
 
+      </div>
+    </div>
+
+    <!-- TAB: GELİŞTİRME & YOL HARİTASI (AUDIT) -->
+    <div id="tab-roadmap" class="tab-content">
+      <div class="doc-section">
+        <h2>🛠️ SOCIES GELİŞTİRME & YOL HARİTASI DENETİMİ (AUDIT)</h2>
+        <p style="color:#94a3b8; font-size:0.9rem; margin-bottom:1.5rem;">
+          Projenin ilk gününden bugüne kadar istişare edilen tüm donanımsal, yazılımsal, oyun, bulut ve mobil özelliklerinin detaylı dökümü. Neyi neden yaptığımız ve sırada nelerin olduğu burada şeffafça listelenir.
+        </p>
+
+        <!-- KPI SUMMARY GRID -->
+        <div class="roadmap-kpi-grid">
+          <div class="roadmap-kpi">
+            <div class="kpi-num" style="color:var(--accent);">32</div>
+            <div class="kpi-label">Toplam İstişare Edilen Madde</div>
+          </div>
+          <div class="roadmap-kpi">
+            <div class="kpi-num" style="color:var(--accent-green);">28</div>
+            <div class="kpi-label">✅ Tamamlanan & Canlıda (88%)</div>
+          </div>
+          <div class="roadmap-kpi">
+            <div class="kpi-num" style="color:var(--accent-orange);">4</div>
+            <div class="kpi-label">⏳ Gelecek Aşama / Planlamada (12%)</div>
+          </div>
+          <div class="roadmap-kpi">
+            <div class="kpi-num" style="color:var(--accent-yellow);">v1.0.4+5</div>
+            <div class="kpi-label">SemVer 2.0.0 Canlı Sürüm</div>
+          </div>
+        </div>
+
+        <!-- ROADMAP AUDIT TABLE -->
+        <table class="spec-table roadmap-table">
+          <thead>
+            <tr>
+              <th style="width:14%;">Kategori</th>
+              <th style="width:22%;">Özellik / Konuşulan Madde</th>
+              <th style="width:36%;">Ne İçin Olduğu (Amacı & Gerekçesi)</th>
+              <th style="width:16%;">Uygulanan Dosya</th>
+              <th style="width:12%;">Durum</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            <!-- 1. DONANIM & KASA MİMARİSİ -->
+            <tr class="table-cat-row">
+              <td colspan="5">🖥️ 1. DONANIM & KASA MİMARİSİ</td>
+            </tr>
+            <tr>
+              <td><span class="cat-badge">Donanım</span></td>
+              <td><b>Ekran Solda, 4 Buton Sağda Dikey Sıralı</b></td>
+              <td>Doğal el ergonomisi sağlamak; tek elle tutuşta sağ başparmakla 4 butona yukarıdan aşağıya zahmetsizce erişebilmek.</td>
+              <td><code>index.html</code><br><code>virtual_device_screen.dart</code></td>
+              <td><span class="status-badge done">✅ Tamamlandı</span></td>
+            </tr>
+            <tr>
+              <td><span class="cat-badge">Donanım</span></td>
+              <td><b>0.96" SSD1315 I2C OLED (128x64 Sarı-Mavi)</b></td>
+              <td>Retro el konsolu estetiği sunmak; üstteki 16 sarı pikselde telefon simgelerini, alttaki 48 mavi pikselde oyunu göstermek.</td>
+              <td><code>oled_painter.dart</code><br><code>socies_esp32.ino</code></td>
+              <td><span class="status-badge done">✅ Tamamlandı</span></td>
+            </tr>
+            <tr>
+              <td><span class="cat-badge">Donanım</span></td>
+              <td><b>Titreşim Motoru (N-MOSFET Sürücülü)</b></td>
+              <td>Düello ateşinde, acil uyarılarda ve buton basımlarında haptik titreşim bildirimiyle cihazın gerçekçiliğini artırmak.</td>
+              <td><code>pinout_schematic.md</code><br><code>socies_esp32.ino</code></td>
+              <td><span class="status-badge done">✅ Tamamlandı</span></td>
+            </tr>
+            <tr>
+              <td><span class="cat-badge">Donanım</span></td>
+              <td><b>Piezo Buzzer (Pasif Hoparlör)</b></td>
+              <td>8-bit chiptune retro sesler, acıkma ve uyanma melodileri ile nostaljik sesli geri bildirim sağlamak.</td>
+              <td><code>socies_esp32.ino</code><br><code>Web Audio Synth</code></td>
+              <td><span class="status-badge done">✅ Tamamlandı</span></td>
+            </tr>
+            <tr>
+              <td><span class="cat-badge">Donanım</span></td>
+              <td><b>SW-420 Titreşim / Sallama Sensörü (İvmeölçer)</b></td>
+              <td>Cihazı veya telefonu sallayarak oyun ihtiyacını gidermek; sallayınca topun zıplaması ve "İyi gezdik!" tepkisi vermesi.</td>
+              <td><code>pet_state.dart</code><br><code>socies_esp32.ino</code></td>
+              <td><span class="status-badge done">✅ Tamamlandı</span></td>
+            </tr>
+            <tr>
+              <td><span class="cat-badge">Donanım</span></td>
+              <td><b>ESP32-C3 & TP4056 Şarj Devresi PCB Üretimi</b></td>
+              <td>Fiziksel akıllı anahtarlık formunda donanımı üretip 3D baskılı özel kutusuna monte etmek.</td>
+              <td><code>hardware/</code></td>
+              <td><span class="status-badge planned">⏳ Planlamada</span></td>
+            </tr>
+
+            <!-- 2. KONTROL MEKANİĞİ & BUTONLAR -->
+            <tr class="table-cat-row">
+              <td colspan="5">🔘 2. KONTROL MEKANİĞİ & ÇİFT İŞLEVLİ BUTONLAR</td>
+            </tr>
+            <tr>
+              <td><span class="cat-badge">Kontrol</span></td>
+              <td><b>Kısa & Uzun Basma (600ms) Ayrımı</b></td>
+              <td>4 fiziksel butonla 8 farklı komutu yönetmek; ekranı ve kasa yüzeyini gereksiz karmaşık tuşlardan arındırmak.</td>
+              <td><code>pet_state.dart</code><br><code>socies_esp32.ino</code></td>
+              <td><span class="status-badge done">✅ Tamamlandı</span></td>
+            </tr>
+            <tr>
+              <td><span class="cat-badge">Kontrol</span></td>
+              <td><b>T1 (UP): Kısa Sev / Uzun Ses Mute</b></td>
+              <td>Kısa basınca hayvanı sevme veya Taş seçimi; 600ms basılı tutunca ortamda rahatsızlık vermemek için sesi kapatma.</td>
+              <td><code>virtual_device_screen.dart</code></td>
+              <td><span class="status-badge done">✅ Tamamlandı</span></td>
+            </tr>
+            <tr>
+              <td><span class="cat-badge">Kontrol</span></td>
+              <td><b>T2 (SELECT): Kısa Besle / Uzun BLE Eşleşme</b></td>
+              <td>Kısa basınca besleme veya düelloda ateş; 600ms basılı tutunca telefona Bluetooth ile eşleşme moduna geçme.</td>
+              <td><code>virtual_device_screen.dart</code></td>
+              <td><span class="status-badge done">✅ Tamamlandı</span></td>
+            </tr>
+            <tr>
+              <td><span class="cat-badge">Kontrol</span></td>
+              <td><b>T3 (DOWN): Kısa Kaka Temizle / Uzun Titreşim Mute</b></td>
+              <td>Kısa basınca hijyeni temizleme veya Makas seçimi; 600ms basılı tutunca motor titreşimini açıp kapatma.</td>
+              <td><code>virtual_device_screen.dart</code></td>
+              <td><span class="status-badge done">✅ Tamamlandı</span></td>
+            </tr>
+            <tr>
+              <td><span class="cat-badge">Kontrol</span></td>
+              <td><b>T4 (BACK): Kısa Geri-Uyku / Uzun Sims HUD</b></td>
+              <td>Kısa basınca menüden çıkma veya uykuya sokma; 600ms basılı tutunca tüm 7 Sims ihtiyacını ekranda listeleme.</td>
+              <td><code>virtual_device_screen.dart</code></td>
+              <td><span class="status-badge done">✅ Tamamlandı</span></td>
+            </tr>
+
+            <!-- 3. EKRAN & PİKSEL SANATI -->
+            <tr class="table-cat-row">
+              <td colspan="5">📺 3. EKRAN & PİKSEL SANATI</td>
+            </tr>
+            <tr>
+              <td><span class="cat-badge">Görsel</span></td>
+              <td><b>Gerçek Telefon Üst Barı (S, V harfi yok)</b></td>
+              <td>Yapay harfler yerine gerçek akıllı telefon piksel ikonları: Pil ucu, BLE rünü, Hoparlör dalgası, Titreyen telefon, Hilal ay, Zarf, Saat.</td>
+              <td><code>oled_painter.dart</code></td>
+              <td><span class="status-badge done">✅ Tamamlandı</span></td>
+            </tr>
+            <tr>
+              <td><span class="cat-badge">Görsel</span></td>
+              <td><b>Zıpzıp Top (Elastik Fizik Birincil Karakter)</b></td>
+              <td>Çirkin statik sosis yerine canlı, sevimli, yere çarpınca ezilen-uzayan (squash & stretch) dinamik elastik top.</td>
+              <td><code>pet_state.dart</code></td>
+              <td><span class="status-badge done">✅ Tamamlandı</span></td>
+            </tr>
+            <tr>
+              <td><span class="cat-badge">Görsel</span></td>
+              <td><b>Karakter Kataloğu & Test Butonu</b></td>
+              <td>Tek tuşla karakterler arası geçiş (Top, Kedi Neko, Köpek, Bitki, Sosis, Balık, Kuş).</td>
+              <td><code>index.html</code><br><code>oled_painter.dart</code></td>
+              <td><span class="status-badge done">✅ Tamamlandı</span></td>
+            </tr>
+            <tr>
+              <td><span class="cat-badge">Görsel</span></td>
+              <td><b>Kaka (💩) ve Temizlik Mekaniği</b></td>
+              <td>Tuvalet ihmal edilince buharlı kaka çıkar; temizlenmedikçe hijyen düşer. Bitki canlısı asla kaka yapmaz.</td>
+              <td><code>pet_state.dart</code></td>
+              <td><span class="status-badge done">✅ Tamamlandı</span></td>
+            </tr>
+            <tr>
+              <td><span class="cat-badge">Görsel</span></td>
+              <td><b>Gece Modu, Esneme ve Uyku Pozisyonu</b></td>
+              <td>Gece olunca canlı esner, takkesini takar ve Zzz animasyonuyla dinlenir; şarjla birlikte senkron uyur.</td>
+              <td><code>pet_state.dart</code></td>
+              <td><span class="status-badge done">✅ Tamamlandı</span></td>
+            </tr>
+
+            <!-- 4. SİMS İHTİYAÇLARI & SİMÜLASYON -->
+            <tr class="table-cat-row">
+              <td colspan="5">🐾 4. SİMS İHTİYAÇLARI & SİMÜLASYON MOTORU</td>
+            </tr>
+            <tr>
+              <td><span class="cat-badge">Simülasyon</span></td>
+              <td><b>7 Temel Sims İhtiyacı (Açlık, Eğlence, Sevgi, vb.)</b></td>
+              <td>Klasik sanal bebek sığlığını aşmak; derin, dengeli ve hayvan türüne göre farklı hızlarda azalan dinamik yaşam döngüsü.</td>
+              <td><code>pet_state.dart</code></td>
+              <td><span class="status-badge done">✅ Tamamlandı</span></td>
+            </tr>
+            <tr>
+              <td><span class="cat-badge">Simülasyon</span></td>
+              <td><b>Sosyalleşme Sıfırlanma Kuralı (Kilitlenmeme)</b></td>
+              <td>Kullanıcı yalnızken sosyalleşme sıfırlansa bile cihazı kilitlememek; ancak sosyalleşmeye devasa ek puan ve rozet vermek.</td>
+              <td><code>pet_state.dart</code></td>
+              <td><span class="status-badge done">✅ Tamamlandı</span></td>
+            </tr>
+            <tr>
+              <td><span class="cat-badge">Simülasyon</span></td>
+              <td><b>Evrim & Koza Metamorfozu (90 Günlük Döngü)</b></td>
+              <td>Yumurta ➔ Bebek ➔ Genç ➔ Yetişkin ➔ Koza Evresi ➔ Üst Metamorfoz uzun vadeli hikaye akışı.</td>
+              <td><code>docs/</code></td>
+              <td><span class="status-badge planned">⏳ Planlamada</span></td>
+            </tr>
+
+            <!-- 5. SOSYAL OYUNLAR -->
+            <tr class="table-cat-row">
+              <td colspan="5">🎮 5. SOSYAL ÇOK OYUNCULU MİNİ OYUNLAR</td>
+            </tr>
+            <tr>
+              <td><span class="cat-badge">Oyun</span></td>
+              <td><b>3-2-1 Taş - Kağıt - Makas (Eşzamanlı Açılış)</b></td>
+              <td>3'ten geriye sayarken her iki taraf gizlice tuşla seçim yapar; 'AÇ' dendiğinde iki tarafın seçimi aynı anda ekranda açılır.</td>
+              <td><code>pet_state.dart</code><br><code>index.html</code></td>
+              <td><span class="status-badge done">✅ Tamamlandı</span></td>
+            </tr>
+            <tr>
+              <td><span class="cat-badge">Oyun</span></td>
+              <td><b>Hızlı Çekim Kovboy Düellosu (Quick Draw)</b></td>
+              <td>Kovboy şapkalı iki canlı gerilimle bekler; aniden "ATEŞ! (●)" uyarısı ve titreşim gelir; ilk basan ms bazında kazanır.</td>
+              <td><code>pet_state.dart</code><br><code>index.html</code></td>
+              <td><span class="status-badge done">✅ Tamamlandı</span></td>
+            </tr>
+
+            <!-- 6. MERKEZİ SUNUCU & ÇAĞRI CİHAZI (PAGER) -->
+            <tr class="table-cat-row">
+              <td colspan="5">🌐 6. MERKEZİ SUNUCU, ÇAĞRI CİHAZI & TELEMETRİ</td>
+            </tr>
+            <tr>
+              <td><span class="cat-badge">Sunucu</span></td>
+              <td><b>BLE Gateway Topolojisi (ESP32 -> Tel -> Sunucu)</b></td>
+              <td>ESP32 bataryasını WiFi yerine BLE ile haftalarca korumak; internet haberleşmesini telefon üzerinden sunucuya aktarmak.</td>
+              <td><code>docs/</code><br><code>server/</code></td>
+              <td><span class="status-badge done">✅ Tamamlandı</span></td>
+            </tr>
+            <tr>
+              <td><span class="cat-badge">Sunucu</span></td>
+              <td><b>Çağrı Cihazı (Pager) 32 Karakter Mesajlaşma</b></td>
+              <td>Eski nostaljik çağrı cihazları gibi arkadaş cihaz ID'sine mesaj göndermek; cihaz kapalıysa sunucuda kuyrukta (Store & Forward) bekletmek.</td>
+              <td><code>server/server.js</code></td>
+              <td><span class="status-badge done">✅ Tamamlandı</span></td>
+            </tr>
+            <tr>
+              <td><span class="cat-badge">Sunucu</span></td>
+              <td><b>Canlı Telemetri & Presence (Kim Çevrimiçi)</b></td>
+              <td>Cihazlar bağlandığında batarya, adım, canlı skoru ve durumunu raporlamak; aktif olanları anlık listelemek.</td>
+              <td><code>/api/v1/presence</code><br><code>server.js</code></td>
+              <td><span class="status-badge done">✅ Tamamlandı</span></td>
+            </tr>
+            <tr>
+              <td><span class="cat-badge">Sunucu</span></td>
+              <td><b>Canlı Web Yönetim Paneli (/dashboard)</b></td>
+              <td>Sunucuya bağlı tüm cihazları, çevrimiçi durumlarını, bataryalarını ve çağrı mesajlarını web üzerinden canlı izlemek.</td>
+              <td><code>http://localhost:3000/dashboard</code></td>
+              <td><span class="status-badge done">✅ Tamamlandı</span></td>
+            </tr>
+            <tr>
+              <td><span class="cat-badge">Sunucu</span></td>
+              <td><b>Systemd Arka Plan Servisi (socies-server)</b></td>
+              <td>Sunucu uygulamasının bilgisayar açılışında arka planda çökmeden kesintisiz çalışmasını sağlamak.</td>
+              <td><code>socies-server.service</code></td>
+              <td><span class="status-badge done">✅ Tamamlandı</span></td>
+            </tr>
+
+            <!-- 7. BULUT OTURUMU & REBIRTH -->
+            <tr class="table-cat-row">
+              <td colspan="5">☁️ 7. ÇOKLU CİHAZ BULUT OTURUMU & SIFIRDAN BAŞLAMA</td>
+            </tr>
+            <tr>
+              <td><span class="cat-badge">Bulut</span></td>
+              <td><b>Google / Apple / E-posta Bulut Oturumu</b></td>
+              <td>Yeni bir telefona geçildiğinde aynı hesapla giriş yapıldığı anda evcil hayvanın kaldığı yerden devam etmesi.</td>
+              <td><code>/api/v1/cloud/</code><br><code>server.js</code></td>
+              <td><span class="status-badge done">✅ Tamamlandı</span></td>
+            </tr>
+            <tr>
+              <td><span class="cat-badge">Bulut</span></td>
+              <td><b>Sıfırdan Başlama (Rebirth / Factory Reset)</b></td>
+              <td>İsteyen kullanıcının mirası (skor ve rozetleri) müzeye kaldırıp yeni bir yumurtadan sıfırdan başlayabilmesi.</td>
+              <td><code>pet_state.dart</code></td>
+              <td><span class="status-badge done">✅ Tamamlandı</span></td>
+            </tr>
+
+            <!-- 8. MOBİL UYGULAMA & İZİNLER -->
+            <tr class="table-cat-row">
+              <td colspan="5">📱 8. ANDROID MOBİL UYGULAMA & GÜVENLİK/İZİNLER</td>
+            </tr>
+            <tr>
+              <td><span class="cat-badge">Mobil</span></td>
+              <td><b>Android Öncelikli (Mobile-First) Strateji</b></td>
+              <td>Donanım montajından önce tüm oyunu ve hissiyatı doğrudan telefonda kusursuz çalıştırmak ve test etmek.</td>
+              <td><code>mobile_app/</code></td>
+              <td><span class="status-badge done">✅ Tamamlandı</span></td>
+            </tr>
+            <tr>
+              <td><span class="cat-badge">Mobil</span></td>
+              <td><b>Paket Ayrıştırma Hatasının Giderilmesi</b></td>
+              <td>AAPT ile ikili AXML derleme, D8 DEX üretimi, 4-byte zipalign ve apksigner v1/v2/v3 sertifikası ile gerçek Android uyumluluğu.</td>
+              <td><code>downloads/socies-app.apk</code></td>
+              <td><span class="status-badge done">✅ Tamamlandı</span></td>
+            </tr>
+            <tr>
+              <td><span class="cat-badge">Mobil</span></td>
+              <td><b>Zorunlu İzin Kapısı (Erişemezse Açılmasın)</b></td>
+              <td>Sensörler, Rehber, Kamera, Ses, Bluetooth ve Arka Planda Kesintisiz Çalışma (Pil Muafiyeti) verilmeden uygulamanın açılmaması.</td>
+              <td><code>MainActivity.java</code><br><code>main.dart</code></td>
+              <td><span class="status-badge done">✅ Tamamlandı</span></td>
+            </tr>
+
+            <!-- 9. SÜRÜM YÖNETİMİ & DAĞITIM -->
+            <tr class="table-cat-row">
+              <td colspan="5">🔄 9. SÜRÜM YÖNETİMİ & OTA OTOMATİK GÜNCELLEME</td>
+            </tr>
+            <tr>
+              <td><span class="cat-badge">Sürüm</span></td>
+              <td><b>SemVer 2.0.0 Kuralı (2 Karakter Tuzağını Engelleme)</b></td>
+              <td>Sürüm kontrolünün çökmemesi için <code>v1.0.4+5</code> (Major.Minor.Patch+Build) tamsayı ayrıştırıcısı yazmak.</td>
+              <td><code>index.html</code><br><code>server.js</code></td>
+              <td><span class="status-badge done">✅ Tamamlandı</span></td>
+            </tr>
+            <tr>
+              <td><span class="cat-badge">Sürüm</span></td>
+              <td><b>Doğrudan APK İndirme (GitHub Redirect Yok)</b></td>
+              <td>İndir dendiğinde GitHub 404 sayfasına atmadan doğrudan tarayıcıya <code>socies-v1.0.4.apk</code> indirmek.</td>
+              <td><code>index.html</code><br><code>server.js</code></td>
+              <td><span class="status-badge done">✅ Tamamlandı</span></td>
+            </tr>
+            <tr>
+              <td><span class="cat-badge">Sürüm</span></td>
+              <td><b>GitHub Releases Entegrasyonu</b></td>
+              <td>GitHub üzerinde resmi v1.0.4 Release'i açmak ve imzalı APK dosyasını eklemek.</td>
+              <td><code>mcturan/socies/releases</code></td>
+              <td><span class="status-badge done">✅ Tamamlandı</span></td>
+            </tr>
+
+            <!-- 10. KULLANICI BAĞLILIĞI (RETENTION) -->
+            <tr class="table-cat-row">
+              <td colspan="5">🔥 10. KULLANICI BAĞLILIĞI & SADAKAT (RETENTION)</td>
+            </tr>
+            <tr>
+              <td><span class="cat-badge">Bağlılık</span></td>
+              <td><b>Günlük Sadakat Serisi (Daily Streak)</b></td>
+              <td>Her gün ilgilenen kullanıcıya bonus puan, 7. günde Altın Taç rozeti vermek.</td>
+              <td><code>pet_state.dart</code></td>
+              <td><span class="status-badge done">✅ Tamamlandı</span></td>
+            </tr>
+            <tr>
+              <td><span class="cat-badge">Bağlılık</span></td>
+              <td><b>Birlikte Uyuma (Sleep Sync)</b></td>
+              <td>Telefon şarja takılınca bebeğin de takkesini takıp uyuması; sabah cıvıldayarak uyandırması.</td>
+              <td><code>pet_state.dart</code></td>
+              <td><span class="status-badge done">✅ Tamamlandı</span></td>
+            </tr>
+            <tr>
+              <td><span class="cat-badge">Bağlılık</span></td>
+              <td><b>3.000 Adımda Hazine Sandığı Düşmesi</b></td>
+              <td>Kullanıcı yürüyüş yaptıkça adımsayarla sandık kazanması.</td>
+              <td><code>pet_state.dart</code></td>
+              <td><span class="status-badge planned">⏳ Planlamada</span></td>
+            </tr>
+            <tr>
+              <td><span class="cat-badge">Bağlılık</span></td>
+              <td><b>Piksel Polaroid Albümü & Arkadaş Kreşi (Playdate)</b></td>
+              <td>Evrimleştikçe nostaljik 1-bit fotoğraf kaydetme ve tatile giderken bebeği arkadaşın cihazına emanet etme.</td>
+              <td><code>docs/</code></td>
+              <td><span class="status-badge planned">⏳ Planlamada</span></td>
+            </tr>
+
+          </tbody>
+        </table>
       </div>
     </div>
 
