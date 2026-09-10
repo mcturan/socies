@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SOCIES - ESP32 Sanal Bebek & Çağrı Cihazı (Pager) Ekosistemi</title>
+  <title>SOCIES - ESP32 Sanal Bebek & Pager (Sosis Edition)</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -34,20 +34,20 @@
     }
 
     header {
-      border-bottom: 1px solid var(--card-border); background: rgba(15, 21, 35, 0.9);
+      border-bottom: 1px solid var(--card-border); background: rgba(15, 21, 35, 0.92);
       backdrop-filter: blur(14px); position: sticky; top: 0; z-index: 100; padding: 0.85rem 2rem;
       display: flex; align-items: center; justify-content: space-between;
     }
 
     .brand { display: flex; align-items: center; gap: 0.8rem; }
     .brand-logo {
-      width: 44px; height: 44px; background: linear-gradient(135deg, #f97316, #ff2a85);
+      width: 44px; height: 44px; background: linear-gradient(135deg, #ea580c, #dc2626);
       border-radius: 12px; display: flex; align-items: center; justify-content: center;
-      font-size: 1.4rem; box-shadow: 0 0 20px rgba(249, 115, 22, 0.4);
+      font-size: 1.5rem; box-shadow: 0 0 20px rgba(234, 88, 12, 0.4);
     }
     .brand-title {
       font-weight: 800; font-size: 1.35rem; letter-spacing: -0.5px;
-      background: linear-gradient(90deg, #fff, var(--accent));
+      background: linear-gradient(90deg, #fff, #fb923c, var(--accent));
       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     }
     .brand-tagline { font-size: 0.72rem; color: var(--text-muted); }
@@ -88,23 +88,24 @@
     .simulator-grid { display: grid; grid-template-columns: 1.22fr 0.88fr; gap: 2rem; align-items: start; }
     @media (max-width: 1240px) { .simulator-grid { grid-template-columns: 1fr; } }
 
+    /* HARDWARE STAGE & CASING */
     .device-stage {
       background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 24px;
       padding: 2rem; box-shadow: 0 20px 40px rgba(0,0,0,0.6); position: relative;
     }
     .device-casing {
-      background: linear-gradient(150deg, #1e2638, #0d121c); border-radius: 36px;
+      background: linear-gradient(150deg, #1c2436, #0c111c); border-radius: 36px;
       padding: 2.2rem 2.4rem; box-shadow: 0 25px 50px rgba(0,0,0,0.85), inset 0 2px 3px rgba(255,255,255,0.12), inset 0 -4px 8px rgba(0,0,0,0.7);
       position: relative; border: 2px solid #2d374d; max-width: 660px; margin: 0 auto;
       transition: transform 0.1s ease;
     }
-    .device-casing.vibrating { animation: casingShake 0.12s infinite; }
+    .device-casing.vibrating { animation: casingShake 0.1s infinite; }
     @keyframes casingShake {
       0% { transform: translate(0, 0) rotate(0deg); }
-      25% { transform: translate(-2px, 3px) rotate(-0.5deg); }
-      50% { transform: translate(3px, -2px) rotate(0.5deg); }
-      75% { transform: translate(-3px, -1px) rotate(-0.3deg); }
-      100% { transform: translate(2px, 2px) rotate(0.3deg); }
+      25% { transform: translate(-3px, 3px) rotate(-0.6deg); }
+      50% { transform: translate(3px, -3px) rotate(0.6deg); }
+      75% { transform: translate(-3px, -1px) rotate(-0.4deg); }
+      100% { transform: translate(2px, 2px) rotate(0.4deg); }
     }
 
     .casing-top-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.4rem; }
@@ -112,16 +113,12 @@
       font-family: 'Press Start 2P', monospace; font-size: 0.85rem; color: #94a3b8;
       letter-spacing: 2px; display: flex; align-items: center; gap: 0.6rem;
     }
-    .pager-badge {
-      font-size: 0.6rem; background: rgba(168, 85, 247, 0.2); border: 1px solid rgba(168, 85, 247, 0.4);
-      color: var(--accent-purple); padding: 0.2rem 0.5rem; border-radius: 6px; font-family: 'JetBrains Mono', monospace;
-    }
-    .lanyard-hole {
-      width: 18px; height: 18px; border-radius: 50%; background: #080d14;
-      border: 2px solid #374151; box-shadow: inset 0 2px 4px #000;
+    .badge-sensor {
+      font-size: 0.6rem; background: rgba(0, 240, 255, 0.15); border: 1px solid rgba(0, 240, 255, 0.35);
+      color: var(--accent); padding: 0.2rem 0.5rem; border-radius: 6px; font-family: 'JetBrains Mono', monospace;
     }
 
-    /* HORIZONTAL LAYOUT: SCREEN ON LEFT, 4 BUTTONS ON RIGHT */
+    /* HORIZONTAL CASING LAYOUT: SCREEN ON LEFT, 4 BUTTONS ON RIGHT */
     .casing-body-horizontal {
       display: grid; grid-template-columns: 1fr auto; gap: 1.6rem; align-items: center;
     }
@@ -157,7 +154,7 @@
       transform: translateY(3px); box-shadow: 0 2px 4px rgba(0,0,0,0.5), inset 0 1px 1px rgba(0,0,0,0.5);
       border-color: var(--accent); color: var(--accent);
     }
-    .hw-btn-action { background: linear-gradient(145deg, #f97316, #c2410c); border-color: #fb923c; color: #fff; }
+    .hw-btn-action { background: linear-gradient(145deg, #ea580c, #9a3412); border-color: #f97316; color: #fff; }
     .btn-desc-tag { font-size: 0.63rem; color: #94a3b8; width: 105px; line-height: 1.25; }
     .btn-desc-tag b { color: #fff; display: block; font-size: 0.68rem; }
     .btn-desc-tag span { color: var(--accent-yellow); font-size: 0.58rem; }
@@ -172,11 +169,16 @@
       display: flex; align-items: center; gap: 0.35rem; transition: all 0.15s ease;
     }
     .micro-btn:hover { background: #2b354b; color: #fff; }
+    .micro-btn.btn-shake {
+      background: linear-gradient(135deg, #0ea5e9, #0284c7); color: #fff; border-color: #38bdf8;
+      box-shadow: 0 0 12px rgba(14, 165, 233, 0.4);
+    }
     .feedback-indicators { display: flex; gap: 1rem; align-items: center; font-size: 0.68rem; color: #94a3b8; }
     .haptic-dot { width: 8px; height: 8px; border-radius: 50%; background: #64748b; }
     .haptic-dot.active { background: var(--accent-pink); box-shadow: 0 0 8px var(--accent-pink); }
-    .charge-dot { width: 8px; height: 8px; border-radius: 50%; background: #ef4444; box-shadow: 0 0 6px #ef4444; }
+    .charge-dot { width: 8px; height: 8px; border-radius: 50%; background: #10b981; box-shadow: 0 0 6px #10b981; }
 
+    /* PHONE COMPANION */
     .phone-stage {
       background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 24px;
       padding: 1.8rem; box-shadow: 0 20px 40px rgba(0,0,0,0.6);
@@ -216,43 +218,44 @@
     .stat-val { font-size: 1.05rem; font-weight: 800; color: var(--accent); font-family: 'JetBrains Mono', monospace; }
     .stat-lbl { font-size: 0.62rem; color: var(--text-muted); margin-top: 2px; }
 
+    /* ACTION CARDS */
+    .walk-speech-bubble {
+      background: rgba(14, 165, 233, 0.15); border: 1px solid rgba(14, 165, 233, 0.4);
+      color: #38bdf8; border-radius: 12px; padding: 0.6rem 0.8rem; font-size: 0.75rem;
+      margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.4rem;
+    }
+
+    .night-mode-card {
+      background: linear-gradient(135deg, rgba(79, 70, 229, 0.15), rgba(15, 23, 42, 0.8));
+      border: 1px solid rgba(99, 102, 241, 0.3); border-radius: 14px; padding: 0.75rem 0.9rem;
+      margin-bottom: 0.8rem; display: flex; justify-content: space-between; align-items: center;
+    }
+    .night-mode-title { font-size: 0.75rem; font-weight: 700; color: #a5b4fc; }
+
     .pager-box {
       background: linear-gradient(135deg, rgba(168, 85, 247, 0.12), rgba(15, 23, 42, 0.8));
-      border: 1px solid rgba(168, 85, 247, 0.35); border-radius: 16px; padding: 1rem; margin-bottom: 1rem;
+      border: 1px solid rgba(168, 85, 247, 0.35); border-radius: 16px; padding: 0.9rem; margin-bottom: 0.8rem;
     }
     .pager-box-title {
-      font-size: 0.75rem; font-weight: 800; color: var(--accent-purple); margin-bottom: 0.6rem;
+      font-size: 0.75rem; font-weight: 800; color: var(--accent-purple); margin-bottom: 0.5rem;
       display: flex; justify-content: space-between; align-items: center;
     }
     .pager-input-group { display: flex; gap: 0.5rem; }
     .pager-input {
-      flex: 1; background: #070a12; border: 1px solid #334155; color: #fff; padding: 0.5rem 0.75rem;
+      flex: 1; background: #070a12; border: 1px solid #334155; color: #fff; padding: 0.45rem 0.65rem;
       border-radius: 8px; font-size: 0.75rem; outline: none;
     }
     .pager-send-btn {
-      background: var(--accent-purple); color: #fff; border: none; padding: 0.5rem 0.9rem;
+      background: var(--accent-purple); color: #fff; border: none; padding: 0.45rem 0.8rem;
       border-radius: 8px; font-size: 0.75rem; font-weight: 700; cursor: pointer;
-      display: flex; align-items: center; gap: 0.3rem;
-    }
-
-    .friend-actions-card {
-      background: rgba(15, 23, 42, 0.6); border: 1px solid #1e293b; border-radius: 16px;
-      padding: 0.85rem; margin-bottom: 1rem;
-    }
-    .friend-actions-title { font-size: 0.72rem; color: #94a3b8; font-weight: 700; margin-bottom: 0.6rem; }
-    .friend-btn-row { display: flex; gap: 0.5rem; }
-    .btn-friend-action {
-      flex: 1; background: #1e293b; border: 1px solid #334155; color: #fff; font-size: 0.72rem;
-      font-weight: 600; padding: 0.5rem; border-radius: 8px; cursor: pointer;
-      display: flex; align-items: center; justify-content: center; gap: 0.35rem;
     }
 
     .needs-container { margin-bottom: 1rem; }
     .needs-title {
-      font-size: 0.78rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.6rem;
+      font-size: 0.78rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.55rem;
       display: flex; justify-content: space-between;
     }
-    .need-meter { margin-bottom: 0.55rem; }
+    .need-meter { margin-bottom: 0.5rem; }
     .need-meta { display: flex; justify-content: space-between; font-size: 0.7rem; font-weight: 600; margin-bottom: 0.2rem; }
     .need-bar-bg { height: 7px; background: #1e293b; border-radius: 6px; overflow: hidden; }
     .need-bar-fill { height: 100%; border-radius: 6px; transition: width 0.3s ease; }
@@ -286,19 +289,6 @@
     }
     .doc-section h2 { font-size: 1.45rem; font-weight: 800; margin-bottom: 1.2rem; color: #fff; }
     .doc-section h3 { font-size: 1.15rem; font-weight: 700; margin: 1.5rem 0 0.8rem 0; color: var(--accent); }
-    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; margin-top: 1.5rem; }
-    .feature-card {
-      background: rgba(15, 23, 42, 0.7); border: 1px solid var(--card-border); border-radius: 16px;
-      padding: 1.4rem; position: relative; overflow: hidden;
-    }
-    .feature-card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--accent); }
-    .feature-card.purple::before { background: var(--accent-purple); }
-    .feature-card.gold::before { background: var(--accent-yellow); }
-    .feature-card.pink::before { background: var(--accent-pink); }
-    .feature-icon { font-size: 1.6rem; margin-bottom: 0.6rem; }
-    .feature-title { font-size: 1.05rem; font-weight: 800; color: #fff; margin-bottom: 0.4rem; }
-    .feature-desc { font-size: 0.85rem; color: #94a3b8; }
-
     table.spec-table { width: 100%; border-collapse: collapse; margin: 1.2rem 0; font-size: 0.88rem; }
     table.spec-table th, table.spec-table td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid var(--card-border); }
     table.spec-table th { background: rgba(255, 255, 255, 0.04); color: var(--accent); font-weight: 700; }
@@ -315,21 +305,20 @@
       <div class="brand-logo">🌭</div>
       <div>
         <div class="brand-title">SOCIES & PAGER</div>
-        <div class="brand-tagline">ESP32 & OLED Sanal Bebek / Çağrı Cihazı</div>
+        <div class="brand-tagline">Sosis Edition • OLED 128x64 & Titreşim Sensörü</div>
       </div>
     </div>
 
     <nav class="nav-tabs">
       <button class="nav-btn active" onclick="switchTab('tab-sim')">🎮 Emülatör & Cihaz</button>
-      <button class="nav-btn" onclick="switchTab('tab-ideas')">💡 İstişare & Yeni Fikirler (9-11)</button>
-      <button class="nav-btn" onclick="switchTab('tab-hardware')">📐 Donanım & Titreşim/Buzzer Şeması</button>
-      <button class="nav-btn" onclick="switchTab('tab-code')">💻 ESP32 C++ (Uzun Basma & Pager)</button>
+      <button class="nav-btn" onclick="switchTab('tab-hardware')">📐 Titreşim Sensörü & Donanım Şeması</button>
+      <button class="nav-btn" onclick="switchTab('tab-code')">💻 ESP32 C++ (Sensör & Gece Modu)</button>
     </nav>
 
     <div class="header-actions">
       <div class="badge-status" id="headerBleStatus">BLE Aktif</div>
-      <button class="micro-btn" id="btnSoundToggle" onclick="toggleAudio()">🔊 Ses: Açık</button>
-      <button class="micro-btn" id="btnHapticToggle" onclick="toggleHaptic()">📳 Titreşim: Açık</button>
+      <button class="micro-btn" id="btnSoundToggle" onclick="toggleAudio()">🔊 Ses</button>
+      <button class="micro-btn" id="btnHapticToggle" onclick="toggleHaptic()">📳 Titreşim</button>
     </div>
   </header>
 
@@ -337,16 +326,16 @@
     <div id="tab-sim" class="tab-content active">
       <div class="simulator-grid">
         
-        <!-- LEFT: ESP32 HARDWARE CASING (SCREEN LEFT, 4 BUTTONS ON RIGHT) -->
+        <!-- LEFT: ESP32 HARDWARE CASING -->
         <div class="device-stage">
           <div class="device-casing" id="deviceCasing">
             
             <div class="casing-top-row">
               <div class="casing-brand">
                 <span>SOCIES</span>
-                <span class="pager-badge">📟 PAGER & VIBRO</span>
+                <span class="badge-sensor">📡 SW-420 TİTREŞİM SENSÖRÜ</span>
               </div>
-              <div class="lanyard-hole" title="Anahtarlık / Kordon Girişi"></div>
+              <div style="font-size:0.7rem; color:var(--accent-yellow);" id="petStatusText">Durum: Mutlu Sosis</div>
             </div>
 
             <div class="casing-body-horizontal">
@@ -354,8 +343,8 @@
               <!-- SCREEN (LEFT) -->
               <div class="screen-bezel">
                 <div class="screen-label-top">
-                  <span>0.96" SSD1315 I2C 128x64</span>
-                  <span id="screenModeTag" style="color:var(--accent-yellow);">MOD: NORMAL</span>
+                  <span>0.96" SSD1315 OLED (128x64)</span>
+                  <span id="screenModeTag" style="color:var(--accent-yellow);">GERÇEK PİKSEL BAR</span>
                 </div>
                 <canvas id="oledCanvas" width="128" height="64"></canvas>
               </div>
@@ -381,7 +370,7 @@
                     <span>●</span>
                   </button>
                   <div class="btn-desc-tag">
-                    <b>2. SEÇ / ETKİLEŞ</b>
+                    <b>2. SEÇ / AKSİYON</b>
                     <span>Uzun: 🔵 BLE Eşleş</span>
                   </div>
                 </div>
@@ -413,82 +402,91 @@
 
             </div>
 
+            <!-- CASING BOTTOM ACTIONS -->
             <div class="casing-bottom-row">
-              <div style="display:flex; gap:0.5rem;">
-                <button class="micro-btn" onclick="triggerReset()">⟲ RESET</button>
-                <button class="micro-btn" id="btnPower" onclick="togglePower()">⏻ GÜÇ (SLEEP)</button>
+              <div style="display:flex; gap:0.5rem; align-items:center;">
+                <!-- SHAKE BUTTON SIMULATING THE VIBRATION SENSOR -->
+                <button class="micro-btn btn-shake" onclick="triggerDeviceShake()">
+                  <span>👋 Cihazı Salla (Sensör)</span>
+                </button>
+                <button class="micro-btn" id="btnMiniGame" onclick="startReflexGame()">
+                  <span>⚡ Refleks Oyunu</span>
+                </button>
               </div>
 
               <div class="feedback-indicators">
                 <div style="display:flex; align-items:center; gap:0.35rem;">
                   <div class="haptic-dot" id="vibroDot"></div>
-                  <span>Titreşim Motoru</span>
+                  <span>Haptik Motor</span>
                 </div>
                 <div style="display:flex; align-items:center; gap:0.35rem;">
                   <div class="charge-dot"></div>
-                  <span>TP4056: 3.95V</span>
+                  <span>3.98V</span>
                 </div>
               </div>
             </div>
 
           </div>
 
-          <div style="margin-top:1.2rem; background:rgba(0,0,0,0.3); padding:0.8rem 1.2rem; border-radius:12px; font-size:0.75rem; color:#94a3b8; display:flex; justify-content:space-between;">
-            <span>⌨️ <b>Klavye:</b> Yukarı [W/▲], Seç [Enter/Space], Aşağı [S/▼], Geri [Esc/Q] (Basılı tutunca uzun basma çalışır!)</span>
-            <span style="color:var(--accent);">Sosis Modu Aktif 🌭</span>
+          <div style="margin-top:1rem; background:rgba(0,0,0,0.3); padding:0.8rem 1.2rem; border-radius:12px; font-size:0.75rem; color:#94a3b8; display:flex; justify-content:space-between;">
+            <span>💡 <b>Titreşim Sensörü:</b> Cihaz sallandıkça adım sayar ve oyun ihtiyacını giderir. Komik geri bildirimler verir!</span>
+            <span style="color:var(--accent);">Klavye: [W/▲], [Enter], [S/▼], [Esc/Q]</span>
           </div>
         </div>
 
-        <!-- RIGHT: COMPANION SMARTPHONE (PAGER + SOCIAL POKE) -->
+        <!-- RIGHT: COMPANION SMARTPHONE APP -->
         <div class="phone-stage">
           <div class="phone-frame">
             <div class="phone-island"><div class="camera-lens"></div></div>
 
             <div class="phone-header">
-              <div class="ble-status-badge"><span>🔵</span><span>Socies_ESP32: Bağlı</span></div>
+              <div class="ble-status-badge"><span>🔵</span><span>Socies_Sosis_C3</span></div>
               <button class="ble-btn" onclick="toggleBle()">Eşleşme</button>
             </div>
 
+            <!-- PET PROFILE CARD -->
             <div class="phone-pet-card">
               <div class="pet-card-top">
                 <div>
-                  <div class="pet-name-tag"><span>🌭</span><span>Sosis (Tombiş)</span></div>
-                  <div style="font-size:0.68rem; color:#94a3b8;">Karakter: Sosis | Cihaz: #SOC-7701</div>
+                  <div class="pet-name-tag"><span>🌭</span><span id="appPetName">Sosis (Tombiş)</span></div>
+                  <div style="font-size:0.68rem; color:#94a3b8;">Gerçek Frankurter Modeli | #SOC-7701</div>
                 </div>
-                <div class="pet-stage-tag">Bebek (Lv. 1)</div>
+                <div class="pet-stage-tag" id="appPetStage">Bebek (Lv. 1)</div>
               </div>
 
               <div class="pet-card-stats">
-                <div class="stat-box"><div class="stat-val" id="appPetAge">1 Gün</div><div class="stat-lbl">Yaş</div></div>
-                <div class="stat-box"><div class="stat-val" id="appPetScore">180</div><div class="stat-lbl">Puan</div></div>
-                <div class="stat-box"><div class="stat-val">85%</div><div class="stat-lbl">Pil</div></div>
+                <div class="stat-box"><div class="stat-val" id="appPetAge">1 Gün</div><div class="stat-lbl">Yaşam</div></div>
+                <div class="stat-box"><div class="stat-val" id="appPetSteps">1,420</div><div class="stat-lbl">Adım Sayar</div></div>
+                <div class="stat-box"><div class="stat-val" id="appPetScore">220</div><div class="stat-lbl">Puan</div></div>
               </div>
             </div>
 
-            <!-- PAGER (ÇAĞRI CİHAZI) MESAJ GÖNDERME KUTUSU (MADDE 9) -->
+            <!-- KOMİK GEZDİK GERİ BİLDİRİM BALONU -->
+            <div class="walk-speech-bubble" id="walkSpeechBubble">
+              <span>💬</span>
+              <b id="walkSpeechText">Sosis: "Hadi biraz salla da gezelim!"</b>
+            </div>
+
+            <!-- GECE MODU (DO NOT DISTURB) KARTI -->
+            <div class="night-mode-card">
+              <div>
+                <div class="night-mode-title">🌙 Gece Modu (Rahatsız Etme)</div>
+                <div style="font-size:0.65rem; color:#94a3b8;">Sosis uyur, sesler kısılır, Zzz uçar</div>
+              </div>
+              <button class="micro-btn" id="btnNightToggle" onclick="toggleNightMode()">
+                <span id="nightBtnText">Modu Aç</span>
+              </button>
+            </div>
+
+            <!-- PAGER (ÇAĞRI CİHAZI) MESAJ KUTUSU -->
             <div class="pager-box">
               <div class="pager-box-title">
-                <span>📟 ÇAĞRI CİHAZI (PAGER) MESAJI GÖNDER</span>
-                <span style="font-size:0.65rem; color:#cbd5e1;">BLE ile Ekrana Düşer</span>
+                <span>📟 ÇAĞRI CİHAZI (PAGER) MESAJI</span>
+                <span style="font-size:0.62rem; color:#cbd5e1;">OLED'de Kayan Yazı</span>
               </div>
               <div class="pager-input-group">
-                <input type="text" class="pager-input" id="pagerMsgInput" placeholder="Örn: 15:00 parkta bulusalim!" maxlength="32">
-                <button class="pager-send-btn" onclick="sendPagerMessage()">
-                  <span>Gönder</span><span>📨</span>
-                </button>
-              </div>
-            </div>
-
-            <!-- ARKADAŞ POKE & DÜELLO (MADDE 6-7) -->
-            <div class="friend-actions-card">
-              <div class="friend-actions-title">👥 ARKADAŞ ETKİLEŞİMİ (SOSYAL BONUS)</div>
-              <div class="friend-btn-row">
-                <button class="btn-friend-action" onclick="triggerFriendPoke('Ahmet')">
-                  <span>👉</span><span>Ahmet'i Dürt (Poke)</span>
-                </button>
-                <button class="btn-friend-action" onclick="triggerFriendInvite('Zeynep')">
-                  <span>⚔️</span><span>Refleks Düellosu Daveti</span>
-                </button>
+                <input type="text" class="pager-input" id="pagerMsgInput" placeholder="Örn: 17:00 parktayim!" maxlength="32">
+                <button class="pager-send-btn" onclick="sendPagerMessage()">Gönder</button>
               </div>
             </div>
 
@@ -501,7 +499,7 @@
                 <div class="need-bar-bg"><div class="need-bar-fill high" id="bar_hunger" style="width:85%;"></div></div>
               </div>
               <div class="need-meter">
-                <div class="need-meta"><span>🎾 Oyun & Zıplama</span><span id="val_fun">75%</span></div>
+                <div class="need-meta"><span>🎾 Oyun (Sallayarak Artar)</span><span id="val_fun">75%</span></div>
                 <div class="need-bar-bg"><div class="need-bar-fill high" id="bar_fun" style="width:75%;"></div></div>
               </div>
               <div class="need-meter">
@@ -509,7 +507,7 @@
                 <div class="need-bar-bg"><div class="need-bar-fill high" id="bar_love" style="width:90%;"></div></div>
               </div>
               <div class="need-meter">
-                <div class="need-meta"><span>💤 Uyku / Enerji</span><span id="val_sleep">70%</span></div>
+                <div class="need-meta"><span>💤 Uyku (Esneme / Gece Modu)</span><span id="val_sleep">70%</span></div>
                 <div class="need-bar-bg"><div class="need-bar-fill high" id="bar_sleep" style="width:70%;"></div></div>
               </div>
               <div class="need-meter">
@@ -517,24 +515,23 @@
                 <div class="need-bar-bg"><div class="need-bar-fill high" id="bar_toilet" style="width:80%;"></div></div>
               </div>
               <div class="need-meter">
-                <div class="need-meta"><span>🧼 Hijyen / Banyo</span><span id="val_clean">80%</span></div>
+                <div class="need-meta"><span>🧼 Banyo / Hijyen</span><span id="val_clean">80%</span></div>
                 <div class="need-bar-bg"><div class="need-bar-fill high" id="bar_clean" style="width:80%;"></div></div>
               </div>
-              <!-- SOSYALLEŞME (KİLİTLEMEZ, BONUS VERİR - MADDE 8) -->
               <div class="need-meter">
-                <div class="need-meta"><span>👥 Sosyalleşme (Ek Puan & Bonus)</span><span id="val_social" style="color:var(--accent-purple);">65% (+XP)</span></div>
+                <div class="need-meta"><span>👥 Sosyalleşme (+XP Çarpanı)</span><span id="val_social" style="color:var(--accent-purple);">65%</span></div>
                 <div class="need-bar-bg"><div class="need-bar-fill social-bar" id="bar_social" style="width:65%;"></div></div>
               </div>
             </div>
 
-            <!-- DEV KONTROLLER -->
+            <!-- DEV HIZLI TEST KONTROLLERİ -->
             <div class="dev-controls-card">
-              <div class="dev-controls-title">⏱️ Hızlı Test Kontrolleri</div>
+              <div class="dev-controls-title">⏱️ Test Kontrolleri</div>
               <div class="dev-buttons">
+                <button class="btn-dev" onclick="forceYawn()">🥱 Esneme Testi</button>
                 <button class="btn-dev" onclick="devTimeTravel(1)">⏩ +1 Gün</button>
-                <button class="btn-dev" onclick="devTimeTravel(30)">⏩ +30 Gün (Büyüt)</button>
-                <button class="btn-dev" onclick="devTriggerCocoon()">🥓 Pastırma Kozası (90. Gün)</button>
-                <button class="btn-dev btn-dev-danger" onclick="devZeroNeeds()">⚠️ İhtiyaçları Sıfırla</button>
+                <button class="btn-dev" onclick="devTimeTravel(30)">⏩ +30 Gün</button>
+                <button class="btn-dev" onclick="devTriggerCocoon()">🥓 Pastırma Kozası</button>
               </div>
             </div>
 
@@ -544,154 +541,59 @@
       </div>
     </div>
 
-    <!-- TAB 2: İSTİŞARE VE YENİ FİKİRLER -->
-    <div id="tab-ideas" class="tab-content">
-      <div class="doc-section">
-        <h2>💡 İstişare: Eklenen Özellikler & Yeni Fikirler (Madde 9-11)</h2>
-        <p>Taleplerinizle birlikte cihazımız sıradan bir sanal bebek olmaktan çıkıp tam bir <b>"Retro-Tech Sosyal Çağrı Cihazı (Pager)"</b> kimliğine kavuştu.</p>
-
-        <h3>1. Gerçekleştirilen Mimari Değişiklikler</h3>
-        <table class="spec-table">
-          <thead>
-            <tr><th>Özellik</th><th>Tasarım & Çözüm</th><th>Kullanıcı Deneyimi</th></tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><b>Ekran Solda, 4 Buton Sağda Dikey</b></td>
-              <td>0.96" OLED sol tarafa yerleştirildi. 4 adet taktil buton sağ tarafta yukarıdan aşağıya dizildi.</td>
-              <td>Sağ el başparmağının 4 tuşa dikey eksende tek hamlede rahatça ulaştığı ergonomik tutuş.</td>
-            </tr>
-            <tr>
-              <td><b>Titreşim Motoru + Buzzer</b></td>
-              <td>Kutu içerisine NPN transistör/MOSFET sürücülü mini ERM titreşim motoru eklendi.</td>
-              <td>Cepte taşınırken gelen çağrılarda, dürtmelerde (poke) ve kritik uyarılarda dokunsal titreşim hissi.</td>
-            </tr>
-            <tr>
-              <td><b>Kısa & Uzun Basma Fonksiyonları</b></td>
-              <td>600ms eşikli uzun basma motoru yazıldı:<br>
-                - Tuş 1: Kısa: Yukarı | Uzun: Ses Aç/Kapat (Mute)<br>
-                - Tuş 2: Kısa: Seç | Uzun: BLE Eşleşme Modu<br>
-                - Tuş 3: Kısa: Aşağı | Uzun: Titreşim Aç/Kapat<br>
-                - Tuş 4: Kısa: İptal | Uzun: Tüm İhtiyaçlar HUD Ekranı
-              </td>
-              <td>Ekstra tuş kalabalığı olmadan tüm cihaz ayarları ve durum ekranı 4 tuşla yönetilir. Üst sarı barda simgeler anlık değişir.</td>
-            </tr>
-            <tr>
-              <td><b>Sosyalleşme Kuralı (Madde 8)</b></td>
-              <td>Sosyalleşme 0 olsa bile kilitlenmez. Ancak %70 üzerine çıkarıldığında <b>1.5x XP ve Hızlı Evrim Çarpanı</b> kazandırır.</td>
-              <td>Tek başına oynayanı cezalandırmaz, sosyalleşeni ödüllendirir.</td>
-            </tr>
-            <tr>
-              <td><b>Çağrı Cihazı (Pager) Mesajlaşması (Madde 9)</b></td>
-              <td>Telefondan yazılan 32 karaktere kadar kısa mesaj BLE ile cihaza iletilir.</td>
-              <td>Cihaz 90'ların çağrı cihazı gibi titrer ve öter; üst barda zarf [✉] simgesi belirir ve mesaj ekranda kayan yazı olarak akar.</td>
-            </tr>
-            <tr>
-              <td><b>İlk Hayvan: SOSİS (Madde 10)</b></td>
-              <td>Tombiş, kıvrılan, sevimli mimikleri olan Sosis karakteri modellendi.</td>
-              <td>Bebekken minik sosis, yetişkinken hardal/ketçap şapkalı sevimli gurme sosis, 90. günde "Pastırma/Folyo Kozası", sonra Siber Mega Sosis!</td>
-            </tr>
-          </tbody>
-        </table>
-
-        <h3>2. İstişare: Bu Temele Eklenebilecek 6 Çığır Açan Yeni Fikir</h3>
-        <div class="features-grid">
-          <div class="feature-card purple">
-            <div class="feature-icon">📟</div>
-            <div class="feature-title">1. Mors Alfabesi / Gizli Titreşim Kodları</div>
-            <div class="feature-desc">Arkadaşınızdan gelen acil mesajlar ekrana bakmaya gerek kalmadan cebinizde mors alfabesi titreşim ritmiyle anlaşılabilir (örn. 2 kısa 1 uzun titreşim = EVET).</div>
-          </div>
-          <div class="feature-card gold">
-            <div class="feature-icon">🌭</div>
-            <div class="feature-title">2. Sosis İçin "Sıcak Izgara" Sıcaklık Mekaniği</div>
-            <div class="feature-desc">ESP32'nin dahili sıcaklık sensörüyle hava soğuksa Sosis titrer ve üşür. Cihazı cebinize koyup ısıttığınızda neşelenir ve nar gibi kızarır!</div>
-          </div>
-          <div class="feature-card pink">
-            <div class="feature-icon">🎒</div>
-            <div class="feature-title">3. Pager Hızlı Çağrı Kodları & Emojiler</div>
-            <div class="feature-desc">90'ların nostaljik çağrı kodları: "07734" (HELLO), "143" (I LOVE YOU), "911" (ACİL DÜELLO) veya 1-bit minik pikselli emojiler gönderebilme.</div>
-          </div>
-          <div class="feature-card">
-            <div class="feature-icon">🎲</div>
-            <div class="feature-title">4. 4-Tuş Dikey Refleks / Guitar Hero Mini Oyunu</div>
-            <div class="feature-desc">4 buton dikey dizili olduğu için ekranda kayan notaları doğru tuşa basarak yakalama ritim oyunu mükemmel çalışır. Hem titreşim geri bildirimi verir hem Sosis'in eğlence ihtiyacını doldurur.</div>
-          </div>
-          <div class="feature-card gold">
-            <div class="feature-icon">🌙</div>
-            <div class="feature-title">5. Gece Rahatsız Etme (Do Not Disturb) Modu</div>
-            <div class="feature-desc">Mobil uygulamadan ayarlanabilen sessiz saatlerde (23:00 - 08:00) Sosis uyku takkesini takar; gelen mesajlar sessizce hafızaya alınır ve sabah uyandığında listelenir.</div>
-          </div>
-          <div class="feature-card purple">
-            <div class="feature-icon">🛡️</div>
-            <div class="feature-title">6. Kordon / Boyun Askısı Takınca Adımsayar Entegrasyonu</div>
-            <div class="feature-desc">Cihaz boyunda veya anahtarlıkta sallandıkça basit bir titreşim sensörü veya ESP32 kapasitif dokunma ile adımları sayarak Sosise gezinti puanı kazandırır.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- TAB 3: DONANIM ŞEMASI -->
+    <!-- TAB 2: HARDWARE & VIBRATION SENSOR SCHEMATIC -->
     <div id="tab-hardware" class="tab-content">
       <div class="doc-section">
-        <h2>📐 Güncellenmiş Donanım Şeması (Titreşim Motoru & Dikey 4 Tuş)</h2>
+        <h2>📐 Titreşim Sensörü (SW-420) & Güncel Donanım Şeması</h2>
+        <p>Cihaz kutusuna eklenen <b>SW-420 Titreşim Sensörü</b> (veya basit bilyalı tilt anahtarı / ball rolling switch), kullanıcı cihazı cebinde salladığında veya yürürken adımlarını algılar. Harici kesme (Interrupt) pini üzerinden ESP32 uyanır ve adım sayar.</p>
+
+        <h3>1. Pin Bağlantı Tablosu</h3>
         <table class="spec-table">
           <thead>
-            <tr><th>ESP32-C3 Pini</th><th>Bağlanan Bileşen</th><th>İşlev ve Kısa / Uzun Basma Görevi</th></tr>
+            <tr><th>ESP32-C3 Pini</th><th>Bileşen</th><th>İşlev ve Açıklama</th></tr>
           </thead>
           <tbody>
             <tr><td><b>GPIO 8 (SDA)</b></td><td>OLED SDA</td><td>I2C Ekran Veri Hattı</td></tr>
             <tr><td><b>GPIO 9 (SCL)</b></td><td>OLED SCL</td><td>I2C Ekran Saat Hattı</td></tr>
-            <tr><td><b>GPIO 0</b></td><td>Buton 1 (En Üst Tuş)</td><td><b>Kısa:</b> YUKARI | <b>Uzun (600ms):</b> Ses Aç/Kapat (Mute)</td></tr>
-            <tr><td><b>GPIO 1</b></td><td>Buton 2 (Üst-Orta Tuş)</td><td><b>Kısa:</b> SEÇ | <b>Uzun (600ms):</b> BLE Eşleşme Modu</td></tr>
-            <tr><td><b>GPIO 2</b></td><td>Buton 3 (Alt-Orta Tuş)</td><td><b>Kısa:</b> AŞAĞI | <b>Uzun (600ms):</b> Titreşim Aç/Kapat</td></tr>
-            <tr><td><b>GPIO 3</b></td><td>Buton 4 (En Alt Tuş)</td><td><b>Kısa:</b> İPTAL / GERİ | <b>Uzun (600ms):</b> TÜM İHTİYAÇLAR HUD EKRANI</td></tr>
-            <tr><td><b>GPIO 4</b></td><td>Pasif Piezo Buzzer (+)</td><td>LEDC PWM Donanımsal Ses Çıkışı (Bip, Melodi, Pager Çağrı Sesi)</td></tr>
-            <tr><td><b>GPIO 6</b></td><td>Titreşim Motoru MOSFET Gate</td><td>1kΩ direnç ile N-MOSFET (2N7002/2N2222) sürer; motor 3.3V'tan beslenir</td></tr>
-            <tr><td><b>GPIO 5 (ADC)</b></td><td>Pil Gerilim Bölücü</td><td>100k / 100k direnç bölücü ile Li-Po pil voltajı takibi</td></tr>
+            <tr><td><b>GPIO 0</b></td><td>Buton 1 (En Üst Tuş)</td><td><b>Kısa:</b> YUKARI | <b>Uzun:</b> Ses Aç/Kapat</td></tr>
+            <tr><td><b>GPIO 1</b></td><td>Buton 2 (Üst-Orta Tuş)</td><td><b>Kısa:</b> SEÇ / AKSİYON | <b>Uzun:</b> BLE Eşleşme Modu</td></tr>
+            <tr><td><b>GPIO 2</b></td><td>Buton 3 (Alt-Orta Tuş)</td><td><b>Kısa:</b> AŞAĞI | <b>Uzun:</b> Titreşim Aç/Kapat</td></tr>
+            <tr><td><b>GPIO 3</b></td><td>Buton 4 (En Alt Tuş)</td><td><b>Kısa:</b> İPTAL / GERİ | <b>Uzun:</b> TÜM İHTİYAÇLAR HUD EKRANI</td></tr>
+            <tr><td><b>GPIO 4</b></td><td>Pasif Buzzer (+)</td><td>LEDC PWM Ses Tonu</td></tr>
+            <tr><td><b>GPIO 6</b></td><td>Titreşim Motoru Gate</td><td>N-MOSFET Gate Sürücü (1k dirençli)</td></tr>
+            <tr><td><b>GPIO 7</b></td><td><b>SW-420 Titreşim Sensörü</b></td><td><b>Adım Sayar & Sallama Algılama (INPUT_PULLUP Kesmesi)</b></td></tr>
+            <tr><td><b>GPIO 5 (ADC)</b></td><td>Pil Gerilim Bölücü</td><td>100k / 100k Li-Po Pil Monitörü</td></tr>
           </tbody>
         </table>
       </div>
     </div>
 
-    <!-- TAB 4: KOD -->
+    <!-- TAB 3: CODE -->
     <div id="tab-code" class="tab-content">
       <div class="doc-section">
-        <h2>💻 ESP32 C++ Kodu (Uzun Basma Mantığı & Çağrı Cihazı Servisi)</h2>
-        <pre><code>// SOCIES PAGER & SANAL BEBEK FIRMWARE
-// 4 Dikey Tuş için Kısa / Uzun Basma Algoritması ve Pager BLE GATT Karakteristiği
+        <h2>💻 ESP32 C++ Kodu (Titreşim Sensörü Kesmesi & Gece Modu)</h2>
+        <pre><code>// SW-420 Titreşim Sensörü ve Adım Sayar Kesme Kodu
+#define PIN_VIBRO_SENSOR 7
+#define PIN_VIBRO_MOTOR  6
+#define PIN_BUZZER       4
 
-#define PIN_BTN_UP     0
-#define PIN_BTN_ACTION 1
-#define PIN_BTN_DOWN   2
-#define PIN_BTN_BACK   3
-#define PIN_BUZZER     4
-#define PIN_VIBRO      6
+volatile unsigned long lastShakeTime = 0;
+volatile uint32_t stepCounter = 0;
 
-#define LONG_PRESS_MS  600 // 600ms üzeri basılı tutma uzun basmadır
-
-// Titreşim Motorunu Tetikleme
-void triggerVibration(int durationMs) {
-  digitalWrite(PIN_VIBRO, HIGH);
-  delay(durationMs);
-  digitalWrite(PIN_VIBRO, LOW);
+void IRAM_ATTR onShakeInterrupt() {
+  unsigned long now = millis();
+  if (now - lastShakeTime > 180) { // 180ms debounce filtresi
+    stepCounter++;
+    lastShakeTime = now;
+    // Oyun ihtiyacı artar
+    sosis.fun = min(100, sosis.fun + 2);
+  }
 }
 
-// Pager Çağrı Cihazı BLE Karakteristiği (Mobil Uygulamadan Metin Gelince)
-class PagerCallback: public NimBLECharacteristicCallbacks {
-  void onWrite(NimBLECharacteristic* pChar) {
-    std::string msg = pChar->getValue();
-    if (msg.length() > 0) {
-      // Nostaljik Çağrı Cihazı Titreşim ve Ses Deseni: Bip-Bip-Bip + Titreşim
-      for(int i=0; i<3; i++) {
-        digitalWrite(PIN_VIBRO, HIGH);
-        tone(PIN_BUZZER, 1200, 80);
-        delay(100);
-        digitalWrite(PIN_VIBRO, LOW);
-        delay(80);
-      }
-    }
-  }
-};
+void setup() {
+  pinMode(PIN_VIBRO_SENSOR, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(PIN_VIBRO_SENSOR), onShakeInterrupt, FALLING);
+}
 </code></pre>
       </div>
     </div>
@@ -700,6 +602,9 @@ class PagerCallback: public NimBLECharacteristicCallbacks {
   <div class="toast" id="appToast">İşlem tamamlandı!</div>
 
   <script>
+    // ==========================================
+    // AUDIO ENGINE & HAPTIC PROFILES
+    // ==========================================
     let audioCtx = null;
     let audioEnabled = true;
     let hapticEnabled = true;
@@ -710,20 +615,20 @@ class PagerCallback: public NimBLECharacteristicCallbacks {
 
     function toggleAudio() {
       audioEnabled = !audioEnabled;
-      document.getElementById('btnSoundToggle').textContent = audioEnabled ? "🔊 Ses: Açık" : "🔇 Ses: Kapalı";
-      showToast(audioEnabled ? "Ses efektleri açıldı" : "Ses kapatıldı (Mute)");
+      document.getElementById('btnSoundToggle').textContent = audioEnabled ? "🔊 Ses" : "🔇 Sessiz";
+      showToast(audioEnabled ? "Ses efektleri açıldı" : "Ses kapatıldı");
       renderOLED();
     }
 
     function toggleHaptic() {
       hapticEnabled = !hapticEnabled;
-      document.getElementById('btnHapticToggle').textContent = hapticEnabled ? "📳 Titreşim: Açık" : "📵 Titreşim: Kapalı";
+      document.getElementById('btnHapticToggle').textContent = hapticEnabled ? "📳 Titreşim" : "📵 Titreşim Kapalı";
       showToast(hapticEnabled ? "Titreşim motoru aktif" : "Titreşim kapatıldı");
       renderOLED();
     }
 
     function playTone(freq, duration = 0.08, type = 'square') {
-      if (!audioEnabled) return;
+      if (!audioEnabled || state.isNightMode) return;
       initAudio();
       try {
         const osc = audioCtx.createOscillator();
@@ -739,36 +644,86 @@ class PagerCallback: public NimBLECharacteristicCallbacks {
       } catch (e) {}
     }
 
-    function triggerVibrationSim(durationMs = 180) {
+    // DISTINCT HAPTIC PROFILES
+    function triggerHaptic(type = 'default') {
       if (!hapticEnabled) return;
       const casing = document.getElementById('deviceCasing');
       const dot = document.getElementById('vibroDot');
+
+      let duration = 150;
+      if (type === 'food') {
+        // Double pulse for eating
+        duration = 180;
+        if (navigator.vibrate) navigator.vibrate([60, 40, 80]);
+      } else if (type === 'shake') {
+        // Quick energetic rumble
+        duration = 120;
+        if (navigator.vibrate) navigator.vibrate(100);
+      } else if (type === 'yawn') {
+        // Slow gentle pulse
+        duration = 350;
+        if (navigator.vibrate) navigator.vibrate([150, 100, 100]);
+      } else if (type === 'sleep') {
+        duration = 200;
+        if (navigator.vibrate) navigator.vibrate(200);
+      } else {
+        if (navigator.vibrate) navigator.vibrate(duration);
+      }
+
       casing.classList.add('vibrating');
       dot.classList.add('active');
-      if (navigator.vibrate) navigator.vibrate(durationMs);
       setTimeout(() => {
         casing.classList.remove('vibrating');
         dot.classList.remove('active');
-      }, durationMs);
+      }, duration);
     }
+
+    // ==========================================
+    // GAME STATE & UNMISTAKABLE SAUSAGE DATA
+    // ==========================================
+    const funnyWalkQuotes = [
+      "İyi gezdik be!",
+      "Bacaklarım koptu ama değdi!",
+      "Oh be, mis gibi hava!",
+      "Biraz daha koşalım mı?",
+      "Sosis dediğin böyle gezdirilir!",
+      "Günde 5000 adım şart abi!",
+      "Sıcak ızgaradan kaçtım, koşuyorum!"
+    ];
 
     const state = {
       petBreed: "Sosis",
-      stage: 1,
+      stage: 1, // 1: Bebek Sosis
       ageDays: 1,
-      totalScore: 180,
+      totalScore: 220,
+      steps: 1420,
       battery: 85,
       isPowered: true,
       bleConnected: true,
+      isNightMode: false,
       menuIndex: 0,
       animFrame: 0,
-      currentView: 'MAIN',
-      pagerMessage: "Hos geldin! Sosis seni bekliyor.",
+      currentView: 'MAIN', // 'MAIN' | 'ALL_NEEDS_HUD' | 'PAGER_READ' | 'REFLEX_GAME'
+      
+      sausageState: 'IDLE', // 'IDLE' | 'YAWN' | 'SLEEPING' | 'WALKING' | 'EATING'
+      yawnTimer: 0,
+      
+      pagerMessage: "Sosisten selamlar!",
       hasUnreadPager: false,
       pagerScrollX: 128,
 
+      // Reflex game vars
+      reflexTargetBtn: 0,
+      reflexScore: 0,
+
       needs: {
-        hunger: 85, fun: 75, love: 90, sleep: 70, toilet: 80, clean: 80, social: 65
+        hunger: 85,
+        fun: 75,
+        love: 90,
+        sleep: 70,
+        toilet: 80,
+        clean: 80,
+        social: 65
       },
 
       menuItems: [
@@ -782,6 +737,107 @@ class PagerCallback: public NimBLECharacteristicCallbacks {
       ]
     };
 
+    // ==========================================
+    // VIBRATION SENSOR & SHAKE INTERACTION
+    // ==========================================
+    let shakeCount = 0;
+    function triggerDeviceShake() {
+      if (!state.isPowered) return;
+      shakeCount++;
+      state.steps += Math.floor(Math.random() * 8) + 12;
+      state.needs.fun = Math.min(100, state.needs.fun + 8);
+      state.totalScore += 5;
+
+      state.sausageState = 'WALKING';
+      triggerHaptic('shake');
+      playTone(480, 0.05);
+
+      // Random funny quotes
+      const quote = funnyWalkQuotes[Math.floor(Math.random() * funnyWalkQuotes.length)];
+      document.getElementById('walkSpeechText').textContent = `Sosis: "${quote}"`;
+      document.getElementById('appPetSteps').textContent = state.steps.toLocaleString();
+
+      showToast(`👋 Cihaz sallandı! (+Adım, Oyun % +8) -> "${quote}"`);
+
+      setTimeout(() => {
+        if (state.sausageState === 'WALKING') state.sausageState = state.isNightMode ? 'SLEEPING' : 'IDLE';
+        updateUI();
+      }, 1400);
+
+      updateUI();
+    }
+
+    // ==========================================
+    // NIGHT MODE (DO NOT DISTURB & SLEEP POSE)
+    // ==========================================
+    function toggleNightMode() {
+      state.isNightMode = !state.isNightMode;
+      const btn = document.getElementById('nightBtnText');
+
+      if (state.isNightMode) {
+        state.sausageState = 'SLEEPING';
+        btn.textContent = "Modu Kapat (Uyandır)";
+        triggerHaptic('sleep');
+        playTone(392, 0.12); setTimeout(() => playTone(330, 0.2), 120);
+        showToast("🌙 Gece Modu Açıldı! Sosis uyku takkesini taktı ve uykuya daldı.");
+      } else {
+        state.sausageState = 'IDLE';
+        btn.textContent = "Modu Aç";
+        triggerHaptic('default');
+        playTone(523, 0.1); setTimeout(() => playTone(659, 0.1), 100);
+        showToast("☀️ Günaydın! Sosis uyandı.");
+      }
+      updateUI();
+    }
+
+    function forceYawn() {
+      state.sausageState = 'YAWN';
+      state.yawnTimer = 6;
+      triggerHaptic('yawn');
+      playTone(400, 0.2, 'triangle');
+      showToast("🥱 Sosis kocaman esniyor! Uykusu geldi...");
+      updateUI();
+    }
+
+    // ==========================================
+    // REFLEX MINI-GAME (4-VERTICAL BUTTONS)
+    // ==========================================
+    function startReflexGame() {
+      state.currentView = 'REFLEX_GAME';
+      state.reflexScore = 0;
+      nextReflexTarget();
+      showToast("⚡ Refleks Oyunu Başladı! Ekranda gösterilen doğru tuşa hemen bas!");
+      updateUI();
+    }
+
+    function nextReflexTarget() {
+      state.reflexTargetBtn = Math.floor(Math.random() * 4); // 0: Up, 1: Action, 2: Down, 3: Back
+      playTone(800, 0.05);
+    }
+
+    function handleReflexInput(btnIndex) {
+      if (btnIndex === state.reflexTargetBtn) {
+        state.reflexScore += 10;
+        state.needs.fun = Math.min(100, state.needs.fun + 10);
+        state.totalScore += 20;
+        triggerHaptic('default');
+        playTone(1000, 0.06);
+        if (state.reflexScore >= 50) {
+          showToast(`🏆 Tebrikler! Refleks oyununu kazandın! (+50 Puan)`);
+          state.currentView = 'MAIN';
+        } else {
+          nextReflexTarget();
+        }
+      } else {
+        playTone(250, 0.1, 'sawtooth');
+        showToast("Yanlış tuş! Tekrar dene.");
+      }
+      updateUI();
+    }
+
+    // ==========================================
+    // BUTTON LONG-PRESS ENGINE (600ms)
+    // ==========================================
     const pressTimers = {};
 
     function startBtnPress(btnKey) {
@@ -814,6 +870,13 @@ class PagerCallback: public NimBLECharacteristicCallbacks {
     function handleShortPress(btnKey) {
       if (!state.isPowered) return;
       playTone(650, 0.04);
+
+      if (state.currentView === 'REFLEX_GAME') {
+        const mapping = { 'UP': 0, 'ACTION': 1, 'DOWN': 2, 'BACK': 3 };
+        handleReflexInput(mapping[btnKey]);
+        return;
+      }
+
       if (state.currentView !== 'MAIN') {
         state.currentView = 'MAIN';
         updateUI();
@@ -839,7 +902,7 @@ class PagerCallback: public NimBLECharacteristicCallbacks {
 
     function handleLongPress(btnKey) {
       if (!state.isPowered) return;
-      triggerVibrationSim(120);
+      triggerHaptic('default');
 
       switch(btnKey) {
         case 'UP':
@@ -864,9 +927,9 @@ class PagerCallback: public NimBLECharacteristicCallbacks {
     function executeAction() {
       if (state.stage === 0) {
         state.stage = 1;
-        triggerVibrationSim(250);
+        triggerHaptic('food');
         playTone(523, 0.1); setTimeout(() => playTone(659, 0.1), 100); setTimeout(() => playTone(784, 0.2), 200);
-        showToast("🎉 Yumurta çatladı! Minik bir Sosis doğdu!");
+        showToast("🎉 Yumurta çatladı! Tombiş bir Sosis doğdu!");
         updateUI();
         return;
       }
@@ -877,21 +940,37 @@ class PagerCallback: public NimBLECharacteristicCallbacks {
 
       if (zeroCritical && zeroCritical !== curItem.action) {
         playTone(350, 0.12, 'sawtooth');
-        triggerVibrationSim(300);
+        triggerHaptic('alert');
         showToast("⚠️ KİLİT! Sıfırlanan ihtiyaç giderilmeden başka şey yapılamaz!");
         return;
       }
 
       state.needs[curItem.action] = Math.min(100, state.needs[curItem.action] + 25);
+      
+      // Distinct haptic & animations per action
+      if (curItem.action === 'hunger') {
+        state.sausageState = 'EATING';
+        triggerHaptic('food');
+        setTimeout(() => state.sausageState = 'IDLE', 1200);
+      } else if (curItem.action === 'sleep') {
+        toggleNightMode();
+        return;
+      } else {
+        triggerHaptic('default');
+      }
+
       let pts = (curItem.action === 'social' || state.needs.social > 70) ? 25 : 10;
       state.totalScore += pts;
 
-      triggerVibrationSim(80);
       playTone(587, 0.08); setTimeout(() => playTone(880, 0.12), 90);
       showToast("✨ " + curItem.label + " giderildi! (+" + pts + " Puan)");
       updateUI();
     }
 
+    // ==========================================
+    // OLED CANVAS RENDERING (128x64)
+    // REAL PHONE STATUS BAR WITH TRUE PIXEL ICONS
+    // ==========================================
     const canvas = document.getElementById('oledCanvas');
     const ctx = canvas.getContext('2d');
 
@@ -902,52 +981,314 @@ class PagerCallback: public NimBLECharacteristicCallbacks {
 
       ctx.fillStyle = "#02060c"; ctx.fillRect(0, 0, 128, 64);
 
-      // TOP YELLOW ZONE (16PX)
-      ctx.fillStyle = "#ffe600"; ctx.font = "bold 7px 'Press Start 2P', monospace";
-      ctx.fillText(state.battery + "%", 2, 10);
-      if (state.bleConnected) ctx.fillText("B", 42, 10);
-      const soundIcon = audioEnabled ? "S" : "-";
-      const vibIcon = hapticEnabled ? "V" : "-";
-      ctx.fillText(soundIcon + " " + vibIcon, 62, 10);
-      if (state.hasUnreadPager) ctx.fillText("✉", 92, 10);
+      // ========================================
+      // 1. TOP 16 PIXELS: REAL PHONE STATUS BAR
+      // ========================================
+      drawPhoneStatusBar();
 
-      const isCritical = Object.values(state.needs).some(v => v < 50);
-      if (isCritical && (Math.floor(Date.now() / 400) % 2 === 0)) ctx.fillText("!", 118, 10);
-
+      // Divider Line between Yellow & Blue zone
       ctx.strokeStyle = "rgba(255, 230, 0, 0.4)";
       ctx.beginPath(); ctx.moveTo(0, 14.5); ctx.lineTo(128, 14.5); ctx.stroke();
 
-      // BOTTOM BLUE ZONE (48PX)
+      // ========================================
+      // 2. BOTTOM 48 PIXELS: BLUE ZONE
+      // ========================================
       ctx.fillStyle = "#00f0ff";
+
       if (state.currentView === 'ALL_NEEDS_HUD') { drawAllNeedsHUD(); return; }
       if (state.currentView === 'PAGER_READ') { drawPagerScreen(); return; }
+      if (state.currentView === 'REFLEX_GAME') { drawReflexGameScreen(); return; }
 
-      drawSausageSprite(64, 38, state.animFrame);
+      drawAuthenticSausage(64, 38, state.animFrame);
       drawOledMenu();
     }
 
-    function drawSausageSprite(cx, cy, frame) {
-      const bounce = (frame % 2 === 0) ? 0 : -2;
-      const y = cy + bounce;
+    // REAL PIXEL ICONS IN YELLOW ZONE (NO "S", "V", "B" TEXT!)
+    function drawPhoneStatusBar() {
+      ctx.fillStyle = "#ffe600";
 
-      if (state.stage === 0) {
-        ctx.beginPath(); ctx.ellipse(cx, cy + 2, 10, 13, 0, 0, Math.PI * 2); ctx.fill();
-        ctx.fillStyle = "#02060c"; ctx.fillRect(cx - 3, cy - 2, 6, 2); return;
-      }
-      if (state.stage === 4) {
-        ctx.beginPath(); ctx.ellipse(cx, cy + bounce, 14, 16, 0, 0, Math.PI * 2); ctx.fill();
-        ctx.fillStyle = "#02060c"; ctx.fillRect(cx - 10, cy - 5, 20, 2);
-        ctx.fillRect(cx - 12, cy, 24, 2); ctx.fillRect(cx - 10, cy + 5, 20, 2); return;
+      // 1. BATTERY ICON (X: 2, Y: 4, W: 14, H: 7)
+      ctx.strokeRect(2.5, 4.5, 12, 6);
+      ctx.fillRect(15, 6, 2, 3); // battery nub
+      const batFillW = Math.max(1, Math.round((state.battery / 100) * 8));
+      ctx.fillRect(4, 6, batFillW, 3);
+
+      // 2. BLUETOOTH RUNE ICON (X: 22, Y: 4)
+      if (state.bleConnected) {
+        drawPixelBLE(22, 4);
       }
 
-      ctx.beginPath(); ctx.roundRect(cx - 18, y - 6, 36, 13, 6); ctx.fill();
-      ctx.fillRect(cx - 10, y + 7, 4, 3); ctx.fillRect(cx + 6, y + 7, 4, 3);
+      // 3. SPEAKER / SOUND ICON (X: 34, Y: 4)
+      drawPixelSpeaker(34, 4, audioEnabled && !state.isNightMode);
+
+      // 4. VIBRATING PHONE ICON (X: 47, Y: 4)
+      drawPixelVibration(47, 4, hapticEnabled);
+
+      // 5. MOON ICON (NIGHT MODE) (X: 62, Y: 4)
+      if (state.isNightMode) {
+        drawPixelMoon(62, 4);
+      }
+
+      // 6. ENVELOPE ICON (PAGER UNREAD) (X: 74, Y: 4)
+      if (state.hasUnreadPager) {
+        drawPixelEnvelope(74, 4);
+      }
+
+      // 7. PEDOMETER / CLOCK (X: 86 to 126)
+      ctx.font = "bold 6px 'Press Start 2P', monospace";
+      const d = new Date();
+      const h = String(d.getHours()).padStart(2, '0');
+      const m = String(d.getMinutes()).padStart(2, '0');
+      ctx.fillText(`${h}:${m}`, 92, 10);
+    }
+
+    // PIXEL DRAWING HELPERS FOR STATUS BAR
+    function drawPixelBLE(x, y) {
+      // Authentic Bluetooth rune (center spine + triangles)
+      ctx.fillRect(x + 2, y, 1, 7);
+      ctx.fillRect(x + 3, y + 1, 1, 1);
+      ctx.fillRect(x + 4, y + 2, 1, 1);
+      ctx.fillRect(x + 3, y + 3, 1, 1);
+      ctx.fillRect(x + 4, y + 4, 1, 1);
+      ctx.fillRect(x + 3, y + 5, 1, 1);
+      ctx.fillRect(x + 1, y + 1, 1, 1);
+      ctx.fillRect(x + 1, y + 5, 1, 1);
+    }
+
+    function drawPixelSpeaker(x, y, isSoundOn) {
+      // Speaker cone
+      ctx.fillRect(x, y + 2, 2, 3);
+      ctx.fillRect(x + 2, y + 1, 2, 5);
+      if (isSoundOn) {
+        // Sound waves
+        ctx.fillRect(x + 5, y + 1, 1, 1);
+        ctx.fillRect(x + 6, y + 2, 1, 3);
+        ctx.fillRect(x + 5, y + 5, 1, 1);
+      } else {
+        // Mute slash
+        ctx.fillRect(x + 5, y + 2, 1, 1);
+        ctx.fillRect(x + 6, y + 3, 1, 1);
+        ctx.fillRect(x + 7, y + 4, 1, 1);
+        ctx.fillRect(x + 5, y + 4, 1, 1);
+        ctx.fillRect(x + 7, y + 2, 1, 1);
+      }
+    }
+
+    function drawPixelVibration(x, y, isVibOn) {
+      // Tiny phone rectangle
+      ctx.fillRect(x + 2, y, 4, 7);
       ctx.fillStyle = "#02060c";
-      ctx.fillRect(cx - 6, y - 2, 2, 3); ctx.fillRect(cx + 4, y - 2, 2, 3);
-      ctx.fillRect(cx - 2, y + 2, 4, 1);
-      if (state.stage >= 2) {
-        ctx.fillStyle = "#00f0ff"; ctx.fillRect(cx - 4, y - 10, 8, 4); ctx.fillRect(cx - 2, y - 12, 4, 2);
+      ctx.fillRect(x + 3, y + 1, 2, 5);
+      ctx.fillStyle = "#ffe600";
+      if (isVibOn) {
+        // Vibration waves left & right: ) [ ] (
+        ctx.fillRect(x, y + 2, 1, 3);
+        ctx.fillRect(x + 7, y + 2, 1, 3);
+      } else {
+        // Dot
+        ctx.fillRect(x + 7, y + 5, 1, 1);
       }
+    }
+
+    function drawPixelMoon(x, y) {
+      ctx.beginPath();
+      ctx.arc(x + 3, y + 3, 3, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "#02060c";
+      ctx.beginPath();
+      ctx.arc(x + 4.5, y + 2.5, 2.5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "#ffe600";
+    }
+
+    function drawPixelEnvelope(x, y) {
+      ctx.strokeRect(x + 0.5, y + 1.5, 7, 5);
+      ctx.fillRect(x + 2, y + 3, 1, 1);
+      ctx.fillRect(x + 4, y + 3, 1, 1);
+      ctx.fillRect(x + 3, y + 4, 1, 1);
+    }
+
+    // ==========================================
+    // AUTHENTIC UNMISTAKABLE WIENER / SAUSAGE PIXEL ART
+    // ==========================================
+    function drawAuthenticSausage(cx, cy, frame) {
+      ctx.fillStyle = "#00f0ff";
+
+      // YAWN STATE (ESNEME)
+      if (state.sausageState === 'YAWN') {
+        drawYawningSausage(cx, cy, frame);
+        return;
+      }
+
+      // SLEEPING STATE (UYUMA POZİSYONU)
+      if (state.sausageState === 'SLEEPING') {
+        drawSleepingSausage(cx, cy, frame);
+        return;
+      }
+
+      // WALKING / SHAKING STATE
+      if (state.sausageState === 'WALKING') {
+        drawWalkingSausage(cx, cy, frame);
+        return;
+      }
+
+      // EATING STATE
+      if (state.sausageState === 'EATING') {
+        drawEatingSausage(cx, cy, frame);
+        return;
+      }
+
+      // NORMAL IDLE SAUSAGE (WOBBLING WIENER)
+      const squash = (frame % 2 === 0) ? 0 : -2;
+      const y = cy + squash;
+
+      // 1. Frankurter body curve (Curved cylinder)
+      ctx.beginPath();
+      // Left pinch knot
+      ctx.arc(cx - 20, y + 1, 4, 0, Math.PI * 2);
+      ctx.arc(cx + 20, y - 1, 4, 0, Math.PI * 2);
+      // Main curved belly
+      ctx.roundRect(cx - 18, y - 6, 36, 14, 7);
+      ctx.fill();
+
+      // Casing knot nubs
+      ctx.fillRect(cx - 23, y, 3, 2);
+      ctx.fillRect(cx + 21, y - 2, 3, 2);
+
+      // Diagonal grill marks
+      ctx.fillStyle = "#02060c";
+      ctx.fillRect(cx - 12, y - 3, 2, 6);
+      ctx.fillRect(cx - 2, y - 4, 2, 7);
+      ctx.fillRect(cx + 8, y - 3, 2, 6);
+
+      // Cartoon Eyes (Beady round eyes with white shine)
+      ctx.fillStyle = "#02060c";
+      ctx.fillRect(cx - 6, y - 2, 3, 4);
+      ctx.fillRect(cx + 3, y - 2, 3, 4);
+      ctx.fillStyle = "#00f0ff";
+      ctx.fillRect(cx - 6, y - 2, 1, 1);
+      ctx.fillRect(cx + 3, y - 2, 1, 1);
+
+      // Cute Smile
+      ctx.fillStyle = "#02060c";
+      ctx.fillRect(cx - 2, y + 3, 4, 1);
+      ctx.fillRect(cx - 3, y + 2, 1, 1);
+      ctx.fillRect(cx + 2, y + 2, 1, 1);
+
+      // Tiny cartoon feet
+      ctx.fillStyle = "#00f0ff";
+      ctx.fillRect(cx - 8, y + 8, 4, 3);
+      ctx.fillRect(cx + 4, y + 8, 4, 3);
+    }
+
+    // ESNEME ANİMASYONU (YAWN WITH HUGE MOUTH)
+    function drawYawningSausage(cx, cy, frame) {
+      const y = cy - 2;
+      ctx.fillStyle = "#00f0ff";
+
+      // Stretched body
+      ctx.beginPath();
+      ctx.roundRect(cx - 16, y - 8, 32, 18, 8);
+      ctx.fill();
+
+      // Closed squeezed sleepy eyes (> <)
+      ctx.fillStyle = "#02060c";
+      ctx.fillRect(cx - 7, y - 4, 3, 1);
+      ctx.fillRect(cx - 6, y - 5, 1, 1);
+      ctx.fillRect(cx - 6, y - 3, 1, 1);
+
+      ctx.fillRect(cx + 4, y - 4, 3, 1);
+      ctx.fillRect(cx + 5, y - 5, 1, 1);
+      ctx.fillRect(cx + 5, y - 3, 1, 1);
+
+      // HUGE YAWNING MOUTH (Round open cavern)
+      ctx.fillRect(cx - 4, y - 1, 8, 7);
+      ctx.fillStyle = "#00f0ff";
+      ctx.fillRect(cx - 2, y + 4, 4, 2); // tongue
+
+      // Floating "Z"
+      ctx.fillStyle = "#00f0ff";
+      ctx.font = "bold 6px 'Press Start 2P', monospace";
+      ctx.fillText("Z", cx + 18, y - 6);
+    }
+
+    // UYUMA POZİSYONU (LYING DOWN + NIGHTCAP + ZZZ BUBBLES)
+    function drawSleepingSausage(cx, cy, frame) {
+      const y = cy + 4;
+      ctx.fillStyle = "#00f0ff";
+
+      // Horizontal sausage resting on floor
+      ctx.beginPath();
+      ctx.roundRect(cx - 20, y - 4, 40, 10, 5);
+      ctx.fill();
+
+      // Sleeping closed slit eyes (- -)
+      ctx.fillStyle = "#02060c";
+      ctx.fillRect(cx - 8, y - 1, 4, 1);
+      ctx.fillRect(cx + 4, y - 1, 4, 1);
+
+      // Cute sleeping Nightcap (Takke) on head
+      ctx.fillStyle = "#00f0ff";
+      ctx.beginPath();
+      ctx.moveTo(cx - 14, y - 4);
+      ctx.lineTo(cx - 8, y - 13);
+      ctx.lineTo(cx - 2, y - 4);
+      ctx.fill();
+      // Pom-pom ball on nightcap
+      ctx.fillRect(cx - 9, y - 15, 3, 3);
+
+      // Floating Z Z z bubbles
+      const zOffset = (frame * 2) % 18;
+      ctx.font = "bold 6px 'Press Start 2P', monospace";
+      ctx.fillText("z", cx + 12, y - 6 - zOffset);
+      ctx.fillText("Z", cx + 18, y - 12 - (zOffset * 0.8));
+    }
+
+    // SALLAMA / YÜRÜYÜŞ ANİMASYONU (RUNNING WITH NOODLE LEGS)
+    function drawWalkingSausage(cx, cy, frame) {
+      const hop = (frame % 2 === 0) ? -3 : 0;
+      const y = cy + hop;
+      ctx.fillStyle = "#00f0ff";
+
+      ctx.beginPath();
+      ctx.roundRect(cx - 18, y - 6, 36, 14, 7);
+      ctx.fill();
+
+      // Happy energetic open eyes
+      ctx.fillStyle = "#02060c";
+      ctx.fillRect(cx - 6, y - 3, 3, 3);
+      ctx.fillRect(cx + 3, y - 3, 3, 3);
+      // Open panting smile with tongue
+      ctx.fillRect(cx - 2, y + 2, 4, 2);
+      ctx.fillRect(cx - 1, y + 4, 2, 2);
+
+      // Running legs (alternating)
+      ctx.fillStyle = "#00f0ff";
+      if (frame % 2 === 0) {
+        ctx.fillRect(cx - 10, y + 8, 5, 2);
+        ctx.fillRect(cx + 6, y + 6, 3, 4);
+      } else {
+        ctx.fillRect(cx - 8, y + 6, 3, 4);
+        ctx.fillRect(cx + 4, y + 8, 5, 2);
+      }
+    }
+
+    // YEMEK YEME ANİMASYONU
+    function drawEatingSausage(cx, cy, frame) {
+      const y = cy;
+      ctx.fillStyle = "#00f0ff";
+      ctx.beginPath(); ctx.roundRect(cx - 18, y - 6, 36, 14, 7); ctx.fill();
+
+      // Munching bulging cheeks
+      ctx.fillStyle = "#02060c";
+      ctx.fillRect(cx - 7, y - 2, 3, 3);
+      ctx.fillRect(cx + 4, y - 2, 3, 3);
+      ctx.fillRect(cx - 3, y + 2, 6, 3);
+
+      // Crumbs
+      ctx.fillStyle = "#00f0ff";
+      ctx.fillRect(cx + 14, y + 2, 2, 2);
+      ctx.fillRect(cx + 17, y + 6, 1, 1);
     }
 
     function drawOledMenu() {
@@ -990,6 +1331,22 @@ class PagerCallback: public NimBLECharacteristicCallbacks {
       ctx.font = "6px 'Press Start 2P', monospace"; ctx.fillText("[Geri tusuna bas]", 12, 60);
     }
 
+    function drawReflexGameScreen() {
+      ctx.font = "7px 'Press Start 2P', monospace"; ctx.fillStyle = "#00f0ff";
+      ctx.fillText("REFLEKS: " + state.reflexScore, 10, 24);
+
+      const targetNames = ["[▲ YUKARI]", "[● SEC]", "[▼ ASAGI]", "[✕ GERI]"];
+      ctx.fillStyle = "#ffe600";
+      ctx.fillText("BAS -> " + targetNames[state.reflexTargetBtn], 8, 42);
+
+      ctx.fillStyle = "#00f0ff";
+      ctx.font = "6px 'Press Start 2P', monospace";
+      ctx.fillText("Dogru tuşa hemen bas!", 4, 58);
+    }
+
+    // ==========================================
+    // COMPANION ACTIONS
+    // ==========================================
     function sendPagerMessage() {
       const input = document.getElementById('pagerMsgInput');
       const msg = input.value.trim();
@@ -998,42 +1355,23 @@ class PagerCallback: public NimBLECharacteristicCallbacks {
       state.hasUnreadPager = true;
       state.currentView = 'PAGER_READ';
       state.pagerScrollX = 128;
-      triggerVibrationSim(350);
+      triggerHaptic('default');
       playTone(1046, 0.1); setTimeout(() => playTone(1318, 0.12), 120); setTimeout(() => playTone(1567, 0.15), 240);
       showToast("📟 Mesaj gönderildi! Ekranda akıyor: " + msg);
       input.value = "";
       updateUI();
     }
 
-    function triggerFriendPoke(friendName) {
-      state.pagerMessage = friendName + " seni durttu! 👉";
-      state.hasUnreadPager = true;
-      state.currentView = 'PAGER_READ';
-      state.pagerScrollX = 128;
-      state.needs.social = Math.min(100, state.needs.social + 20);
-      state.totalScore += 30;
-      triggerVibrationSim(120); setTimeout(() => triggerVibrationSim(180), 200);
-      playTone(880, 0.08); setTimeout(() => playTone(1174, 0.1), 100);
-      showToast("👉 " + friendName + " seni dürttü! Titreşim verildi & Sosyal +20!");
-      updateUI();
-    }
-
-    function triggerFriendInvite(friendName) {
-      state.pagerMessage = friendName + " duello daveti! ⚔️";
-      state.hasUnreadPager = true;
-      state.currentView = 'PAGER_READ';
-      state.pagerScrollX = 128;
-      state.needs.fun = Math.min(100, state.needs.fun + 25);
-      state.totalScore += 50;
-      triggerVibrationSim(250);
-      playTone(784, 0.09); setTimeout(() => playTone(987, 0.14), 110);
-      showToast("⚔️ " + friendName + " ile oyun daveti başlatıldı!");
-      updateUI();
-    }
-
     function simTick() {
       state.animFrame++;
-      if (state.isPowered && state.stage !== 0 && state.stage !== 4) {
+
+      // Yawn timer handling
+      if (state.sausageState === 'YAWN') {
+        state.yawnTimer--;
+        if (state.yawnTimer <= 0) state.sausageState = state.isNightMode ? 'SLEEPING' : 'IDLE';
+      }
+
+      if (state.isPowered && state.stage !== 0 && state.stage !== 4 && !state.isNightMode) {
         state.needs.hunger = Math.max(0, state.needs.hunger - 0.22);
         state.needs.fun    = Math.max(0, state.needs.fun - 0.2);
         state.needs.love   = Math.max(0, state.needs.love - 0.15);
@@ -1041,7 +1379,16 @@ class PagerCallback: public NimBLECharacteristicCallbacks {
         state.needs.toilet = Math.max(0, state.needs.toilet - 0.18);
         state.needs.clean  = Math.max(0, state.needs.clean - 0.15);
         state.needs.social = Math.max(0, state.needs.social - 0.18);
+
+        // Natural yawning if sleepy (<30%)
+        if (state.needs.sleep < 30 && Math.random() < 0.05 && state.sausageState === 'IDLE') {
+          forceYawn();
+        }
+      } else if (state.isNightMode) {
+        // Sleep replenishes energy
+        state.needs.sleep = Math.min(100, state.needs.sleep + 0.5);
       }
+
       renderOLED();
       updateMobileUI();
     }
@@ -1049,6 +1396,8 @@ class PagerCallback: public NimBLECharacteristicCallbacks {
     function updateMobileUI() {
       document.getElementById('appPetAge').textContent = state.ageDays + " Gün";
       document.getElementById('appPetScore').textContent = state.totalScore;
+      document.getElementById('appPetSteps').textContent = state.steps.toLocaleString();
+
       const needKeys = ['hunger', 'fun', 'love', 'sleep', 'toilet', 'clean', 'social'];
       needKeys.forEach(k => {
         const val = Math.round(state.needs[k]);
@@ -1064,24 +1413,9 @@ class PagerCallback: public NimBLECharacteristicCallbacks {
 
     function updateUI() { renderOLED(); updateMobileUI(); }
 
-    function togglePower() {
-      state.isPowered = !state.isPowered;
-      triggerVibrationSim(80);
-      playTone(state.isPowered ? 880 : 300, 0.1);
-      document.getElementById('btnPower').textContent = state.isPowered ? "⏻ GÜÇ (SLEEP)" : "⏻ UYANDIR";
-      showToast(state.isPowered ? "ESP32 Uyandırıldı" : "ESP32 Deep Sleep Moduna Girdi");
-      updateUI();
-    }
-
-    function triggerReset() {
-      triggerVibrationSim(200); playTone(1200, 0.15);
-      showToast("ESP32 Donanım Reset!");
-      state.isPowered = true; state.currentView = 'MAIN'; updateUI();
-    }
-
     function toggleBle() {
       state.bleConnected = !state.bleConnected;
-      triggerVibrationSim(100);
+      triggerHaptic('default');
       showToast(state.bleConnected ? "BLE Bağlandı" : "BLE Bağlantısı Kesildi");
       updateUI();
     }
@@ -1093,13 +1427,8 @@ class PagerCallback: public NimBLECharacteristicCallbacks {
     }
 
     function devTriggerCocoon() {
-      state.ageDays = 90; state.stage = 4; triggerVibrationSim(250);
+      state.ageDays = 90; state.stage = 4; triggerHaptic('default');
       showToast("🥓 Sosis Pastırma Kozası evresine girdi!"); updateUI();
-    }
-
-    function devZeroNeeds() {
-      Object.keys(state.needs).forEach(k => state.needs[k] = 0);
-      triggerVibrationSim(400); showToast("⚠️ İhtiyaçlar sıfırlandı!"); updateUI();
     }
 
     function showToast(msg) {
