@@ -1,76 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="io.socies.app"
-    android:versionCode="5"
-    android:versionName="1.0.4">
+    android:versionCode="6"
+    android:versionName="1.0.5">
+
+    <uses-sdk android:minSdkVersion="21" android:targetSdkVersion="28" />
 
     <!-- 1. İNTERNET & SUNUCU HABERLEŞMESİ -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-    <!-- 2. KAMERA İZNİ -->
+    <!-- 2. KAMERA İZNİ (SELFIE'DEN PİKSEL KARAKTER ÜRETİMİ) -->
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-feature android:name="android.hardware.camera" android:required="false" />
-    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
 
-    <!-- 3. TELEFON DEFTERİ / REHBER İZNİ (ARKADAŞ EKLEME & ÇAĞRI İÇİN) -->
+    <!-- 3. TELEFON DEFTERİ / REHBER İZNİ -->
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.WRITE_CONTACTS" />
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
 
     <!-- 4. SES / MİKROFON İZNİ -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
 
-    <!-- 5. SENSÖRLER (SW-420 EŞDEĞERİ JİROSKOP, ADIMSAYAR, VÜCUT SENSÖRLERİ) -->
+    <!-- 5. SENSÖRLER (VÜCUT / ADIMSAYAR / TİTREŞİM) -->
     <uses-permission android:name="android.permission.BODY_SENSORS" />
-    <uses-permission android:name="android.permission.BODY_SENSORS_BACKGROUND" />
-    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
-    <uses-permission android:name="android.permission.HIGH_SAMPLING_RATE_SENSORS" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <!-- 6. BLUETOOTH LOW ENERGY (ESP32 BAĞLANTISI) -->
-    <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30" />
-    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
-    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
-    <uses-feature android:name="android.hardware.bluetooth_le" android:required="true" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
-    <!-- 7. KONUM İZİNLERİ (BLE TARAMA & HAVA DURUMU İÇİN) -->
+    <!-- 7. KONUM İZİNLERİ (BLE TARAMA & BÖLGESEL HAVA DURUMU) -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 
-    <!-- 8. ARKA PLANDA KESİNTİSİZ ÇALIŞMA & PİL OPTİMİZASYONUNDAN MUAFİYET -->
-    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+    <!-- 8. ARKA PLANDA KESİNTİSİZ ÇALIŞMA & PİL OPTİMİZASYONU MUAFİYETİ -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
-    <!-- 9. DEPOLAMA İZİNLERİ (POLAROID ALBÜM VE YEDEK İÇİN) -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="29" />
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <!-- 9. DEPOLAMA İZİNLERİ -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-        android:label="Socies"
-        android:name="android.app.Application"
-        android:icon="@mipmap/ic_launcher"
-        android:usesCleartextTraffic="true"
-        android:requestLegacyExternalStorage="true"
-        android:allowBackup="true">
+        android:label="@string/app_name"
+        android:allowBackup="true"
+        android:hardwareAccelerated="true">
         <activity
             android:name="io.socies.app.MainActivity"
+            android:label="@string/app_name"
             android:exported="true"
-            android:launchMode="singleTop"
-            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
-            android:hardwareAccelerated="true"
-            android:windowSoftInputMode="adjustResize">
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+            android:configChanges="orientation|keyboardHidden|screenSize">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>

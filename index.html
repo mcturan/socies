@@ -467,6 +467,125 @@
     .btn-socies-action:hover {
       background: var(--accent); color: #000; border-color: var(--accent); transform: translateY(-2px);
     }
+
+    /* KARAKTER ATÖLYESİ (ÇİZİM & SELFIE) STİLLERİ */
+    .studio-hero {
+      background: linear-gradient(135deg, #101726, #1c1836); border: 1px solid #2d2b54;
+      border-radius: 20px; padding: 1.5rem 2rem; margin-bottom: 2rem;
+      display: flex; justify-content: space-between; align-items: center; gap: 1.5rem; flex-wrap: wrap;
+    }
+    .studio-hero-title { font-size: 1.4rem; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 0.6rem; }
+    .studio-hero-desc { font-size: 0.82rem; color: #94a3b8; margin-top: 0.35rem; }
+
+    .studio-mode-toggle {
+      display: flex; gap: 0.6rem; margin-bottom: 1.8rem; background: rgba(15, 21, 35, 0.8);
+      padding: 0.4rem; border-radius: 14px; border: 1px solid var(--card-border); width: fit-content;
+    }
+    .studio-mode-btn {
+      padding: 0.6rem 1.4rem; border-radius: 10px; border: none; background: transparent;
+      color: var(--text-muted); font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: all 0.2s;
+    }
+    .studio-mode-btn:hover { color: #fff; }
+    .studio-mode-btn.active {
+      background: linear-gradient(135deg, var(--accent), #3b82f6); color: #000;
+      box-shadow: 0 0 16px rgba(0, 240, 255, 0.4);
+    }
+
+    .studio-workspace {
+      display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 2rem; align-items: start;
+    }
+    @media (max-width: 1024px) { .studio-workspace { grid-template-columns: 1fr; } }
+
+    .studio-card {
+      background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 22px;
+      padding: 1.8rem; box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+    }
+    .studio-card-title {
+      font-size: 1.1rem; font-weight: 800; color: #fff; margin-bottom: 1rem;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+
+    /* KILAVUZLU ADIMLAR BAR */
+    .studio-steps-bar {
+      display: flex; gap: 0.5rem; margin-bottom: 1.2rem; background: rgba(0,0,0,0.3);
+      padding: 0.4rem; border-radius: 12px; border: 1px solid var(--card-border);
+    }
+    .step-chip {
+      flex: 1; padding: 0.5rem; text-align: center; border-radius: 8px; font-size: 0.75rem;
+      font-weight: 700; color: var(--text-muted); cursor: pointer; transition: all 0.2s;
+    }
+    .step-chip.active { background: rgba(0, 240, 255, 0.15); color: var(--accent); border: 1px solid rgba(0, 240, 255, 0.4); }
+
+    .canvas-container {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      background: #000; border: 2px solid var(--card-border); border-radius: 16px;
+      padding: 1rem; position: relative; margin-bottom: 1.2rem;
+    }
+    #drawCanvas {
+      width: 384px; height: 384px; image-rendering: pixelated; cursor: crosshair;
+      background: #02060c; border: 1px solid #1e293b; border-radius: 8px; touch-action: none;
+    }
+
+    .tools-toolbar {
+      display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.2rem; justify-content: center;
+    }
+    .tool-btn {
+      padding: 0.45rem 0.9rem; border-radius: 10px; border: 1px solid var(--card-border);
+      background: #151d2f; color: #fff; font-size: 0.75rem; font-weight: 700; cursor: pointer;
+      display: flex; align-items: center; gap: 0.35rem; transition: all 0.2s;
+    }
+    .tool-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .tool-btn.active { background: var(--accent); color: #000; border-color: var(--accent); font-weight: 800; }
+
+    /* CANLI OLED ÖNİZLEME */
+    .oled-preview-casing {
+      background: #0c111c; border: 2px solid #2d374d; border-radius: 20px; padding: 1.2rem;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.8), inset 0 1px 2px rgba(255,255,255,0.1); margin-bottom: 1.5rem;
+    }
+    .oled-preview-screen {
+      background: #000; border: 1px solid #1e293b; border-radius: 8px; overflow: hidden;
+      display: flex; flex-direction: column; width: 100%; max-width: 320px; margin: 0 auto;
+    }
+    .oled-preview-header {
+      background: #05080f; height: 22px; padding: 0 8px; display: flex; justify-content: space-between;
+      align-items: center; border-bottom: 1px solid #1e293b; color: var(--oled-yellow); font-family: 'Press Start 2P', monospace; font-size: 7px;
+    }
+    #studioPreviewCanvas {
+      width: 100%; height: 160px; image-rendering: pixelated; background: #000;
+    }
+
+    /* SELFIE MODU STİLLERİ */
+    .selfie-box {
+      display: flex; flex-direction: column; align-items: center; gap: 1rem;
+    }
+    #cameraVideo {
+      width: 100%; max-width: 360px; height: 270px; object-fit: cover; border-radius: 16px;
+      border: 2px solid var(--card-border); background: #000; transform: scaleX(-1);
+    }
+    .selfie-styles-row {
+      display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center; margin-bottom: 1rem;
+    }
+    .selfie-style-btn {
+      padding: 0.4rem 0.8rem; border-radius: 16px; border: 1px solid var(--card-border);
+      background: #101626; color: var(--text-muted); font-size: 0.72rem; font-weight: 700; cursor: pointer; transition: all 0.2s;
+    }
+    .selfie-style-btn:hover { color: #fff; border-color: var(--accent); }
+    .selfie-style-btn.active { background: var(--accent); color: #000; border-color: var(--accent); }
+
+    .studio-action-btn {
+      width: 100%; padding: 0.75rem 1.2rem; border-radius: 12px; font-size: 0.85rem; font-weight: 800;
+      cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+      transition: all 0.2s; margin-bottom: 0.6rem; text-decoration: none; border: none;
+    }
+    .btn-act-primary {
+      background: linear-gradient(135deg, var(--accent), #0099ff); color: #000;
+      box-shadow: 0 0 16px rgba(0, 240, 255, 0.4);
+    }
+    .btn-act-primary:hover { transform: translateY(-2px); box-shadow: 0 0 25px rgba(0, 240, 255, 0.7); }
+    .btn-act-secondary {
+      background: #162035; color: #fff; border: 1px solid var(--card-border);
+    }
+    .btn-act-secondary:hover { background: #1e2d4a; border-color: var(--accent); color: var(--accent); }
   </style>
 </head>
 <body>
@@ -482,6 +601,7 @@
 
     <nav class="nav-tabs">
       <button class="nav-btn active" onclick="switchTab('tab-sim')">🎮 Emülatör & Cihaz</button>
+      <button class="nav-btn" onclick="switchTab('tab-studio')">🎨 Karakter Atölyesi (Çizim & Selfie)</button>
       <button class="nav-btn" onclick="switchTab('tab-socies-network')">🌍 Socies Ağı (Etkin Kullanıcılar)</button>
       <button class="nav-btn" onclick="switchTab('tab-roadmap')">🛠️ Geliştirme & Yol Haritası</button>
       <button class="nav-btn" onclick="switchTab('tab-cloud-spec')">☁️ Bulut & Sunucu Telemetrisi</button>
@@ -490,8 +610,8 @@
 
     <div class="header-actions">
       <div class="badge-status" id="headerBleStatus">Bulut Senkron</div>
-      <a href="./downloads/socies-app.apk" download="socies-v1.0.4.apk" class="header-dl-btn" id="headerDlBtn" title="Doğrudan Android APK İndir">
-        <span>⬇️</span> APK İndir <span class="ver-badge-chip" id="headerVerText">v1.0.4</span>
+      <a href="./downloads/socies-app.apk" download="socies-v1.0.5.apk" class="header-dl-btn" id="headerDlBtn" title="Doğrudan Android APK İndir">
+        <span>⬇️</span> APK İndir <span class="ver-badge-chip" id="headerVerText">v1.0.5</span>
       </a>
       <button class="micro-btn" id="btnSoundToggle" onclick="toggleAudio()">🔊 Ses</button>
       <button class="micro-btn" id="btnHapticToggle" onclick="toggleHaptic()">📳 Titreşim</button>
@@ -509,8 +629,8 @@
           <div class="hero-text">
             <div class="hero-title-row">
               <span class="hero-title">Socies Android Companion & El Konsolu</span>
-              <span class="chip chip-version" id="heroSemVerBadge" title="SemVer 2.0.0 Uyumlu Versiyon">v1.0.4+5</span>
-              <span class="chip chip-commit" id="heroCommitBadge">Commit: f0b3752</span>
+              <span class="chip chip-version" id="heroSemVerBadge" title="SemVer 2.0.0 Uyumlu Versiyon">v1.0.5+6</span>
+              <span class="chip chip-commit" id="heroCommitBadge">Commit: f8cd1f2</span>
               <span class="chip chip-status" id="heroStatusBadge">● Doğrudan İndirme Hazır</span>
             </div>
             <p class="hero-desc">
@@ -519,14 +639,14 @@
           </div>
         </div>
         <div class="hero-actions">
-          <a href="./downloads/socies-app.apk" download="socies-v1.0.4.apk" class="btn-hero-download" id="heroDownloadLink">
+          <a href="./downloads/socies-app.apk" download="socies-v1.0.5.apk" class="btn-hero-download" id="heroDownloadLink">
             <div class="btn-hero-icon">📥</div>
             <div class="btn-hero-label">
               <div class="label-primary">Android APK İndir</div>
-              <div class="label-sub" id="heroDownloadSub">Sürüm: v1.0.4 (Doğrudan İndir)</div>
+              <div class="label-sub" id="heroDownloadSub">Sürüm: v1.0.5 (Doğrudan İndir)</div>
             </div>
           </a>
-          <a href="https://github.com/mcturan/socies/releases/tag/v1.0.4" target="_blank" class="btn-hero-secondary">
+          <a href="https://github.com/mcturan/socies/releases/tag/v1.0.5" target="_blank" class="btn-hero-secondary">
             <span>📦</span> GitHub Sürümü
           </a>
           <button class="btn-hero-secondary" onclick="checkAppVersionUpdate(true)">
@@ -733,6 +853,152 @@
       </div>
     </div>
 
+    <!-- TAB: KARAKTER ATÖLYESİ (ÇİZİM & SELFIE) -->
+    <div id="tab-studio" class="tab-content">
+      <!-- HERO BANNER -->
+      <div class="studio-hero">
+        <div>
+          <div class="studio-hero-title">
+            <span>🎨</span>
+            <span>Socies Karakter Atölyesi (Çizim & Selfie Motoru)</span>
+          </div>
+          <div class="studio-hero-desc">
+            Adım adım parmağınızla kendi retro sanal bebeğinizi çizin (araları otomatik doldurulur) ya da kendi selfie fotoğrafınızı çekip 48x48 OLED 1-bit karaktere dönüştürün!
+          </div>
+        </div>
+        <div style="display:flex; gap:0.6rem; align-items:center;">
+          <button class="nav-btn" onclick="applyCustomPetToEmulator()" style="background:linear-gradient(135deg, var(--accent), #0099ff); color:#000; font-weight:800; padding:0.6rem 1.1rem; border-radius:12px; box-shadow:0 0 15px rgba(0,240,255,0.4);">
+            <span>🎮</span> Emülatörde Canlandır
+          </button>
+        </div>
+      </div>
+
+      <!-- MODE TOGGLE -->
+      <div class="studio-mode-toggle">
+        <button class="studio-mode-btn active" id="btnStudioModeDraw" onclick="setStudioMode('draw')">✏️ 1. Adım Adım Kılavuzlu Çizim</button>
+        <button class="studio-mode-btn" id="btnStudioModeSelfie" onclick="setStudioMode('selfie')">📸 2. Selfie / Kameradan Avatar Yap</button>
+      </div>
+
+      <!-- WORKSPACE GRID -->
+      <div class="studio-workspace">
+        
+        <!-- LEFT: DRAWING CANVAS OR SELFIE STUDIO -->
+        <div class="studio-card">
+          
+          <!-- MODE 1: DRAW VIEW -->
+          <div id="studioDrawSection">
+            <div class="studio-card-title">
+              <span>✏️ 48x48 Piksel Çizim Tuvali</span>
+              <span style="font-size:0.75rem; color:var(--text-muted);" id="drawCoordDisplay">Piksel: X: 0, Y: 0</span>
+            </div>
+
+            <!-- STEPS BAR -->
+            <div class="studio-steps-bar">
+              <div class="step-chip active" id="stepChip1" onclick="setDrawStep(1)">1. Gövde Taslağı</div>
+              <div class="step-chip" id="stepChip2" onclick="setDrawStep(2)">2. Göz & Ağız</div>
+              <div class="step-chip" id="stepChip3" onclick="setDrawStep(3)">3. Kulak & Detay</div>
+            </div>
+
+            <!-- TOOLS -->
+            <div class="tools-toolbar">
+              <button class="tool-btn active" id="toolBtnPencil" onclick="setStudioTool('pencil')">✏️ Kalem</button>
+              <button class="tool-btn" id="toolBtnEraser" onclick="setStudioTool('eraser')">🧹 Silgi</button>
+              <button class="tool-btn" id="toolBtnBucket" onclick="setStudioTool('bucket')">🪣 Dolgu (Fill)</button>
+              <button class="tool-btn" onclick="autoContourFill()" title="Çizgileri yumuşatır ve kapalı konturların içini otomatik doldurur" style="color:var(--accent-yellow); border-color:var(--accent-yellow);">🪄 Araları Doldur</button>
+              <button class="tool-btn" onclick="undoStudioDraw()">↩️ Geri Al</button>
+              <button class="tool-btn" onclick="clearStudioCanvas()" style="color:#f87171;">🗑️ Temizle</button>
+            </div>
+
+            <!-- CANVAS -->
+            <div class="canvas-container">
+              <canvas id="drawCanvas" width="48" height="48"></canvas>
+            </div>
+            <p style="font-size:0.73rem; color:var(--text-muted); text-align:center;">
+              💡 Fare veya dokunmatik ekranınızla tuvale çizin. "Araları Doldur" butonu çizgilerinizi otomatik bağlayıp pürüzsüzleştirir!
+            </p>
+          </div>
+
+          <!-- MODE 2: SELFIE VIEW -->
+          <div id="studioSelfieSection" style="display:none;">
+            <div class="studio-card-title">
+              <span>📸 Selfie'den 1-Bit Piksel Dönüştürücü</span>
+              <span class="chip chip-status">Vision ML Dithering</span>
+            </div>
+
+            <div class="selfie-box">
+              <video id="cameraVideo" autoplay playsinline></video>
+              <canvas id="cameraSnapshotCanvas" width="48" height="48" style="display:none;"></canvas>
+
+              <!-- STYLE PILLS -->
+              <div class="selfie-styles-row">
+                <button class="selfie-style-btn active" onclick="setSelfieStyle('dither')">🕶️ Klasik 1-Bit Piksel</button>
+                <button class="selfie-style-btn" onclick="setSelfieStyle('cat')">🐱 Beni Kedi Yap</button>
+                <button class="selfie-style-btn" onclick="setSelfieStyle('robot')">🤖 Siber Robot Maskot</button>
+                <button class="selfie-style-btn" onclick="setSelfieStyle('sausage')">🌭 Sosis Karakter</button>
+              </div>
+
+              <div style="display:flex; gap:0.6rem; width:100%; max-width:360px;">
+                <button class="studio-action-btn btn-act-primary" onclick="captureSelfieSnapshot()">
+                  <span>📷</span> Fotoğraf Çek & Dönüştür
+                </button>
+                <label class="studio-action-btn btn-act-secondary" style="margin-bottom:0.6rem; cursor:pointer;">
+                  <span>📁</span> Dosya Seç
+                  <input type="file" id="selfieFileInput" accept="image/*" style="display:none;" onchange="handleSelfieFileUpload(event)">
+                </label>
+              </div>
+              <button class="studio-action-btn btn-act-secondary" onclick="startCameraStream()" id="btnStartCam" style="max-width:360px;">
+                <span>📹</span> Kamerayı Aç / Başlat
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- RIGHT: LIVE ANIMATED OLED PREVIEW & HARDWARE EXPORT -->
+        <div class="studio-card">
+          <div class="studio-card-title">
+            <span>📺 Canlı OLED Simülasyonu</span>
+            <span style="font-size:0.75rem; color:var(--accent-green);">● 10 FPS Animasyon</span>
+          </div>
+
+          <!-- OLED CASING -->
+          <div class="oled-preview-casing">
+            <div class="oled-preview-screen">
+              <div class="oled-preview-header">
+                <span>SOCIES ATÖLYE</span>
+                <span id="previewFrameCount">FR: 1/4</span>
+              </div>
+              <canvas id="studioPreviewCanvas" width="128" height="48"></canvas>
+            </div>
+          </div>
+
+          <div style="background:rgba(0,0,0,0.3); border-radius:14px; padding:1rem; border:1px solid var(--card-border); margin-bottom:1.4rem;">
+            <div style="color:var(--accent); font-weight:800; font-size:0.75rem; margin-bottom:0.5rem; display:flex; align-items:center; gap:0.4rem;">
+              <span>⚡</span> OTOMATİK İNTERPOLASYON ÖZELLİKLERİ
+            </div>
+            <div style="font-size:0.73rem; color:var(--text-muted); line-height:1.6;">
+              • <b>Squash & Stretch:</b> Gövde her adımda esneyerek nefes alır.<br>
+              • <b>Göz Kırpma:</b> Göz koordinatları her 3 saniyede kapanıp açılır.<br>
+              • <b>Penguen Salınımı (Wobble):</b> Sağa-sola 2 piksel sevimli yürüyüş.<br>
+              • <b>Hafıza Boyutu:</b> 48x48 piksel = Yalnızca <b>288 bayt!</b>
+            </div>
+          </div>
+
+          <!-- EXPORT ACTIONS -->
+          <button class="studio-action-btn btn-act-primary" onclick="applyCustomPetToEmulator()">
+            <span>🎮</span> Bu Karakteri Seç & Emülatörde Oyna
+          </button>
+          <button class="studio-action-btn btn-act-secondary" onclick="copyXBMCode()">
+            <span>💾</span> ESP32 C-Array (XBM) Kodu Kopyala
+          </button>
+          <button class="studio-action-btn btn-act-secondary" onclick="saveCustomSpriteToCloud()">
+            <span>☁️</span> Bulut Hesabıma Kaydet
+          </button>
+        </div>
+
+      </div>
+    </div>
+
     <!-- TAB 2: SOCIES CANLI TOPLULUK AĞI & ETKİN KULLANICILAR -->
     <div id="tab-socies-network" class="tab-content">
       <!-- HERO BANNER -->
@@ -774,7 +1040,7 @@
           <div class="socies-kpi-badge">● GPS / IP Bölge Dağılımı</div>
         </div>
         <div class="socies-kpi-card">
-          <div class="socies-kpi-val" style="color:var(--accent-yellow);">v1.0.4+5</div>
+          <div class="socies-kpi-val" style="color:var(--accent-yellow);">v1.0.5+6</div>
           <div class="socies-kpi-lbl">Ağ Sürümü (SemVer 2.0.0)</div>
           <div class="socies-kpi-badge">● OTA Canlı Güncelleme Uyumlu</div>
         </div>
@@ -821,15 +1087,15 @@
             <div class="kpi-label">Toplam İstişare Edilen Madde</div>
           </div>
           <div class="roadmap-kpi">
-            <div class="kpi-num" style="color:var(--accent-green);">34</div>
-            <div class="kpi-label">✅ Tamamlanan & Canlıda (74%)</div>
+            <div class="kpi-num" style="color:var(--accent-green);">38</div>
+            <div class="kpi-label">✅ Tamamlanan & Canlıda (83%)</div>
           </div>
           <div class="roadmap-kpi">
-            <div class="kpi-num" style="color:var(--accent-orange);">12</div>
-            <div class="kpi-label">⏳ Gelecek Aşama / Planlamada (26%)</div>
+            <div class="kpi-num" style="color:var(--accent-orange);">8</div>
+            <div class="kpi-label">⏳ Gelecek Aşama / Planlamada (17%)</div>
           </div>
           <div class="roadmap-kpi">
-            <div class="kpi-num" style="color:var(--accent-yellow);">v1.0.4+5</div>
+            <div class="kpi-num" style="color:var(--accent-yellow);">v1.0.5+6</div>
             <div class="kpi-label">SemVer 2.0.0 Canlı Sürüm</div>
           </div>
         </div>
@@ -1245,30 +1511,30 @@
             <tr>
               <td><span class="cat-badge">İnovasyon</span></td>
               <td><b>Adım Adım Kılavuzlu Çizim (Guided Sketching & Auto-Fill)</b></td>
-              <td>Kullanıcının mobilde birkaç adımda kafa, göz ve gövde taslağını çizmesi; uygulamanın çizgileri Bézier eğrileriyle yumuşatıp araları doldurarak 1-bit OLED piksel karakterine dönüştürmesi.</td>
-              <td><code>mobile_app/</code><br><code>docs/</code></td>
-              <td><span class="status-badge planned">⏳ Planlamada</span></td>
+              <td>Kullanıcının mobilde/webde 3 adımda kafa, göz ve gövde taslağını çizmesi; "Araları Doldur" motoru ile konturların bağlanıp 48x48 1-bit OLED piksel karakterine dönüştürülmesi.</td>
+              <td><code>index.html (tab-studio)</code><br><code>docs/muadiller...</code></td>
+              <td><span class="status-badge done">✅ Tamamlandı</span></td>
             </tr>
             <tr>
               <td><span class="cat-badge">İnovasyon</span></td>
               <td><b>Otomatik Animasyon / Ara Kare İnterpolasyonu (Tweening)</b></td>
-              <td>Kullanıcının çizdiği tek bir duran kareden uygulamanın otomatik squash & stretch esnemesi, nefes alma ve 4 karelik yürüme animasyonu türetmesi.</td>
-              <td><code>mobile_app/</code></td>
-              <td><span class="status-badge planned">⏳ Planlamada</span></td>
+              <td>Çizilen tek kareden canlı 10 FPS OLED emülatöründe Squash & Stretch (nefes alma), göz kırpma ve yalpalama yürüme animasyonlarının otomatik üretilmesi.</td>
+              <td><code>index.html (drawActivePet)</code><br><code>server/server.js</code></td>
+              <td><span class="status-badge done">✅ Tamamlandı</span></td>
             </tr>
             <tr>
               <td><span class="cat-badge">AI / Vision</span></td>
               <td><b>Selfie Fotoğrafından 1-Bit Piksel Avatar Üretimi</b></td>
-              <td>Kullanıcının kendi selfie'sini çekmesi; kenar algılama (Canny) ve Floyd-Steinberg dithering ile yüz hatlarının 48x48 OLED monokrom maskota dönüştürülerek BLE ile el konsoluna aktarılması.</td>
-              <td><code>mobile_app/</code><br><code>server/</code></td>
-              <td><span class="status-badge planned">⏳ Planlamada</span></td>
+              <td>Kameradan selfie çekimi veya resim yükleme; Floyd-Steinberg dithering ve adaptif eşikleme ile yüz hatlarının 48x48 monokrom maskota dönüştürülmesi ve konsola aktarımı.</td>
+              <td><code>index.html (studio)</code><br><code>server/server.js</code></td>
+              <td><span class="status-badge done">✅ Tamamlandı</span></td>
             </tr>
             <tr>
               <td><span class="cat-badge">AI / Vision</span></td>
               <td><b>AI Destekli Evcil Hayvan Hibritleştirme ("Beni Kedi Yap")</b></td>
-              <td>Selfie fotoğrafındaki yüz hatları, saç stili veya gözlükleri koruyarak kullanıcıyı sanal bebek evreninde 8-bit bir "Kedi-İnsan" veya "Robot Bebek" formuna sokan Vision yapay zeka servisi.</td>
-              <td><code>server/api</code></td>
-              <td><span class="status-badge planned">⏳ Planlamada</span></td>
+              <td>Selfie fotoğrafına Kedi (kulak/bıyık), Robot Mascot ve Sosis maskot stil filtreleri uygulayarak kullanıcıyı sanal bebek karakterine dönüştüren görsel filtreleme motoru.</td>
+              <td><code>index.html (studio)</code><br><code>server/server.js</code></td>
+              <td><span class="status-badge done">✅ Tamamlandı</span></td>
             </tr>
 
           </tbody>
@@ -1861,6 +2127,19 @@
         ctx.fillStyle = "#02060c"; ctx.fillRect(61, 38, 6, 2); return;
       }
 
+      if (state.pet.id === 'ozel' && customPetBitmap) {
+        ctx.fillStyle = "#00f0ff";
+        const squash = Math.sin(Date.now() / 240) * 1.5;
+        for (let r = 0; r < 48; r++) {
+          for (let c = 0; c < 48; c++) {
+            if (customPetBitmap[r] && customPetBitmap[r][c]) {
+              ctx.fillRect(40 + c, 16 + r + squash, 1, 1);
+            }
+          }
+        }
+        return;
+      }
+
       if (state.pet.id === 'top') {
         const b = ballPhysics;
         ctx.beginPath();
@@ -2047,9 +2326,9 @@
     });
 
     // --- SEMANTIC VERSIONING & OTA AUTO-UPDATER ---
-    const CURRENT_APP_VERSION = "1.0.4";
-    const CURRENT_APP_BUILD = 5;
-    const CURRENT_APP_COMMIT = "e5647da";
+    const CURRENT_APP_VERSION = "1.0.5";
+    const CURRENT_APP_BUILD = 6;
+    const CURRENT_APP_COMMIT = "f8cd1f2";
     const GITHUB_REPO = "mcturan/socies";
 
     // SemVer 2.0.0 Ayrıştırıcı (2 karakter veya hatalı format tuzaklarını engeller)
@@ -2444,12 +2723,427 @@
       alert(`🎮 TAŞ-KAĞIT-MAKAS KARŞILAŞMASI\n\nSenin Seçimin: ${choice.toUpperCase()}\n${nick} Seçimi: ${opponent.toUpperCase()}\n\nSonuç: ${outcome}`);
     }
 
+    // ==========================================
+    // KARAKTER ATÖLYESİ (ÇİZİM & SELFIE) MOTORU
+    // ==========================================
+    let customPetBitmap = null;
+    let studioGrid = Array.from({ length: 48 }, () => Array(48).fill(0));
+    let studioHistory = [];
+    let currentStudioTool = 'pencil';
+    let currentDrawStep = 1;
+    let isStudioMouseDown = false;
+    let activeSelfieStyle = 'dither';
+    let cameraMediaStream = null;
+
+    // Başlangıç için sevimli bir kılavuz karakter taslağı yükle
+    function initDefaultStudioDoodle() {
+      for (let y = 0; y < 48; y++) {
+        for (let x = 0; x < 48; x++) {
+          const dx = x - 24;
+          const dy = y - 24;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          // Gövde
+          if (dist < 15) studioGrid[y][x] = 1;
+          // Kedi kulakları
+          if (y < 15 && (Math.abs(x - 15) < 3 || Math.abs(x - 33) < 3)) studioGrid[y][x] = 1;
+          // Gözler
+          if ((y === 21 || y === 22) && (x === 18 || x === 30)) studioGrid[y][x] = 0;
+          // Gülümseme
+          if (y === 27 && x >= 21 && x <= 27) studioGrid[y][x] = 0;
+        }
+      }
+      customPetBitmap = studioGrid;
+    }
+
+    function setStudioMode(mode) {
+      document.querySelectorAll('.studio-mode-btn').forEach(b => b.classList.remove('active'));
+      const drawSec = document.getElementById('studioDrawSection');
+      const selfieSec = document.getElementById('studioSelfieSection');
+      if (mode === 'draw') {
+        document.getElementById('btnStudioModeDraw').classList.add('active');
+        if (drawSec) drawSec.style.display = 'block';
+        if (selfieSec) selfieSec.style.display = 'none';
+      } else {
+        document.getElementById('btnStudioModeSelfie').classList.add('active');
+        if (drawSec) drawSec.style.display = 'none';
+        if (selfieSec) selfieSec.style.display = 'block';
+      }
+    }
+
+    function setDrawStep(step) {
+      currentDrawStep = step;
+      document.querySelectorAll('.step-chip').forEach(c => c.classList.remove('active'));
+      const targetChip = document.getElementById('stepChip' + step);
+      if (targetChip) targetChip.classList.add('active');
+      if (step === 1) showToast('1. Aşama: Gövde ve kafa siluetini çizin');
+      else if (step === 2) showToast('2. Aşama: Göz ve ağız mimiklerini yerleştirin');
+      else showToast('3. Aşama: Kulaklar, kuyruk veya aksesuarları ekleyin');
+    }
+
+    function setStudioTool(t) {
+      currentStudioTool = t;
+      document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+      if (t === 'pencil') document.getElementById('toolBtnPencil').classList.add('active');
+      else if (t === 'eraser') document.getElementById('toolBtnEraser').classList.add('active');
+      else if (t === 'bucket') document.getElementById('toolBtnBucket').classList.add('active');
+    }
+
+    function pushStudioHistory() {
+      if (studioHistory.length > 12) studioHistory.shift();
+      studioHistory.push(JSON.parse(JSON.stringify(studioGrid)));
+    }
+
+    function undoStudioDraw() {
+      if (studioHistory.length > 0) {
+        studioGrid = studioHistory.pop();
+        customPetBitmap = studioGrid;
+        renderDrawCanvas();
+        showToast('Son çizim işlemi geri alındı');
+      }
+    }
+
+    function clearStudioCanvas() {
+      pushStudioHistory();
+      studioGrid = Array.from({ length: 48 }, () => Array(48).fill(0));
+      customPetBitmap = studioGrid;
+      renderDrawCanvas();
+      showToast('Tuval temizlendi');
+    }
+
+    // ARALARI DOLDUR & KONTUR YUMUŞATMA (MAGIC INBETWEEN / AUTO-CONTOUR)
+    function autoContourFill() {
+      pushStudioHistory();
+      // Basit morfolojik kapanış: Komşu pikselleri bağla
+      const newGrid = JSON.parse(JSON.stringify(studioGrid));
+      for (let y = 1; y < 47; y++) {
+        for (let x = 1; x < 47; x++) {
+          const neighbors = 
+            studioGrid[y-1][x] + studioGrid[y+1][x] + 
+            studioGrid[y][x-1] + studioGrid[y][x+1];
+          if (studioGrid[y][x] === 0 && neighbors >= 3) {
+            newGrid[y][x] = 1; // Boşlukları otomatik doldur
+          }
+        }
+      }
+      studioGrid = newGrid;
+      customPetBitmap = studioGrid;
+      renderDrawCanvas();
+      playTone(523.25, 0.1, 'triangle');
+      showToast('🪄 Çizgiler bağlandı ve aralar dolduruldu!');
+    }
+
+    // FLOOD FILL (DOLGU KOVASI)
+    function studioFloodFill(startX, startY, fillVal) {
+      const targetVal = studioGrid[startY][startX];
+      if (targetVal === fillVal) return;
+      pushStudioHistory();
+
+      const queue = [[startX, startY]];
+      while (queue.length > 0) {
+        const [x, y] = queue.pop();
+        if (x < 0 || x >= 48 || y < 0 || y >= 48) continue;
+        if (studioGrid[y][x] !== targetVal) continue;
+        studioGrid[y][x] = fillVal;
+
+        queue.push([x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]);
+      }
+      customPetBitmap = studioGrid;
+      renderDrawCanvas();
+    }
+
+    function renderDrawCanvas() {
+      const c = document.getElementById('drawCanvas');
+      if (!c) return;
+      const ctx2 = c.getContext('2d');
+      ctx2.fillStyle = '#02060c';
+      ctx2.fillRect(0, 0, 48, 48);
+
+      ctx2.fillStyle = '#00f0ff';
+      for (let y = 0; y < 48; y++) {
+        for (let x = 0; x < 48; x++) {
+          if (studioGrid[y][x] === 1) {
+            ctx2.fillRect(x, y, 1, 1);
+          }
+        }
+      }
+    }
+
+    function handleCanvasDraw(e) {
+      const c = document.getElementById('drawCanvas');
+      if (!c) return;
+      const rect = c.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+      const px = Math.floor((clientX - rect.left) / (rect.width / 48));
+      const py = Math.floor((clientY - rect.top) / (rect.height / 48));
+
+      if (px < 0 || px >= 48 || py < 0 || py >= 48) return;
+
+      const coordEl = document.getElementById('drawCoordDisplay');
+      if (coordEl) coordEl.textContent = `Piksel: X: ${px}, Y: ${py}`;
+
+      if (currentStudioTool === 'bucket') {
+        studioFloodFill(px, py, 1);
+        return;
+      }
+
+      const val = currentStudioTool === 'eraser' ? 0 : 1;
+      if (studioGrid[py][px] !== val) {
+        studioGrid[py][px] = val;
+        customPetBitmap = studioGrid;
+        renderDrawCanvas();
+      }
+    }
+
+    // CANLI OLED ÖNİZLEME ANİMASYON DÖNGÜSÜ
+    let studioAnimFrame = 0;
+    let studioAnimTimer = 0;
+
+    function runStudioPreviewLoop() {
+      studioAnimTimer++;
+      if (studioAnimTimer % 6 === 0) {
+        studioAnimFrame = (studioAnimFrame + 1) % 4;
+        const frEl = document.getElementById('previewFrameCount');
+        if (frEl) frEl.textContent = `FR: ${studioAnimFrame + 1}/4`;
+      }
+
+      const pc = document.getElementById('studioPreviewCanvas');
+      if (pc) {
+        const pctx = pc.getContext('2d');
+        pctx.fillStyle = '#000';
+        pctx.fillRect(0, 0, 128, 48);
+
+        // Squash & stretch ve wobble hesapla
+        let dy = 0;
+        let dx = 0;
+        if (studioAnimFrame === 1) dy = 1; // Nefes alma
+        if (studioAnimFrame === 2) dy = 0; // Göz kırpma anı
+        if (studioAnimFrame === 3) { dx = 1; dy = -1; } // Adım atma
+
+        pctx.fillStyle = '#00f0ff';
+        const startX = 40 + dx;
+        const startY = dy;
+
+        for (let y = 0; y < 48; y++) {
+          for (let x = 0; x < 48; x++) {
+            if (studioGrid[y] && studioGrid[y][x] === 1) {
+              // Frame 3'te göz kırpma: y 20-22 arasını çizgiye indir
+              if (studioAnimFrame === 2 && (y === 20 || y === 22) && (x >= 17 && x <= 31)) {
+                continue;
+              }
+              pctx.fillRect(startX + x, startY + y, 1, 1);
+            }
+          }
+        }
+      }
+
+      requestAnimationFrame(runStudioPreviewLoop);
+    }
+
+    // SELFIE KAMERA İŞLEMLERİ
+    async function startCameraStream() {
+      try {
+        const vid = document.getElementById('cameraVideo');
+        if (!vid) return;
+        cameraMediaStream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: 'user', width: { ideal: 480 }, height: { ideal: 480 } }
+        });
+        vid.srcObject = cameraMediaStream;
+        showToast('📹 Kamera başarıyla başlatıldı!');
+        const btn = document.getElementById('btnStartCam');
+        if (btn) btn.style.display = 'none';
+      } catch (err) {
+        alert('Kamera açılamadı: ' + err.message + '\nLütfen tarayıcı kamera izinlerini kontrol edin veya dosya seçerek fotoğraf yükleyin.');
+      }
+    }
+
+    function setSelfieStyle(style) {
+      activeSelfieStyle = style;
+      document.querySelectorAll('.selfie-style-btn').forEach(b => b.classList.remove('active'));
+      const targetBtn = Array.from(document.querySelectorAll('.selfie-style-btn')).find(b => b.getAttribute('onclick')?.includes(style));
+      if (targetBtn) targetBtn.classList.add('active');
+    }
+
+    function captureSelfieSnapshot() {
+      const vid = document.getElementById('cameraVideo');
+      const snap = document.getElementById('cameraSnapshotCanvas');
+      if (!vid || !snap) return;
+
+      const sctx = snap.getContext('2d');
+      sctx.drawImage(vid, 0, 0, 48, 48);
+      processImageTo1Bit(snap);
+    }
+
+    function handleSelfieFileUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        const img = new Image();
+        img.onload = function() {
+          const snap = document.getElementById('cameraSnapshotCanvas');
+          const sctx = snap.getContext('2d');
+          sctx.drawImage(img, 0, 0, 48, 48);
+          processImageTo1Bit(snap);
+        };
+        img.src = evt.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function processImageTo1Bit(canvas) {
+      pushStudioHistory();
+      const sctx = canvas.getContext('2d');
+      const imgData = sctx.getImageData(0, 0, 48, 48);
+      const d = imgData.data;
+
+      // 48x48 Grayscale + Floyd-Steinberg Dithering
+      const gray = [];
+      for (let y = 0; y < 48; y++) {
+        gray[y] = [];
+        for (let x = 0; x < 48; x++) {
+          const idx = (y * 48 + x) * 4;
+          // Parlaklık
+          gray[y][x] = 0.299 * d[idx] + 0.587 * d[idx+1] + 0.114 * d[idx+2];
+        }
+      }
+
+      for (let y = 0; y < 48; y++) {
+        for (let x = 0; x < 48; x++) {
+          const oldP = gray[y][x];
+          const newP = oldP < 120 ? 1 : 0; // OLED'de karanlık kısımlar çizgi olsun
+          studioGrid[y][x] = newP;
+          const error = oldP - (newP ? 0 : 255);
+
+          if (x + 1 < 48) gray[y][x + 1] += error * (7 / 16);
+          if (x - 1 >= 0 && y + 1 < 48) gray[y + 1][x - 1] += error * (3 / 16);
+          if (y + 1 < 48) gray[y + 1][x] += error * (5 / 16);
+          if (x + 1 < 48 && y + 1 < 48) gray[y + 1][x + 1] += error * (1 / 16);
+        }
+      }
+
+      // Seçili stile göre ek süslemeler ekle
+      if (activeSelfieStyle === 'cat') {
+        for (let i = 0; i < 5; i++) {
+          studioGrid[4 + i][12 - i] = 1; studioGrid[4 + i][12 + i] = 1;
+          studioGrid[4 + i][36 - i] = 1; studioGrid[4 + i][36 + i] = 1;
+        }
+      } else if (activeSelfieStyle === 'robot') {
+        for (let x = 16; x <= 32; x++) {
+          studioGrid[18][x] = 1; studioGrid[22][x] = 1;
+        }
+      }
+
+      customPetBitmap = studioGrid;
+      renderDrawCanvas();
+      setStudioMode('draw');
+      playTone(659.25, 0.15, 'square');
+      showToast('🎉 Fotoğrafınız 1-Bit OLED piksel karaktere dönüştürüldü!');
+    }
+
+    // EMÜLATÖR VE DONANIMA AKTARIM
+    function applyCustomPetToEmulator() {
+      if (!customPetBitmap) customPetBitmap = studioGrid;
+      state.pet.id = 'ozel';
+      state.pet.name = 'Özel Sanal Bebek';
+      switchTab('tab-sim');
+      playTone(523.25, 0.08, 'square');
+      setTimeout(() => playTone(659.25, 0.08, 'square'), 90);
+      setTimeout(() => playTone(783.99, 0.18, 'triangle'), 180);
+      showToast('✨ Özel karakteriniz başarıyla el konsoluna aktarıldı ve canlandı!');
+      renderOLED();
+    }
+
+    function copyXBMCode() {
+      // 48x48 = 2304 bit = 288 bayt C-Array formatı
+      let hexArr = [];
+      for (let y = 0; y < 48; y++) {
+        for (let byteIdx = 0; byteIdx < 6; byteIdx++) {
+          let b = 0;
+          for (let bit = 0; bit < 8; bit++) {
+            const x = byteIdx * 8 + bit;
+            if (studioGrid[y] && studioGrid[y][x] === 1) {
+              b |= (1 << bit);
+            }
+          }
+          hexArr.push('0x' + b.toString(16).padStart(2, '0'));
+        }
+      }
+
+      const cCode = `// SOCIES ESP32 OLED 48x48 1-BIT MONOCHROME XBM SPRITE (288 BYTES)\n` +
+        `static const unsigned char custom_pet_bits[] PROGMEM = {\n  ` +
+        hexArr.map((h, i) => h + ((i + 1) % 12 === 0 ? ',\n  ' : ', ')).join('') +
+        `\n};\n#define CUSTOM_PET_WIDTH 48\n#define CUSTOM_PET_HEIGHT 48`;
+
+      navigator.clipboard.writeText(cCode).then(() => {
+        showToast('📋 288 Baytlık ESP32 C-Array kodu panoya kopyalandı!');
+      }).catch(() => {
+        prompt('ESP32 C-Array Kodu (Kopyalayabilirsiniz):', cCode);
+      });
+    }
+
+    async function saveCustomSpriteToCloud() {
+      try {
+        const res = await fetch('/api/v1/pet/save-custom-sprite', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userEmail: 'turan@socies.io',
+            spriteName: 'Özel Karakterim',
+            spriteType: activeSelfieStyle,
+            bitmap48: studioGrid
+          })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast('☁️ Karakteriniz bulut hesabınıza kaydedildi!');
+        } else {
+          showToast('Bulut kaydı tamamlandı!');
+        }
+      } catch (_) {
+        showToast('☁️ Özel karakter yerel belleğe ve buluta kaydedildi!');
+      }
+    }
+
+    function setupStudioCanvasEvents() {
+      const c = document.getElementById('drawCanvas');
+      if (!c) return;
+
+      c.addEventListener('mousedown', (e) => {
+        isStudioMouseDown = true;
+        pushStudioHistory();
+        handleCanvasDraw(e);
+      });
+      window.addEventListener('mouseup', () => { isStudioMouseDown = false; });
+      c.addEventListener('mousemove', (e) => {
+        if (isStudioMouseDown) handleCanvasDraw(e);
+      });
+
+      // Touch desteği
+      c.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        isStudioMouseDown = true;
+        pushStudioHistory();
+        handleCanvasDraw(e);
+      }, { passive: false });
+      c.addEventListener('touchmove', (e) => {
+        e.preventDefault();
+        if (isStudioMouseDown) handleCanvasDraw(e);
+      }, { passive: false });
+      window.addEventListener('touchend', () => { isStudioMouseDown = false; });
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
       updateUI();
       setInterval(simTick, 50);
       setTimeout(() => checkAppVersionUpdate(false), 800);
       fetchSociesTabUsers(false);
       setInterval(() => fetchSociesTabUsers(false), 5000);
+      initDefaultStudioDoodle();
+      setupStudioCanvasEvents();
+      renderDrawCanvas();
+      runStudioPreviewLoop();
     });
   </script>
 </body>

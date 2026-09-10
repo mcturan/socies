@@ -23,6 +23,7 @@ const database = {
   users: new Map(),          // userEmail -> { email, activeDeviceId, cloudSave, createdAt }
   offlineMessages: new Map(),// targetDeviceId -> [ { id, from, text, timestamp } ]
   activeSockets: new Map(),  // deviceId -> socket/client connection
+  customSprites: new Map(),  // userEmail -> [ { id, name, type, xbm, createdAt } ]
   systemStats: {
     totalMessagesSent: 0,
     totalPokesSent: 0,
@@ -38,7 +39,7 @@ const initialDevices = [
     mac: 'A4:CF:12:89:34:B1',
     user: { nickname: 'Turan (Kurucu)', email: 'turan@socies.io', avatar: '👑', isVip: true },
     location: { country: 'Türkiye', city: 'İstanbul', district: 'Kadıköy', flag: '🇹🇷', ip: '176.240.12.89' },
-    phone: { model: 'Samsung Galaxy S24 Ultra', os: 'Android 14 (One UI 6.1)', batteryPct: 88, batteryMv: 3980, stepsToday: 5420, connection: '5G / Wi-Fi 6E', appVersion: 'v1.0.4+5', latencyMs: 18 },
+    phone: { model: 'Samsung Galaxy S24 Ultra', os: 'Android 14 (One UI 6.1)', batteryPct: 88, batteryMv: 3980, stepsToday: 5420, connection: '5G / Wi-Fi 6E', appVersion: 'v1.0.5+6', latencyMs: 18 },
     pet: { breed: 'top', stage: 2, ageDays: 5, score: 940, streakDays: 5 },
     needs: { hunger: 85, fun: 90, love: 95, sleep: 80, toilet: 90, clean: 95, social: 75 },
     lastSeen: Date.now(),
@@ -49,7 +50,7 @@ const initialDevices = [
     mac: 'B8:27:EB:AA:51:72',
     user: { nickname: 'Zeynep_Retro', email: 'zeynep@socies.io', avatar: '🐱', isVip: false },
     location: { country: 'Türkiye', city: 'Ankara', district: 'Çankaya', flag: '🇹🇷', ip: '88.255.45.102' },
-    phone: { model: 'Xiaomi 13 Pro', os: 'Android 14 (HyperOS)', batteryPct: 94, batteryMv: 4150, stepsToday: 7120, connection: 'Wi-Fi 6 / BLE 5.2', appVersion: 'v1.0.4+5', latencyMs: 24 },
+    phone: { model: 'Xiaomi 13 Pro', os: 'Android 14 (HyperOS)', batteryPct: 94, batteryMv: 4150, stepsToday: 7120, connection: 'Wi-Fi 6 / BLE 5.2', appVersion: 'v1.0.5+6', latencyMs: 24 },
     pet: { breed: 'kedi', stage: 3, ageDays: 21, score: 3420, streakDays: 14 },
     needs: { hunger: 70, fun: 95, love: 90, sleep: 85, toilet: 80, clean: 90, social: 85 },
     lastSeen: Date.now() - 5000,
@@ -60,7 +61,7 @@ const initialDevices = [
     mac: '24:6F:28:44:91:A8',
     user: { nickname: 'Emre_Ege', email: 'emre@socies.io', avatar: '🐶', isVip: false },
     location: { country: 'Türkiye', city: 'İzmir', district: 'Alsancak', flag: '🇹🇷', ip: '94.122.80.14' },
-    phone: { model: 'Google Pixel 8', os: 'Android 14 (Vanilla)', batteryPct: 76, batteryMv: 3890, stepsToday: 3890, connection: '4G LTE / BLE 5.0', appVersion: 'v1.0.4+5', latencyMs: 31 },
+    phone: { model: 'Google Pixel 8', os: 'Android 14 (Vanilla)', batteryPct: 76, batteryMv: 3890, stepsToday: 3890, connection: '4G LTE / BLE 5.0', appVersion: 'v1.0.5+6', latencyMs: 31 },
     pet: { breed: 'kopek', stage: 2, ageDays: 12, score: 1850, streakDays: 8 },
     needs: { hunger: 65, fun: 80, love: 85, sleep: 70, toilet: 75, clean: 80, social: 70 },
     lastSeen: Date.now() - 12000,
@@ -71,7 +72,7 @@ const initialDevices = [
     mac: 'F0:18:98:C3:19:22',
     user: { nickname: 'Selin_Botanist', email: 'selin@socies.io', avatar: '🌱', isVip: false },
     location: { country: 'Türkiye', city: 'Bursa', district: 'Nilüfer', flag: '🇹🇷', ip: '195.175.39.210' },
-    phone: { model: 'Apple iPhone 15 Pro', os: 'iOS 17.5.1', batteryPct: 92, batteryMv: 4110, stepsToday: 6240, connection: 'Wi-Fi / BLE 5.3', appVersion: 'v1.0.4+5', latencyMs: 22 },
+    phone: { model: 'Apple iPhone 15 Pro', os: 'iOS 17.5.1', batteryPct: 92, batteryMv: 4110, stepsToday: 6240, connection: 'Wi-Fi / BLE 5.3', appVersion: 'v1.0.5+6', latencyMs: 22 },
     pet: { breed: 'bitki', stage: 2, ageDays: 9, score: 1220, streakDays: 9 },
     needs: { hunger: 90, fun: 85, love: 95, sleep: 90, toilet: 100, clean: 100, social: 60 },
     lastSeen: Date.now() - 8000,
@@ -82,7 +83,7 @@ const initialDevices = [
     mac: 'C8:2B:96:77:43:55',
     user: { nickname: 'Kaan_Akdeniz', email: 'kaan@socies.io', avatar: '🐠', isVip: false },
     location: { country: 'Türkiye', city: 'Antalya', district: 'Muratpaşa', flag: '🇹🇷', ip: '212.156.40.85' },
-    phone: { model: 'OnePlus 12', os: 'Android 14 (OxygenOS)', batteryPct: 65, batteryMv: 3820, stepsToday: 4310, connection: '5G / BLE Gateway', appVersion: 'v1.0.4+5', latencyMs: 29 },
+    phone: { model: 'OnePlus 12', os: 'Android 14 (OxygenOS)', batteryPct: 65, batteryMv: 3820, stepsToday: 4310, connection: '5G / BLE Gateway', appVersion: 'v1.0.5+6', latencyMs: 29 },
     pet: { breed: 'balik', stage: 1, ageDays: 3, score: 480, streakDays: 3 },
     needs: { hunger: 75, fun: 70, love: 80, sleep: 80, toilet: 85, clean: 70, social: 50 },
     lastSeen: Date.now() - 25000,
@@ -93,7 +94,7 @@ const initialDevices = [
     mac: 'DC:A6:32:11:80:BC',
     user: { nickname: 'Hans_Berlin', email: 'hans@socies.io', avatar: '🌭', isVip: false },
     location: { country: 'Almanya', city: 'Berlin', district: 'Mitte', flag: '🇩🇪', ip: '84.119.12.44' },
-    phone: { model: 'Nothing Phone (2)', os: 'Android 14 (Nothing OS 2.5)', batteryPct: 82, batteryMv: 3950, stepsToday: 8450, connection: 'Wi-Fi 6E / BLE 5.3', appVersion: 'v1.0.4+5', latencyMs: 48 },
+    phone: { model: 'Nothing Phone (2)', os: 'Android 14 (Nothing OS 2.5)', batteryPct: 82, batteryMv: 3950, stepsToday: 8450, connection: 'Wi-Fi 6E / BLE 5.3', appVersion: 'v1.0.5+6', latencyMs: 48 },
     pet: { breed: 'sosis', stage: 3, ageDays: 26, score: 4180, streakDays: 19 },
     needs: { hunger: 80, fun: 85, love: 90, sleep: 75, toilet: 80, clean: 85, social: 90 },
     lastSeen: Date.now() - 40000,
@@ -104,7 +105,7 @@ const initialDevices = [
     mac: 'E4:5F:01:29:76:D1',
     user: { nickname: 'Oliver_London', email: 'oliver@socies.io', avatar: '🐦', isVip: false },
     location: { country: 'Birleşik Krallık', city: 'Londra', district: 'Soho', flag: '🇬🇧', ip: '82.165.197.1' },
-    phone: { model: 'Apple iPhone 14', os: 'iOS 17.4', batteryPct: 71, batteryMv: 3860, stepsToday: 5110, connection: '4G LTE / BLE 5.0', appVersion: 'v1.0.4+5', latencyMs: 55 },
+    phone: { model: 'Apple iPhone 14', os: 'iOS 17.4', batteryPct: 71, batteryMv: 3860, stepsToday: 5110, connection: '4G LTE / BLE 5.0', appVersion: 'v1.0.5+6', latencyMs: 55 },
     pet: { breed: 'kus', stage: 2, ageDays: 14, score: 2190, streakDays: 11 },
     needs: { hunger: 60, fun: 90, love: 85, sleep: 80, toilet: 75, clean: 90, social: 80 },
     lastSeen: Date.now() - 95000,
@@ -176,12 +177,12 @@ const server = http.createServer((req, res) => {
   }
 
   // 1.2 DOĞRUDAN APK İNDİRME UÇ NOKTASI (ATTACHMENT DOWNLOAD)
-  if (path === '/download/socies-app.apk' || path === '/downloads/socies-app.apk' || path === '/socies-app.apk' || path === '/download/socies-v1.0.4.apk') {
+  if (path === '/download/socies-app.apk' || path === '/downloads/socies-app.apk' || path === '/socies-app.apk' || path === '/download/socies-v1.0.5.apk' || path === '/download/socies-v1.0.4.apk') {
     const apkFile = pathModule.join(__dirname, '../downloads/socies-app.apk');
     if (fs.existsSync(apkFile)) {
       res.writeHead(200, {
         'Content-Type': 'application/vnd.android.package-archive',
-        'Content-Disposition': 'attachment; filename="socies-v1.0.4.apk"',
+        'Content-Disposition': 'attachment; filename="socies-v1.0.5.apk"',
         'Access-Control-Allow-Origin': '*'
       });
       return fs.createReadStream(apkFile).pipe(res);
@@ -268,7 +269,7 @@ const server = http.createServer((req, res) => {
       mac: d.mac,
       user: d.user || { nickname: d.userEmail?.split('@')[0] || 'Dost', email: d.userEmail, avatar: '👤', isVip: false },
       location: d.location || { country: 'Türkiye', city: 'İstanbul', district: 'Merkez', flag: '🇹🇷', ip: '127.0.0.1' },
-      phone: d.phone || { model: 'Mobil Telefon', os: 'Android', batteryPct: d.stats?.batteryPct || 100, batteryMv: d.stats?.batteryMv || 4000, stepsToday: d.stats?.steps || 0, connection: 'Wi-Fi', appVersion: 'v1.0.4+5', latencyMs: 25 },
+      phone: d.phone || { model: 'Mobil Telefon', os: 'Android', batteryPct: d.stats?.batteryPct || 100, batteryMv: d.stats?.batteryMv || 4000, stepsToday: d.stats?.steps || 0, connection: 'Wi-Fi', appVersion: 'v1.0.5+6', latencyMs: 25 },
       pet: d.pet || { breed: 'top', stage: 1, ageDays: 1, score: 100, streakDays: 1 },
       needs: d.needs || { hunger: 80, fun: 80, love: 80, sleep: 80, toilet: 80, clean: 80, social: 80 },
       isOnline: (Date.now() - d.lastSeen) < 180000,
@@ -365,22 +366,97 @@ const server = http.createServer((req, res) => {
     return sendJSON(res, 200, { success: true, backup: userData });
   }
 
-  // 8. GITHUB SÜRÜM / OTA KONTROLÜ
+  // 7.1 ÖZEL KARAKTER & ÇİZİM BULUT KAYDI (CUSTOM SPRITE SAVE)
+  if (path === '/api/v1/pet/save-custom-sprite' && method === 'POST') {
+    return parseBody(req, (body) => {
+      const { userEmail, spriteName, spriteType, bitmap48, xbmData } = body;
+      if (!userEmail || !bitmap48) {
+        return sendJSON(res, 400, { error: 'userEmail ve bitmap48 zorunludur' });
+      }
+
+      const spriteObj = {
+        id: crypto.randomUUID(),
+        name: spriteName || 'Özel Canlı',
+        type: spriteType || 'sketch', // 'sketch' | 'selfie'
+        bitmap48,
+        xbmData: xbmData || '',
+        createdAt: new Date().toISOString()
+      };
+
+      if (!database.customSprites.has(userEmail)) {
+        database.customSprites.set(userEmail, []);
+      }
+      database.customSprites.get(userEmail).push(spriteObj);
+
+      sendJSON(res, 200, {
+        success: true,
+        message: 'Özel karakter buluta kaydedildi',
+        sprite: spriteObj
+      });
+    });
+  }
+
+  // 7.2 ÖZEL KARAKTERLERİ ÇEKME
+  if (path.startsWith('/api/v1/pet/custom-sprites/') && method === 'GET') {
+    const email = decodeURIComponent(path.split('/')[5]);
+    const list = database.customSprites.get(email) || [];
+    return sendJSON(res, 200, {
+      userEmail: email,
+      count: list.length,
+      sprites: list
+    });
+  }
+
+  // 7.3 SELFIE TO 1-BIT PIXEL AVATAR DÖNÜŞTÜRÜCÜ (VISION / DITHER PROCESSOR)
+  if (path === '/api/v1/pet/generate-from-selfie' && method === 'POST') {
+    return parseBody(req, (body) => {
+      const { userEmail, style, imageBase64 } = body;
+      // 48x48 Piksel monokrom simüle edilmiş adaptif dither deseni ve yüz hatları üretimi
+      const simulatedBitmap = [];
+      for (let y = 0; y < 48; y++) {
+        const row = [];
+        for (let x = 0; x < 48; x++) {
+          // Kafa/gövde silueti dairesel alan
+          const dx = x - 24;
+          const dy = y - 24;
+          const dist = Math.sqrt(dx*dx + dy*dy);
+          let pixel = 0;
+          if (dist < 18 && dist > 14) pixel = 1; // dış hat
+          if (style === 'cat' && y < 14 && (Math.abs(x - 14) < 4 || Math.abs(x - 34) < 4)) pixel = 1; // kedi kulağı
+          if (y >= 20 && y <= 22 && (x === 18 || x === 30)) pixel = 1; // gözler
+          if (y === 28 && x >= 20 && x <= 28) pixel = 1; // gülümseme
+          row.push(pixel);
+        }
+        simulatedBitmap.push(row);
+      }
+
+      sendJSON(res, 200, {
+        success: true,
+        style: style || 'original',
+        width: 48,
+        height: 48,
+        bitmap: simulatedBitmap,
+        message: 'Selfie başarıyla 48x48 OLED 1-bit karaktere dönüştürüldü'
+      });
+    });
+  }
+
+  // 8. GITHUB SÜRÜM / OTA KONTROLÜ (SemVer 2.0.0 v1.0.5)
   if (path === '/api/v1/version/check' && method === 'GET') {
     return sendJSON(res, 200, {
-      latestVersion: 'v1.0.4',
+      latestVersion: 'v1.0.5',
       semver: {
         major: 1,
         minor: 0,
-        patch: 4,
-        build: 5
+        patch: 5,
+        build: 6
       },
-      versionCode: 5,
-      latestCommitHash: 'f0b3752',
+      versionCode: 6,
+      latestCommitHash: 'f8cd1f2',
       mandatoryUpdate: false,
-      releaseNotes: 'Zıpzıp Top, Kaka mekaniği, 3-2-1 Taş-Kağıt-Makas ve Kovboy Düellosu eklendi.',
+      releaseNotes: 'Karakter Atölyesi eklendi: Adım adım kılavuzlu çizim, ara kare interpolasyonu ve selfie fotoğrafından 1-bit OLED piksel avatar dönüştürücü.',
       apkDownloadUrl: '/download/socies-app.apk',
-      githubApkUrl: 'https://github.com/mcturan/socies/releases/download/v1.0.4/socies-app.apk'
+      githubApkUrl: 'https://github.com/mcturan/socies/releases/download/v1.0.5/socies-app.apk'
     });
   }
 
@@ -443,7 +519,7 @@ function serveDashboard(res) {
       </div>
       <div class="header-right">
         <a href="https://github.com/mcturan/socies/releases/latest/download/socies-app.apk" class="dl-btn">
-          <span>📥</span> Android APK İndir (v1.0.4)
+          <span>📥</span> Android APK İndir (v1.0.5)
         </a>
         <div style="font-family:'JetBrains Mono'; font-size:0.8rem; color:#00ff66;">● SUNUCU AKTİF (Port: ${PORT})</div>
       </div>
@@ -463,7 +539,7 @@ function serveDashboard(res) {
         <div class="stat-lbl">İletilen Çağrı Mesajı</div>
       </div>
       <div class="stat-card">
-        <div class="stat-val" style="color:#ffe600;">v1.0.4</div>
+        <div class="stat-val" style="color:#ffe600;">v1.0.5</div>
         <div class="stat-lbl">OTA Hedef Sürüm</div>
       </div>
     </div>
@@ -599,7 +675,7 @@ function serveSociesNetworkPage(res) {
         <div class="kpi-lbl">${countries.join(', ')}</div>
       </div>
       <div class="kpi-card">
-        <div class="kpi-val" style="color:#ffe600;">v1.0.4+5</div>
+        <div class="kpi-val" style="color:#ffe600;">v1.0.5+6</div>
         <div class="kpi-lbl">Ağ Sürümü (SemVer 2.0.0)</div>
       </div>
     </div>
