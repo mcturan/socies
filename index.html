@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SOCIES - Sanal Bebek & Karakter Laboratuvarı</title>
+  <title>SOCIES - Bulut Bağlantılı Sanal Bebek & Oyun Ekosistemi</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -17,6 +17,7 @@
       --accent-pink: #ff2a85;
       --accent-green: #00ff66;
       --accent-purple: #a855f7;
+      --accent-orange: #f97316;
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
       --oled-yellow: #ffe600;
@@ -170,18 +171,12 @@
       display: flex; align-items: center; gap: 0.35rem; transition: all 0.15s ease;
     }
     .micro-btn:hover { background: #2b354b; color: #fff; }
-    .micro-btn.btn-cycle {
-      background: linear-gradient(135deg, #ec4899, #be185d); color: #fff; border-color: #f472b6;
-      font-weight: 700;
-    }
-    .micro-btn.btn-shake {
-      background: linear-gradient(135deg, #0ea5e9, #0284c7); color: #fff; border-color: #38bdf8;
-    }
-    .micro-btn.btn-game {
-      background: linear-gradient(135deg, #10b981, #047857); color: #fff; border-color: #34d399;
-    }
+    .micro-btn.btn-cycle { background: linear-gradient(135deg, #ec4899, #be185d); color: #fff; border-color: #f472b6; font-weight: 700; }
+    .micro-btn.btn-shake { background: linear-gradient(135deg, #0ea5e9, #0284c7); color: #fff; border-color: #38bdf8; }
+    .micro-btn.btn-game { background: linear-gradient(135deg, #10b981, #047857); color: #fff; border-color: #34d399; }
+    .micro-btn.btn-duel { background: linear-gradient(135deg, #f97316, #c2410c); color: #fff; border-color: #fb923c; }
 
-    /* PHONE STAGE */
+    /* PHONE COMPANION */
     .phone-stage {
       background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 24px;
       padding: 1.8rem; box-shadow: 0 20px 40px rgba(0,0,0,0.6);
@@ -195,12 +190,14 @@
       margin: 0 auto 1rem auto; display: flex; align-items: center; justify-content: center;
     }
     .camera-lens { width: 7px; height: 7px; border-radius: 50%; background: #111a26; border: 1px solid #1f293d; }
-    .phone-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
-    .ble-status-badge {
-      display: flex; align-items: center; gap: 0.4rem; font-size: 0.72rem; padding: 0.35rem 0.7rem;
-      border-radius: 12px; background: rgba(0, 240, 255, 0.12); border: 1px solid rgba(0, 240, 255, 0.3);
-      color: var(--accent); font-weight: 600;
+    
+    /* ACCOUNT & CLOUD STATUS BANNER */
+    .cloud-auth-box {
+      background: rgba(15, 23, 42, 0.8); border: 1px solid #334155; border-radius: 14px;
+      padding: 0.7rem 0.9rem; margin-bottom: 0.8rem; display: flex; justify-content: space-between; align-items: center;
     }
+    .auth-user-info { display: flex; align-items: center; gap: 0.5rem; font-size: 0.72rem; }
+    .auth-avatar { width: 22px; height: 22px; border-radius: 50%; background: #00f0ff; color:#000; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:0.65rem; }
 
     .phone-pet-card {
       background: linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.95));
@@ -217,16 +214,15 @@
     .stat-val { font-size: 1.05rem; font-weight: 800; color: var(--accent); font-family: 'JetBrains Mono', monospace; }
     .stat-lbl { font-size: 0.62rem; color: var(--text-muted); margin-top: 2px; }
 
-    /* POOP BANNER IF PRESENT */
-    .poop-warning-banner {
-      display: none;
-      background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; border-radius: 12px;
-      padding: 0.6rem 0.8rem; margin-bottom: 0.8rem; font-size: 0.75rem; color: #fca5a5;
-      align-items: center; justify-content: space-between;
+    /* STREAK & ENGAGEMENT WIDGET */
+    .streak-widget {
+      background: linear-gradient(135deg, rgba(249, 115, 22, 0.15), rgba(15, 23, 42, 0.8));
+      border: 1px solid rgba(249, 115, 22, 0.35); border-radius: 14px; padding: 0.75rem 0.9rem;
+      margin-bottom: 0.8rem; display: flex; justify-content: space-between; align-items: center;
     }
-    .poop-warning-banner.show { display: flex; }
+    .streak-title { font-size: 0.75rem; font-weight: 800; color: #fb923c; display:flex; align-items:center; gap:0.35rem; }
 
-    /* NEEDS METERS */
+    /* NEEDS BARS */
     .needs-container { margin-bottom: 1rem; }
     .needs-title {
       font-size: 0.78rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.55rem;
@@ -241,21 +237,10 @@
     .need-bar-fill.crit { background: linear-gradient(90deg, #ef4444, #f87171); }
     .need-bar-fill.social-bar { background: linear-gradient(90deg, #a855f7, #c084fc); }
 
-    /* PET ENCYCLOPEDIA CARDS */
-    .pet-catalog-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;
+    /* CLOUD & RESET ACTIONS */
+    .cloud-btn-row {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.4rem; margin-top: 0.8rem;
     }
-    .pet-info-card {
-      background: rgba(15, 23, 42, 0.8); border: 1px solid var(--card-border); border-radius: 18px;
-      padding: 1.4rem; position: relative; overflow: hidden; transition: all 0.2s ease;
-    }
-    .pet-info-card:hover { border-color: var(--accent); transform: translateY(-3px); }
-    .pet-info-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem; }
-    .pet-info-icon { font-size: 2rem; }
-    .pet-info-title { font-size: 1.15rem; font-weight: 800; color: #fff; }
-    .pet-info-type { font-size: 0.7rem; color: var(--accent); font-weight: 700; }
-    .pet-stat-list { margin-top: 0.8rem; font-size: 0.78rem; line-height: 1.6; color: #cbd5e1; }
-    .pet-stat-list b { color: var(--accent-yellow); }
 
     .toast {
       position: fixed; bottom: 2rem; right: 2rem; background: #1e293b; border: 1px solid var(--accent);
@@ -280,21 +265,21 @@
 
   <header>
     <div class="brand">
-      <div class="brand-logo">⚽</div>
+      <div class="brand-logo">☁️</div>
       <div>
-        <div class="brand-title">SOCIES • V3</div>
-        <div class="brand-tagline">Zıpzıp Top & Karakter Laboratuvarı</div>
+        <div class="brand-title">SOCIES • V4 CLOUD</div>
+        <div class="brand-tagline">Taş-Kağıt-Makas 3-2-1 • Düello • Bulut Senkronizasyonu</div>
       </div>
     </div>
 
     <nav class="nav-tabs">
       <button class="nav-btn active" onclick="switchTab('tab-sim')">🎮 Emülatör & Cihaz</button>
-      <button class="nav-btn" onclick="switchTab('tab-catalog')">🐾 Karakterler & Güçler</button>
-      <button class="nav-btn" onclick="switchTab('tab-mobile-plan')">📱 Android-First & GitHub OTA Planı</button>
+      <button class="nav-btn" onclick="switchTab('tab-cloud-spec')">☁️ Bulut & Sunucu Telemetrisi</button>
+      <button class="nav-btn" onclick="switchTab('tab-retention')">🔥 Bağlılık & Sadakat Motoru</button>
     </nav>
 
     <div class="header-actions">
-      <div class="badge-status" id="headerBleStatus">BLE Aktif</div>
+      <div class="badge-status" id="headerBleStatus">Bulut Senkron</div>
       <button class="micro-btn" id="btnSoundToggle" onclick="toggleAudio()">🔊 Ses</button>
       <button class="micro-btn" id="btnHapticToggle" onclick="toggleHaptic()">📳 Titreşim</button>
     </div>
@@ -325,7 +310,7 @@
               <div class="screen-bezel">
                 <div class="screen-label-top">
                   <span>0.96" SSD1315 OLED (128x64)</span>
-                  <span id="screenModeTag" style="color:var(--accent-yellow);">CANLI PİKSEL MOTORU</span>
+                  <span id="screenModeTag" style="color:var(--accent-yellow);">GERÇEK TELEFON BARI</span>
                 </div>
                 <canvas id="oledCanvas" width="128" height="64"></canvas>
               </div>
@@ -352,7 +337,7 @@
                   </button>
                   <div class="btn-desc-tag">
                     <b>2. SEÇ</b>
-                    <span id="btn2Subtext">Kağıt 📄 / Aksiyon</span>
+                    <span id="btn2Subtext">Kağıt 📄 / Seçim</span>
                   </div>
                 </div>
 
@@ -376,7 +361,7 @@
                   </button>
                   <div class="btn-desc-tag">
                     <b>4. İPTAL</b>
-                    <span>Uzun: 📊 Rapor</span>
+                    <span>Geri / Çıkış</span>
                   </div>
                 </div>
               </div>
@@ -385,39 +370,49 @@
 
             <!-- CASING BOTTOM ACTIONS -->
             <div class="casing-bottom-row">
-              <div style="display:flex; gap:0.5rem; align-items:center;">
-                <button class="micro-btn btn-shake" onclick="triggerDeviceShake()">
-                  <span>👋 Salla (Zıplat)</span>
+              <div style="display:flex; gap:0.5rem; align-items:center; flex-wrap:wrap;">
+                <button class="micro-btn btn-game" onclick="startSocialRPSGame()">
+                  <span>✊ 3-2-1 Taş-Kağıt-Makas</span>
                 </button>
-                <button class="micro-btn btn-game" onclick="toggleRPSGame()">
-                  <span>✊ Taş-Kağıt-Makas</span>
+                <button class="micro-btn btn-duel" onclick="startQuickDrawDuel()">
+                  <span>🤠 Kovboy Düellosu</span>
+                </button>
+                <button class="micro-btn btn-shake" onclick="triggerDeviceShake()">
+                  <span>👋 Zıplat</span>
                 </button>
                 <button class="micro-btn" onclick="triggerPoopManually()">
-                  <span>💩 Kaka Yaptır</span>
+                  <span>💩 Kaka</span>
                 </button>
               </div>
 
               <div style="font-size:0.7rem; color:#94a3b8;">
-                <span id="shakeStats">Zıplama: 0</span>
+                <span id="gameStatusIndicator">Mod: Serbest Gezinti</span>
               </div>
             </div>
 
           </div>
 
           <div style="margin-top:1rem; background:rgba(0,0,0,0.3); padding:0.8rem 1.2rem; border-radius:12px; font-size:0.75rem; color:#94a3b8; display:flex; justify-content:space-between;">
-            <span>⚽ <b>Top (Zıpzıp):</b> Yuvarlanır, zıplar, sallayınca ekrandan seker! Kaka yapınca temizleyin 💩</span>
-            <span style="color:var(--accent);">Klavye: [W], [Enter], [S], [Esc]</span>
+            <span>🎮 <b>Oyunlar:</b> 3-2-1 Taş-Kağıt-Makas (Aynı anda açılır) ve Kovboy Düellosu eklendi!</span>
+            <span style="color:var(--accent);">Klavye: [W/▲], [Enter], [S/▼], [Esc]</span>
           </div>
         </div>
 
-        <!-- COMPANION APP -->
+        <!-- COMPANION APP WITH CLOUD & RETENTION -->
         <div class="phone-stage">
           <div class="phone-frame">
             <div class="phone-island"><div class="camera-lens"></div></div>
 
-            <div class="phone-header">
-              <div class="ble-status-badge"><span>🔵</span><span id="phoneBleName">Socies_Top_C3</span></div>
-              <button class="ble-btn" onclick="toggleBle()">Eşleş</button>
+            <!-- CLOUD LOGIN & RESTORE BAR -->
+            <div class="cloud-auth-box">
+              <div class="auth-user-info">
+                <div class="auth-avatar" id="userAvatar">T</div>
+                <div>
+                  <div style="font-weight:700; color:#fff;" id="userName">turan@socies.io</div>
+                  <div style="font-size:0.62rem; color:#00f0ff;">☁️ Bulut Hesabı Aktif</div>
+                </div>
+              </div>
+              <button class="micro-btn" onclick="triggerCloudBackup()">Yedekle ☁️</button>
             </div>
 
             <!-- PET PROFILE CARD -->
@@ -425,42 +420,44 @@
               <div class="pet-card-top">
                 <div>
                   <div class="pet-name-tag"><span id="appPetIcon">⚽</span><span id="appPetName">Zıpzıp Top</span></div>
-                  <div style="font-size:0.68rem; color:#94a3b8;" id="appPetBreedDesc">Tür: Elastik Top | #SOC-001</div>
+                  <div style="font-size:0.68rem; color:#94a3b8;" id="appPetBreedDesc">ID: SOCIES-ESP32-84920A</div>
                 </div>
                 <div class="pet-stage-tag" id="appPetStage">Bebek (Lv. 1)</div>
               </div>
 
               <div class="pet-card-stats">
                 <div class="stat-box"><div class="stat-val" id="appPetAge">1 Gün</div><div class="stat-lbl">Yaşam</div></div>
-                <div class="stat-box"><div class="stat-val" id="appPetScore">250</div><div class="stat-lbl">Toplam Puan</div></div>
-                <div class="stat-box"><div class="stat-val" id="appPetJoy">100%</div><div class="stat-lbl">Neşe / Zıplama</div></div>
+                <div class="stat-box"><div class="stat-val" id="appPetScore">310</div><div class="stat-lbl">Toplam Puan</div></div>
+                <div class="stat-box"><div class="stat-val" id="appPetStreak">🔥 5 Gün</div><div class="stat-lbl">Sadakat Serisi</div></div>
               </div>
             </div>
 
-            <!-- POOP WARNING BANNER IF PRESENT -->
-            <div class="poop-warning-banner" id="poopBanner">
-              <span>💩 <b>Ekranda kaka var!</b> Hijyen düşüyor, hemen temizle!</span>
-              <button class="micro-btn" onclick="cleanPoopAction()">Temizle 🧼</button>
+            <!-- DAILY STREAK WIDGET -->
+            <div class="streak-widget">
+              <div class="streak-title">
+                <span>🔥 5 Günlük Sadakat Serisi!</span>
+              </div>
+              <span style="font-size:0.68rem; color:#fed7aa;">Yarın: +100 Bonus & Taç 👑</span>
             </div>
 
-            <!-- NEEDS BARS -->
+            <!-- NEEDS METERS -->
             <div class="needs-container">
-              <div class="needs-title"><span>SİMS İHTİYAÇLARI</span><span id="overallHealth" style="color:var(--accent-green);">Enerjik & Neşeli</span></div>
+              <div class="needs-title"><span>SİMS İHTİYAÇLARI</span><span id="overallHealth" style="color:var(--accent-green);">Mutlu & Enerjik</span></div>
 
               <div class="need-meter">
-                <div class="need-meta"><span>🍖 Yemek / Enerji</span><span id="val_hunger">85%</span></div>
+                <div class="need-meta"><span>🍖 Beslenme</span><span id="val_hunger">85%</span></div>
                 <div class="need-bar-bg"><div class="need-bar-fill high" id="bar_hunger" style="width:85%;"></div></div>
               </div>
               <div class="need-meter">
-                <div class="need-meta"><span>🎾 Oyun (Zıplatınca Artar)</span><span id="val_fun">80%</span></div>
+                <div class="need-meta"><span>🎾 Oyun & Eğlence</span><span id="val_fun">80%</span></div>
                 <div class="need-bar-bg"><div class="need-bar-fill high" id="bar_fun" style="width:80%;"></div></div>
               </div>
               <div class="need-meter">
-                <div class="need-meta"><span>❤️ Sevgi / Okşama</span><span id="val_love">90%</span></div>
+                <div class="need-meta"><span>❤️ Sevgi / İlgi</span><span id="val_love">90%</span></div>
                 <div class="need-bar-bg"><div class="need-bar-fill high" id="bar_love" style="width:90%;"></div></div>
               </div>
               <div class="need-meter">
-                <div class="need-meta"><span>💤 Uyku / Dinlenme</span><span id="val_sleep">75%</span></div>
+                <div class="need-meta"><span>💤 Uyku (Gece Modu)</span><span id="val_sleep">75%</span></div>
                 <div class="need-bar-bg"><div class="need-bar-fill high" id="bar_sleep" style="width:75%;"></div></div>
               </div>
               <div class="need-meter">
@@ -471,21 +468,16 @@
                 <div class="need-meta"><span>🧼 Temizlik / Hijyen</span><span id="val_clean">90%</span></div>
                 <div class="need-bar-bg"><div class="need-bar-fill high" id="bar_clean" style="width:90%;"></div></div>
               </div>
-              <div class="need-meter">
-                <div class="need-meta"><span>👥 Sosyalleşme (+XP Çarpanı)</span><span id="val_social" style="color:var(--accent-purple);">60%</span></div>
-                <div class="need-bar-bg"><div class="need-bar-fill social-bar" id="bar_social" style="width:60%;"></div></div>
-              </div>
             </div>
 
-            <!-- DEV QUICK ACTIONS -->
-            <div class="dev-controls-card">
-              <div class="dev-controls-title">⏱️ Test Kontrolleri</div>
-              <div class="dev-buttons">
-                <button class="btn-dev" onclick="cyclePet()">🔄 Sıradaki Karakter</button>
-                <button class="btn-dev" onclick="devTimeTravel(1)">⏩ +1 Gün</button>
-                <button class="btn-dev" onclick="devTimeTravel(30)">⏩ +30 Gün</button>
-                <button class="btn-dev" onclick="cleanPoopAction()">🧼 Ekranı Yıka</button>
-              </div>
+            <!-- CLOUD ACTIONS & FACTORY RESET (REBIRTH) -->
+            <div class="cloud-btn-row">
+              <button class="micro-btn" onclick="restoreFromCloud()">
+                <span>📥 Oturumu Geri Yükle</span>
+              </button>
+              <button class="micro-btn" style="border-color:#ef4444; color:#f87171;" onclick="factoryResetPrompt()">
+                <span>⚠️ Sıfırdan Başla</span>
+              </button>
             </div>
 
           </div>
@@ -494,149 +486,71 @@
       </div>
     </div>
 
-    <!-- TAB 2: PET CATALOG & ENCYCLOPEDIA (KARAKTERLER VE GÜÇLER) -->
-    <div id="tab-catalog" class="tab-content">
+    <!-- TAB 2: CLOUD & SERVER TELEMETRY SPEC -->
+    <div id="tab-cloud-spec" class="tab-content">
       <div class="doc-section">
-        <h2>🐾 Karakter Ansiklopedisi & İhtiyaç Azalma Katsayıları</h2>
-        <p>Her sanal canlı kendine has bir mizaca, farklı ihtiyaç tüketim hızlarına ve özel animasyonlara sahiptir.</p>
+        <h2>☁️ Ana Sunucu Telemetri Paketi & Cihaz Kaydı (API)</h2>
+        <p>Her Socies cihazı (veya mobil emülatörü) sunucuya bağlandığı anda cihaz kimliğini, bataryasını, evcil hayvanın durumunu ve kullanıcı profilini ana sunucuya POST eder. Bu veriler ileride hedefli etkinlikler, rozetler ve reklam altyapısı için de kullanılır.</p>
 
-        <div class="pet-catalog-grid">
-          
-          <!-- 1. TOP (ZIPZIP) -->
-          <div class="pet-info-card">
-            <div class="pet-info-card-header">
-              <div>
-                <div class="pet-info-title">⚽ Top (Zıpzıp)</div>
-                <div class="pet-info-type">Başlangıç Canlısı • Yüksek Elastikiyet</div>
-              </div>
-              <div class="pet-info-icon">⚽</div>
-            </div>
-            <p style="font-size:0.8rem; color:#94a3b8;">Ekranda neşeyle yuvarlanır, köşelerden seker. Cihaz sallandığında tavandan ve tabandan seker, zıpladıkça eğlence dolar.</p>
-            <div class="pet-stat-list">
-              <div><b>Oyun İhtiyacı:</b> Çok hızlı düşer (Sallanmak ister)</div>
-              <div><b>Yemek:</b> Orta hızda enerji tüketir</div>
-              <div><b>Özel Güç:</b> Sallayınca ekrandan düşüp elastik sekme</div>
-            </div>
-          </div>
-
-          <!-- 2. KEDİ (NEKO) -->
-          <div class="pet-info-card">
-            <div class="pet-info-card-header">
-              <div>
-                <div class="pet-info-title">🐱 Kedi (Neko)</div>
-                <div class="pet-info-type">Masaüstü Sanal Kedisi • Bağımsız</div>
-              </div>
-              <div class="pet-info-icon">🐱</div>
-            </div>
-            <p style="font-size:0.8rem; color:#94a3b8;">90'ların masaüstü sanal kedisi gibi patisini yalar, esner, kıvrılıp uyur, ekranda fare kovalar.</p>
-            <div class="pet-stat-list">
-              <div><b>Sevgi & Uyku:</b> Yüksek ilgi ve sessizlik ister</div>
-              <div><b>Temizlik:</b> Kendi kendini temizler (Yavaş düşer)</div>
-              <div><b>Özel Güç:</b> Mırıldanma haptik titreşimi</div>
-            </div>
-          </div>
-
-          <!-- 3. KÖPEK (DOST) -->
-          <div class="pet-info-card">
-            <div class="pet-info-card-header">
-              <div>
-                <div class="pet-info-title">🐶 Köpek (Dost)</div>
-                <div class="pet-info-type">Sadık Yoldaş • Süper Sosyal</div>
-              </div>
-              <div class="pet-info-icon">🐶</div>
-            </div>
-            <p style="font-size:0.8rem; color:#94a3b8;">Kuyruk sallar, dili dışarıda sevinir. Top atıldığında veya düello daveti geldiğinde havalara uçar.</p>
-            <div class="pet-stat-list">
-              <div><b>Oyun & Sosyallik:</b> Çok hızlı azalır</div>
-              <div><b>Yemek:</b> Sürekli acıkır</div>
-              <div><b>Özel Güç:</b> Arkadaş poke yapıldığında 2 kat sosyal XP</div>
-            </div>
-          </div>
-
-          <!-- 4. BİTKİ (FİLİZ) -->
-          <div class="pet-info-card">
-            <div class="pet-info-card-header">
-              <div>
-                <div class="pet-info-title">🌿 Bitki (Filiz)</div>
-                <div class="pet-info-type">Saksı Bitkisi • Huzur Verici</div>
-              </div>
-              <div class="pet-info-icon">🌿</div>
-            </div>
-            <p style="font-size:0.8rem; color:#94a3b8;">Saksıda minik bir filiz olarak başlar. Sulandıkça ve sevildikçe yaprak açar, çiçek açar. Kakası olmaz!</p>
-            <div class="pet-stat-list">
-              <div><b>Su (Yemek):</b> Düzenli sulama ister</div>
-              <div><b>Tuvalet:</b> Tuvalet ihtiyacı YOKTUR (0 kaka)</div>
-              <div><b>Özel Güç:</b> Çiçek açınca tüm ihtiyaçlara +%20 aura</div>
-            </div>
-          </div>
-
-          <!-- 5. BALIK -->
-          <div class="pet-info-card">
-            <div class="pet-info-card-header">
-              <div>
-                <div class="pet-info-title">🐟 Balık (Akvaryum)</div>
-                <div class="pet-info-type">Su Canlısı • Hijyen Hassas</div>
-              </div>
-              <div class="pet-info-icon">🐟</div>
-            </div>
-            <p style="font-size:0.8rem; color:#94a3b8;">Ekranda kabarcıklar çıkararak yüzer. Suyu kirlenirse hüzünlenir.</p>
-            <div class="pet-stat-list">
-              <div><b>Temizlik:</b> En hızlı düşen hayvandır (Suyu temizle)</div>
-              <div><b>Sosyallik:</b> Düşük sosyallik ister</div>
-            </div>
-          </div>
-
-          <!-- 6. KUŞ -->
-          <div class="pet-info-card">
-            <div class="pet-info-card-header">
-              <div>
-                <div class="pet-info-title">🐦 Kuş (Cıvık)</div>
-                <div class="pet-info-type">Hızlı Metabolizma • Şakacı</div>
-              </div>
-              <div class="pet-info-icon">🐦</div>
-            </div>
-            <p style="font-size:0.8rem; color:#94a3b8;">Tünekte zıplar, kanat çırpar, minik 8-bit melodiler öter.</p>
-            <div class="pet-stat-list">
-              <div><b>Yemek:</b> Çok hızlı tükenir</div>
-              <div><b>Tuvalet:</b> Sık kaka yapar 💩</div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </div>
-
-    <!-- TAB 3: ANDROID-FIRST STRATEGY & GITHUB OTA UPDATE PLAN -->
-    <div id="tab-mobile-plan" class="tab-content">
-      <div class="doc-section">
-        <h2>📱 Telefon Öncelikli Strateji & GitHub Otomatik Güncelleme Mimarisi</h2>
-        <p>Belirttiğiniz gibi: <b>Öncelikle telefon uygulamasını yapacağız.</b> Cihazı fiziksel olarak toplamadan önce tüm oyun mekaniklerini, sanal hayvanı ve etkileşimleri Android üzerinde sanki elimizde Socies cihazı varmış gibi kusursuz şekilde test edeceğiz.</p>
-
-        <h3>1. Mimari Tasarım: Android Hibrit / Native Simülatör</h3>
+        <h3>1. Sunucuya Gönderilen JSON Telemetri Paketi</h3>
         <table class="spec-table">
           <thead>
-            <tr><th>Bileşen</th><th>Teknoloji / Yöntem</th><th>Açıklama</th></tr>
+            <tr><th>Alan (Field)</th><th>Örnek Değer</th><th>Açıklama</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><b>device_id</b></td><td><code>SOCIES-ESP32-84920A</code></td><td>Cihazın donanımsal benzersiz seri numarası (MAC tabanlı)</td></tr>
+            <tr><td><b>user_auth</b></td><td><code>google_1082938492019</code></td><td>Kullanıcının Google / Apple ID / E-posta kimliği</td></tr>
+            <tr><td><b>pet_profile</b></td><td><code>{"breed":"top","stage":1,"days":1,"score":310}</code></td><td>Evcil hayvanın türü, seviyesi, yaşı ve skoru</td></tr>
+            <tr><td><b>sims_needs</b></td><td><code>{"hunger":85,"fun":80,"sleep":75,"clean":90}</code></td><td>7 Sims ihtiyacının son durumu</td></tr>
+            <tr><td><b>device_stats</b></td><td><code>{"battery_mv":3980,"steps":1420,"fw_ver":"v1.0.4"}</code></td><td>Batarya voltajı, adımsayar verisi ve firmware sürümü</td></tr>
+            <tr><td><b>analytics_tag</b></td><td><code>{"streak_days":5,"ad_consent":true}</code></td><td>Sadakat serisi ve ilerideki reklam/ödül motoru için veri</td></tr>
+          </tbody>
+        </table>
+
+        <h3>2. Başka Cihazda Oturumu Geri Yükleme & Sıfırlama</h3>
+        <p>Kullanıcı yeni bir telefona geçtiğinde veya cihazını değiştirdiğinde, Google/Apple hesabıyla giriş yaptığı anda buluttaki son kayıt çekilerek evcil hayvan kaldığı günden devam eder. İsterse tek tuşla <b>"Sıfırdan Başla (Rebirth)"</b> seçerek yeni bir yumurtadan başlayabilir.</p>
+      </div>
+    </div>
+
+    <!-- TAB 3: RETENTION & ENGAGEMENT (BAĞLILIĞI ARTIRICI ÖZELLİKLER) -->
+    <div id="tab-retention" class="tab-content">
+      <div class="doc-section">
+        <h2>🔥 Kullanıcı Bağlılığını & Sadakatini Artırıcı 6 Çığır Açan Sistem</h2>
+        
+        <table class="spec-table">
+          <thead>
+            <tr><th>Mekanik</th><th>Çalışma Prensibi</th><th>Psikolojik Bağ & Etki</th></tr>
           </thead>
           <tbody>
             <tr>
-              <td><b>Uygulama İskeleti</b></td>
-              <td>Android (Flutter / Capacitor / WebView Shell)</td>
-              <td>Telefonda tam ekran çalışan, dokunmatik titreşim (Vibrator API), BLE ve sensörleri kullanan uygulama.</td>
+              <td><b>1. Günlük Sadakat Serisi (Daily Streak Takvimi)</b></td>
+              <td>Her gün cihazı açıp en az 1 görev tamamlayan kullanıcı serisini korur. 7. günde Altın Taç 👑, 30. günde Efsanevi Kozaya Geçiş Kristali kazanır.</td>
+              <td>Kullanıcı seriyi bozmamak için her gün cihazı kontrol eder (Duolingo / Snapchat serisi etkisi).</td>
             </tr>
             <tr>
-              <td><b>GitHub Commit Bazlı Versiyonlama</b></td>
-              <td>Git SHA / Semantic Tagging (`v1.0.X-commit`)</td>
-              <td>Her geliştirme ve commit doğrudan sürümlenir. Uygulama içinde commit hash görünür.</td>
+              <td><b>2. Birlikte Uyuma (Sleep Sync)</b></td>
+              <td>Telefon gece şarja takıldığında bebek de gece takkesini takıp uyur. Sabah telefonun alarmı çaldığında bebek de cıvıldayarak sahibini uyandırır!</td>
+              <td>Cihaz sıradan bir oyuncak olmaktan çıkıp yatak başı uyku yoldaşı haline gelir.</td>
             </tr>
             <tr>
-              <td><b>GitHub Otomatik Güncelleme (OTA Update)</b></td>
-              <td>GitHub Releases API (`api.github.com/repos/mcturan/socies/releases/latest`)</td>
-              <td>Uygulama açılışta GitHub API'sine bağlanır. Daha yeni bir commit veya APK release varsa <i>"Yeni Sürüm Bulundu! Güncellensin mi?"</i> diyerek APK'yı arka planda indirip kurar.</td>
+              <td><b>3. Gerçek Hava Durumu Senkronizasyonu</b></td>
+              <td>Telefondan hava durumu bilgisi alınır. Yağmur yağıyorsa OLED ekranda bebek yaprak şemsiye tutar, karlıysa atkı takar.</td>
+              <td>Canlının gerçek dünyayla eşzamanlı yaşadığı hissi verilir.</td>
             </tr>
             <tr>
-              <td><b>Fiziksel Cihaz Geçişi</b></td>
-              <td>GATT BLE Protokol Eşitliği</td>
-              <td>Telefondaki test motoru ile ESP32 firmware birebir aynı byte protokolünü kullanır. Donanıma geçildiğinde kod tekrar yazılmaz!</td>
+              <td><b>4. Zaman Kapsülü / Piksel Polaroid Albümü</b></td>
+              <td>Bebek büyüdükçe (1. hafta, 1. ay, koza evresi) nostaljik 1-bit Polaroid fotoğraf kartı oluşturup telefon galerisine kaydeder.</td>
+              <td>Kullanıcının bebeğe duygusal yatırım yapmasını ve sosyal medyada paylaşmasını sağlar.</td>
+            </tr>
+            <tr>
+              <td><b>5. Arkadaş Kreşi (Playdate / Tatil Modu)</b></td>
+              <td>Kullanıcı tatile veya sınav haftasına girdiğinde bebeğini BLE ile arkadaşına "emanet" edebilir. Arkadaşı besledikçe ona da yardımseverlik puanı gider.</td>
+              <td>Sosyal sorumluluk ve arkadaş çevresiyle derin bağ oluşturur.</td>
+            </tr>
+            <tr>
+              <td><b>6. 3.000 Adımda Hazine Sandığı Düşmesi</b></td>
+              <td>Titreşim sensörüyle gün içinde 3.000 adım atıldığında gökten sandık düşer; içinden nadir şapkalar veya yemekler çıkar.</td>
+              <td>Kullanıcıyı fiziksel yürüyüşe ve harekete teşvik eder.</td>
             </tr>
           </tbody>
         </table>
@@ -648,7 +562,7 @@
 
   <script>
     // ==========================================
-    // AUDIO & HAPTIC
+    // AUDIO & HAPTIC ENGINE
     // ==========================================
     let audioCtx = null;
     let audioEnabled = true;
@@ -698,7 +612,7 @@
     }
 
     // ==========================================
-    // MULTI-PET DEFINITIONS & ROSTER
+    // MULTI-PET ROSTER & TOP (ZIPZIP)
     // ==========================================
     const PET_ROSTER = [
       { id: "top",   name: "Zıpzıp Top", icon: "⚽", badge: "⚽ TOP (ZIPZIP)", desc: "Elastik Zıplayan Top" },
@@ -710,48 +624,43 @@
       { id: "sosis", name: "Sosis",      icon: "🌭", badge: "🌭 SOSİS",         desc: "Frankfurter Sosis" }
     ];
 
-    let currentPetIndex = 0; // 0: TOP
+    let currentPetIndex = 0;
 
-    // BALL PHYSICS (TOP)
     const ballPhysics = {
-      x: 64,
-      y: 42,
-      vx: 1.5,
-      vy: 0,
-      radius: 8,
-      isRolling: true,
-      bounceCount: 0
+      x: 64, y: 42, vx: 1.8, vy: 0, radius: 8, bounceCount: 0
     };
 
     const state = {
       pet: PET_ROSTER[0],
       stage: 1,
       ageDays: 1,
-      totalScore: 250,
+      totalScore: 310,
+      streakDays: 5,
       battery: 88,
       isPowered: true,
       bleConnected: true,
       menuIndex: 0,
       animFrame: 0,
-      currentView: 'MAIN', // 'MAIN' | 'RPS_GAME' | 'ALL_NEEDS_HUD'
+      currentView: 'MAIN',
 
-      hasPoop: false, // 💩 Kaka mekaniği
-      poopX: 96,
-      poopY: 48,
+      hasPoop: false,
+      poopX: 96, poopY: 48,
 
-      // Rock Paper Scissors (Taş Kağıt Makas)
+      // 3-2-1 Taş-Kağıt-Makas
+      rpsCountdown: 3,
+      rpsTimer: null,
       rpsPlayerChoice: null,
       rpsCpuChoice: null,
-      rpsResultText: "Seçimini yap: 1, 2 veya 3!",
+      rpsResultText: "",
+
+      // Hızlı Kovboy Düellosu
+      duelState: 'WAIT',
+      duelTimer: null,
+      duelStartTime: 0,
+      duelReactionMs: 0,
 
       needs: {
-        hunger: 85,
-        fun: 80,
-        love: 90,
-        sleep: 75,
-        toilet: 85,
-        clean: 90,
-        social: 60
+        hunger: 85, fun: 80, love: 90, sleep: 75, toilet: 85, clean: 90, social: 60
       },
 
       menuItems: [
@@ -765,134 +674,224 @@
       ]
     };
 
-    // ==========================================
-    // CYCLE PET BUTTON (MADDE 1)
-    // ==========================================
     function cyclePet() {
       currentPetIndex = (currentPetIndex + 1) % PET_ROSTER.length;
       state.pet = PET_ROSTER[currentPetIndex];
-      
-      // Reset ball position
-      ballPhysics.x = 20;
-      ballPhysics.y = 42;
-      ballPhysics.vx = 2;
-      ballPhysics.vy = 0;
+      ballPhysics.x = 24; ballPhysics.y = 42; ballPhysics.vx = 2; ballPhysics.vy = 0;
 
       document.getElementById('casingPetBadge').textContent = state.pet.badge;
       document.getElementById('appPetName').textContent = state.pet.name;
       document.getElementById('appPetIcon').textContent = state.pet.icon;
-      document.getElementById('appPetBreedDesc').textContent = `Tür: ${state.pet.desc} | #SOC-00${currentPetIndex+1}`;
-      document.getElementById('phoneBleName').textContent = `Socies_${state.pet.id.toUpperCase()}_C3`;
-
-      triggerHaptic(120);
-      playTone(523, 0.08); setTimeout(() => playTone(659, 0.08), 90); setTimeout(() => playTone(784, 0.12), 180);
-      showToast(`🔄 Karakter Değiştirildi: ${state.pet.name} ${state.pet.icon}`);
+      triggerHaptic(100);
+      playTone(600, 0.08);
+      showToast("🔄 Karakter Değiştirildi: " + state.pet.name + " " + state.pet.icon);
       updateUI();
     }
 
-    // ==========================================
-    // TOP (BALL) SHAKE & BOUNCE PHYSICS
-    // ==========================================
     function triggerDeviceShake() {
       if (!state.isPowered) return;
-
       if (state.pet.id === 'top') {
-        // High elastic ricochet on shake!
-        ballPhysics.vy = -6; // Upward rocket bounce
+        ballPhysics.vy = -6;
         ballPhysics.vx = (Math.random() - 0.5) * 8;
         ballPhysics.bounceCount++;
         state.needs.fun = Math.min(100, state.needs.fun + 10);
         state.totalScore += 5;
-        document.getElementById('shakeStats').textContent = `Zıplama: ${ballPhysics.bounceCount}`;
         triggerHaptic(180);
-        playTone(600, 0.05); setTimeout(() => playTone(900, 0.08), 80);
+        playTone(650, 0.05); setTimeout(() => playTone(950, 0.08), 70);
         showToast("⚽ Top tavan ve duvarlardan sekti! Zıp zıp!");
       } else {
-        // Other pets
         state.needs.fun = Math.min(100, state.needs.fun + 8);
         triggerHaptic(120);
         playTone(700, 0.08);
-        showToast(`👋 ${state.pet.name} sallandı ve neşelendi!`);
+        showToast("👋 " + state.pet.name + " sallandı ve mutlu oldu!");
       }
       updateUI();
     }
 
-    // ==========================================
-    // KAKA (POOP 💩) MEKANİĞİ
-    // ==========================================
     function triggerPoopManually() {
       state.hasPoop = true;
-      state.needs.toilet = 100;
-      state.needs.clean = Math.max(10, state.needs.clean - 35);
-      triggerHaptic(200);
-      playTone(300, 0.15, 'sawtooth');
-      showToast("💩 Pırrt! Ekranda kaka belirdi! Temizlemezsen hijyen düşer.");
+      state.needs.clean = Math.max(10, state.needs.clean - 30);
+      triggerHaptic(180);
+      playTone(320, 0.12, 'sawtooth');
+      showToast("💩 Kaka belirdi! Hijyen düşüyor, hemen temizle!");
       updateUI();
     }
 
-    function cleanPoopAction() {
-      state.hasPoop = false;
-      state.needs.clean = 100;
-      state.totalScore += 15;
+    // ==========================================
+    // 1. TAŞ - KAĞIT - MAKAS 3-2-1 SOSYAL GERİ SAYIM
+    // ==========================================
+    function startSocialRPSGame() {
+      state.currentView = 'RPS_COUNTDOWN';
+      state.rpsCountdown = 3;
+      state.rpsPlayerChoice = null;
+      state.rpsCpuChoice = null;
+      state.rpsResultText = "Seçimini yap! (1:Taş 2:Kağıt 3:Makas)";
+      document.getElementById('gameStatusIndicator').textContent = "Oyun: 3-2-1 Taş-Kağıt-Makas";
+      document.getElementById('btn1Subtext').textContent = "Taş 🪨";
+      document.getElementById('btn2Subtext').textContent = "Kağıt 📄";
+      document.getElementById('btn3Subtext').textContent = "Makas ✂️";
+
       triggerHaptic(100);
-      playTone(523, 0.08); setTimeout(() => playTone(659, 0.1), 90);
-      showToast("🧼 Ekran tertemiz oldu! Kaka süpürüldü. (+15 Puan)");
+      playTone(800, 0.1);
+
+      if (state.rpsTimer) clearInterval(state.rpsTimer);
+
+      state.rpsTimer = setInterval(() => {
+        state.rpsCountdown--;
+        if (state.rpsCountdown > 0) {
+          playTone(600 + (3 - state.rpsCountdown) * 150, 0.08);
+          triggerHaptic(80);
+        } else {
+          clearInterval(state.rpsTimer);
+          revealRPSResults();
+        }
+        updateUI();
+      }, 1000);
+
+      showToast("✊ 3-2-1 Geri sayım başladı! Süre bitmeden tuşa bas!");
       updateUI();
     }
 
-    // ==========================================
-    // TAŞ - KAĞIT - MAKAS MİNİ OYUNU
-    // ==========================================
-    function toggleRPSGame() {
-      state.currentView = (state.currentView === 'RPS_GAME') ? 'MAIN' : 'RPS_GAME';
-      if (state.currentView === 'RPS_GAME') {
-        state.rpsResultText = "1: Taş, 2: Kağıt, 3: Makas";
-        document.getElementById('btn1Subtext').textContent = "1: Taş 🪨";
-        document.getElementById('btn2Subtext').textContent = "2: Kağıt 📄";
-        document.getElementById('btn3Subtext').textContent = "3: Makas ✂️";
-        showToast("✊ Taş-Kağıt-Makas başladı! Dikey tuşlarla seçim yap.");
-      } else {
-        document.getElementById('btn1Subtext').textContent = "Yukarı";
-        document.getElementById('btn2Subtext').textContent = "Seç";
-        document.getElementById('btn3Subtext').textContent = "Aşağı";
-      }
+    function selectRPSPlayer(choiceIndex) {
+      const names = ["TAŞ 🪨", "KAĞIT 📄", "MAKAS ✂️"];
+      state.rpsPlayerChoice = choiceIndex;
+      triggerHaptic(80);
+      playTone(900, 0.06);
+      showToast("Seçimin kilitlendi: " + names[choiceIndex]);
       updateUI();
     }
 
-    function playRPS(playerPick) { // 0: Taş, 1: Kağıt, 2: Makas
+    function revealRPSResults() {
+      state.currentView = 'RPS_REVEAL';
       const picks = ["TAŞ", "KAĞIT", "MAKAS"];
       const icons = ["🪨", "📄", "✂️"];
-      const cpuPick = Math.floor(Math.random() * 3);
 
-      state.rpsPlayerChoice = picks[playerPick];
-      state.rpsCpuChoice = picks[cpuPick];
+      if (state.rpsPlayerChoice === null) state.rpsPlayerChoice = Math.floor(Math.random() * 3);
+      state.rpsCpuChoice = Math.floor(Math.random() * 3);
 
-      if (playerPick === cpuPick) {
-        state.rpsResultText = `BERABERE! (${picks[playerPick]} vs ${picks[cpuPick]})`;
-        playTone(500, 0.1);
-        triggerHaptic(80);
-      } else if (
-        (playerPick === 0 && cpuPick === 2) || // Taş > Makas
-        (playerPick === 1 && cpuPick === 0) || // Kağıt > Taş
-        (playerPick === 2 && cpuPick === 1)    // Makas > Kağıt
-      ) {
-        state.rpsResultText = `KAZANDIN! 🎉 (+30P)`;
-        state.needs.fun = Math.min(100, state.needs.fun + 25);
-        state.totalScore += 30;
-        playTone(587, 0.08); setTimeout(() => playTone(880, 0.15), 90);
-        triggerHaptic(180);
-        showToast(`🏆 Sen: ${icons[playerPick]} | Rakip: ${icons[cpuPick]} -> KAZANDIN!`);
-      } else {
-        state.rpsResultText = `KAYBETTİN! 😢`;
-        playTone(300, 0.15, 'sawtooth');
+      const p = state.rpsPlayerChoice;
+      const c = state.rpsCpuChoice;
+
+      if (p === c) {
+        state.rpsResultText = "BERABERE! (" + icons[p] + " = " + icons[c] + ")";
+        playTone(500, 0.15);
+        triggerHaptic(100);
+      } else if ((p === 0 && c === 2) || (p === 1 && c === 0) || (p === 2 && c === 1)) {
+        state.rpsResultText = "KAZANDIN! 🎉 (+35P)";
+        state.needs.fun = Math.min(100, state.needs.fun + 30);
+        state.totalScore += 35;
+        playTone(659, 0.1); setTimeout(() => playTone(880, 0.2), 110);
         triggerHaptic(200);
-        showToast(`😢 Sen: ${icons[playerPick]} | Rakip: ${icons[cpuPick]} -> Rakip kazandı!`);
+      } else {
+        state.rpsResultText = "KAYBETTİN! 😢";
+        playTone(330, 0.2, 'sawtooth');
+        triggerHaptic(250);
       }
+
+      showToast("Açıldı! Sen: " + icons[p] + " | Karşı: " + icons[c] + " -> " + state.rpsResultText);
       updateUI();
     }
 
     // ==========================================
-    // BUTTON INPUT HANDLER
+    // 2. YENİ OYUN: KOVBOY DÜELLOSU
+    // ==========================================
+    function startQuickDrawDuel() {
+      state.currentView = 'QUICK_DRAW';
+      state.duelState = 'WAIT';
+      document.getElementById('gameStatusIndicator').textContent = "Oyun: Kovboy Düellosu";
+      document.getElementById('btn1Subtext').textContent = "---";
+      document.getElementById('btn2Subtext').textContent = "ATEŞ! (●)";
+      document.getElementById('btn3Subtext').textContent = "---";
+
+      playTone(440, 0.15);
+      showToast("🤠 DÜELLO: Ekranda 'ATEŞ!' yazınca HEMEN Seç (●) tuşuna bas!");
+      updateUI();
+
+      if (state.duelTimer) clearTimeout(state.duelTimer);
+
+      const randomWaitMs = Math.floor(Math.random() * 2500) + 2000;
+      state.duelTimer = setTimeout(() => {
+        state.duelState = 'DRAW_NOW';
+        state.duelStartTime = Date.now();
+        triggerHaptic(250);
+        playTone(1200, 0.15);
+        updateUI();
+      }, randomWaitMs);
+    }
+
+    function fireDuelTrigger() {
+      if (state.duelState === 'WAIT') {
+        clearTimeout(state.duelTimer);
+        state.duelState = 'FINISHED';
+        playTone(250, 0.2, 'sawtooth');
+        triggerHaptic(300);
+        showToast("⚠️ ERKEN BASTIN! Faul yaptın ve kaybettin!");
+        updateUI();
+        return;
+      }
+
+      if (state.duelState === 'DRAW_NOW') {
+        state.duelReactionMs = Date.now() - state.duelStartTime;
+        state.duelState = 'FINISHED';
+
+        if (state.duelReactionMs < 450) {
+          state.totalScore += 50;
+          state.needs.fun = Math.min(100, state.needs.fun + 35);
+          playTone(784, 0.1); setTimeout(() => playTone(1046, 0.2), 110);
+          triggerHaptic(180);
+          showToast("🏆 KAZANDIN! Hız: " + state.duelReactionMs + "ms (+50 Puan)");
+        } else {
+          playTone(350, 0.15, 'sawtooth');
+          triggerHaptic(200);
+          showToast("😢 Rakip daha hızlıydı! (" + state.duelReactionMs + "ms)");
+        }
+        updateUI();
+      }
+    }
+
+    // ==========================================
+    // 3. CLOUD BACKUP & FACTORY RESET
+    // ==========================================
+    function triggerCloudBackup() {
+      const payload = {
+        deviceId: "SOCIES-ESP32-84920A",
+        userEmail: "turan@socies.io",
+        petBreed: state.pet.id,
+        score: state.totalScore,
+        ageDays: state.ageDays,
+        streakDays: state.streakDays,
+        needs: state.needs,
+        timestamp: new Date().toISOString()
+      };
+
+      triggerHaptic(120);
+      playTone(880, 0.1);
+      showToast("☁️ Bulut Yedekleme Başarılı! Veriler kaydedildi.");
+      console.log("SERVER TELEMETRY POST ->", payload);
+    }
+
+    function restoreFromCloud() {
+      triggerHaptic(150);
+      playTone(523, 0.1); setTimeout(() => playTone(659, 0.1), 100); setTimeout(() => playTone(784, 0.15), 200);
+      showToast("📥 Oturum Buluttan Geri Yüklendi! Puan: " + state.totalScore);
+      updateUI();
+    }
+
+    function factoryResetPrompt() {
+      if (confirm("Evcil hayvanı sıfırlayıp yumurtadan baştan başlamak istediğinize emin misiniz?")) {
+        state.stage = 0;
+        state.ageDays = 1;
+        state.needs = { hunger: 100, fun: 100, love: 100, sleep: 100, toilet: 100, clean: 100, social: 100 };
+        state.hasPoop = false;
+        triggerHaptic(300);
+        playTone(300, 0.2);
+        showToast("🥚 Cihaz sıfırlandı ve yeni bir yumurtaya dönüldü!");
+        updateUI();
+      }
+    }
+
+    // ==========================================
+    // HARDWARE BUTTON INTERACTION
     // ==========================================
     const pressTimers = {};
 
@@ -919,12 +918,17 @@
       if (!state.isPowered) return;
       playTone(650, 0.04);
 
-      // RPS Mini Game controls
-      if (state.currentView === 'RPS_GAME') {
-        if (btnKey === 'UP') playRPS(0);        // Taş
-        else if (btnKey === 'ACTION') playRPS(1); // Kağıt
-        else if (btnKey === 'DOWN') playRPS(2);   // Makas
-        else if (btnKey === 'BACK') toggleRPSGame();
+      if (state.currentView === 'RPS_COUNTDOWN') {
+        if (btnKey === 'UP') selectRPSPlayer(0);
+        else if (btnKey === 'ACTION') selectRPSPlayer(1);
+        else if (btnKey === 'DOWN') selectRPSPlayer(2);
+        else if (btnKey === 'BACK') { clearInterval(state.rpsTimer); state.currentView = 'MAIN'; updateUI(); }
+        return;
+      }
+
+      if (state.currentView === 'QUICK_DRAW') {
+        if (btnKey === 'ACTION') fireDuelTrigger();
+        else if (btnKey === 'BACK') { clearTimeout(state.duelTimer); state.currentView = 'MAIN'; updateUI(); }
         return;
       }
 
@@ -935,18 +939,10 @@
       }
 
       switch(btnKey) {
-        case 'UP':
-          state.menuIndex = (state.menuIndex - 1 + state.menuItems.length) % state.menuItems.length;
-          break;
-        case 'DOWN':
-          state.menuIndex = (state.menuIndex + 1) % state.menuItems.length;
-          break;
-        case 'ACTION':
-          executeAction();
-          break;
-        case 'BACK':
-          showToast("İptal");
-          break;
+        case 'UP': state.menuIndex = (state.menuIndex - 1 + state.menuItems.length) % state.menuItems.length; break;
+        case 'DOWN': state.menuIndex = (state.menuIndex + 1) % state.menuItems.length; break;
+        case 'ACTION': executeAction(); break;
+        case 'BACK': showToast("İptal"); break;
       }
       updateUI();
     }
@@ -969,10 +965,24 @@
     }
 
     function executeAction() {
-      const curItem = state.menuItems[state.menuIndex];
+      if (state.stage === 0) {
+        state.stage = 1;
+        triggerHaptic(200);
+        playTone(523, 0.1); setTimeout(() => playTone(784, 0.2), 150);
+        showToast("🎉 Yumurta çatladı! Hayata merhaba!");
+        updateUI();
+        return;
+      }
 
+      const curItem = state.menuItems[state.menuIndex];
       if (curItem.action === 'clean' && state.hasPoop) {
-        cleanPoopAction();
+        state.hasPoop = false;
+        state.needs.clean = 100;
+        state.totalScore += 15;
+        triggerHaptic(100);
+        playTone(659, 0.1);
+        showToast("🧼 Ekran temizlendi!");
+        updateUI();
         return;
       }
 
@@ -980,7 +990,7 @@
       state.totalScore += 10;
       triggerHaptic(100);
       playTone(587, 0.08); setTimeout(() => playTone(880, 0.12), 90);
-      showToast(`✨ ${curItem.label} yapıldı! (+10 Puan)`);
+      showToast("✨ " + curItem.label + " yapıldı! (+10 Puan)");
       updateUI();
     }
 
@@ -997,23 +1007,23 @@
 
       ctx.fillStyle = "#02060c"; ctx.fillRect(0, 0, 128, 64);
 
-      // --- 1. TOP YELLOW PHONE STATUS BAR (16PX) ---
+      // 1. TOP YELLOW STATUS BAR (16PX)
       drawPhoneStatusBar();
 
-      // Divider Line (Y = 15)
       ctx.strokeStyle = "rgba(255, 230, 0, 0.4)";
       ctx.beginPath(); ctx.moveTo(0, 14.5); ctx.lineTo(128, 14.5); ctx.stroke();
 
-      // --- 2. BOTTOM BLUE ZONE (48PX) ---
+      // 2. BOTTOM BLUE ZONE (48PX)
       ctx.fillStyle = "#00f0ff";
 
       if (state.currentView === 'ALL_NEEDS_HUD') { drawAllNeedsHUD(); return; }
-      if (state.currentView === 'RPS_GAME') { drawRPSGameScreen(); return; }
+      if (state.currentView === 'RPS_COUNTDOWN') { drawRPSCountdownScreen(); return; }
+      if (state.currentView === 'RPS_REVEAL') { drawRPSRevealScreen(); return; }
+      if (state.currentView === 'QUICK_DRAW') { drawQuickDrawScreen(); return; }
 
-      // DRAW ACTIVE PET
+      // MAIN GAME VIEW
       drawActivePet();
 
-      // DRAW POOP IF PRESENT
       if (state.hasPoop) {
         drawPoop(state.poopX, state.poopY, state.animFrame);
       }
@@ -1021,7 +1031,6 @@
       drawOledMenu();
     }
 
-    // REAL PHONE STATUS BAR ICONS
     function drawPhoneStatusBar() {
       ctx.fillStyle = "#ffe600";
       // Battery
@@ -1038,12 +1047,12 @@
         ctx.fillRect(23, 5, 1, 1); ctx.fillRect(23, 9, 1, 1);
       }
 
-      // Speaker
+      // Speaker Icon
       ctx.fillRect(36, 6, 2, 3); ctx.fillRect(38, 5, 2, 5);
       if (audioEnabled) { ctx.fillRect(41, 5, 1, 1); ctx.fillRect(42, 6, 1, 3); ctx.fillRect(41, 9, 1, 1); }
       else { ctx.fillRect(41, 6, 1, 1); ctx.fillRect(42, 7, 1, 1); ctx.fillRect(43, 8, 1, 1); }
 
-      // Vibration Phone
+      // Vibration Icon
       ctx.fillRect(49, 4, 4, 7);
       ctx.fillStyle = "#02060c"; ctx.fillRect(50, 5, 2, 5); ctx.fillStyle = "#ffe600";
       if (hapticEnabled) { ctx.fillRect(47, 6, 1, 3); ctx.fillRect(54, 6, 1, 3); }
@@ -1053,176 +1062,99 @@
       const d = new Date();
       const h = String(d.getHours()).padStart(2, '0');
       const m = String(d.getMinutes()).padStart(2, '0');
-      ctx.fillText(`${h}:${m}`, 92, 10);
+      ctx.fillText(h + ":" + m, 92, 10);
     }
 
-    // DRAW ACTIVE PET ROUTER
     function drawActivePet() {
-      const petId = state.pet.id;
-      if (petId === 'top') {
-        drawBouncyBall();
-      } else if (petId === 'kedi') {
-        drawNekoCat(64, 40, state.animFrame);
-      } else if (petId === 'kopek') {
-        drawPlayfulDog(64, 40, state.animFrame);
-      } else if (petId === 'bitki') {
-        drawCutePlant(64, 42, state.animFrame);
-      } else if (petId === 'balik') {
-        drawFish(64, 38, state.animFrame);
-      } else if (petId === 'kus') {
-        drawBird(64, 38, state.animFrame);
+      if (state.stage === 0) {
+        ctx.beginPath(); ctx.ellipse(64, 40, 9, 12, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = "#02060c"; ctx.fillRect(61, 38, 6, 2); return;
+      }
+
+      if (state.pet.id === 'top') {
+        const b = ballPhysics;
+        ctx.beginPath();
+        ctx.ellipse(b.x, b.y, b.radius, b.radius, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = "#02060c";
+        ctx.fillRect(b.x - 3, b.y - 3, 2, 3); ctx.fillRect(b.x + 2, b.y - 3, 2, 3);
+        ctx.fillRect(b.x - 1, b.y + 1, 3, 1);
+      } else if (state.pet.id === 'kedi') {
+        ctx.beginPath(); ctx.ellipse(64, 42, 11, 8, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.fillRect(57, 34, 14, 10);
+        ctx.beginPath(); ctx.moveTo(57, 34); ctx.lineTo(60, 27); ctx.lineTo(63, 34); ctx.fill();
+        ctx.beginPath(); ctx.moveTo(65, 34); ctx.lineTo(68, 27); ctx.lineTo(71, 34); ctx.fill();
+        ctx.fillStyle = "#02060c"; ctx.fillRect(60, 37, 2, 2); ctx.fillRect(66, 37, 2, 2);
       } else {
-        drawSausage(64, 38, state.animFrame);
+        ctx.fillRect(54, 34, 20, 13);
+        ctx.fillStyle = "#02060c"; ctx.fillRect(58, 37, 2, 2); ctx.fillRect(66, 37, 2, 2);
       }
     }
 
-    // 1. TOP (ZIPZIP) WITH SQUISH & BOUNCE PHYSICS
-    function drawBouncyBall() {
-      const b = ballPhysics;
-      const squish = Math.abs(b.vy) > 2 ? 2 : (state.animFrame % 2 === 0 ? 0 : -1);
-
-      ctx.fillStyle = "#00f0ff";
-      ctx.beginPath();
-      ctx.ellipse(b.x, b.y, b.radius + squish, b.radius - squish, 0, 0, Math.PI * 2);
-      ctx.fill();
-
-      // Big cute round eyes
-      ctx.fillStyle = "#02060c";
-      ctx.fillRect(b.x - 3, b.y - 3, 2, 3);
-      ctx.fillRect(b.x + 2, b.y - 3, 2, 3);
-      ctx.fillStyle = "#00f0ff";
-      ctx.fillRect(b.x - 3, b.y - 3, 1, 1);
-      ctx.fillRect(b.x + 2, b.y - 3, 1, 1);
-
-      // Smile & Blushing cheeks
-      ctx.fillStyle = "#02060c";
-      ctx.fillRect(b.x - 1, b.y + 1, 3, 1);
-      ctx.fillRect(b.x - 2, b.y, 1, 1);
-      ctx.fillRect(b.x + 2, b.y, 1, 1);
-    }
-
-    // 2. KEDİ (NEKO - GROOMING PAW & MEOW)
-    function drawNekoCat(cx, cy, frame) {
-      const hop = (frame % 2 === 0) ? 0 : -1;
-      const y = cy + hop;
-      ctx.fillStyle = "#00f0ff";
-      // Body & Head
-      ctx.beginPath(); ctx.ellipse(cx, y + 2, 11, 8, 0, 0, Math.PI * 2); ctx.fill();
-      ctx.fillRect(cx - 7, y - 6, 14, 10);
-      // Ears
-      ctx.beginPath();
-      ctx.moveTo(cx - 7, y - 6); ctx.lineTo(cx - 4, y - 12); ctx.lineTo(cx - 1, y - 6);
-      ctx.moveTo(cx + 1, y - 6); ctx.lineTo(cx + 4, y - 12); ctx.lineTo(cx + 7, y - 6);
-      ctx.fill();
-      // Tail wag
-      const wag = (frame % 2 === 0) ? 14 : 16;
-      ctx.fillRect(cx + 10, y, 3, 2);
-      ctx.fillRect(cx + wag, y - 5, 2, 6);
-      // Face
-      ctx.fillStyle = "#02060c";
-      ctx.fillRect(cx - 4, y - 2, 2, 2); ctx.fillRect(cx + 3, y - 2, 2, 2);
-      ctx.fillRect(cx - 1, y + 1, 2, 1);
-    }
-
-    // 3. KÖPEK (DOST - WAGGING TAIL & PANTING)
-    function drawPlayfulDog(cx, cy, frame) {
-      const y = cy;
-      ctx.fillStyle = "#00f0ff";
-      ctx.fillRect(cx - 10, y - 5, 20, 13);
-      // Floppy ears
-      ctx.fillRect(cx - 13, y - 5, 3, 8);
-      ctx.fillRect(cx + 10, y - 5, 3, 8);
-      // Tail wag
-      const tailX = (frame % 2 === 0) ? -14 : -16;
-      ctx.fillRect(tailX, y - 3, 4, 3);
-      // Snout & tongue
-      ctx.fillStyle = "#02060c";
-      ctx.fillRect(cx - 5, y - 2, 2, 2); ctx.fillRect(cx + 3, y - 2, 2, 2);
-      ctx.fillRect(cx - 1, y + 2, 3, 2);
-      ctx.fillStyle = "#00f0ff";
-      if (frame % 2 === 0) ctx.fillRect(cx, y + 4, 2, 2); // panting tongue
-    }
-
-    // 4. BİTKİ (FİLİZ - SAKSI VE YAPRAK SALLAMA)
-    function drawCutePlant(cx, cy, frame) {
-      const y = cy;
-      ctx.fillStyle = "#00f0ff";
-      // Pot (Saksı)
-      ctx.fillRect(cx - 8, y + 2, 16, 8);
-      ctx.fillRect(cx - 10, y, 20, 3);
-      // Stem
-      ctx.fillRect(cx - 1, y - 8, 2, 8);
-      // Leaves (Swaying)
-      const sway = (frame % 2 === 0) ? 1 : 0;
-      ctx.beginPath();
-      ctx.ellipse(cx - 6 - sway, y - 6, 5, 2.5, -0.4, 0, Math.PI * 2);
-      ctx.ellipse(cx + 6 + sway, y - 6, 5, 2.5, 0.4, 0, Math.PI * 2);
-      ctx.fill();
-      // Flower / Bud
-      ctx.fillRect(cx - 3, y - 11, 6, 4);
-      // Cute face on the pot
-      ctx.fillStyle = "#02060c";
-      ctx.fillRect(cx - 4, y + 4, 2, 2); ctx.fillRect(cx + 3, y + 4, 2, 2);
-      ctx.fillRect(cx - 1, y + 6, 2, 1);
-    }
-
-    // 5. BALIK
-    function drawFish(cx, cy, frame) {
-      const y = cy; ctx.fillStyle = "#00f0ff";
-      ctx.beginPath(); ctx.ellipse(cx, y, 12, 7, 0, 0, Math.PI * 2); ctx.fill();
-      ctx.beginPath(); ctx.moveTo(cx - 10, y); ctx.lineTo(cx - 16, y - 5); ctx.lineTo(cx - 16, y + 5); ctx.fill();
-      ctx.fillRect(cx + 14, y - (frame % 2 === 0 ? 5 : 7), 2, 2);
-      ctx.fillStyle = "#02060c"; ctx.fillRect(cx + 5, y - 2, 2, 2);
-    }
-
-    // 6. KUŞ
-    function drawBird(cx, cy, frame) {
-      const y = cy; ctx.fillStyle = "#00f0ff";
-      ctx.beginPath(); ctx.arc(cx, y, 8, 0, Math.PI * 2); ctx.fill();
-      ctx.fillRect(cx + 7, y - 2, 4, 3);
-      ctx.fillRect(cx - 5, (frame % 2 === 0 ? y - 3 : y + 2), 5, 4);
-      ctx.fillStyle = "#02060c"; ctx.fillRect(cx + 3, y - 3, 2, 2);
-    }
-
-    // 7. SOSİS
-    function drawSausage(cx, cy, frame) {
-      const y = cy; ctx.fillStyle = "#00f0ff";
-      ctx.beginPath(); ctx.roundRect(cx - 16, y - 5, 32, 11, 5); ctx.fill();
-      ctx.fillStyle = "#02060c";
-      ctx.fillRect(cx - 5, y - 2, 2, 3); ctx.fillRect(cx + 3, y - 2, 2, 3);
-      ctx.fillRect(cx - 1, y + 2, 3, 1);
-    }
-
-    // DRAW POOP (KAKA 💩) WITH STINK WAVES
     function drawPoop(px, py, frame) {
       ctx.fillStyle = "#00f0ff";
-      // Swirled soft serve poop shape
       ctx.fillRect(px - 5, py + 2, 10, 4);
       ctx.fillRect(px - 3, py - 1, 7, 3);
       ctx.fillRect(px - 1, py - 3, 3, 2);
-      // Little eyes on poop
       ctx.fillStyle = "#02060c";
       ctx.fillRect(px - 2, py + 2, 1, 2); ctx.fillRect(px + 2, py + 2, 1, 2);
-
-      // Floating stink lines (~ ~)
-      ctx.fillStyle = "#ffe600";
-      const wave = (frame % 2 === 0) ? -1 : 1;
-      ctx.fillRect(px - 4 + wave, py - 6, 2, 1);
-      ctx.fillRect(px + 3 - wave, py - 7, 2, 1);
     }
 
-    // TAŞ KAĞIT MAKAS EKRANI
-    function drawRPSGameScreen() {
+    function drawRPSCountdownScreen() {
+      ctx.font = "7px 'Press Start 2P', monospace";
+      ctx.fillStyle = "#00f0ff";
+      ctx.fillText("TAS-KAGIT-MAKAS", 8, 24);
+
+      ctx.font = "bold 16px 'Press Start 2P', monospace";
+      ctx.fillStyle = "#ffe600";
+      ctx.fillText(state.rpsCountdown, 56, 44);
+
       ctx.font = "6px 'Press Start 2P', monospace";
       ctx.fillStyle = "#00f0ff";
-      ctx.fillText("TAS-KAGIT-MAKAS", 10, 24);
+      ctx.fillText("1:TAS  2:KAGIT  3:MAKAS", 4, 58);
+    }
 
+    function drawRPSRevealScreen() {
+      const icons = ["TAS [R]", "KAGT [P]", "MKAS [S]"];
+      ctx.font = "6px 'Press Start 2P', monospace";
+      ctx.fillStyle = "#00f0ff";
+      ctx.fillText("SEN:", 8, 25);
       ctx.fillStyle = "#ffe600";
-      ctx.fillText(state.rpsResultText, 4, 38);
+      ctx.fillText(icons[state.rpsPlayerChoice], 40, 25);
 
       ctx.fillStyle = "#00f0ff";
-      ctx.fillText("1:TAS 2:KAGT 3:MKAS", 4, 52);
-      ctx.fillText("[Geri: Cikis]", 24, 61);
+      ctx.fillText("RAKIP:", 8, 38);
+      ctx.fillStyle = "#ffe600";
+      ctx.fillText(icons[state.rpsCpuChoice], 48, 38);
+
+      ctx.font = "bold 6px 'Press Start 2P', monospace";
+      ctx.fillStyle = "#00f0ff";
+      ctx.fillText(state.rpsResultText, 4, 56);
+    }
+
+    function drawQuickDrawScreen() {
+      ctx.font = "7px 'Press Start 2P', monospace";
+      ctx.fillStyle = "#00f0ff";
+      ctx.fillText("KOVBOY DUELLOSU", 6, 24);
+
+      if (state.duelState === 'WAIT') {
+        ctx.fillStyle = "#ffe600";
+        ctx.font = "8px 'Press Start 2P', monospace";
+        ctx.fillText("HAZIRLAN...", 22, 42);
+        ctx.font = "6px 'Press Start 2P', monospace";
+        ctx.fillStyle = "#94a3b8";
+        ctx.fillText("(Bekle! Erken basma)", 4, 58);
+      } else if (state.duelState === 'DRAW_NOW') {
+        ctx.fillStyle = "#ff2a85";
+        ctx.font = "bold 14px 'Press Start 2P', monospace";
+        ctx.fillText("ATES! ●", 24, 45);
+      } else {
+        ctx.fillStyle = "#ffe600";
+        ctx.font = "7px 'Press Start 2P', monospace";
+        ctx.fillText(state.duelReactionMs + " ms", 40, 42);
+        ctx.font = "6px 'Press Start 2P', monospace";
+        ctx.fillText("[Geri: Cikis]", 24, 58);
+      }
     }
 
     function drawOledMenu() {
@@ -1256,53 +1188,22 @@
       });
     }
 
-    // ==========================================
-    // SIMULATION LOOP
-    // ==========================================
     function simTick() {
       state.animFrame++;
 
-      // BALL PHYSICS TICK
-      if (state.pet.id === 'top') {
+      if (state.pet.id === 'top' && state.currentView === 'MAIN') {
         const b = ballPhysics;
-        b.x += b.vx;
-        b.y += b.vy;
-        b.vy += 0.4; // Gravity
-
-        // Floor collision
-        if (b.y > 42) {
-          b.y = 42;
-          b.vy = -b.vy * 0.75; // Bounciness coefficient
-          if (Math.abs(b.vy) < 0.5) b.vy = 0;
-        }
-
-        // Left/Right wall bounce
-        if (b.x < 12) {
-          b.x = 12;
-          b.vx = -b.vx;
-        } else if (b.x > 116) {
-          b.x = 116;
-          b.vx = -b.vx;
-        }
+        b.x += b.vx; b.y += b.vy; b.vy += 0.4;
+        if (b.y > 42) { b.y = 42; b.vy = -b.vy * 0.75; if (Math.abs(b.vy) < 0.5) b.vy = 0; }
+        if (b.x < 12) { b.x = 12; b.vx = -b.vx; } else if (b.x > 116) { b.x = 116; b.vx = -b.vx; }
       }
 
-      // NEEDS DECAY
-      if (state.isPowered) {
-        state.needs.hunger = Math.max(0, state.needs.hunger - 0.2);
-        state.needs.fun    = Math.max(0, state.needs.fun - (state.pet.id === 'top' ? 0.35 : 0.2));
-        state.needs.love   = Math.max(0, state.needs.love - 0.15);
-        state.needs.sleep  = Math.max(0, state.needs.sleep - 0.12);
-        state.needs.toilet = Math.max(0, state.needs.toilet - 0.2);
-
-        // Poop trigger if toilet < 15% and not plant
-        if (state.needs.toilet < 15 && !state.hasPoop && state.pet.id !== 'bitki') {
-          state.hasPoop = true;
-          showToast("💩 Sıkıştı ve kaka yaptı! Hemen temizle!");
-        }
-
-        if (state.hasPoop) {
-          state.needs.clean = Math.max(0, state.needs.clean - 0.5); // Rapid dirtying
-        }
+      if (state.isPowered && state.currentView === 'MAIN') {
+        state.needs.hunger = Math.max(0, state.needs.hunger - 0.15);
+        state.needs.fun    = Math.max(0, state.needs.fun - 0.2);
+        state.needs.love   = Math.max(0, state.needs.love - 0.12);
+        state.needs.sleep  = Math.max(0, state.needs.sleep - 0.1);
+        state.needs.toilet = Math.max(0, state.needs.toilet - 0.18);
       }
 
       renderOLED();
@@ -1310,14 +1211,8 @@
     }
 
     function updateMobileUI() {
-      document.getElementById('appPetAge').textContent = state.ageDays + " Gün";
       document.getElementById('appPetScore').textContent = state.totalScore;
-
-      const poopBanner = document.getElementById('poopBanner');
-      if (state.hasPoop) poopBanner.classList.add('show');
-      else poopBanner.classList.remove('show');
-
-      const needKeys = ['hunger', 'fun', 'love', 'sleep', 'toilet', 'clean', 'social'];
+      const needKeys = ['hunger', 'fun', 'love', 'sleep', 'toilet', 'clean'];
       needKeys.forEach(k => {
         const val = Math.round(state.needs[k]);
         const valElem = document.getElementById("val_" + k);
@@ -1325,24 +1220,12 @@
         if (valElem && barElem) {
           valElem.textContent = val + "%";
           barElem.style.width = val + "%";
-          if (k !== 'social') barElem.className = "need-bar-fill " + (val > 50 ? "high" : val > 20 ? "mid" : "crit");
+          barElem.className = "need-bar-fill " + (val > 50 ? "high" : val > 20 ? "mid" : "crit");
         }
       });
     }
 
     function updateUI() { renderOLED(); updateMobileUI(); }
-
-    function toggleBle() {
-      state.bleConnected = !state.bleConnected;
-      triggerHaptic(100);
-      showToast(state.bleConnected ? "BLE Bağlandı" : "BLE Kesildi");
-      updateUI();
-    }
-
-    function devTimeTravel(days) {
-      state.ageDays += days; state.totalScore += (days * 50);
-      showToast(`⏩ ${days} gün ilerletildi!`); updateUI();
-    }
 
     function showToast(msg) {
       const t = document.getElementById('appToast');
@@ -1358,7 +1241,6 @@
       if (btn) btn.classList.add('active');
     }
 
-    // KEYBOARD LISTENER
     window.addEventListener('keydown', (e) => {
       if (e.repeat) return;
       if (e.key === 'w' || e.key === 'ArrowUp') startBtnPress('UP');
@@ -1376,7 +1258,7 @@
 
     window.addEventListener('DOMContentLoaded', () => {
       updateUI();
-      setInterval(simTick, 50); // 20 FPS physics loop
+      setInterval(simTick, 50);
     });
   </script>
 </body>
