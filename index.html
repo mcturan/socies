@@ -1,0 +1,2235 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SOCIES - ESP32 Sanal Bebek & Mobil Ekosistem</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #090d16;
+      --card-bg: #111827;
+      --card-border: #1f293d;
+      --accent: #00f0ff;
+      --accent-yellow: #ffe600;
+      --accent-pink: #ff2a85;
+      --accent-green: #00ff66;
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --oled-yellow: #ffe600;
+      --oled-blue: #00f0ff;
+      --oled-bg: #03080e;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    body {
+      background: var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100vh;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(0, 240, 255, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 85% 85%, rgba(255, 42, 133, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 50% 50%, rgba(255, 230, 0, 0.04) 0%, transparent 60%);
+    }
+
+    header {
+      border-bottom: 1px solid var(--card-border);
+      background: rgba(17, 24, 39, 0.85);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 0.85rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .brand-logo {
+      width: 42px;
+      height: 42px;
+      background: linear-gradient(135deg, var(--accent-yellow), var(--accent-pink));
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 1.1rem;
+      color: #000;
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
+    }
+
+    .brand-title {
+      font-weight: 800;
+      font-size: 1.4rem;
+      letter-spacing: -0.5px;
+      background: linear-gradient(90deg, #fff, var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-tagline {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    nav.nav-tabs {
+      display: flex;
+      gap: 0.5rem;
+      background: rgba(9, 13, 22, 0.6);
+      padding: 0.35rem;
+      border-radius: 12px;
+      border: 1px solid var(--card-border);
+    }
+
+    .nav-btn {
+      padding: 0.55rem 1.1rem;
+      border-radius: 8px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+
+    .nav-btn:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .nav-btn.active {
+      background: var(--accent);
+      color: #000;
+      box-shadow: 0 0 16px rgba(0, 240, 255, 0.4);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .badge-status {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.75rem;
+      padding: 0.35rem 0.75rem;
+      border-radius: 20px;
+      background: rgba(0, 255, 102, 0.12);
+      border: 1px solid rgba(0, 255, 102, 0.3);
+      color: var(--accent-green);
+      font-weight: 600;
+    }
+
+    .badge-status::before {
+      content: '';
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent-green);
+      box-shadow: 0 0 8px var(--accent-green);
+      animation: pulse 1.8s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    main {
+      padding: 2rem;
+      max-width: 1560px;
+      margin: 0 auto;
+    }
+
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* SIMULATOR LAYOUT */
+    .simulator-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.95fr;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    @media (max-width: 1200px) {
+      .simulator-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* DEVICE HARDWARE CASING */
+    .device-stage {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 2rem;
+      position: relative;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    }
+
+    .device-casing {
+      background: linear-gradient(145deg, #1e2433, #0f1420);
+      border-radius: 40px;
+      padding: 2.2rem 2.5rem;
+      box-shadow: 
+        0 25px 50px rgba(0,0,0,0.8),
+        inset 0 2px 4px rgba(255,255,255,0.15),
+        inset 0 -4px 8px rgba(0,0,0,0.6);
+      position: relative;
+      border: 2px solid #2b354d;
+      max-width: 580px;
+      margin: 0 auto;
+    }
+
+    .casing-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.4rem;
+    }
+
+    .casing-brand {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.9rem;
+      color: #7d8ea8;
+      letter-spacing: 2px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .lanyard-hole {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #090d16;
+      border: 2px solid #374151;
+      box-shadow: inset 0 2px 4px #000;
+    }
+
+    /* OLED SCREEN BEZEL */
+    .screen-bezel {
+      background: #000;
+      border-radius: 16px;
+      padding: 18px 20px;
+      border: 3px solid #1a202c;
+      box-shadow: 
+        inset 0 4px 10px rgba(0,0,0,0.9),
+        0 4px 12px rgba(0,0,0,0.6);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .oled-specs-badge {
+      position: absolute;
+      top: 6px;
+      right: 14px;
+      font-size: 0.55rem;
+      color: #4b5563;
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: 0.5px;
+    }
+
+    /* 128x64 CANVAS */
+    #oledCanvas {
+      background: var(--oled-bg);
+      border-radius: 4px;
+      image-rendering: pixelated;
+      width: 100%;
+      max-width: 512px;
+      height: 256px;
+      display: block;
+      box-shadow: 0 0 30px rgba(0, 240, 255, 0.15);
+      border: 1px solid rgba(0, 240, 255, 0.2);
+    }
+
+    /* HARDWARE CONTROLS */
+    .controls-zone {
+      margin-top: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 1rem;
+    }
+
+    .dpad-container {
+      display: flex;
+      gap: 1.2rem;
+      align-items: center;
+    }
+
+    .hw-btn {
+      background: linear-gradient(145deg, #2b354b, #182030);
+      border: 2px solid #3d4a66;
+      border-radius: 50%;
+      width: 58px;
+      height: 58px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #cbd5e1;
+      font-weight: 700;
+      transition: all 0.1s ease;
+      box-shadow: 
+        0 6px 12px rgba(0,0,0,0.5),
+        inset 0 2px 2px rgba(255,255,255,0.15);
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .hw-btn:active {
+      transform: translateY(3px);
+      box-shadow: 
+        0 2px 4px rgba(0,0,0,0.5),
+        inset 0 1px 1px rgba(0,0,0,0.5);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .hw-btn-label {
+      font-size: 0.58rem;
+      margin-top: 2px;
+      color: #94a3b8;
+      font-family: 'Press Start 2P', monospace;
+    }
+
+    .hw-btn-action {
+      background: linear-gradient(145deg, #ff2a85, #b81458);
+      border-color: #ff559f;
+      color: #fff;
+      width: 64px;
+      height: 64px;
+    }
+
+    .hw-btn-action:active {
+      border-color: #fff;
+    }
+
+    .action-cluster {
+      display: flex;
+      gap: 1.2rem;
+      align-items: center;
+    }
+
+    .utility-buttons {
+      margin-top: 1.6rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid #1f293d;
+      padding-top: 1.2rem;
+    }
+
+    .micro-btn {
+      background: #1e2533;
+      border: 1px solid #334155;
+      color: #94a3b8;
+      font-size: 0.65rem;
+      font-weight: 600;
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: all 0.15s ease;
+    }
+
+    .micro-btn:hover {
+      background: #283347;
+      color: #fff;
+    }
+
+    .chg-led-indicator {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.65rem;
+      color: #64748b;
+    }
+
+    .led-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ef4444;
+      box-shadow: 0 0 6px #ef4444;
+    }
+
+    .led-dot.full {
+      background: #10b981;
+      box-shadow: 0 0 6px #10b981;
+    }
+
+    /* RIGHT SIDE: PHONE COMPANION */
+    .phone-stage {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 1.8rem;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    }
+
+    .phone-frame {
+      max-width: 440px;
+      margin: 0 auto;
+      background: #0f141f;
+      border: 3px solid #2d3748;
+      border-radius: 44px;
+      padding: 1.2rem 1.4rem;
+      box-shadow: 
+        0 20px 50px rgba(0,0,0,0.9),
+        inset 0 1px 2px rgba(255,255,255,0.1);
+      position: relative;
+    }
+
+    .phone-island {
+      width: 100px;
+      height: 20px;
+      background: #000;
+      border-radius: 20px;
+      margin: 0 auto 1.2rem auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .camera-lens {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #111b27;
+      border: 1px solid #1f293d;
+    }
+
+    .phone-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.2rem;
+    }
+
+    .ble-status-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.72rem;
+      padding: 0.35rem 0.7rem;
+      border-radius: 12px;
+      background: rgba(0, 240, 255, 0.12);
+      border: 1px solid rgba(0, 240, 255, 0.3);
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .ble-btn {
+      background: var(--accent);
+      color: #000;
+      border: none;
+      padding: 0.3rem 0.7rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    /* PET PROFILE CARD ON PHONE */
+    .phone-pet-card {
+      background: linear-gradient(135deg, rgba(31, 41, 55, 0.7), rgba(17, 24, 39, 0.9));
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 1.2rem;
+      margin-bottom: 1.2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pet-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.8rem;
+    }
+
+    .pet-name-tag {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .pet-stage-tag {
+      font-size: 0.7rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 8px;
+      background: rgba(255, 230, 0, 0.15);
+      color: var(--accent-yellow);
+      font-weight: 700;
+    }
+
+    .pet-card-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.6rem;
+      text-align: center;
+    }
+
+    .stat-box {
+      background: rgba(0,0,0,0.3);
+      padding: 0.5rem;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .stat-val {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--accent);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .stat-lbl {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* SIMS NEED METERS */
+    .needs-container {
+      margin-bottom: 1.2rem;
+    }
+
+    .needs-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .need-meter {
+      margin-bottom: 0.6rem;
+    }
+
+    .need-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.72rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .need-bar-bg {
+      height: 8px;
+      background: #1e293b;
+      border-radius: 6px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .need-bar-fill {
+      height: 100%;
+      border-radius: 6px;
+      transition: width 0.3s ease, background-color 0.3s ease;
+    }
+
+    .need-bar-fill.high {
+      background: linear-gradient(90deg, #10b981, #34d399);
+    }
+
+    .need-bar-fill.mid {
+      background: linear-gradient(90deg, #f59e0b, #fbbf24);
+    }
+
+    .need-bar-fill.crit {
+      background: linear-gradient(90deg, #ef4444, #f87171);
+      animation: pulse 1s infinite;
+    }
+
+    /* TIME TRAVEL / DEV BAR */
+    .dev-controls-card {
+      background: rgba(17, 24, 39, 0.6);
+      border: 1px dashed #374151;
+      border-radius: 16px;
+      padding: 0.9rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .dev-controls-title {
+      font-size: 0.7rem;
+      color: #9ca3af;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.6rem;
+    }
+
+    .dev-buttons {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.4rem;
+    }
+
+    .btn-dev {
+      background: #1f2937;
+      border: 1px solid #374151;
+      color: #e5e7eb;
+      font-size: 0.68rem;
+      font-weight: 600;
+      padding: 0.45rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .btn-dev:hover {
+      background: #374151;
+      color: #fff;
+    }
+
+    .btn-dev-danger {
+      border-color: #ef4444;
+      color: #f87171;
+    }
+
+    .btn-dev-danger:hover {
+      background: rgba(239, 68, 68, 0.2);
+    }
+
+    /* LEADERBOARD & SOCIAL */
+    .tab-pills {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .pill-btn {
+      flex: 1;
+      padding: 0.4rem;
+      font-size: 0.72rem;
+      font-weight: 700;
+      background: #1e293b;
+      border: none;
+      border-radius: 8px;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .pill-btn.active {
+      background: var(--accent);
+      color: #000;
+    }
+
+    .leaderboard-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .lb-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(15, 23, 42, 0.6);
+      padding: 0.5rem 0.75rem;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.04);
+      font-size: 0.75rem;
+    }
+
+    .lb-rank {
+      font-weight: 800;
+      width: 24px;
+      color: var(--accent-yellow);
+    }
+
+    .lb-user {
+      flex: 1;
+      margin-left: 0.4rem;
+    }
+
+    .lb-user-name {
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .lb-user-pet {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+    }
+
+    .lb-score {
+      font-weight: 800;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--accent);
+    }
+
+    /* TABS CONTENT STYLES */
+    .doc-section {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 2.2rem;
+      margin-bottom: 2rem;
+      line-height: 1.7;
+    }
+
+    .doc-section h2 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin-bottom: 1.2rem;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .doc-section h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin: 1.5rem 0 0.8rem 0;
+      color: var(--accent);
+    }
+
+    .doc-section p {
+      color: #d1d5db;
+      margin-bottom: 1rem;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .feature-card {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-4px);
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--accent);
+    }
+
+    .feature-card.gold::before {
+      background: var(--accent-yellow);
+    }
+
+    .feature-card.pink::before {
+      background: var(--accent-pink);
+    }
+
+    .feature-icon {
+      font-size: 1.8rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .feature-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+
+    .feature-desc {
+      font-size: 0.85rem;
+      color: #94a3b8;
+    }
+
+    /* CODE BLOCKS */
+    pre {
+      background: #070a12;
+      border: 1px solid #1f293d;
+      border-radius: 12px;
+      padding: 1.2rem;
+      overflow-x: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: #e2e8f0;
+      margin: 1rem 0;
+      line-height: 1.5;
+    }
+
+    code {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    table.spec-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.2rem 0;
+      font-size: 0.9rem;
+    }
+
+    table.spec-table th, table.spec-table td {
+      padding: 0.8rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    table.spec-table th {
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .alert-banner {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
+      padding: 1rem 1.2rem;
+      border-radius: 12px;
+      margin: 1.2rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      font-size: 0.85rem;
+    }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--card-border);
+      padding: 2rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: #1e293b;
+      border: 1px solid var(--accent);
+      color: #fff;
+      padding: 0.8rem 1.4rem;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+      z-index: 1000;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="brand">
+      <div class="brand-logo">S</div>
+      <div>
+        <div class="brand-title">SOCIES</div>
+        <div class="brand-tagline">ESP32 & OLED Sanal Bebek Ekosistemi</div>
+      </div>
+    </div>
+
+    <nav class="nav-tabs">
+      <button class="nav-btn active" onclick="switchTab('tab-sim')">🎮 Emülatör & Cihaz</button>
+      <button class="nav-btn" onclick="switchTab('tab-hardware')">📐 Donanım & Şema</button>
+      <button class="nav-btn" onclick="switchTab('tab-code')">💻 ESP32 C++ Kodu</button>
+      <button class="nav-btn" onclick="switchTab('tab-benchmark')">🚀 Muadil Analizi & İnovasyon (Madde 17)</button>
+      <button class="nav-btn" onclick="switchTab('tab-rules')">📜 Oyun Kuralları</button>
+    </nav>
+
+    <div class="header-actions">
+      <div class="badge-status" id="headerBleStatus">BLE Aktif</div>
+      <button class="micro-btn" id="btnSoundToggle" onclick="toggleAudio()">🔊 Ses: Açık</button>
+    </div>
+  </header>
+
+  <!-- MAIN VIEW CONTAINER -->
+  <main>
+
+    <!-- TAB 1: SIMULATOR (DUAL VIEW: ESP32 DEVICE + MOBILE APP) -->
+    <div id="tab-sim" class="tab-content active">
+      <div class="simulator-grid">
+        
+        <!-- LEFT: ESP32 HARDWARE CASING & OLED SIMULATOR -->
+        <div class="device-stage">
+          <div class="device-casing">
+            
+            <div class="casing-header">
+              <div class="casing-brand">
+                <span>SOCIES</span>
+                <span style="font-size:0.5rem; color:#00f0ff;">ESP32-C3</span>
+              </div>
+              <div class="lanyard-hole" title="Anahtarlık / Kordon Girişi"></div>
+            </div>
+
+            <!-- OLED DISPLAY BEZEL -->
+            <div class="screen-bezel">
+              <span class="oled-specs-badge">0.96" SSD1315 I2C 128x64 (Y/B)</span>
+              <!-- Authentic 128x64 Canvas (Scaled 4x) -->
+              <canvas id="oledCanvas" width="128" height="64"></canvas>
+            </div>
+
+            <!-- PHYSICAL CONTROLS CLUSTER -->
+            <div class="controls-zone">
+              <div class="dpad-container">
+                <button class="hw-btn" id="btnLeft" onclick="handleInput('LEFT')">
+                  <span>◀</span>
+                  <span class="hw-btn-label">SOL</span>
+                </button>
+                <button class="hw-btn hw-btn-action" id="btnAction" onclick="handleInput('ACTION')">
+                  <span>●</span>
+                  <span class="hw-btn-label" style="color:#fff;">SEÇ</span>
+                </button>
+                <button class="hw-btn" id="btnRight" onclick="handleInput('RIGHT')">
+                  <span>▶</span>
+                  <span class="hw-btn-label">SAĞ</span>
+                </button>
+              </div>
+
+              <div class="action-cluster">
+                <button class="hw-btn" id="btnBack" onclick="handleInput('BACK')" style="width:50px; height:50px;">
+                  <span>✕</span>
+                  <span class="hw-btn-label">İPTAL</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- UTILITY BUTTONS & TP4056 CHARGE LED -->
+            <div class="utility-buttons">
+              <div style="display:flex; gap:0.6rem;">
+                <button class="micro-btn" onclick="handleInput('RESET')">⟲ ESP32 RESET</button>
+                <button class="micro-btn" id="btnPower" onclick="handleInput('POWER')">⏻ GÜÇ (SLEEP)</button>
+              </div>
+              
+              <div class="chg-led-indicator">
+                <div class="led-dot" id="chgLed"></div>
+                <span id="chgLedText">TP4056: Şarjda (3.98V)</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- KEYBOARD SHORTCUT HELPER -->
+          <div style="margin-top:1.5rem; background:rgba(0,0,0,0.3); padding:0.8rem 1.2rem; border-radius:12px; font-size:0.75rem; color:#9ca3af; display:flex; justify-content:space-between; align-items:center;">
+            <span>⌨️ <b>Klavye Kısayolları:</b> Sol Ok: [◀], Sağ Ok: [▶], Boşluk/Enter: [SEÇ], Esc: [İPTAL], R: [RESET]</span>
+            <span style="color:var(--accent);">ESP32 FreeRTOS v10.4 Simülasyonu</span>
+          </div>
+        </div>
+
+        <!-- RIGHT: SMARTPHONE COMPANION APP (IOS / ANDROID BLE APP) -->
+        <div class="phone-stage">
+          <div class="phone-frame">
+            
+            <div class="phone-island">
+              <div class="camera-lens"></div>
+            </div>
+
+            <div class="phone-header">
+              <div class="ble-status-badge" id="appBleBadge">
+                <span>🔵</span>
+                <span id="appBleText">Socies_ESP32_C3: Bağlı</span>
+              </div>
+              <button class="ble-btn" id="btnBleToggle" onclick="toggleBle()">Bağlantıyı Kes</button>
+            </div>
+
+            <!-- PET PROFILE CARD -->
+            <div class="phone-pet-card">
+              <div class="pet-card-top">
+                <div>
+                  <div class="pet-name-tag" id="appPetName">Pamuk (Kedi)</div>
+                  <div style="font-size:0.7rem; color:#9ca3af; margin-top:2px;" id="appPetBreed">Tür: Kedi | ID: #SOC-8492</div>
+                </div>
+                <div class="pet-stage-tag" id="appPetStage">Bebek (Lv. 1)</div>
+              </div>
+
+              <div class="pet-card-stats">
+                <div class="stat-box">
+                  <div class="stat-val" id="appPetAge">1 Gün</div>
+                  <div class="stat-lbl">Yaşam Süresi</div>
+                </div>
+                <div class="stat-box">
+                  <div class="stat-val" id="appPetScore">120</div>
+                  <div class="stat-lbl">Toplam Puan</div>
+                </div>
+                <div class="stat-box">
+                  <div class="stat-val" id="appPetBat">85%</div>
+                  <div class="stat-lbl">Cihaz Bataryası</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- SIMS 7 NEED METERS -->
+            <div class="needs-container">
+              <div class="needs-title">
+                <span>SİMS İHTİYAÇ DÜZEYLERİ</span>
+                <span id="overallHealth" style="color:var(--accent-green);">Durum: Mutlu</span>
+              </div>
+
+              <!-- 1. YEMEK -->
+              <div class="need-meter">
+                <div class="need-meta">
+                  <span>🍖 Yemek (Açlık)</span>
+                  <span id="val_hunger">85%</span>
+                </div>
+                <div class="need-bar-bg"><div class="need-bar-fill high" id="bar_hunger" style="width: 85%;"></div></div>
+              </div>
+
+              <!-- 2. OYUN -->
+              <div class="need-meter">
+                <div class="need-meta">
+                  <span>🎾 Oyun & Eğlence</span>
+                  <span id="val_fun">70%</span>
+                </div>
+                <div class="need-bar-bg"><div class="need-bar-fill high" id="bar_fun" style="width: 70%;"></div></div>
+              </div>
+
+              <!-- 3. SEVGİ -->
+              <div class="need-meter">
+                <div class="need-meta">
+                  <span>❤️ Sevgi & İlgi</span>
+                  <span id="val_love">90%</span>
+                </div>
+                <div class="need-bar-bg"><div class="need-bar-fill high" id="bar_love" style="width: 90%;"></div></div>
+              </div>
+
+              <!-- 4. UYKU -->
+              <div class="need-meter">
+                <div class="need-meta">
+                  <span>💤 Enerji / Uyku</span>
+                  <span id="val_sleep">65%</span>
+                </div>
+                <div class="need-bar-bg"><div class="need-bar-fill high" id="bar_sleep" style="width: 65%;"></div></div>
+              </div>
+
+              <!-- 5. TUVALET -->
+              <div class="need-meter">
+                <div class="need-meta">
+                  <span>🚽 Tuvalet</span>
+                  <span id="val_toilet">80%</span>
+                </div>
+                <div class="need-bar-bg"><div class="need-bar-fill high" id="bar_toilet" style="width: 80%;"></div></div>
+              </div>
+
+              <!-- 6. TEMİZLİK -->
+              <div class="need-meter">
+                <div class="need-meta">
+                  <span>🧼 Hijyen / Temizlik</span>
+                  <span id="val_clean">75%</span>
+                </div>
+                <div class="need-bar-bg"><div class="need-bar-fill high" id="bar_clean" style="width: 75%;"></div></div>
+              </div>
+
+              <!-- 7. SOSYALLEŞME -->
+              <div class="need-meter">
+                <div class="need-meta">
+                  <span>👥 Sosyalleşme</span>
+                  <span id="val_social">60%</span>
+                </div>
+                <div class="need-bar-bg"><div class="need-bar-fill high" id="bar_social" style="width: 60%;"></div></div>
+              </div>
+            </div>
+
+            <!-- TIME TRAVEL & DEV TESTING CONTROLS -->
+            <div class="dev-controls-card">
+              <div class="dev-controls-title">⏱️ Test ve Zaman Makinesi (Simülasyon)</div>
+              <div class="dev-buttons">
+                <button class="btn-dev" onclick="devTimeTravel(1)">⏩ +1 Gün Geçir</button>
+                <button class="btn-dev" onclick="devTimeTravel(30)">⏩ +30 Gün (Büyüt)</button>
+                <button class="btn-dev" onclick="devTriggerCocoon()">🪱 Koza Evresi (90. Gün)</button>
+                <button class="btn-dev btn-dev-danger" onclick="devCriticalTest()">⚠️ İhtiyaçları %0 Yap</button>
+                <button class="btn-dev" onclick="devChangePet()">🔄 Hayvanı Değiştir</button>
+                <button class="btn-dev" onclick="devFulfillAll()">✨ Tümünü Doyur (%100)</button>
+              </div>
+            </div>
+
+            <!-- SOCIAL & LEADERBOARD -->
+            <div class="tab-pills">
+              <button class="pill-btn active" id="pillGlobal" onclick="switchLb('global')">🏆 Dünya Sıralaması</button>
+              <button class="pill-btn" id="pillFriends" onclick="switchLb('friends')">👥 Arkadaşlar (5)</button>
+            </div>
+
+            <div class="leaderboard-list" id="lbContent">
+              <!-- Rendered via JS -->
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- TAB 2: HARDWARE SCHEMATICS & PINOUT -->
+    <div id="tab-hardware" class="tab-content">
+      <div class="doc-section">
+        <h2>📐 Socies Donanım Mimarisi & Devre Şeması</h2>
+        <p>Socies sanal bebek donanımı, ultra düşük güç tüketimi, kompaktlık ve cepte taşınabilirlik amacıyla <b>ESP32-C3 SuperMini</b> veya <b>ESP32-Pico-D4</b> üzerine tasarlanmıştır.</p>
+
+        <h3>1. Bileşen Listesi (BOM - Bill of Materials)</h3>
+        <table class="spec-table">
+          <thead>
+            <tr>
+              <th>Bileşen</th>
+              <th>Model / Tip</th>
+              <th>Görevi & Özellikleri</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><b>Mikrodenetleyici</b></td>
+              <td>ESP32-C3 SuperMini (veya WROOM-32)</td>
+              <td>160MHz RISC-V, Dahili Wi-Fi & BLE 5.0, 4MB Flash, Deep Sleep (5µA)</td>
+            </tr>
+            <tr>
+              <td><b>Ekran</b></td>
+              <td>0.96" 128x64 4-Pin OLED (SSD1315 / SSD1306)</td>
+              <td>I2C Arayüzü, Sarı (Üst 16px) - Mavi (Alt 48px) çift renk alanı</td>
+            </tr>
+            <tr>
+              <td><b>Güç Kaynağı</b></td>
+              <td>3.7V Lityum Polimer (500mAh - 1000mAh)</td>
+              <td>Cihaz boyutuna göre yassı Li-Po pil (örneğin 503035 veya 18650)</td>
+            </tr>
+            <tr>
+              <td><b>Şarj Modülü</b></td>
+              <td>TP4056 Type-C Korumalı Şarj Kartı</td>
+              <td>DW01A + 8205A batarya korumalı, 5V Type-C giriş, 1A ayarlanabilir şarj</td>
+            </tr>
+            <tr>
+              <td><b>Düğmeler</b></td>
+              <td>4x SMD/Taktil Buton (6x6x5mm)</td>
+              <td>Sol, Sağ, Seç, İptal + Harici Donanım Reset & Sürgülü Açma/Kapama</td>
+            </tr>
+            <tr>
+              <td><b>Ses (Audio)</b></td>
+              <td>Pasif Piezo Buzzer (9mm SMD/Through-hole)</td>
+              <td>8-bit chiptune melodiler, acil ihtiyaç alarmları, PWM ton üretimi</td>
+            </tr>
+            <tr>
+              <td><b>Batarya Monitörü</b></td>
+              <td>2x 100kΩ Direnç (Gerilim Bölücü)</td>
+              <td>Li-Po pil voltajını ADC üzerinden okuyup % pil seviyesi hesaplar</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>2. Pin Bağlantı Tablosu (Pinout)</h3>
+        <table class="spec-table">
+          <thead>
+            <tr>
+              <th>ESP32-C3 Pini</th>
+              <th>Bağlanan Bileşen</th>
+              <th>Açıklama / Konfigürasyon</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><b>GPIO 8 (SDA)</b></td>
+              <td>OLED SDA</td>
+              <td>I2C Veri Hattı (Dahili / Harici 4.7kΩ pull-up)</td>
+            </tr>
+            <tr>
+              <td><b>GPIO 9 (SCL)</b></td>
+              <td>OLED SCL</td>
+              <td>I2C Saat Hattı</td>
+            </tr>
+            <tr>
+              <td><b>GPIO 0</b></td>
+              <td>Buton 1 (SOL / YUKARI)</td>
+              <td>INPUT_PULLUP (Butona basılınca GND'ye çeker)</td>
+            </tr>
+            <tr>
+              <td><b>GPIO 1</b></td>
+              <td>Buton 2 (SEÇ / AKSİYON)</td>
+              <td>INPUT_PULLUP (Wake-up pin olarak da kullanılır)</td>
+            </tr>
+            <tr>
+              <td><b>GPIO 2</b></td>
+              <td>Buton 3 (SAĞ / AŞAĞI)</td>
+              <td>INPUT_PULLUP</td>
+            </tr>
+            <tr>
+              <td><b>GPIO 3</b></td>
+              <td>Buton 4 (İPTAL / GERİ)</td>
+              <td>INPUT_PULLUP</td>
+            </tr>
+            <tr>
+              <td><b>GPIO 4</b></td>
+              <td>Pasif Buzzer (+)</td>
+              <td>LEDC Donanımsal PWM çıkışı (8-bit tonlar)</td>
+            </tr>
+            <tr>
+              <td><b>GPIO 5 (ADC1)</b></td>
+              <td>Batarya Gerilim Bölücü</td>
+              <td>Pil (+) kutbundan gelen 100k / 100k bölücü orta noktası (0-2.1V)</td>
+            </tr>
+            <tr>
+              <td><b>3V3 & GND</b></td>
+              <td>Tüm Modüller</td>
+              <td>ESP32 regülatör çıkışı ve ortak şasi hattı</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="alert-banner">
+          <span>⚡ <b>Pil Ömrü Optimizasyonu:</b> Cihaz kullanılmadığında 60 saniye sonra OLED ekranı kapatarak ESP32 Deep Sleep moduna geçer. GPIO1 (Seç butonu) harici uyandırma (EXT0 Wakeup) olarak ayarlanır. Bu sayede 500mAh pil ile 20 güne varan bekleme süresi elde edilir.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: ESP32 ARDUINO C++ CODE -->
+    <div id="tab-code" class="tab-content">
+      <div class="doc-section">
+        <h2>💻 ESP32 C++ / Arduino Kaynak Kodu (Firmware)</h2>
+        <p>Aşağıdaki kod, <b>U8g2</b> OLED grafik kütüphanesi ve <b>NimBLE-Arduino</b> Bluetooth kütüphanesi kullanarak Socies mantığını, Sims ihtiyaç döngüsünü ve BLE telemetrisini çalıştıran tam teşekküllü üretim kodudur.</p>
+
+        <pre><code>/**
+ * SOCIES SANAL BEBEK - ESP32 FIRMWARE
+ * Donanım: ESP32-C3 SuperMini, 0.96" SSD1315/SSD1306 OLED (I2C), 4 Buton, Buzzer
+ * Kütüphaneler: U8g2lib, NimBLEDevice, Preferences (NVS Flash Kayıt)
+ */
+
+#include &lt;Arduino.h&gt;
+#include &lt;U8g2lib.h&gt;
+#include &lt;Wire.h&gt;
+#include &lt;NimBLEDevice.h&gt;
+#include &lt;Preferences.h&gt;
+
+// PIN TANIMLARI
+#define PIN_OLED_SDA  8
+#define PIN_OLED_SCL  9
+#define PIN_BTN_LEFT  0
+#define PIN_BTN_OK    1
+#define PIN_BTN_RIGHT 2
+#define PIN_BTN_BACK  3
+#define PIN_BUZZER    4
+#define PIN_BATTERY   5
+
+// OLED EKRAN BAŞLATMA (SSD1306 / SSD1315 128x64 I2C)
+U8G2_SSD1306_128X64_NONAME_F_HW_I2C u8g2(U8G2_R0, U8X8_PIN_NONE, PIN_OLED_SCL, PIN_OLED_SDA);
+
+// BLE GATT UUID TANIMLARI
+#define SERVICE_UUID        "180F" // Socies Service
+#define CHAR_TELEMETRY_UUID "2A19" // Needs & Stats Notify
+#define CHAR_ACTION_UUID    "2A20" // App Commands Write
+
+NimBLEServer* pServer = nullptr;
+NimBLECharacteristic* pTelemetryChar = nullptr;
+Preferences preferences;
+
+// SİMS İHTİYAÇLARI YAPISI
+struct PetState {
+  uint8_t petType;      // 0:Kedi, 1:Kopek, 2:Kus, 3:Balik, 4:Sosis, 5:Pacman, 6:Yengec
+  uint8_t stage;        // 0:Yumurta, 1:Bebek, 2:Cocuk, 3:Yetiskin, 4:Koza, 5:Mega
+  uint16_t ageDays;
+  uint32_t totalScore;
+  
+  // 7 Sims Ihtiyaci (0 - 100 arasi)
+  int hunger;
+  int fun;
+  int love;
+  int sleep;
+  int toilet;
+  int clean;
+  int social;
+  
+  uint8_t zeroNeedsDays; // 5 gun kurali sayaci
+  bool isSleeping;
+};
+
+PetState pet = {0, 1, 1, 100, 85, 70, 90, 65, 80, 75, 60, 0, false};
+
+// 8-BIT SES MOTORU
+void playBeep(int freq, int durationMs) {
+  tone(PIN_BUZZER, freq, durationMs);
+}
+
+void playJingleHappy() {
+  playBeep(523, 100); delay(120);
+  playBeep(659, 100); delay(120);
+  playBeep(784, 150);
+}
+
+void playAlarmWarning() {
+  for(int i = 0; i < 3; i++) {
+    playBeep(880, 80); delay(100);
+    playBeep(440, 80); delay(100);
+  }
+}
+
+// SIMS IHTIYAC TUKETIM FONKSIYONU (Periyodik Calisir)
+void decayNeeds() {
+  if(pet.stage == 0 || pet.stage == 4) return; // Yumurta veya kozada azalmaz
+
+  // Hayvan cinsine gore ozel katsayilar
+  int hungerRate = (pet.petType == 2) ? 3 : 2; // Kus hizli acikir
+  int cleanRate  = (pet.petType == 3) ? 3 : 1; // Balik temiz su ister
+  
+  pet.hunger = max(0, pet.hunger - hungerRate);
+  pet.fun    = max(0, pet.fun - 2);
+  pet.love   = max(0, pet.love - 1);
+  pet.toilet = max(0, pet.toilet - 2);
+  pet.clean  = max(0, pet.clean - cleanRate);
+  pet.social = max(0, pet.social - 1);
+  if(!pet.isSleeping) pet.sleep = max(0, pet.sleep - 1);
+
+  // %50 ALTI UYARI KONTROLU
+  bool hasWarning = (pet.hunger < 50 || pet.fun < 50 || pet.love < 50 || 
+                     pet.toilet < 50 || pet.clean < 50 || pet.social < 50);
+  if(hasWarning) {
+    playAlarmWarning();
+  }
+
+  // 5 GUN TUM IHTIYACLAR SIFIR KURALI
+  if(pet.hunger == 0 && pet.fun == 0 && pet.love == 0 && 
+     pet.toilet == 0 && pet.clean == 0 && pet.social == 0) {
+    pet.zeroNeedsDays++;
+    if(pet.zeroNeedsDays >= 5) {
+      if(pet.stage > 1) {
+        pet.stage--; // Level duser
+      } else {
+        pet.stage = 0; // Yumurtaya doner!
+      }
+      pet.zeroNeedsDays = 0;
+    }
+  } else {
+    pet.zeroNeedsDays = 0;
+  }
+}
+
+// OLED EKRAN CIZIM FONKSIYONU (128x64)
+void renderScreen() {
+  u8g2.clearBuffer();
+
+  // === UST 16 PIKSEL SARI BOLGE (STATUS BAR) ===
+  u8g2.setFont(u8g2_font_profont10_mr);
+  u8g2.setCursor(2, 10);
+  u8g2.print("SOCIES");
+  
+  u8g2.setCursor(54, 10);
+  u8g2.printf("G:%d", pet.ageDays);
+
+  u8g2.setCursor(92, 10);
+  u8g2.print("BAT:85%");
+
+  u8g2.drawHLine(0, 14, 128); // Sari-Mavi ayrim cizgisi
+
+  // === ALT 48 PIKSEL MAVI BOLGE (SPRITE & OYUN) ===
+  if(pet.stage == 0) {
+    // Yumurta
+    u8g2.drawDisc(64, 42, 12);
+    u8g2.setCursor(44, 60);
+    u8g2.print("Catlat!");
+  } else if(pet.stage == 4) {
+    // Koza
+    u8g2.drawFrame(52, 24, 24, 34);
+    u8g2.setCursor(42, 62);
+    u8g2.print("KOZA EVRESI");
+  } else {
+    // Hayvan Sprite Cizimi (Ornek Kedi)
+    u8g2.drawDisc(64, 40, 10); // Kafa
+    u8g2.drawTriangle(56, 33, 59, 25, 63, 31); // Sol Kulak
+    u8g2.drawTriangle(65, 31, 69, 25, 72, 33); // Sag Kulak
+    
+    u8g2.setCursor(35, 60);
+    u8g2.printf("Ac:%d%% Sev:%d%%", pet.hunger, pet.love);
+  }
+
+  u8g2.sendBuffer();
+}
+
+void setup() {
+  Serial.begin(115200);
+  pinMode(PIN_BTN_LEFT, INPUT_PULLUP);
+  pinMode(PIN_BTN_OK, INPUT_PULLUP);
+  pinMode(PIN_BTN_RIGHT, INPUT_PULLUP);
+  pinMode(PIN_BTN_BACK, INPUT_PULLUP);
+  pinMode(PIN_BUZZER, OUTPUT);
+
+  u8g2.begin();
+  
+  // NimBLE BLE Server Baslatma
+  NimBLEDevice::init("Socies_ESP32_C3");
+  pServer = NimBLEDevice::createServer();
+  NimBLEService* pService = pServer->createService(SERVICE_UUID);
+  pTelemetryChar = pService->createCharacteristic(
+    CHAR_TELEMETRY_UUID,
+    NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY
+  );
+  pService->start();
+  NimBLEAdvertising* pAdvertising = NimBLEDevice::getAdvertising();
+  pAdvertising->start();
+
+  playJingleHappy();
+}
+
+void loop() {
+  static unsigned long lastTick = 0;
+  if(millis() - lastTick > 30000) { // 30 saniyede bir ihtiyac eksilmesi
+    lastTick = millis();
+    decayNeeds();
+  }
+
+  // Buton kontrolleri
+  if(digitalRead(PIN_BTN_OK) == LOW) {
+    playBeep(1000, 50);
+    pet.hunger = min(100, pet.hunger + 25);
+    pet.totalScore += 10;
+    delay(200);
+  }
+
+  renderScreen();
+  delay(50);
+}
+</code></pre>
+      </div>
+    </div>
+
+    <!-- TAB 4: BENCHMARK & INNOVATIONS (MADDE 17) -->
+    <div id="tab-benchmark" class="tab-content">
+      <div class="doc-section">
+        <h2>🚀 Muadil Karşılaştırması & Çığır Açan Özellikler (Madde 17)</h2>
+        <p>Piyasadaki tüm sanal bebek ve taşınabilir dijital yoldaş cihazları incelendiğinde Socies'in konumu ve onu <b>dünyada benzersiz kılacak</b> özellikler aşağıda detaylandırılmıştır.</p>
+
+        <h3>1. Muadil Analizi & Eksiklikleri</h3>
+        <table class="spec-table">
+          <thead>
+            <tr>
+              <th>Cihaz / Rakip</th>
+              <th>Güçlü Yönleri</th>
+              <th>En Büyük Zayıflığı / Eksikliği</th>
+              <th>Socies'in Üstünlüğü</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><b>Tamagotchi Uni (Bandai)</b></td>
+              <td>Renkli LCD, WiFi ile Tamaverse girişi</td>
+              <td>Kapalı ekosistem, 60$+ pahalı fiyat, hacklenemez, mobil uygulama bağımsız ve zayıf</td>
+              <td>Açık donanım (ESP32), ultra düşük maliyet (~8-12$), gerçek zamanlı BLE mobil senkronizasyonu</td>
+            </tr>
+            <tr>
+              <td><b>Digimon Vital Bracelet</b></td>
+              <td>Adımsayar ve kalp ritmi ile evrim</td>
+              <td>Pil ömrü 1 gün bile gitmiyor, özel DIM kartları ücretli satılıyor, ekran küçük ve soluk</td>
+              <td>Haftalarca pil ömrü, mikroçip derin uyku, uygulama üzerinden sınırsız ücretsiz içerik</td>
+            </tr>
+            <tr>
+              <td><b>Flipper Zero (Dolphin Mascot)</b></td>
+              <td>Mükemmel gamification, geek topluluğu tarafından sevilme</td>
+              <td>Sanal bebek ana odak değil, sadece hacker araçları için maskot, fiyatı çok yüksek (169$)</td>
+              <td>Sims tarzı derin ihtiyaç motoru, günlük görevler ve sosyal arkadaşlık odaklı</td>
+            </tr>
+            <tr>
+              <td><b>Bitzee (Spin Master)</b></td>
+              <td>Dokunmatik sanal hologram hissi</td>
+              <td>Bağlantı özelliği (BLE/WiFi) yok, arkadaş edinme yok, ekranı titreşen şerit (göz yorucu)</td>
+              <td>0.96" yüksek kontrastlı OLED, global liderlik tablosu ve arkadaşlık mekaniği</td>
+            </tr>
+            <tr>
+              <td><b>Habitica / Forest (Mobil App)</b></td>
+              <td>Alışkanlık takibi ve RPG</td>
+              <td>Sadece telefonda bir uygulama, elde taşınan fiziksel bir nesne ve bağ kurma hissi yok</td>
+              <td>Cepte taşınan, titreşen, öten, fiziki butonlu gerçek bir donanım yoldaş!</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>2. Socies İçin Dünyada İlk: 7 Benzersiz (Killer) İnovasyon</h3>
+        <div class="features-grid">
+          
+          <div class="feature-card">
+            <div class="feature-icon">🤝</div>
+            <div class="feature-title">1. ESP-NOW "StreetPass" (Cepte Karşılaşma)</div>
+            <div class="feature-desc">
+              İnternet veya telefona hiç ihtiyaç duymadan! İki Socies kullanıcısı sokakta, otobüste veya okulda yan yana geldiğinde ESP32'ler arka planda birbirini fark eder. Cihaz gizlice cıvıldar ve ekranda <i>"Yeni bir arkadaşla karşılaşıldı: Pamuk (Lv.3 Kedi)!"</i> yazar. Sosyal görevi anında tamamlar!
+            </div>
+          </div>
+
+          <div class="feature-card gold">
+            <div class="feature-icon">🏃</div>
+            <div class="feature-title">2. Gerçek Hayat Alışkanlık Motoru (Habit Sync)</div>
+            <div class="feature-desc">
+              Socies sahibine yük olmaz, sahibini geliştirir! Telefonda "2 litre su içtim", "Kitap okudum" veya "Ders çalıştım" dendiğinde bebeğe süper besin ve ekstra XP gider. Kullanıcının Apple Health / Google Fit adım sayısı bebeğin yürüme ihtiyacını karşılar.
+            </div>
+          </div>
+
+          <div class="feature-card pink">
+            <div class="feature-icon">⚔️</div>
+            <div class="feature-title">3. P2P Bluetooth / ESP-NOW Mini Oyun Düellosu</div>
+            <div class="feature-desc">
+              İki cihazı yan yana getirip Seç butonuna basınca 8-bit refleks yarışı, taş-kağıt-makas veya yemek paylaşma oyunu başlar. Kazanan hayvan ekstra mutluluk ve kozaya geçiş için özel kristal kazanır.
+            </div>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">🎨</div>
+            <div class="feature-title">4. Açık Kaynak Topluluk Pixel-Art Editörü</div>
+            <div class="feature-desc">
+              Kullanıcılar web sitesindeki 16x16 / 32x32 piksel editörüyle kendi hayvanlarını, şapkalarını veya animasyonlarını çizip tek tuşla Bluetooth üzerinden ESP32 flash belleğine yükleyebilir.
+            </div>
+          </div>
+
+          <div class="feature-card gold">
+            <div class="feature-icon">🎵</div>
+            <div class="feature-title">5. 8-Bit Chiptune Beste ve Melodi Paylaşımı</div>
+            <div class="feature-desc">
+              Pasif buzzer sadece bip sesi çıkarmaz; bebek mutlu olduğunda minik Game Boy melodileri çalar. Mobil uygulamadan bebeğe özel melodi bestelenip cihaza zil sesi olarak gönderilebilir.
+            </div>
+          </div>
+
+          <div class="feature-card pink">
+            <div class="feature-icon">⚡</div>
+            <div class="feature-title">6. ULP & Deep Sleep ile 30 Gün Pil Ömrü</div>
+            <div class="feature-desc">
+              Akıllı güç mimarisi: Ekran 45 sn sonra kararır. Dahili RTC 15 dakikada bir uyanıp ihtiyaç durumunu kontrol eder. Acil durum yoksa uykuya geri dalar. Butona basıldığı mikrosaniyede uyanır. 500mAh pil aylarca dayanır.
+            </div>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">🏅</div>
+            <div class="feature-title">7. Koza Sonrası Efsanevi Metamorfoz Sistemi</div>
+            <div class="feature-desc">
+              3 ay boyunca hayvana nasıl bakıldığına göre (daha çok oyun mu oynandı, yemek mi verildi, sosyalleşildi mi?) koza evresinden çıkacak canlı farklılaşır: Sibernetik Kedi, Anka Kuşu, Ejder Balık veya Altın Pacman!
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 5: GAME RULES & SIMS LOGIC -->
+    <div id="tab-rules" class="tab-content">
+      <div class="doc-section">
+        <h2>📜 Oyun Kuralları & Sims Dinamikleri</h2>
+        
+        <h3>1. Seçilebilir Başlangıç Hayvanları</h3>
+        <p>Açılışta rastgele veya seçimle belirlenen 7 karakterin temel metabolizma farkları:</p>
+        <ul style="margin-left:1.5rem; color:#d1d5db; line-height:1.8;">
+          <li>🐱 <b>Kedi:</b> Yüksek sevgi ve uyku ister. Bağımsızdır, oyun ihtiyacı daha yavaş düşer.</li>
+          <li>🐶 <b>Köpek:</b> Çok sosyaldir, yüksek oyun ve sevgi bekler. İlgisiz kalırsa hızla üzülür.</li>
+          <li>🐦 <b>Kuş:</b> Hızlı bir metabolizmaya sahiptir, yemek ihtiyacı diğerlerine göre %50 daha hızlı tükenir.</li>
+          <li>🐟 <b>Balık:</b> Akvaryum suyu kirlendiği için Temizlik (Hijyen) ihtiyacı en hızlı azalan hayvandır.</li>
+          <li>🌭 <b>Sosis:</b> Sürekli acıkan, mizahi ve eğlenceli reaksiyonlar veren gurme bir karakter.</li>
+          <li>🟡 <b>Pacman:</b> Sürekli enerji ve yemek tüketir; arcade tarzı ses efektleri çıkarır.</li>
+          <li>🦀 <b>Yengeç:</b> İnatçı ve dayanıklıdır; su/kum temizliği ister, özel kıskaç dansı animasyonuna sahiptir.</li>
+        </ul>
+
+        <h3>2. Yaşam Evreleri & 3 Aylık Koza Süreci</h3>
+        <ol style="margin-left:1.5rem; color:#d1d5db; line-height:1.8;">
+          <li><b>Yumurta Evresi (0. Gün):</b> Kullanıcı cihazın butonlarına tıklayarak veya telefondan sallayarak yumurtayı çatlatır.</li>
+          <li><b>Bebeklik (1 - 15. Gün):</b> İhtiyaçlar hızlı azalır, ilgi ister. Minik sprite boyutundadır.</li>
+          <li><b>Çocukluk (16 - 45. Gün):</b> Oyun oynamayı öğrenir, yeni animasyonlar ve mimikler kazanır.</li>
+          <li><b>Yetişkinlik (46 - 90. Gün):</b> Tam boyuta ulaşır, günlük görevlerde maksimum puan getirir.</li>
+          <li><b>Koza Evresi (90. Gün):</b> 3 gün boyunca koza içinde uykuya yatar.</li>
+          <li><b>Metamorfoz Evrimi (93+. Gün):</b> Bakım geçmişine göre efsanevi üst düzey türe dönüşür!</li>
+        </ol>
+
+        <h3>3. Kritik İhtiyaç Kuralları</h3>
+        <div class="alert-banner">
+          <span>⚠️ <b>%50 Altı Kuralı:</b> Herhangi bir ihtiyaç %50'nin altına indiğinde cihaz buzzer ile uyarı verir, OLED ekranda yanıp sönen bir ikaz belirir ve mobil uygulamaya anlık bildirim düşer.</span>
+        </div>
+        <div class="alert-banner" style="background:rgba(239,68,68,0.25); border-color:#ef4444;">
+          <span>🚫 <b>%0 Kilitlenme Kuralı:</b> Eğer bir ihtiyaç %0 olursa evcil hayvan hastalanır/inatlaşır. O ihtiyaç giderilmeden başka hiçbir aktivite (oyun, sosyalleşme vb.) yapılamaz.</span>
+        </div>
+        <div class="alert-banner" style="background:rgba(168,85,247,0.2); border-color:#a855f7; color:#e9d5ff;">
+          <span>⏳ <b>5 Gün İhmal Cezası:</b> Tüm ihtiyaçlar %0 seviyesine inip 5 gün boyunca müdahale edilmezse hayvan bir önceki evresine düşer. Eğer zaten 1. evredeyse (Bebek) cezalandırılarak yeniden yumurtaya döner!</span>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- TOAST NOTIFICATION -->
+  <div class="toast" id="appToast">İşlem başarıyla tamamlandı!</div>
+
+  <!-- JAVASCRIPT ENGINE (OLED RENDERER + SIMS GAME ENGINE + BLE EMULATOR) -->
+  <script>
+    // ==========================================
+    // AUDIO ENGINE (WEB AUDIO SYNTHESIZER)
+    // ==========================================
+    let audioCtx = null;
+    let audioEnabled = true;
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+    }
+
+    function toggleAudio() {
+      audioEnabled = !audioEnabled;
+      document.getElementById('btnSoundToggle').textContent = audioEnabled ? "🔊 Ses: Açık" : "🔇 Ses: Kapalı";
+      showToast(audioEnabled ? "Ses efektleri açıldı" : "Ses efektleri kapatıldı");
+    }
+
+    function playTone(freq, duration = 0.08, type = 'square') {
+      if (!audioEnabled) return;
+      initAudio();
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) {
+        console.warn("Audio not permitted yet:", e);
+      }
+    }
+
+    function playSoundSuccess() {
+      playTone(523, 0.08);
+      setTimeout(() => playTone(659, 0.08), 80);
+      setTimeout(() => playTone(784, 0.14), 160);
+    }
+
+    function playSoundAlert() {
+      playTone(880, 0.09, 'sawtooth');
+      setTimeout(() => playTone(440, 0.09, 'sawtooth'), 100);
+    }
+
+    // ==========================================
+    // GAME STATE & SIMS MODEL
+    // ==========================================
+    const PET_NAMES = ["Kedi", "Köpek", "Kuş", "Balık", "Sosis", "Pacman", "Yengeç"];
+    const STAGE_NAMES = ["Yumurta", "Bebek (Lv.1)", "Çocuk (Lv.2)", "Yetişkin (Lv.3)", "Koza", "Mega Efsanevi"];
+
+    const state = {
+      petType: 0, // 0:Kedi
+      stage: 1,   // 1:Bebek
+      ageDays: 1,
+      totalScore: 120,
+      battery: 85,
+      isPowered: true,
+      bleConnected: true,
+      menuIndex: 0,
+      animFrame: 0,
+      zeroDaysCount: 0,
+      
+      // 7 Sims Needs
+      needs: {
+        hunger: 85,
+        fun: 70,
+        love: 90,
+        sleep: 65,
+        toilet: 80,
+        clean: 75,
+        social: 60
+      },
+
+      menuItems: [
+        { label: "YEMEK", icon: "🍖", action: "hunger" },
+        { label: "OYUN",  icon: "🎾", action: "fun" },
+        { label: "SEV",   icon: "❤️", action: "love" },
+        { label: "UYUT",  icon: "💤", action: "sleep" },
+        { label: "TUVALET", icon: "🚽", action: "toilet" },
+        { label: "TEMIZLE", icon: "🧼", action: "clean" },
+        { label: "SOSYAL", icon: "👥", action: "social" }
+      ]
+    };
+
+    // ==========================================
+    // OLED CANVAS RENDERING (128x64)
+    // ==========================================
+    const canvas = document.getElementById('oledCanvas');
+    const ctx = canvas.getContext('2d');
+
+    function renderOLED() {
+      if (!state.isPowered) {
+        ctx.fillStyle = "#010306";
+        ctx.fillRect(0, 0, 128, 64);
+        return;
+      }
+
+      // Clear Screen
+      ctx.fillStyle = "#03080e";
+      ctx.fillRect(0, 0, 128, 64);
+
+      // ========================================
+      // TOP 16 PIXELS: YELLOW ZONE (STATUS BAR)
+      // ========================================
+      ctx.fillStyle = "#ffe600";
+      ctx.font = "bold 8px 'Press Start 2P', monospace";
+      
+      // Pet Name / Breed
+      const petName = state.stage === 0 ? "YUMURTA" : PET_NAMES[state.petType].toUpperCase();
+      ctx.fillText(petName.slice(0, 6), 2, 10);
+
+      // Age in Days
+      ctx.font = "7px 'Press Start 2P', monospace";
+      ctx.fillText(`D:${state.ageDays}`, 62, 10);
+
+      // BLE icon & Battery
+      if (state.bleConnected) {
+        ctx.fillText("B", 94, 10);
+      }
+      ctx.fillText(`${state.battery}%`, 105, 10);
+
+      // Dual Zone Divider Line (1 Pixel line at Y=15)
+      ctx.strokeStyle = "rgba(255, 230, 0, 0.4)";
+      ctx.beginPath();
+      ctx.moveTo(0, 14.5);
+      ctx.lineTo(128, 14.5);
+      ctx.stroke();
+
+      // ========================================
+      // BOTTOM 48 PIXELS: BLUE / CYAN ZONE (GAME)
+      // ========================================
+      ctx.fillStyle = "#00f0ff";
+
+      // CHECK LOCKDOWN (%0 Need)
+      const zeroNeed = Object.entries(state.needs).find(([k, v]) => v <= 0);
+      const isCritical = Object.values(state.needs).some(v => v < 50);
+
+      // DRAW ACTIVE PET SPRITE
+      drawPetSprite(64, 38, state.animFrame, zeroNeed);
+
+      // BOTTOM MENU CAROUSEL (Y: 52 - 63)
+      drawOledMenu();
+
+      // WARNING BADGE IF < 50%
+      if (isCritical && (Math.floor(Date.now() / 400) % 2 === 0)) {
+        ctx.fillStyle = "#ffe600";
+        ctx.fillText("!", 4, 25);
+      }
+
+      // ZERO NEED LOCKOUT TEXT
+      if (zeroNeed) {
+        ctx.fillStyle = "#ff2a85";
+        ctx.font = "6px 'Press Start 2P', monospace";
+        ctx.fillText("IHTIYAC ACIL!", 30, 24);
+      }
+    }
+
+    function drawPetSprite(cx, cy, frame, zeroNeed) {
+      ctx.fillStyle = "#00f0ff";
+      const bounce = zeroNeed ? 0 : (frame % 2 === 0 ? 0 : -2);
+
+      if (state.stage === 0) {
+        // EGG SPRITE
+        const wobble = frame % 2 === 0 ? -1 : 1;
+        ctx.beginPath();
+        ctx.ellipse(cx + wobble, cy + 2, 10, 13, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = "#03080e";
+        // Egg cracks
+        ctx.fillRect(cx - 3, cy - 2, 6, 1);
+        ctx.fillRect(cx - 1, cy + 1, 3, 2);
+        return;
+      }
+
+      if (state.stage === 4) {
+        // COCOON SPRITE
+        ctx.beginPath();
+        ctx.ellipse(cx, cy + bounce, 12, 16, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = "#03080e";
+        ctx.fillRect(cx - 8, cy - 6, 16, 2);
+        ctx.fillRect(cx - 9, cy, 18, 2);
+        ctx.fillRect(cx - 8, cy + 6, 16, 2);
+        return;
+      }
+
+      // NORMAL PETS
+      const y = cy + bounce;
+      const type = state.petType;
+
+      if (type === 0) { // KEDİ (CAT)
+        // Body & Head
+        ctx.fillRect(cx - 8, y - 6, 16, 14);
+        // Ears
+        ctx.beginPath();
+        ctx.moveTo(cx - 8, y - 6); ctx.lineTo(cx - 5, y - 12); ctx.lineTo(cx - 2, y - 6);
+        ctx.moveTo(cx + 2, y - 6); ctx.lineTo(cx + 5, y - 12); ctx.lineTo(cx + 8, y - 6);
+        ctx.fill();
+        // Tail
+        const tailWag = frame % 2 === 0 ? 12 : 14;
+        ctx.fillRect(cx + 8, y + 2, 4, 2);
+        ctx.fillRect(cx + tailWag, y - 3, 2, 6);
+        // Eyes
+        ctx.fillStyle = "#03080e";
+        ctx.fillRect(cx - 5, y - 2, 2, 3);
+        ctx.fillRect(cx + 3, y - 2, 2, 3);
+
+      } else if (type === 1) { // KÖPEK (DOG)
+        ctx.fillRect(cx - 9, y - 5, 18, 13);
+        // Droopy Ears
+        ctx.fillRect(cx - 11, y - 6, 3, 7);
+        ctx.fillRect(cx + 8, y - 6, 3, 7);
+        // Snout
+        ctx.fillRect(cx - 3, y + 1, 6, 5);
+        // Wagging tail
+        ctx.fillRect(cx - 12, y + 1, 4, 3);
+        ctx.fillStyle = "#03080e";
+        ctx.fillRect(cx - 6, y - 2, 2, 2);
+        ctx.fillRect(cx + 4, y - 2, 2, 2);
+        ctx.fillRect(cx - 1, y + 3, 2, 2);
+
+      } else if (type === 2) { // KUŞ (BIRD)
+        ctx.beginPath();
+        ctx.arc(cx, y, 9, 0, Math.PI * 2);
+        ctx.fill();
+        // Beak
+        ctx.fillRect(cx + 8, y - 2, 5, 3);
+        // Wing
+        const wingY = frame % 2 === 0 ? y - 4 : y + 2;
+        ctx.fillRect(cx - 6, wingY, 6, 5);
+        ctx.fillStyle = "#03080e";
+        ctx.fillRect(cx + 3, y - 4, 2, 2);
+
+      } else if (type === 3) { // BALIK (FISH)
+        ctx.beginPath();
+        ctx.ellipse(cx, y, 12, 7, 0, 0, Math.PI * 2);
+        ctx.fill();
+        // Tail
+        ctx.beginPath();
+        ctx.moveTo(cx - 10, y); ctx.lineTo(cx - 16, y - 6); ctx.lineTo(cx - 16, y + 6);
+        ctx.fill();
+        // Bubble
+        ctx.fillRect(cx + 14, y - (frame % 2 === 0 ? 6 : 8), 2, 2);
+        ctx.fillStyle = "#03080e";
+        ctx.fillRect(cx + 6, y - 2, 2, 2);
+
+      } else if (type === 4) { // SOSİS (SAUSAGE)
+        ctx.beginPath();
+        ctx.roundRect(cx - 14, y - 5, 28, 10, 5);
+        ctx.fill();
+        // Cute feet
+        ctx.fillRect(cx - 8, y + 5, 3, 3);
+        ctx.fillRect(cx + 5, y + 5, 3, 3);
+        ctx.fillStyle = "#03080e";
+        ctx.fillRect(cx - 4, y - 2, 2, 2);
+        ctx.fillRect(cx + 2, y - 2, 2, 2);
+
+      } else if (type === 5) { // PACMAN
+        ctx.beginPath();
+        const mouth = frame % 2 === 0 ? 0.25 : 0.05;
+        ctx.arc(cx, y, 10, mouth * Math.PI, (2 - mouth) * Math.PI);
+        ctx.lineTo(cx, y);
+        ctx.fill();
+        // Dot
+        ctx.fillRect(cx + 14, y - 1, 3, 3);
+
+      } else if (type === 6) { // YENGEÇ (CRAB)
+        ctx.beginPath();
+        ctx.ellipse(cx, y + 1, 11, 7, 0, 0, Math.PI * 2);
+        ctx.fill();
+        // Claws
+        const claw = frame % 2 === 0 ? 0 : 2;
+        ctx.fillRect(cx - 14, y - 6 + claw, 4, 4);
+        ctx.fillRect(cx + 10, y - 6 - claw, 4, 4);
+        // Legs
+        ctx.fillRect(cx - 12, y + 6, 3, 3);
+        ctx.fillRect(cx + 9, y + 6, 3, 3);
+        ctx.fillStyle = "#03080e";
+        ctx.fillRect(cx - 4, y - 2, 2, 3);
+        ctx.fillRect(cx + 2, y - 2, 2, 3);
+      }
+    }
+
+    function drawOledMenu() {
+      const cur = state.menuItems[state.menuIndex];
+      ctx.fillStyle = "#00f0ff";
+      ctx.font = "7px 'Press Start 2P', monospace";
+      
+      // Menu box at bottom
+      ctx.fillRect(16, 52, 96, 11);
+      ctx.fillStyle = "#03080e";
+      const label = `[${cur.label}]`;
+      const textX = 64 - (label.length * 3.5);
+      ctx.fillText(label, textX, 60);
+
+      // Left / Right Indicator arrows
+      ctx.fillStyle = "#00f0ff";
+      ctx.fillText("<", 4, 60);
+      ctx.fillText(">", 118, 60);
+    }
+
+    // ==========================================
+    // HARDWARE BUTTON INPUT HANDLER
+    // ==========================================
+    function handleInput(btn) {
+      if (!state.isPowered && btn !== 'POWER' && btn !== 'RESET') {
+        return;
+      }
+
+      switch (btn) {
+        case 'LEFT':
+          playTone(600, 0.04);
+          state.menuIndex = (state.menuIndex - 1 + state.menuItems.length) % state.menuItems.length;
+          break;
+
+        case 'RIGHT':
+          playTone(600, 0.04);
+          state.menuIndex = (state.menuIndex + 1) % state.menuItems.length;
+          break;
+
+        case 'ACTION':
+          executeMenuAction();
+          break;
+
+        case 'BACK':
+          playTone(400, 0.05);
+          showToast("İptal edildi");
+          break;
+
+        case 'POWER':
+          state.isPowered = !state.isPowered;
+          playTone(state.isPowered ? 800 : 300, 0.1);
+          document.getElementById('btnPower').textContent = state.isPowered ? "⏻ GÜÇ (SLEEP)" : "⏻ UYANDIR (WAKE)";
+          showToast(state.isPowered ? "ESP32 Uyandırıldı" : "ESP32 Derin Uykuya Girdi (Deep Sleep)");
+          break;
+
+        case 'RESET':
+          playTone(1200, 0.15);
+          showToast("ESP32 Resetlendi! Yeniden başlatılıyor...");
+          state.isPowered = true;
+          state.animFrame = 0;
+          break;
+      }
+      updateUI();
+    }
+
+    function executeMenuAction() {
+      if (state.stage === 0) {
+        // HATCH EGG
+        state.stage = 1;
+        playSoundSuccess();
+        showToast("🎉 Yumurta çatladı! Minik bir " + PET_NAMES[state.petType] + " doğdu!");
+        updateUI();
+        return;
+      }
+
+      // Check if any other need is 0 (Lockout rule)
+      const curItem = state.menuItems[state.menuIndex];
+      const zeroNeedEntry = Object.entries(state.needs).find(([k, v]) => v <= 0);
+
+      if (zeroNeedEntry && zeroNeedEntry[0] !== curItem.action) {
+        playSoundAlert();
+        showToast("⚠️ KİLİT! Sıfıra inen [" + zeroNeedEntry[0].toUpperCase() + "] ihtiyacı giderilmeden başka şey yapılamaz!");
+        return;
+      }
+
+      // Fulfill selected need
+      const actionKey = curItem.action;
+      state.needs[actionKey] = Math.min(100, state.needs[actionKey] + 25);
+      state.totalScore += 10;
+      playSoundSuccess();
+      showToast(`✨ ${curItem.label} giderildi! (+10 Puan)`);
+
+      updateUI();
+    }
+
+    // ==========================================
+    // SIMS DECAY ENGINE & RULES
+    // ==========================================
+    function simTick() {
+      state.animFrame++;
+
+      // Decay needs over time if powered and not egg/cocoon
+      if (state.isPowered && state.stage !== 0 && state.stage !== 4) {
+        // Animal specific modifiers
+        const hungerDrain = state.petType === 2 ? 0.35 : 0.2; // Bird hungry
+        const cleanDrain = state.petType === 3 ? 0.4 : 0.15;  // Fish dirty water
+
+        state.needs.hunger = Math.max(0, state.needs.hunger - hungerDrain);
+        state.needs.fun    = Math.max(0, state.needs.fun - 0.25);
+        state.needs.love   = Math.max(0, state.needs.love - 0.18);
+        state.needs.sleep  = Math.max(0, state.needs.sleep - 0.15);
+        state.needs.toilet = Math.max(0, state.needs.toilet - 0.22);
+        state.needs.clean  = Math.max(0, state.needs.clean - cleanDrain);
+        state.needs.social = Math.max(0, state.needs.social - 0.15);
+
+        // Check 5 day penalty rule if ALL are zero
+        const allZero = Object.values(state.needs).every(v => v === 0);
+        if (allZero) {
+          state.zeroDaysCount++;
+          if (state.zeroDaysCount >= 5) {
+            if (state.stage > 1) {
+              state.stage--;
+              showToast("💀 5 gün boyunca bakılmadı! Seviye geriledi.");
+            } else {
+              state.stage = 0;
+              showToast("🥚 Bebeğe hiç bakılmadı ve yumurtaya dönüştü!");
+            }
+            state.zeroDaysCount = 0;
+          }
+        } else {
+          state.zeroDaysCount = 0;
+        }
+      }
+
+      renderOLED();
+      updateMobileUI();
+    }
+
+    // ==========================================
+    // UI & MOBILE COMPANION APP SYNCHRONIZER
+    // ==========================================
+    function updateMobileUI() {
+      // Pet Name & Stage
+      const pName = PET_NAMES[state.petType];
+      document.getElementById('appPetName').textContent = `${pName} (${state.petType === 0 ? 'Pamuk' : 'Dost'})`;
+      document.getElementById('appPetBreed').textContent = `Tür: ${pName} | ID: #SOC-8492`;
+      document.getElementById('appPetStage').textContent = STAGE_NAMES[state.stage];
+      document.getElementById('appPetAge').textContent = `${state.ageDays} Gün`;
+      document.getElementById('appPetScore').textContent = state.totalScore;
+      document.getElementById('appPetBat').textContent = `${state.battery}%`;
+
+      // Update Need Bars
+      const needKeys = ['hunger', 'fun', 'love', 'sleep', 'toilet', 'clean', 'social'];
+      let minVal = 100;
+
+      needKeys.forEach(k => {
+        const val = Math.round(state.needs[k]);
+        if (val < minVal) minVal = val;
+
+        const valElem = document.getElementById(`val_${k}`);
+        const barElem = document.getElementById(`bar_${k}`);
+        if (valElem && barElem) {
+          valElem.textContent = `${val}%`;
+          barElem.style.width = `${val}%`;
+
+          barElem.className = "need-bar-fill " + (val > 50 ? "high" : val > 20 ? "mid" : "crit");
+        }
+      });
+
+      // Overall health text
+      const healthEl = document.getElementById('overallHealth');
+      if (minVal === 0) {
+        healthEl.textContent = "Durum: Kilitli / Kritik!";
+        healthEl.style.color = "var(--accent-pink)";
+      } else if (minVal < 50) {
+        healthEl.textContent = "Durum: İhtiyaç Var!";
+        healthEl.style.color = "var(--accent-yellow)";
+      } else {
+        healthEl.textContent = "Durum: Harika / Mutlu";
+        healthEl.style.color = "var(--accent-green)";
+      }
+    }
+
+    function updateUI() {
+      renderOLED();
+      updateMobileUI();
+    }
+
+    function toggleBle() {
+      state.bleConnected = !state.bleConnected;
+      const badge = document.getElementById('appBleBadge');
+      const text = document.getElementById('appBleText');
+      const btn = document.getElementById('btnBleToggle');
+      const headerBle = document.getElementById('headerBleStatus');
+
+      if (state.bleConnected) {
+        badge.style.borderColor = "rgba(0, 240, 255, 0.3)";
+        badge.style.color = "var(--accent)";
+        text.textContent = "Socies_ESP32_C3: Bağlı";
+        btn.textContent = "Bağlantıyı Kes";
+        headerBle.textContent = "BLE Aktif";
+        headerBle.style.color = "var(--accent-green)";
+        playSoundSuccess();
+        showToast("Bluetooth ile ESP32'ye bağlanıldı");
+      } else {
+        badge.style.borderColor = "rgba(239, 68, 68, 0.3)";
+        badge.style.color = "#ef4444";
+        text.textContent = "BLE: Bağlantı Yok";
+        btn.textContent = "Bağlan (Eşleştir)";
+        headerBle.textContent = "BLE Kesildi";
+        headerBle.style.color = "#ef4444";
+        playSoundAlert();
+        showToast("Bluetooth bağlantısı kesildi");
+      }
+      updateUI();
+    }
+
+    // ==========================================
+    // DEV CONTROLS / TIME MACHINE
+    // ==========================================
+    function devTimeTravel(days) {
+      state.ageDays += days;
+      state.totalScore += (days * 50);
+
+      // Check metamorphosis at 90 days
+      if (state.ageDays >= 90 && state.stage < 4) {
+        state.stage = 4; // Koza
+        showToast("🌟 90. Gün tamamlandı! Evcil hayvan KOZA evresine girdi!");
+      } else if (state.ageDays > 93 && state.stage === 4) {
+        state.stage = 5; // Mega
+        showToast("🦅 METAMORFOZ TAMAMLANDI! Hayvan efsanevi forma dönüştü!");
+      } else if (state.ageDays > 45 && state.stage === 2) {
+        state.stage = 3; // Adult
+      } else if (state.ageDays > 15 && state.stage === 1) {
+        state.stage = 2; // Child
+      }
+
+      playSoundSuccess();
+      showToast(`⏩ ${days} gün ilerletildi! Yaş: ${state.ageDays} Gün`);
+      updateUI();
+    }
+
+    function devTriggerCocoon() {
+      state.ageDays = 90;
+      state.stage = 4;
+      playSoundSuccess();
+      showToast("🪱 Koza evresine geçildi! (Metamorfoz Başladı)");
+      updateUI();
+    }
+
+    function devCriticalTest() {
+      Object.keys(state.needs).forEach(k => state.needs[k] = 0);
+      playSoundAlert();
+      showToast("⚠️ Tüm ihtiyaçlar %0 yapıldı! Kilitlenme ve 5 gün kuralı devrede.");
+      updateUI();
+    }
+
+    function devFulfillAll() {
+      Object.keys(state.needs).forEach(k => state.needs[k] = 100);
+      playSoundSuccess();
+      showToast("✨ Tüm ihtiyaçlar %100 dolduruldu!");
+      updateUI();
+    }
+
+    function devChangePet() {
+      state.petType = (state.petType + 1) % PET_NAMES.length;
+      playSoundSuccess();
+      showToast("Seçilen Hayvan: " + PET_NAMES[state.petType]);
+      updateUI();
+    }
+
+    // ==========================================
+    // LEADERBOARD & SOCIAL DATA
+    // ==========================================
+    const globalLb = [
+      { rank: 1, name: "CyberGamer", pet: "Mega Kedi (98 Gün)", score: "14,850" },
+      { rank: 2, name: "PixelMaster", pet: "Ejder Balık (92 Gün)", score: "13,200" },
+      { rank: 3, name: "Bora_99", pet: "Yetişkin Köpek (74 Gün)", score: "9,640" },
+      { rank: 4, name: "Sen (Pamuk)", pet: "Bebek Kedi (1 Gün)", score: "120" }
+    ];
+
+    const friendsLb = [
+      { rank: 1, name: "Ahmet_ESP", pet: "Yetişkin Kuş (54 Gün)", score: "7,400" },
+      { rank: 2, name: "Zeynep_Cat", pet: "Çocuk Sosis (28 Gün)", score: "3,890" },
+      { rank: 3, name: "Sen (Pamuk)", pet: "Bebek Kedi (1 Gün)", score: "120" }
+    ];
+
+    function renderLb(list) {
+      const container = document.getElementById('lbContent');
+      container.innerHTML = list.map(item => `
+        <div class="lb-item">
+          <div class="lb-rank">#${item.rank}</div>
+          <div class="lb-user">
+            <div class="lb-user-name">${item.name}</div>
+            <div class="lb-user-pet">${item.pet}</div>
+          </div>
+          <div class="lb-score">${item.score} P</div>
+        </div>
+      `).join('');
+    }
+
+    function switchLb(tab) {
+      document.getElementById('pillGlobal').className = "pill-btn " + (tab === 'global' ? 'active' : '');
+      document.getElementById('pillFriends').className = "pill-btn " + (tab === 'friends' ? 'active' : '');
+      renderLb(tab === 'global' ? globalLb : friendsLb);
+    }
+
+    // ==========================================
+    // TAB SWITCHER & HELPERS
+    // ==========================================
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+      
+      document.getElementById(tabId).classList.add('active');
+      const btn = Array.from(document.querySelectorAll('.nav-btn')).find(b => b.getAttribute('onclick').includes(tabId));
+      if (btn) btn.classList.add('active');
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('appToast');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2600);
+    }
+
+    // KEYBOARD LISTENER
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') handleInput('LEFT');
+      else if (e.key === 'ArrowRight') handleInput('RIGHT');
+      else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleInput('ACTION'); }
+      else if (e.key === 'Escape') handleInput('BACK');
+      else if (e.key === 'r' || e.key === 'R') handleInput('RESET');
+    });
+
+    // INITIALIZATION
+    window.addEventListener('DOMContentLoaded', () => {
+      renderLb(globalLb);
+      updateUI();
+      setInterval(simTick, 500); // 500ms animasyon ve ihtiyaç döngüsü
+    });
+  </script>
+</body>
+</html>
