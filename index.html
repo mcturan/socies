@@ -257,8 +257,61 @@
     .doc-section h2 { font-size: 1.45rem; font-weight: 800; margin-bottom: 1.2rem; color: #fff; }
     .doc-section h3 { font-size: 1.15rem; font-weight: 700; margin: 1.5rem 0 0.8rem 0; color: var(--accent); }
     table.spec-table { width: 100%; border-collapse: collapse; margin: 1.2rem 0; font-size: 0.88rem; }
-    table.spec-table th, table.spec-table td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid var(--card-border); }
-    table.spec-table th { background: rgba(255, 255, 255, 0.04); color: var(--accent); font-weight: 700; }
+    /* APP DOWNLOAD HERO & VERSION CHIPS */
+    .header-dl-btn {
+      display: flex; align-items: center; gap: 0.45rem; padding: 0.4rem 0.85rem; border-radius: 10px;
+      background: linear-gradient(135deg, #00f0ff, #a855f7); color: #000; font-size: 0.78rem;
+      font-weight: 800; text-decoration: none; box-shadow: 0 0 16px rgba(0, 240, 255, 0.4);
+      transition: all 0.2s ease;
+    }
+    .header-dl-btn:hover { transform: translateY(-1px); box-shadow: 0 0 24px rgba(0, 240, 255, 0.7); }
+    .ver-badge-chip {
+      background: rgba(0, 0, 0, 0.25); color: #fff; font-size: 0.65rem; font-weight: 700;
+      padding: 0.15rem 0.45rem; border-radius: 6px; font-family: 'JetBrains Mono', monospace;
+    }
+
+    .app-download-hero {
+      background: linear-gradient(135deg, #0f172a, #131d33); border: 1px solid #2a3754;
+      border-radius: 20px; padding: 1.4rem 1.8rem; margin-bottom: 2rem; display: flex;
+      justify-content: space-between; align-items: center; gap: 1.5rem;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      flex-wrap: wrap;
+    }
+    .hero-left { display: flex; align-items: center; gap: 1.2rem; flex: 1; min-width: 320px; }
+    .hero-icon-box {
+      width: 54px; height: 54px; border-radius: 16px; background: linear-gradient(135deg, #00f0ff, #3b82f6);
+      display: flex; align-items: center; justify-content: center; font-size: 1.8rem;
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.35); flex-shrink: 0;
+    }
+    .hero-title-row { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 0.3rem; }
+    .hero-title { font-size: 1.15rem; font-weight: 800; color: #fff; }
+    .chip {
+      font-size: 0.7rem; font-family: 'JetBrains Mono', monospace; font-weight: 700;
+      padding: 0.2rem 0.55rem; border-radius: 8px; display: inline-flex; align-items: center; gap: 0.3rem;
+    }
+    .chip-version { background: rgba(0, 240, 255, 0.15); border: 1px solid rgba(0, 240, 255, 0.4); color: #00f0ff; }
+    .chip-commit { background: rgba(168, 85, 247, 0.15); border: 1px solid rgba(168, 85, 247, 0.4); color: #c084fc; }
+    .chip-status { background: rgba(0, 255, 102, 0.12); border: 1px solid rgba(0, 255, 102, 0.3); color: #00ff66; }
+    .chip-update-alert { background: rgba(255, 42, 133, 0.2); border: 1px solid rgba(255, 42, 133, 0.6); color: #ff2a85; animation: pulse 1.5s infinite; }
+    .hero-desc { font-size: 0.78rem; color: #94a3b8; line-height: 1.45; }
+
+    .hero-actions { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+    .btn-hero-download {
+      display: flex; align-items: center; gap: 0.8rem; padding: 0.65rem 1.4rem; border-radius: 12px;
+      background: linear-gradient(135deg, #00f0ff, #0099ff); color: #000; text-decoration: none;
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.4); transition: all 0.2s ease;
+    }
+    .btn-hero-download:hover { transform: translateY(-2px); box-shadow: 0 0 30px rgba(0, 240, 255, 0.7); }
+    .btn-hero-icon { font-size: 1.3rem; }
+    .label-primary { font-size: 0.85rem; font-weight: 800; }
+    .label-sub { font-size: 0.65rem; opacity: 0.85; font-family: 'JetBrains Mono', monospace; }
+    .btn-hero-secondary {
+      padding: 0.7rem 1.1rem; border-radius: 12px; background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border); color: #f8fafc; font-size: 0.78rem; font-weight: 700;
+      cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    .btn-hero-secondary:hover { background: rgba(255, 255, 255, 0.1); border-color: var(--accent); }
   </style>
 </head>
 <body>
@@ -280,6 +333,9 @@
 
     <div class="header-actions">
       <div class="badge-status" id="headerBleStatus">Bulut Senkron</div>
+      <a href="https://github.com/mcturan/socies/releases/latest/download/socies-app.apk" class="header-dl-btn" id="headerDlBtn" title="Doğrudan Android APK İndir">
+        <span>⬇️</span> APK İndir <span class="ver-badge-chip" id="headerVerText">v1.0.4</span>
+      </a>
       <button class="micro-btn" id="btnSoundToggle" onclick="toggleAudio()">🔊 Ses</button>
       <button class="micro-btn" id="btnHapticToggle" onclick="toggleHaptic()">📳 Titreşim</button>
     </div>
@@ -288,6 +344,40 @@
   <main>
     <!-- TAB 1: EMULATOR -->
     <div id="tab-sim" class="tab-content active">
+
+      <!-- APP DOWNLOAD & AUTO-UPDATER HERO BANNER -->
+      <div class="app-download-hero">
+        <div class="hero-left">
+          <div class="hero-icon-box">📱</div>
+          <div class="hero-text">
+            <div class="hero-title-row">
+              <span class="hero-title">Socies Android Companion & El Konsolu</span>
+              <span class="chip chip-version" id="heroSemVerBadge" title="SemVer 2.0.0 Uyumlu Versiyon">v1.0.4+5</span>
+              <span class="chip chip-commit" id="heroCommitBadge">Commit: e5647da</span>
+              <span class="chip chip-status" id="heroStatusBadge">● Yayında & Güncel</span>
+            </div>
+            <p class="hero-desc">
+              ESP32 sanal bebek el konsolunu telefonunuzda doğrudan oynayın! 3-2-1 Taş-Kağıt-Makas, Kovboy Düellosu, SW-420 titreşim/sallama algılama ve merkezi sunucu çağrı cihazı mesajlaşması.
+            </p>
+          </div>
+        </div>
+        <div class="hero-actions">
+          <a href="https://github.com/mcturan/socies/releases/latest/download/socies-app.apk" class="btn-hero-download" id="heroDownloadLink" download>
+            <div class="btn-hero-icon">📥</div>
+            <div class="btn-hero-label">
+              <div class="label-primary">Android APK İndir</div>
+              <div class="label-sub" id="heroDownloadSub">Sürüm: v1.0.4 (Doğrudan Yükle)</div>
+            </div>
+          </a>
+          <button class="btn-hero-secondary" onclick="checkAppVersionUpdate(true)">
+            <span>🔄</span> Sürüm Kontrolü
+          </button>
+          <a href="https://github.com/mcturan/socies" target="_blank" class="btn-hero-secondary">
+            <span>⭐</span> GitHub Deposu
+          </a>
+        </div>
+      </div>
+
       <div class="simulator-grid">
         
         <!-- DEVICE STAGE -->
@@ -1256,9 +1346,118 @@
       else if (e.key === 'Escape' || e.key === 'q') endBtnPress('BACK');
     });
 
+    // --- SEMANTIC VERSIONING & OTA AUTO-UPDATER ---
+    const CURRENT_APP_VERSION = "1.0.4";
+    const CURRENT_APP_BUILD = 5;
+    const CURRENT_APP_COMMIT = "e5647da";
+    const GITHUB_REPO = "mcturan/socies";
+
+    // SemVer 2.0.0 Ayrıştırıcı (2 karakter veya hatalı format tuzaklarını engeller)
+    function parseSemVer(vStr) {
+      if (!vStr || typeof vStr !== 'string') return { major: 0, minor: 0, patch: 0, build: 0, valid: false };
+      const cleaned = vStr.trim().replace(/^[vV]/, '');
+      const [core, buildPart] = cleaned.split('+');
+      const parts = core.split('.');
+      if (parts.length < 2) {
+        return { major: parseInt(parts[0], 10) || 0, minor: 0, patch: 0, build: 0, valid: false };
+      }
+      return {
+        major: parseInt(parts[0], 10) || 0,
+        minor: parseInt(parts[1], 10) || 0,
+        patch: parts.length > 2 ? (parseInt(parts[2], 10) || 0) : 0,
+        build: buildPart ? (parseInt(buildPart, 10) || 0) : 0,
+        valid: true
+      };
+    }
+
+    // SemVer Karşılaştırıcı: vA > vB ise >0, vA < vB ise <0, eşitse 0
+    function compareSemVer(vA, vB) {
+      const a = parseSemVer(vA);
+      const b = parseSemVer(vB);
+      if (a.major !== b.major) return a.major - b.major;
+      if (a.minor !== b.minor) return a.minor - b.minor;
+      if (a.patch !== b.patch) return a.patch - b.patch;
+      return a.build - b.build;
+    }
+
+    // Sunucu ve GitHub üzerinden en son sürümü denetler
+    async function checkAppVersionUpdate(isUserClick = false) {
+      const chipStatus = document.getElementById('heroStatusBadge');
+      const heroSemVer = document.getElementById('heroSemVerBadge');
+      const heroCommit = document.getElementById('heroCommitBadge');
+      const heroDlLink = document.getElementById('heroDownloadLink');
+      const heroDlSub = document.getElementById('heroDownloadSub');
+      const headerDlBtn = document.getElementById('headerDlBtn');
+      const headerVerText = document.getElementById('headerVerText');
+
+      if (isUserClick) {
+        showToast("🔄 En son sürüm kontrol ediliyor...");
+      }
+
+      let remoteVer = null;
+      let remoteUrl = null;
+      let releaseNotes = "";
+      let commitSha = null;
+
+      // 1. Önce yerel/merkezi sunucu endpointini dene
+      try {
+        const res = await fetch('http://localhost:3000/api/v1/version/check', { signal: AbortSignal.timeout(2000) });
+        if (res.ok) {
+          const data = await res.json();
+          remoteVer = data.latestVersion;
+          remoteUrl = data.apkDownloadUrl;
+          releaseNotes = data.releaseNotes || "";
+          commitSha = data.latestCommitHash;
+        }
+      } catch (_) {}
+
+      // 2. Sunucuya ulaşılamazsa doğrudan GitHub Releases dene
+      if (!remoteVer) {
+        try {
+          const res = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/releases/latest`, {
+            headers: { 'Accept': 'application/vnd.github.v3+json' },
+            signal: AbortSignal.timeout(3000)
+          });
+          if (res.ok) {
+            const data = await res.json();
+            remoteVer = data.tag_name;
+            releaseNotes = data.body || "";
+            const apkAsset = (data.assets || []).find(a => a.name && a.name.endsWith('.apk'));
+            if (apkAsset) remoteUrl = apkAsset.browser_download_url;
+          }
+        } catch (_) {}
+      }
+
+      if (remoteVer && compareSemVer(remoteVer, CURRENT_APP_VERSION) > 0) {
+        const newVerStr = remoteVer.startsWith('v') ? remoteVer : 'v' + remoteVer;
+        if (chipStatus) {
+          chipStatus.className = "chip chip-update-alert";
+          chipStatus.textContent = `🔥 Yeni Sürüm: ${newVerStr}!`;
+        }
+        if (heroSemVer) heroSemVer.textContent = `${newVerStr} (YENİ)`;
+        if (headerVerText) headerVerText.textContent = newVerStr;
+        if (remoteUrl) {
+          if (heroDlLink) heroDlLink.href = remoteUrl;
+          if (headerDlBtn) headerDlBtn.href = remoteUrl;
+        }
+        if (heroDlSub) heroDlSub.textContent = `Yeni Güncelleme: ${newVerStr} (Hemen İndir)`;
+
+        showToast(`🎉 Yeni Sürüm Tespit Edildi: ${newVerStr}!`);
+      } else {
+        if (chipStatus) {
+          chipStatus.className = "chip chip-status";
+          chipStatus.textContent = `● v${CURRENT_APP_VERSION} (En Güncel)`;
+        }
+        if (isUserClick) {
+          showToast(`✅ v${CURRENT_APP_VERSION} sürümü ile en günceldesiniz!`);
+        }
+      }
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
       updateUI();
       setInterval(simTick, 50);
+      setTimeout(() => checkAppVersionUpdate(false), 800);
     });
   </script>
 </body>

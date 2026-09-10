@@ -1,0 +1,11 @@
+{
+  "name": "socies-central-server",
+  "version": "1.0.4",
+  "description": "Socies Central Telemetry, Pager & Presence Server",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "mcturan",
+  "license": "MIT"
+}

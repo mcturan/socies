@@ -1,0 +1,24 @@
+name: socies_app
+description: "Socies - ESP32 Connected Virtual Pet & Handheld Emulator"
+publish_to: 'none'
+version: 1.0.4+5
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_blue_plus: ^1.34.0
+  http: ^1.2.2
+  shared_preferences: ^2.3.2
+  sensors_plus: ^6.0.1
+  package_info_plus: ^8.0.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
