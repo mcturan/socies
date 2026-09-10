@@ -31,27 +31,97 @@ const database = {
   }
 };
 
-// MOCK VERİLER (Sistemin canlı test edilebilmesi için)
-database.devices.set('SOCIES-ESP32-84920A', {
-  deviceId: 'SOCIES-ESP32-84920A',
-  mac: 'A4:CF:12:89:34:B1',
-  userEmail: 'turan@socies.io',
-  pet: { breed: 'top', stage: 1, ageDays: 1, score: 310, joy: 100 },
-  needs: { hunger: 85, fun: 80, love: 90, sleep: 75, toilet: 85, clean: 90, social: 60 },
-  stats: { batteryMv: 3980, batteryPct: 88, steps: 1420, fwVer: 'v1.0.4' },
-  lastSeen: Date.now(),
-  isOnline: true
-});
+// MOCK VERİLER (Canlı Topluluk & Etkin Kullanıcılar)
+const initialDevices = [
+  {
+    deviceId: 'SOCIES-ESP32-84920A',
+    mac: 'A4:CF:12:89:34:B1',
+    user: { nickname: 'Turan (Kurucu)', email: 'turan@socies.io', avatar: '👑', isVip: true },
+    location: { country: 'Türkiye', city: 'İstanbul', district: 'Kadıköy', flag: '🇹🇷', ip: '176.240.12.89' },
+    phone: { model: 'Samsung Galaxy S24 Ultra', os: 'Android 14 (One UI 6.1)', batteryPct: 88, batteryMv: 3980, stepsToday: 5420, connection: '5G / Wi-Fi 6E', appVersion: 'v1.0.4+5', latencyMs: 18 },
+    pet: { breed: 'top', stage: 2, ageDays: 5, score: 940, streakDays: 5 },
+    needs: { hunger: 85, fun: 90, love: 95, sleep: 80, toilet: 90, clean: 95, social: 75 },
+    lastSeen: Date.now(),
+    isOnline: true
+  },
+  {
+    deviceId: 'SOCIES-AND-9941A',
+    mac: 'B8:27:EB:AA:51:72',
+    user: { nickname: 'Zeynep_Retro', email: 'zeynep@socies.io', avatar: '🐱', isVip: false },
+    location: { country: 'Türkiye', city: 'Ankara', district: 'Çankaya', flag: '🇹🇷', ip: '88.255.45.102' },
+    phone: { model: 'Xiaomi 13 Pro', os: 'Android 14 (HyperOS)', batteryPct: 94, batteryMv: 4150, stepsToday: 7120, connection: 'Wi-Fi 6 / BLE 5.2', appVersion: 'v1.0.4+5', latencyMs: 24 },
+    pet: { breed: 'kedi', stage: 3, ageDays: 21, score: 3420, streakDays: 14 },
+    needs: { hunger: 70, fun: 95, love: 90, sleep: 85, toilet: 80, clean: 90, social: 85 },
+    lastSeen: Date.now() - 5000,
+    isOnline: true
+  },
+  {
+    deviceId: 'SOCIES-ESP32-33129C',
+    mac: '24:6F:28:44:91:A8',
+    user: { nickname: 'Emre_Ege', email: 'emre@socies.io', avatar: '🐶', isVip: false },
+    location: { country: 'Türkiye', city: 'İzmir', district: 'Alsancak', flag: '🇹🇷', ip: '94.122.80.14' },
+    phone: { model: 'Google Pixel 8', os: 'Android 14 (Vanilla)', batteryPct: 76, batteryMv: 3890, stepsToday: 3890, connection: '4G LTE / BLE 5.0', appVersion: 'v1.0.4+5', latencyMs: 31 },
+    pet: { breed: 'kopek', stage: 2, ageDays: 12, score: 1850, streakDays: 8 },
+    needs: { hunger: 65, fun: 80, love: 85, sleep: 70, toilet: 75, clean: 80, social: 70 },
+    lastSeen: Date.now() - 12000,
+    isOnline: true
+  },
+  {
+    deviceId: 'SOCIES-IOS-44810D',
+    mac: 'F0:18:98:C3:19:22',
+    user: { nickname: 'Selin_Botanist', email: 'selin@socies.io', avatar: '🌱', isVip: false },
+    location: { country: 'Türkiye', city: 'Bursa', district: 'Nilüfer', flag: '🇹🇷', ip: '195.175.39.210' },
+    phone: { model: 'Apple iPhone 15 Pro', os: 'iOS 17.5.1', batteryPct: 92, batteryMv: 4110, stepsToday: 6240, connection: 'Wi-Fi / BLE 5.3', appVersion: 'v1.0.4+5', latencyMs: 22 },
+    pet: { breed: 'bitki', stage: 2, ageDays: 9, score: 1220, streakDays: 9 },
+    needs: { hunger: 90, fun: 85, love: 95, sleep: 90, toilet: 100, clean: 100, social: 60 },
+    lastSeen: Date.now() - 8000,
+    isOnline: true
+  },
+  {
+    deviceId: 'SOCIES-ESP32-11094E',
+    mac: 'C8:2B:96:77:43:55',
+    user: { nickname: 'Kaan_Akdeniz', email: 'kaan@socies.io', avatar: '🐠', isVip: false },
+    location: { country: 'Türkiye', city: 'Antalya', district: 'Muratpaşa', flag: '🇹🇷', ip: '212.156.40.85' },
+    phone: { model: 'OnePlus 12', os: 'Android 14 (OxygenOS)', batteryPct: 65, batteryMv: 3820, stepsToday: 4310, connection: '5G / BLE Gateway', appVersion: 'v1.0.4+5', latencyMs: 29 },
+    pet: { breed: 'balik', stage: 1, ageDays: 3, score: 480, streakDays: 3 },
+    needs: { hunger: 75, fun: 70, love: 80, sleep: 80, toilet: 85, clean: 70, social: 50 },
+    lastSeen: Date.now() - 25000,
+    isOnline: true
+  },
+  {
+    deviceId: 'SOCIES-ESP32-77211F',
+    mac: 'DC:A6:32:11:80:BC',
+    user: { nickname: 'Hans_Berlin', email: 'hans@socies.io', avatar: '🌭', isVip: false },
+    location: { country: 'Almanya', city: 'Berlin', district: 'Mitte', flag: '🇩🇪', ip: '84.119.12.44' },
+    phone: { model: 'Nothing Phone (2)', os: 'Android 14 (Nothing OS 2.5)', batteryPct: 82, batteryMv: 3950, stepsToday: 8450, connection: 'Wi-Fi 6E / BLE 5.3', appVersion: 'v1.0.4+5', latencyMs: 48 },
+    pet: { breed: 'sosis', stage: 3, ageDays: 26, score: 4180, streakDays: 19 },
+    needs: { hunger: 80, fun: 85, love: 90, sleep: 75, toilet: 80, clean: 85, social: 90 },
+    lastSeen: Date.now() - 40000,
+    isOnline: true
+  },
+  {
+    deviceId: 'SOCIES-ESP32-55490G',
+    mac: 'E4:5F:01:29:76:D1',
+    user: { nickname: 'Oliver_London', email: 'oliver@socies.io', avatar: '🐦', isVip: false },
+    location: { country: 'Birleşik Krallık', city: 'Londra', district: 'Soho', flag: '🇬🇧', ip: '82.165.197.1' },
+    phone: { model: 'Apple iPhone 14', os: 'iOS 17.4', batteryPct: 71, batteryMv: 3860, stepsToday: 5110, connection: '4G LTE / BLE 5.0', appVersion: 'v1.0.4+5', latencyMs: 55 },
+    pet: { breed: 'kus', stage: 2, ageDays: 14, score: 2190, streakDays: 11 },
+    needs: { hunger: 60, fun: 90, love: 85, sleep: 80, toilet: 75, clean: 90, social: 80 },
+    lastSeen: Date.now() - 95000,
+    isOnline: false
+  }
+];
 
-database.devices.set('SOCIES-ESP32-00482B', {
-  deviceId: 'SOCIES-ESP32-00482B',
-  mac: '24:6F:28:11:55:C3',
-  userEmail: 'ahmet@socies.io',
-  pet: { breed: 'kedi', stage: 2, ageDays: 18, score: 2450, joy: 90 },
-  needs: { hunger: 60, fun: 90, love: 95, sleep: 80, toilet: 70, clean: 85, social: 80 },
-  stats: { batteryMv: 4120, batteryPct: 95, steps: 4890, fwVer: 'v1.0.4' },
-  lastSeen: Date.now() - 120000,
-  isOnline: false
+initialDevices.forEach(d => {
+  database.devices.set(d.deviceId, d);
+  database.users.set(d.user.email, {
+    userEmail: d.user.email,
+    activeDeviceId: d.deviceId,
+    petState: d.pet,
+    totalScore: d.pet.score,
+    streakDays: d.pet.streakDays,
+    createdAt: new Date(Date.now() - d.pet.ageDays * 86400000).toISOString()
+  });
 });
 
 // YARDIMCI JSON YANIT FONKSİYONU
@@ -81,12 +151,31 @@ const server = http.createServer((req, res) => {
     return res.end();
   }
 
-  // 1. CANLI İSTATİSTİK & YÖNETİM PANELİ (DASHBOARD)
-  if (path === '/' || path === '/dashboard' || path === '/admin') {
+  // 1. ANA SAYFA & WEB EMÜLATÖRÜ (index.html)
+  if (path === '/' || path === '/index.html' || path === '/emulator') {
+    const indexPath = pathModule.join(__dirname, '../index.html');
+    if (fs.existsSync(indexPath)) {
+      res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+      return fs.createReadStream(indexPath).pipe(res);
+    }
+  }
+
+  // 1.0 SOCIES AĞ & ETKİN KULLANICILAR SAYFASI (/socies, /socies.html)
+  if (path === '/socies' || path === '/socies/' || path === '/socies.html' || path === '/community' || path === '/users') {
+    const sociesPath = pathModule.join(__dirname, '../socies.html');
+    if (fs.existsSync(sociesPath)) {
+      res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+      return fs.createReadStream(sociesPath).pipe(res);
+    }
+    return serveSociesNetworkPage(res);
+  }
+
+  // 1.1 CANLI İSTATİSTİK & YÖNETİM PANELİ (DASHBOARD)
+  if (path === '/dashboard' || path === '/admin' || path === '/server') {
     return serveDashboard(res);
   }
 
-  // 1.1 DOĞRUDAN APK İNDİRME UÇ NOKTASI (ATTACHMENT DOWNLOAD)
+  // 1.2 DOĞRUDAN APK İNDİRME UÇ NOKTASI (ATTACHMENT DOWNLOAD)
   if (path === '/download/socies-app.apk' || path === '/downloads/socies-app.apk' || path === '/socies-app.apk' || path === '/download/socies-v1.0.4.apk') {
     const apkFile = pathModule.join(__dirname, '../downloads/socies-app.apk');
     if (fs.existsSync(apkFile)) {
@@ -157,10 +246,11 @@ const server = http.createServer((req, res) => {
   if (path === '/api/v1/presence' && method === 'GET') {
     const list = Array.from(database.devices.values()).map(d => ({
       deviceId: d.deviceId,
-      userEmail: d.userEmail,
-      petBreed: d.pet?.breed,
-      petScore: d.pet?.score,
-      isOnline: (Date.now() - d.lastSeen) < 90000, // 90 saniye içinde sinyal verdiyse online
+      user: d.user || { nickname: d.userEmail, email: d.userEmail, avatar: '👤' },
+      location: d.location || { country: 'Türkiye', city: 'İstanbul', flag: '🇹🇷' },
+      phone: d.phone || { model: 'Android Cihaz', os: 'Android 14', batteryPct: d.stats?.batteryPct || 100, stepsToday: d.stats?.steps || 0 },
+      pet: d.pet,
+      isOnline: (Date.now() - d.lastSeen) < 180000,
       lastSeenSecAgo: Math.round((Date.now() - d.lastSeen) / 1000)
     }));
 
@@ -168,6 +258,35 @@ const server = http.createServer((req, res) => {
       totalRegistered: list.length,
       onlineCount: list.filter(d => d.isOnline).length,
       devices: list
+    });
+  }
+
+  // 4.1 ETKİN KULLANICILAR VE TELEFON / KONUM BİLGİLERİ (SOCIES AĞI API)
+  if (path === '/api/v1/socies/active-users' && method === 'GET') {
+    const list = Array.from(database.devices.values()).map(d => ({
+      deviceId: d.deviceId,
+      mac: d.mac,
+      user: d.user || { nickname: d.userEmail?.split('@')[0] || 'Dost', email: d.userEmail, avatar: '👤', isVip: false },
+      location: d.location || { country: 'Türkiye', city: 'İstanbul', district: 'Merkez', flag: '🇹🇷', ip: '127.0.0.1' },
+      phone: d.phone || { model: 'Mobil Telefon', os: 'Android', batteryPct: d.stats?.batteryPct || 100, batteryMv: d.stats?.batteryMv || 4000, stepsToday: d.stats?.steps || 0, connection: 'Wi-Fi', appVersion: 'v1.0.4+5', latencyMs: 25 },
+      pet: d.pet || { breed: 'top', stage: 1, ageDays: 1, score: 100, streakDays: 1 },
+      needs: d.needs || { hunger: 80, fun: 80, love: 80, sleep: 80, toilet: 80, clean: 80, social: 80 },
+      isOnline: (Date.now() - d.lastSeen) < 180000,
+      lastSeenSecAgo: Math.round((Date.now() - d.lastSeen) / 1000)
+    }));
+
+    const countries = [...new Set(list.map(u => u.location.country))];
+    const cities = [...new Set(list.map(u => u.location.city))];
+
+    return sendJSON(res, 200, {
+      totalUsers: list.length,
+      onlineCount: list.filter(u => u.isOnline).length,
+      countriesCount: countries.length,
+      citiesCount: cities.length,
+      countries,
+      cities,
+      serverTime: new Date().toISOString(),
+      users: list
     });
   }
 
@@ -379,6 +498,184 @@ function serveDashboard(res) {
       </table>
     </div>
   </div>
+</body>
+</html>`;
+
+  res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+  res.end(html);
+}
+
+// SOCIES AĞ & ETKİN KULLANICILAR SAYFASI
+function serveSociesNetworkPage(res) {
+  const users = Array.from(database.devices.values()).map(d => ({
+    ...d,
+    isOnline: (Date.now() - d.lastSeen) < 180000
+  }));
+
+  const onlineCount = users.filter(u => u.isOnline).length;
+  const countries = [...new Set(users.map(u => u.location?.country || 'Türkiye'))];
+  const cities = [...new Set(users.map(u => u.location?.city || 'İstanbul'))];
+
+  const html = `<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>SOCIES - Canlı Topluluk Ağı & Etkin Kullanıcılar</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+    body { background: #070a12; color: #f8fafc; padding: 2rem; min-height: 100vh; }
+    .container { max-width: 1380px; margin: 0 auto; }
+    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 1px solid #1e293b; padding-bottom: 1.2rem; flex-wrap: wrap; gap: 1rem; }
+    .title { font-size: 1.6rem; font-weight: 800; background: linear-gradient(90deg, #00f0ff, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .sub { font-size: 0.8rem; color: #94a3b8; margin-top: 4px; }
+    .nav-links { display: flex; align-items: center; gap: 0.8rem; }
+    .nav-btn { background: #0f172a; border: 1px solid #1e293b; color: #fff; padding: 0.5rem 1rem; border-radius: 10px; text-decoration: none; font-size: 0.8rem; font-weight: 700; transition: all 0.2s; }
+    .nav-btn:hover { border-color: #00f0ff; background: rgba(0, 240, 255, 0.1); }
+    .dl-btn { background: linear-gradient(135deg, #00f0ff, #0099ff); color: #000; padding: 0.5rem 1.1rem; border-radius: 10px; font-weight: 800; font-size: 0.8rem; text-decoration: none; box-shadow: 0 0 15px rgba(0,240,255,0.4); }
+
+    .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem; }
+    .kpi-card { background: #0f1523; border: 1px solid #1e293b; border-radius: 16px; padding: 1.2rem; position: relative; }
+    .kpi-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #00f0ff, #a855f7); }
+    .kpi-val { font-size: 1.8rem; font-weight: 800; color: #00f0ff; font-family: 'JetBrains Mono', monospace; }
+    .kpi-lbl { font-size: 0.75rem; color: #94a3b8; margin-top: 4px; }
+
+    .search-row { display: flex; gap: 1rem; margin-bottom: 1.5rem; align-items: center; }
+    .search-input { flex: 1; background: #0f1523; border: 1px solid #1e293b; border-radius: 12px; padding: 0.75rem 1.2rem; color: #fff; font-size: 0.85rem; outline: none; }
+    .search-input:focus { border-color: #00f0ff; }
+
+    .users-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 1.5rem; }
+    .user-card { background: #0f1523; border: 1px solid #1e293b; border-radius: 20px; padding: 1.4rem; transition: transform 0.2s, border-color 0.2s; position: relative; }
+    .user-card:hover { transform: translateY(-3px); border-color: #00f0ff; box-shadow: 0 10px 25px rgba(0, 240, 255, 0.1); }
+    .card-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid #1e293b; padding-bottom: 0.8rem; }
+    .loc-badge { font-size: 0.82rem; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 0.4rem; }
+    .status-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; }
+    .dot-on { background: #00ff66; box-shadow: 0 0 8px #00ff66; }
+    .dot-off { background: #64748b; }
+
+    .user-profile { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1rem; }
+    .avatar { width: 46px; height: 46px; border-radius: 12px; background: linear-gradient(135deg, #1e293b, #334155); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+    .user-name { font-weight: 800; font-size: 1rem; color: #fff; }
+    .user-email { font-size: 0.72rem; color: #94a3b8; font-family: 'JetBrains Mono', monospace; }
+
+    .spec-block { background: rgba(0, 0, 0, 0.25); border-radius: 12px; padding: 0.8rem; margin-bottom: 1rem; font-size: 0.75rem; }
+    .spec-line { display: flex; justify-content: space-between; margin-bottom: 0.35rem; }
+    .spec-lbl { color: #94a3b8; }
+    .spec-val { font-weight: 700; color: #f8fafc; font-family: 'JetBrains Mono', monospace; }
+
+    .pet-badge { display: inline-flex; align-items: center; gap: 0.4rem; background: rgba(0, 240, 255, 0.12); color: #00f0ff; padding: 0.3rem 0.7rem; border-radius: 8px; font-size: 0.75rem; font-weight: 700; margin-bottom: 1rem; }
+
+    .action-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+    .act-btn { padding: 0.5rem; border-radius: 8px; border: 1px solid #1e293b; background: #1a2234; color: #fff; font-size: 0.72rem; font-weight: 700; cursor: pointer; text-align: center; transition: all 0.2s; }
+    .act-btn:hover { background: #00f0ff; color: #000; border-color: #00f0ff; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div>
+        <div class="title">🌍 SOCIES CANLI TOPLULUK AĞI</div>
+        <div class="sub">Etkin Kullanıcılar, Canlı Telefon Telemetrisi & Konum Bilgileri</div>
+      </div>
+      <div class="nav-links">
+        <a href="/dashboard" class="nav-btn">📊 Sunucu Paneli</a>
+        <a href="/" class="nav-btn">🎮 Web Emülatörü</a>
+        <a href="/download/socies-app.apk" class="dl-btn">📥 APK İndir</a>
+      </div>
+    </div>
+
+    <div class="kpi-row">
+      <div class="kpi-card">
+        <div class="kpi-val">${users.length}</div>
+        <div class="kpi-lbl">Kayıtlı Cihaz / Kullanıcı</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-val" style="color:#00ff66;">${onlineCount}</div>
+        <div class="kpi-lbl">Şu An Çevrimiçi (Online)</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-val" style="color:#a855f7;">${cities.length} Şehir</div>
+        <div class="kpi-lbl">${countries.join(', ')}</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-val" style="color:#ffe600;">v1.0.4+5</div>
+        <div class="kpi-lbl">Ağ Sürümü (SemVer 2.0.0)</div>
+      </div>
+    </div>
+
+    <div class="search-row">
+      <input type="text" class="search-input" id="filterInput" placeholder="Şehir, ülke, kullanıcı veya canlı türü ile filtrele... (örn: İstanbul, Ankara, Kedi, Berlin)">
+    </div>
+
+    <div class="users-grid" id="usersGrid">
+      ${users.map(u => `
+        <div class="user-card" data-search="${(u.location?.city + ' ' + u.location?.country + ' ' + u.user?.nickname + ' ' + u.pet?.breed).toLowerCase()}">
+          <div class="card-head">
+            <div class="loc-badge">
+              <span>${u.location?.flag || '🌐'}</span>
+              <span>${u.location?.country || 'Bilinmiyor'}, ${u.location?.city || 'İstanbul'} <small style="color:#64748b;">(${u.location?.district || 'Merkez'})</small></span>
+            </div>
+            <span class="status-dot ${u.isOnline ? 'dot-on' : 'dot-off'}" title="${u.isOnline ? 'Çevrimiçi' : 'Çevrimdışı'}"></span>
+          </div>
+
+          <div class="user-profile">
+            <div class="avatar">${u.user?.avatar || '👤'}</div>
+            <div>
+              <div class="user-name">${u.user?.nickname || 'Socies Dostu'} ${u.user?.isVip ? '<span style="color:#ffe600; font-size:0.75rem;">👑 VIP</span>' : ''}</div>
+              <div class="user-email">${u.user?.email || u.deviceId}</div>
+            </div>
+          </div>
+
+          <div class="pet-badge">
+            <span>🐾</span>
+            <span>${(u.pet?.breed || 'top').toUpperCase()} (Lv. ${u.pet?.stage || 1}) • ${u.pet?.score || 0} P • 🔥 ${u.pet?.streakDays || 1} Gün Seri</span>
+          </div>
+
+          <div class="spec-block">
+            <div style="color:#00f0ff; font-weight:700; margin-bottom:6px; font-size:0.7rem;">📱 TELEFONDAN GELEN BİLGİLER</div>
+            <div class="spec-line"><span class="spec-lbl">Telefon Modeli:</span><span class="spec-val">${u.phone?.model || 'Android Cihaz'}</span></div>
+            <div class="spec-line"><span class="spec-lbl">İşletim Sistemi:</span><span class="spec-val">${u.phone?.os || 'Android 14'}</span></div>
+            <div class="spec-line"><span class="spec-lbl">Telefon Bataryası:</span><span class="spec-val">${u.phone?.batteryPct || 100}% (${u.phone?.batteryMv || 4000} mV)</span></div>
+            <div class="spec-line"><span class="spec-lbl">Günlük Adım:</span><span class="spec-val">${(u.phone?.stepsToday || 0).toLocaleString()} adım</span></div>
+            <div class="spec-line"><span class="spec-lbl">Bağlantı & Gecikme:</span><span class="spec-val">${u.phone?.connection || 'Wi-Fi'} (${u.phone?.latencyMs || 20}ms)</span></div>
+            <div class="spec-line"><span class="spec-lbl">Cihaz ID:</span><span class="spec-val" style="color:#a855f7;">${u.deviceId}</span></div>
+          </div>
+
+          <div class="action-row">
+            <button class="act-btn" onclick="sendQuickMessage('${u.deviceId}', '${u.user?.nickname || 'Dost'}')">📟 Çağrı Gönder</button>
+            <button class="act-btn" onclick="sendDuelInvite('${u.deviceId}', '${u.user?.nickname || 'Dost'}')">🤠 Düelloya Davet Et</button>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('filterInput').addEventListener('input', function(e) {
+      const q = e.target.value.toLowerCase();
+      document.querySelectorAll('.user-card').forEach(card => {
+        const text = card.getAttribute('data-search') || '';
+        card.style.display = text.includes(q) ? 'block' : 'none';
+      });
+    });
+
+    function sendQuickMessage(devId, nick) {
+      const msg = prompt('[' + nick + '] kullanıcısına çağrı mesajı gönder (Maks 32 karakter):', 'Selam! Parkta mısın?');
+      if (!msg) return;
+      fetch('/api/v1/messages/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ targetDeviceId: devId, fromUser: 'Web Kullanıcısı', messageText: msg })
+      }).then(r => r.json()).then(res => {
+        alert(res.status === 'DELIVERED_TO_ONLINE_DEVICE' ? '✨ Mesaj ' + nick + ' kullanıcısına anında iletildi!' : '📬 Hedef kapalı, mesaj kuyruğa alındı.');
+      }).catch(err => alert('Hata: ' + err.message));
+    }
+
+    function sendDuelInvite(devId, nick) {
+      alert('🤠 ' + nick + ' kullanıcısına Kovboy Düellosu daveti gönderildi!');
+    }
+  </script>
 </body>
 </html>`;
 

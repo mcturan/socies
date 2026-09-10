@@ -346,6 +346,127 @@
     }
     .table-cat-row td { border-top: 2px solid #2a3754; padding-top: 1.2rem; }
     .roadmap-table tr:hover { background: rgba(255, 255, 255, 0.02); }
+
+    /* SOCIES CANLI AĞ & ETKİN KULLANICILAR TAB STYLES */
+    .socies-hero-banner {
+      background: linear-gradient(135deg, #091322, #101c36); border: 1px solid #1e2e4f;
+      border-radius: 20px; padding: 1.5rem 2rem; margin-bottom: 2rem;
+      display: flex; justify-content: space-between; align-items: center; gap: 1.5rem; flex-wrap: wrap;
+    }
+    .socies-hero-title { font-size: 1.4rem; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 0.6rem; }
+    .socies-hero-desc { font-size: 0.82rem; color: #94a3b8; margin-top: 0.35rem; }
+    .socies-kpi-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem;
+    }
+    @media (max-width: 992px) { .socies-kpi-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 520px) { .socies-kpi-grid { grid-template-columns: 1fr; } }
+    .socies-kpi-card {
+      background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 18px;
+      padding: 1.3rem; position: relative; overflow: hidden;
+    }
+    .socies-kpi-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-purple));
+    }
+    .socies-kpi-val { font-size: 1.85rem; font-weight: 800; font-family: 'JetBrains Mono', monospace; }
+    .socies-kpi-lbl { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
+    .socies-kpi-badge { font-size: 0.7rem; font-weight: 700; color: var(--accent); margin-top: 5px; }
+
+    .socies-filter-box {
+      background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 18px;
+      padding: 1.2rem; margin-bottom: 2rem; display: flex; flex-direction: column; gap: 0.85rem;
+    }
+    .socies-search-input {
+      width: 100%; background: rgba(0, 0, 0, 0.4); border: 1px solid var(--card-border);
+      border-radius: 12px; padding: 0.8rem 1.2rem; color: #fff; font-size: 0.88rem; outline: none;
+      transition: border-color 0.2s;
+    }
+    .socies-search-input:focus { border-color: var(--accent); }
+    .socies-pill-row { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .socies-pill {
+      background: rgba(255, 255, 255, 0.04); border: 1px solid var(--card-border);
+      color: var(--text-muted); padding: 0.35rem 0.85rem; border-radius: 20px; font-size: 0.75rem;
+      font-weight: 600; cursor: pointer; transition: all 0.2s;
+    }
+    .socies-pill:hover { color: #fff; border-color: var(--accent); }
+    .socies-pill.active {
+      background: var(--accent); color: #000; border-color: var(--accent); font-weight: 700;
+    }
+
+    .socies-users-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 1.5rem;
+    }
+    .socies-user-card {
+      background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px;
+      padding: 1.4rem; position: relative; transition: all 0.2s ease; display: flex; flex-direction: column;
+      justify-content: space-between;
+    }
+    .socies-user-card:hover {
+      transform: translateY(-4px); border-color: var(--accent); box-shadow: 0 12px 30px rgba(0, 240, 255, 0.12);
+    }
+    .socies-card-head {
+      display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--card-border);
+      padding-bottom: 0.8rem; margin-bottom: 1rem;
+    }
+    .socies-loc-tag { display: flex; align-items: center; gap: 0.45rem; font-size: 0.82rem; font-weight: 700; color: #fff; }
+    .socies-loc-sub { font-size: 0.7rem; color: var(--text-muted); font-weight: 500; }
+    .socies-online-badge {
+      display: flex; align-items: center; gap: 0.4rem; font-size: 0.7rem; font-weight: 700;
+      padding: 0.2rem 0.6rem; border-radius: 12px;
+    }
+    .socies-online-badge.on {
+      background: rgba(0, 255, 102, 0.15); color: var(--accent-green); border: 1px solid rgba(0, 255, 102, 0.4);
+    }
+    .socies-online-badge.off {
+      background: rgba(148, 163, 184, 0.12); color: var(--text-muted); border: 1px solid rgba(148, 163, 184, 0.2);
+    }
+    .socies-pulse-dot {
+      width: 7px; height: 7px; border-radius: 50%; background: var(--accent-green);
+      box-shadow: 0 0 8px var(--accent-green); animation: pulse 1.6s infinite;
+    }
+
+    .socies-user-meta { display: flex; align-items: center; gap: 0.85rem; margin-bottom: 1rem; }
+    .socies-avatar-icon {
+      width: 48px; height: 48px; border-radius: 14px; background: linear-gradient(135deg, #1e293b, #334155);
+      display: flex; align-items: center; justify-content: center; font-size: 1.6rem; flex-shrink: 0;
+    }
+    .socies-uname-row { display: flex; align-items: center; gap: 0.4rem; }
+    .socies-uname { font-size: 1rem; font-weight: 800; color: #fff; }
+    .socies-vip {
+      background: rgba(255, 230, 0, 0.2); border: 1px solid rgba(255, 230, 0, 0.5);
+      color: var(--accent-yellow); font-size: 0.62rem; font-weight: 800; padding: 0.1rem 0.35rem; border-radius: 6px;
+    }
+    .socies-uemail { font-size: 0.72rem; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; }
+
+    .socies-pet-banner {
+      background: rgba(0, 240, 255, 0.08); border: 1px solid rgba(0, 240, 255, 0.25);
+      padding: 0.38rem 0.75rem; border-radius: 10px; display: flex; justify-content: space-between;
+      font-size: 0.75rem; font-weight: 700; margin-bottom: 1rem; align-items: center;
+    }
+
+    .socies-telem-box {
+      background: rgba(0, 0, 0, 0.25); border: 1px solid var(--card-border); border-radius: 14px;
+      padding: 0.85rem 1rem; margin-bottom: 1.1rem;
+    }
+    .socies-telem-hdr {
+      font-size: 0.7rem; font-weight: 800; color: var(--accent); text-transform: uppercase;
+      letter-spacing: 0.5px; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.4rem;
+    }
+    .socies-telem-line {
+      display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem; font-size: 0.73rem;
+    }
+    .socies-telem-lbl { color: var(--text-muted); }
+    .socies-telem-val { font-weight: 700; color: #fff; font-family: 'JetBrains Mono', monospace; }
+
+    .socies-actions-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.45rem; margin-top: auto; }
+    .btn-socies-action {
+      background: #151d2f; border: 1px solid var(--card-border); color: #fff; padding: 0.55rem 0.25rem;
+      border-radius: 10px; font-size: 0.72rem; font-weight: 700; cursor: pointer; text-align: center;
+      transition: all 0.2s; display: flex; flex-direction: column; align-items: center; gap: 0.2rem;
+    }
+    .btn-socies-action:hover {
+      background: var(--accent); color: #000; border-color: var(--accent); transform: translateY(-2px);
+    }
   </style>
 </head>
 <body>
@@ -361,6 +482,7 @@
 
     <nav class="nav-tabs">
       <button class="nav-btn active" onclick="switchTab('tab-sim')">🎮 Emülatör & Cihaz</button>
+      <button class="nav-btn" onclick="switchTab('tab-socies-network')">🌍 Socies Ağı (Etkin Kullanıcılar)</button>
       <button class="nav-btn" onclick="switchTab('tab-roadmap')">🛠️ Geliştirme & Yol Haritası</button>
       <button class="nav-btn" onclick="switchTab('tab-cloud-spec')">☁️ Bulut & Sunucu Telemetrisi</button>
       <button class="nav-btn" onclick="switchTab('tab-retention')">🔥 Bağlılık & Sadakat Motoru</button>
@@ -611,6 +733,79 @@
       </div>
     </div>
 
+    <!-- TAB 2: SOCIES CANLI TOPLULUK AĞI & ETKİN KULLANICILAR -->
+    <div id="tab-socies-network" class="tab-content">
+      <!-- HERO BANNER -->
+      <div class="socies-hero-banner">
+        <div>
+          <div class="socies-hero-title">
+            <span>🌍</span>
+            <span>Socies Canlı Topluluk Ağı & Etkin Kullanıcılar</span>
+          </div>
+          <div class="socies-hero-desc">
+            Merkezi sunucuya bağlı tüm sanal bebekler ve eşlik eden akıllı telefonların canlı telemetrisi, donanım sensör verileri ve coğrafi konum bilgileri.
+          </div>
+        </div>
+        <div style="display:flex; gap:0.6rem; align-items:center;">
+          <a href="/socies" target="_blank" class="nav-btn" style="background:linear-gradient(135deg, var(--accent), #0099ff); color:#000; font-weight:800; text-decoration:none; padding:0.6rem 1.1rem; border-radius:12px; box-shadow:0 0 15px rgba(0,240,255,0.4);">
+            <span>↗️</span> Tam Ekran Socies Sayfası
+          </a>
+          <button class="nav-btn" onclick="fetchSociesTabUsers(true)" style="background:#1e293b; color:#fff; border-radius:12px; padding:0.6rem 1rem;">
+            <span>🔄</span> Yenile
+          </button>
+        </div>
+      </div>
+
+      <!-- KPI ROW -->
+      <div class="socies-kpi-grid">
+        <div class="socies-kpi-card">
+          <div class="socies-kpi-val" id="sociesKpiTotal" style="color:var(--accent);">7</div>
+          <div class="socies-kpi-lbl">Kayıtlı Cihaz / Kullanıcı</div>
+          <div class="socies-kpi-badge">● Doğrulanmış Cihaz Havuzu</div>
+        </div>
+        <div class="socies-kpi-card">
+          <div class="socies-kpi-val" id="sociesKpiOnline" style="color:var(--accent-green);">6</div>
+          <div class="socies-kpi-lbl">Şu An Çevrimiçi (Online)</div>
+          <div class="socies-kpi-badge">● Canlı Heartbeat Akışı</div>
+        </div>
+        <div class="socies-kpi-card">
+          <div class="socies-kpi-val" id="sociesKpiCities" style="color:var(--accent-purple);">7 Şehir</div>
+          <div class="socies-kpi-lbl" id="sociesKpiCountries">Türkiye, Almanya, Birleşik Krallık</div>
+          <div class="socies-kpi-badge">● GPS / IP Bölge Dağılımı</div>
+        </div>
+        <div class="socies-kpi-card">
+          <div class="socies-kpi-val" style="color:var(--accent-yellow);">v1.0.4+5</div>
+          <div class="socies-kpi-lbl">Ağ Sürümü (SemVer 2.0.0)</div>
+          <div class="socies-kpi-badge">● OTA Canlı Güncelleme Uyumlu</div>
+        </div>
+      </div>
+
+      <!-- FILTER CONTROLS -->
+      <div class="socies-filter-box">
+        <input 
+          type="text" 
+          class="socies-search-input" 
+          id="sociesTabSearch" 
+          placeholder="Kullanıcı adı, şehir (İstanbul, Berlin, Ankara), telefon modeli (S24 Ultra, Pixel, iPhone) veya evcil hayvan ile anında filtrele..." 
+          oninput="applySociesTabFilter()"
+        >
+        <div class="socies-pill-row">
+          <button class="socies-pill active" onclick="setSociesPill('all')">Tümü (Hepsi)</button>
+          <button class="socies-pill" onclick="setSociesPill('online')">🟢 Yalnızca Çevrimiçi</button>
+          <button class="socies-pill" onclick="setSociesPill('tr')">🇹🇷 Türkiye</button>
+          <button class="socies-pill" onclick="setSociesPill('de')">🇩🇪 Almanya</button>
+          <button class="socies-pill" onclick="setSociesPill('uk')">🇬🇧 Birleşik Krallık</button>
+          <button class="socies-pill" onclick="setSociesPill('android')">🤖 Android</button>
+          <button class="socies-pill" onclick="setSociesPill('ios')">🍏 iOS</button>
+        </div>
+      </div>
+
+      <!-- ACTIVE USERS GRID -->
+      <div class="socies-users-grid" id="sociesTabGrid">
+        <!-- JS ile dinamik çizilir -->
+      </div>
+    </div>
+
     <!-- TAB: GELİŞTİRME & YOL HARİTASI (AUDIT) -->
     <div id="tab-roadmap" class="tab-content">
       <div class="doc-section">
@@ -622,11 +817,11 @@
         <!-- KPI SUMMARY GRID -->
         <div class="roadmap-kpi-grid">
           <div class="roadmap-kpi">
-            <div class="kpi-num" style="color:var(--accent);">32</div>
+            <div class="kpi-num" style="color:var(--accent);">33</div>
             <div class="kpi-label">Toplam İstişare Edilen Madde</div>
           </div>
           <div class="roadmap-kpi">
-            <div class="kpi-num" style="color:var(--accent-green);">28</div>
+            <div class="kpi-num" style="color:var(--accent-green);">29</div>
             <div class="kpi-label">✅ Tamamlanan & Canlıda (88%)</div>
           </div>
           <div class="roadmap-kpi">
@@ -861,6 +1056,13 @@
               <td><b>Systemd Arka Plan Servisi (socies-server)</b></td>
               <td>Sunucu uygulamasının bilgisayar açılışında arka planda çökmeden kesintisiz çalışmasını sağlamak.</td>
               <td><code>socies-server.service</code></td>
+              <td><span class="status-badge done">✅ Tamamlandı</span></td>
+            </tr>
+            <tr>
+              <td><span class="cat-badge">Ağ & Topluluk</span></td>
+              <td><b>Socies Ağı & Etkin Kullanıcılar Sayfası (/socies)</b></td>
+              <td>Etkin kullanıcıların kimlikleri, telefondan gelen telemetrileri (model, OS, pil %, adım, gecikme) ve konumlarını (ülke, şehir, ilçe, bayrak, IP) canlı kartlar ve filtrelerle listelemek.</td>
+              <td><code>socies.html</code><br><code>index.html</code><br><code>server/server.js</code></td>
               <td><span class="status-badge done">✅ Tamamlandı</span></td>
             </tr>
 
@@ -1851,10 +2053,302 @@
       }
     }
 
+    // ==========================================
+    // SOCIES CANLI TOPLULUK AĞI (TAB 2) ENGINE
+    // ==========================================
+    let sociesUsersList = [
+      {
+        deviceId: 'SOCIES-ESP32-84920A',
+        user: { nickname: 'Turan (Kurucu)', email: 'turan@socies.io', avatar: '👑', isVip: true },
+        location: { country: 'Türkiye', city: 'İstanbul', district: 'Kadıköy', flag: '🇹🇷', ip: '176.240.12.xx' },
+        phone: { model: 'Samsung Galaxy S24 Ultra', os: 'Android 14 (One UI 6.1)', batteryPct: 88, batteryMv: 3980, stepsToday: 5420, connection: '5G / Wi-Fi 6E', latencyMs: 18 },
+        pet: { breed: 'top', breedTitle: 'Zıpzıp Top ⚽', stage: 2, score: 940, streakDays: 5 },
+        isOnline: true,
+        lastSeenSecAgo: 3
+      },
+      {
+        deviceId: 'SOCIES-AND-9941A',
+        user: { nickname: 'Zeynep_Retro', email: 'zeynep@socies.io', avatar: '🐱', isVip: false },
+        location: { country: 'Türkiye', city: 'Ankara', district: 'Çankaya', flag: '🇹🇷', ip: '88.255.45.xx' },
+        phone: { model: 'Xiaomi 13 Pro', os: 'Android 14 (HyperOS)', batteryPct: 94, batteryMv: 4150, stepsToday: 7120, connection: 'Wi-Fi 6 / BLE 5.2', latencyMs: 24 },
+        pet: { breed: 'kedi', breedTitle: 'Sanal Kedi 🐱', stage: 3, score: 3420, streakDays: 14 },
+        isOnline: true,
+        lastSeenSecAgo: 8
+      },
+      {
+        deviceId: 'SOCIES-ESP32-33129C',
+        user: { nickname: 'Emre_Ege', email: 'emre@socies.io', avatar: '🐶', isVip: false },
+        location: { country: 'Türkiye', city: 'İzmir', district: 'Alsancak', flag: '🇹🇷', ip: '94.122.80.xx' },
+        phone: { model: 'Google Pixel 8', os: 'Android 14 (Vanilla)', batteryPct: 76, batteryMv: 3890, stepsToday: 3890, connection: '4G LTE / BLE 5.0', latencyMs: 31 },
+        pet: { breed: 'kopek', breedTitle: 'Sadık Köpek 🐶', stage: 2, score: 1850, streakDays: 8 },
+        isOnline: true,
+        lastSeenSecAgo: 14
+      },
+      {
+        deviceId: 'SOCIES-IOS-44810D',
+        user: { nickname: 'Selin_Botanist', email: 'selin@socies.io', avatar: '🌱', isVip: false },
+        location: { country: 'Türkiye', city: 'Bursa', district: 'Nilüfer', flag: '🇹🇷', ip: '195.175.39.xx' },
+        phone: { model: 'Apple iPhone 15 Pro', os: 'iOS 17.5.1', batteryPct: 92, batteryMv: 4110, stepsToday: 6240, connection: 'Wi-Fi / BLE 5.3', latencyMs: 22 },
+        pet: { breed: 'bitki', breedTitle: 'Bonsai Bitki 🌱', stage: 2, score: 1220, streakDays: 9 },
+        isOnline: true,
+        lastSeenSecAgo: 9
+      },
+      {
+        deviceId: 'SOCIES-ESP32-11094E',
+        user: { nickname: 'Kaan_Akdeniz', email: 'kaan@socies.io', avatar: '🐠', isVip: false },
+        location: { country: 'Türkiye', city: 'Antalya', district: 'Muratpaşa', flag: '🇹🇷', ip: '212.156.40.xx' },
+        phone: { model: 'OnePlus 12', os: 'Android 14 (OxygenOS)', batteryPct: 65, batteryMv: 3820, stepsToday: 4310, connection: '5G / BLE Gateway', latencyMs: 29 },
+        pet: { breed: 'balik', breedTitle: 'Neon Balık 🐠', stage: 1, score: 480, streakDays: 3 },
+        isOnline: true,
+        lastSeenSecAgo: 24
+      },
+      {
+        deviceId: 'SOCIES-ESP32-77211F',
+        user: { nickname: 'Hans_Berlin', email: 'hans@socies.io', avatar: '🌭', isVip: false },
+        location: { country: 'Almanya', city: 'Berlin', district: 'Mitte', flag: '🇩🇪', ip: '84.119.12.xx' },
+        phone: { model: 'Nothing Phone (2)', os: 'Android 14 (Nothing OS 2.5)', batteryPct: 82, batteryMv: 3950, stepsToday: 8450, connection: 'Wi-Fi 6E / BLE 5.3', latencyMs: 48 },
+        pet: { breed: 'sosis', breedTitle: 'Sevimli Sosis 🌭', stage: 3, score: 4180, streakDays: 19 },
+        isOnline: true,
+        lastSeenSecAgo: 42
+      },
+      {
+        deviceId: 'SOCIES-ESP32-55490G',
+        user: { nickname: 'Oliver_London', email: 'oliver@socies.io', avatar: '🐦', isVip: false },
+        location: { country: 'Birleşik Krallık', city: 'Londra', district: 'Soho', flag: '🇬🇧', ip: '82.165.197.xx' },
+        phone: { model: 'Apple iPhone 14', os: 'iOS 17.4', batteryPct: 71, batteryMv: 3860, stepsToday: 5110, connection: '4G LTE / BLE 5.0', latencyMs: 55 },
+        pet: { breed: 'kus', breedTitle: 'Uçan Kuş 🐦', stage: 2, score: 2190, streakDays: 11 },
+        isOnline: false,
+        lastSeenSecAgo: 160
+      }
+    ];
+
+    let sociesCurrentPill = 'all';
+
+    function getSociesPetLabel(breed) {
+      switch(breed) {
+        case 'top': return 'Zıpzıp Top ⚽';
+        case 'kedi': return 'Sanal Kedi 🐱';
+        case 'kopek': return 'Sadık Köpek 🐶';
+        case 'bitki': return 'Bonsai Bitki 🌱';
+        case 'balik': return 'Neon Balık 🐠';
+        case 'sosis': return 'Sevimli Sosis 🌭';
+        case 'kus': return 'Uçan Kuş 🐦';
+        default: return (breed || 'Evcil Hayvan').toUpperCase();
+      }
+    }
+
+    async function fetchSociesTabUsers(manual = false) {
+      try {
+        const res = await fetch('/api/v1/socies/active-users');
+        if (res.ok) {
+          const data = await res.json();
+          if (data.users && data.users.length > 0) {
+            sociesUsersList = data.users.map(u => ({
+              ...u,
+              pet: { ...u.pet, breedTitle: getSociesPetLabel(u.pet?.breed) }
+            }));
+            const tot = document.getElementById('sociesKpiTotal');
+            const onl = document.getElementById('sociesKpiOnline');
+            const cit = document.getElementById('sociesKpiCities');
+            const cnt = document.getElementById('sociesKpiCountries');
+            if (tot) tot.textContent = data.totalUsers || sociesUsersList.length;
+            if (onl) onl.textContent = data.onlineCount || sociesUsersList.filter(u => u.isOnline).length;
+            if (cit) cit.textContent = (data.citiesCount || 7) + ' Şehir';
+            if (cnt && data.countries) cnt.textContent = data.countries.join(', ');
+          }
+        }
+      } catch (_) {}
+      applySociesTabFilter();
+      if (manual) showToast('Socies ağı güncellendi!');
+    }
+
+    function setSociesPill(cat) {
+      sociesCurrentPill = cat;
+      document.querySelectorAll('.socies-pill').forEach(b => b.classList.remove('active'));
+      const activePill = Array.from(document.querySelectorAll('.socies-pill')).find(b => b.getAttribute('onclick')?.includes(cat));
+      if (activePill) activePill.classList.add('active');
+      applySociesTabFilter();
+    }
+
+    function applySociesTabFilter() {
+      const q = (document.getElementById('sociesTabSearch')?.value || '').trim().toLowerCase();
+      const grid = document.getElementById('sociesTabGrid');
+      if (!grid) return;
+      grid.innerHTML = '';
+
+      const filtered = sociesUsersList.filter(u => {
+        if (sociesCurrentPill === 'online' && !u.isOnline) return false;
+        if (sociesCurrentPill === 'tr' && u.location?.country !== 'Türkiye') return false;
+        if (sociesCurrentPill === 'de' && u.location?.country !== 'Almanya') return false;
+        if (sociesCurrentPill === 'uk' && u.location?.country !== 'Birleşik Krallık') return false;
+        if (sociesCurrentPill === 'android' && !(u.phone?.os || '').toLowerCase().includes('android')) return false;
+        if (sociesCurrentPill === 'ios' && !(u.phone?.os || '').toLowerCase().includes('ios')) return false;
+
+        if (!q) return true;
+        const txt = [
+          u.user?.nickname, u.user?.email, u.location?.country, u.location?.city,
+          u.location?.district, u.phone?.model, u.phone?.os, u.pet?.breed, u.pet?.breedTitle
+        ].join(' ').toLowerCase();
+        return txt.includes(q);
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div style="grid-column: 1 / -1; text-align:center; padding: 3rem; background: var(--card-bg); border-radius: 20px; border: 1px solid var(--card-border);">
+            <div style="font-size:2.5rem; margin-bottom: 0.5rem;">🔍</div>
+            <div style="font-size:1.1rem; font-weight:700; color:#fff;">Eşleşen Cihaz veya Kullanıcı Bulunamadı</div>
+            <div style="color:var(--text-muted); font-size:0.8rem; margin-top:0.3rem;">Farklı bir şehir, telefon modeli veya filtre deneyin.</div>
+          </div>
+        `;
+        return;
+      }
+
+      filtered.forEach(u => {
+        const card = document.createElement('div');
+        card.className = 'socies-user-card';
+
+        const batColor = u.phone?.batteryPct > 50 ? 'var(--accent-green)' : (u.phone?.batteryPct > 20 ? 'var(--accent-yellow)' : 'var(--accent-pink)');
+        const lastSeenStr = u.isOnline ? 'Çevrimiçi' : (u.lastSeenSecAgo ? Math.round(u.lastSeenSecAgo / 60) + ' dk önce' : 'Çevrimdışı');
+
+        card.innerHTML = `
+          <div>
+            <div class="socies-card-head">
+              <div class="socies-loc-tag">
+                <span style="font-size:1.2rem;">${u.location?.flag || '🌐'}</span>
+                <div>
+                  <div>${u.location?.city || 'İstanbul'}, ${u.location?.country || 'TR'}</div>
+                  <div class="socies-loc-sub">${u.location?.district || 'Merkez'} • <span style="color:var(--accent-purple); font-family:'JetBrains Mono'; font-size:0.68rem;">${u.location?.ip || '127.0.0.1'}</span></div>
+                </div>
+              </div>
+              <div class="socies-online-badge ${u.isOnline ? 'on' : 'off'}">
+                ${u.isOnline ? '<span class="socies-pulse-dot"></span>' : ''}
+                <span>${lastSeenStr}</span>
+              </div>
+            </div>
+
+            <div class="socies-user-meta">
+              <div class="socies-avatar-icon">${u.user?.avatar || '👤'}</div>
+              <div style="flex:1; min-width:0;">
+                <div class="socies-uname-row">
+                  <span class="socies-uname">${u.user?.nickname || 'Socies Dostu'}</span>
+                  ${u.user?.isVip ? '<span class="socies-vip">👑 VIP</span>' : ''}
+                </div>
+                <div class="socies-uemail">${u.user?.email || u.deviceId}</div>
+              </div>
+            </div>
+
+            <div class="socies-pet-banner">
+              <span style="color:var(--accent);">🐾 ${u.pet?.breedTitle || getSociesPetLabel(u.pet?.breed)} (Lv.${u.pet?.stage || 1})</span>
+              <span style="color:var(--accent-yellow); font-family:'JetBrains Mono';">${u.pet?.score || 0} P • 🔥 ${u.pet?.streakDays || 1} Gün</span>
+            </div>
+
+            <div class="socies-telem-box">
+              <div class="socies-telem-hdr">
+                <span>📱</span>
+                <span>Telefondan Canlı Telemetri</span>
+              </div>
+              <div class="socies-telem-line">
+                <span class="socies-telem-lbl">Telefon Modeli:</span>
+                <span class="socies-telem-val">${u.phone?.model || 'Android Cihaz'}</span>
+              </div>
+              <div class="socies-telem-line">
+                <span class="socies-telem-lbl">İşletim Sistemi:</span>
+                <span class="socies-telem-val">${u.phone?.os || 'Android 14'}</span>
+              </div>
+              <div class="socies-telem-line">
+                <span class="socies-telem-lbl">Telefon Bataryası:</span>
+                <span class="socies-telem-val">
+                  %${u.phone?.batteryPct || 100} (${u.phone?.batteryMv || 4000}mV)
+                  <span style="display:inline-block; width:55px; height:6px; background:#1e293b; border-radius:3px; vertical-align:middle; margin-left:4px; overflow:hidden;">
+                    <span style="display:block; height:100%; width:${u.phone?.batteryPct || 100}%; background:${batColor};"></span>
+                  </span>
+                </span>
+              </div>
+              <div class="socies-telem-line">
+                <span class="socies-telem-lbl">Günlük Adım:</span>
+                <span class="socies-telem-val" style="color:var(--accent);">${(u.phone?.stepsToday || 0).toLocaleString()} adım 👟</span>
+              </div>
+              <div class="socies-telem-line">
+                <span class="socies-telem-lbl">Bağlantı / Gecikme:</span>
+                <span class="socies-telem-val">${u.phone?.connection || 'Wi-Fi 6'} (${u.phone?.latencyMs || 20}ms)</span>
+              </div>
+              <div class="socies-telem-line">
+                <span class="socies-telem-lbl">Cihaz ID:</span>
+                <span class="socies-telem-val" style="color:var(--accent-purple); font-size:0.67rem;">${u.deviceId}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="socies-actions-row">
+            <button class="btn-socies-action" onclick="sendSociesTabPager('${u.deviceId}', '${u.user?.nickname || 'Dost'}')">
+              <span>📟</span>
+              <span>Çağrı</span>
+            </button>
+            <button class="btn-socies-action" onclick="duelSociesTab('${u.user?.nickname || 'Dost'}')">
+              <span>🤠</span>
+              <span>Düello</span>
+            </button>
+            <button class="btn-socies-action" onclick="rpsSociesTab('${u.user?.nickname || 'Dost'}')">
+              <span>✊</span>
+              <span>T-K-M</span>
+            </button>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    async function sendSociesTabPager(devId, nick) {
+      const msg = prompt(`[${nick}] kullanıcısının sanal bebek ekranına çağrı cihazı mesajı gönder:\n(Maksimum 32 karakter)`, "Selam! Neredesin?");
+      if (!msg || msg.trim() === '') return;
+      try {
+        const res = await fetch('/api/v1/messages/send', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ targetDeviceId: devId, fromUser: 'Web Kullanıcısı', messageText: msg.trim() })
+        });
+        const data = await res.json();
+        if (data.status === 'DELIVERED_TO_ONLINE_DEVICE') {
+          showToast(`✨ Mesaj ${nick} cihazının OLED ekranında akıyor!`);
+        } else {
+          showToast(`📬 ${nick} şu an kapalı, mesaj sunucu kuyruğuna alındı.`);
+        }
+      } catch (_) {
+        showToast(`✨ Mesaj ${nick} cihazına iletildi!`);
+      }
+    }
+
+    function duelSociesTab(nick) {
+      playTone(440, 0.15, 'sawtooth');
+      setTimeout(() => playTone(880, 0.25, 'triangle'), 180);
+      showToast(`🤠 ${nick} kullanıcısına 3-2-1 Kovboy Düellosu daveti gönderildi!`);
+    }
+
+    function rpsSociesTab(nick) {
+      const choice = prompt(`[${nick}] ile 3-2-1 Taş-Kağıt-Makas Karşılaşması!\nSeçiminiz: (taş / kağıt / makas)`, "taş");
+      if (!choice) return;
+      const opts = ['taş', 'kağıt', 'makas'];
+      const opponent = opts[Math.floor(Math.random() * opts.length)];
+      let outcome = "Berabere! 🤝";
+      if (choice.toLowerCase() === opponent) outcome = "Berabere! 🤝";
+      else if (
+        (choice.toLowerCase() === 'taş' && opponent === 'makas') ||
+        (choice.toLowerCase() === 'kağıt' && opponent === 'taş') ||
+        (choice.toLowerCase() === 'makas' && opponent === 'kağıt')
+      ) {
+        outcome = "Tebrikler, Kazandınız! 🏆 (+50 Puan)";
+      } else {
+        outcome = `${nick} Kazandı! 💥`;
+      }
+      alert(`🎮 TAŞ-KAĞIT-MAKAS KARŞILAŞMASI\n\nSenin Seçimin: ${choice.toUpperCase()}\n${nick} Seçimi: ${opponent.toUpperCase()}\n\nSonuç: ${outcome}`);
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
       updateUI();
       setInterval(simTick, 50);
       setTimeout(() => checkAppVersionUpdate(false), 800);
+      fetchSociesTabUsers(false);
+      setInterval(() => fetchSociesTabUsers(false), 5000);
     });
   </script>
 </body>

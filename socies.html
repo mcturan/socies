@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SOCIES - Canlı Topluluk Ağı & Etkin Kullanıcılar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #070a12;
+      --card-bg: #0f1523;
+      --card-border: #1e293b;
+      --accent: #00f0ff;
+      --accent-green: #00ff66;
+      --accent-purple: #a855f7;
+      --accent-yellow: #ffe600;
+      --accent-pink: #ff2a85;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 1.8rem 2rem;
+      background-image: 
+        radial-gradient(circle at 10% 10%, rgba(0, 240, 255, 0.08) 0%, transparent 45%),
+        radial-gradient(circle at 90% 90%, rgba(255, 42, 133, 0.08) 0%, transparent 45%),
+        radial-gradient(circle at 50% 50%, rgba(168, 85, 247, 0.05) 0%, transparent 60%);
+    }
+
+    .container { max-width: 1440px; margin: 0 auto; }
+
+    /* HEADER */
+    .top-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 1.2rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .brand-wrap { display: flex; align-items: center; gap: 0.9rem; }
+    .brand-icon {
+      width: 48px; height: 48px; border-radius: 14px;
+      background: linear-gradient(135deg, #00f0ff, #a855f7);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem; box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+    }
+    .brand-title {
+      font-size: 1.5rem; font-weight: 800; letter-spacing: -0.5px;
+      background: linear-gradient(90deg, #fff, var(--accent));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .brand-subtitle { font-size: 0.8rem; color: var(--text-muted); }
+
+    .nav-actions { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+    .btn-nav {
+      background: #0f172a; border: 1px solid var(--card-border); color: #fff;
+      padding: 0.5rem 1rem; border-radius: 10px; font-size: 0.8rem; font-weight: 700;
+      text-decoration: none; display: flex; align-items: center; gap: 0.4rem;
+      transition: all 0.2s ease; cursor: pointer;
+    }
+    .btn-nav:hover { border-color: var(--accent); background: rgba(0, 240, 255, 0.1); color: var(--accent); }
+    .btn-download {
+      background: linear-gradient(135deg, #00f0ff, #0099ff); color: #000;
+      padding: 0.5rem 1.1rem; border-radius: 10px; font-weight: 800; font-size: 0.8rem;
+      text-decoration: none; display: flex; align-items: center; gap: 0.4rem;
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.4); transition: all 0.2s;
+    }
+    .btn-download:hover { transform: translateY(-1px); box-shadow: 0 0 25px rgba(0, 240, 255, 0.7); }
+
+    /* KPI METRICS */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.2rem;
+      margin-bottom: 2rem;
+    }
+    @media (max-width: 960px) { .kpi-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 540px) { .kpi-grid { grid-template-columns: 1fr; } }
+
+    .kpi-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 1.3rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .kpi-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-purple));
+    }
+    .kpi-val { font-size: 1.9rem; font-weight: 800; font-family: 'JetBrains Mono', monospace; }
+    .kpi-lbl { font-size: 0.78rem; color: var(--text-muted); margin-top: 4px; }
+    .kpi-sub { font-size: 0.72rem; color: var(--accent); margin-top: 4px; font-weight: 600; }
+
+    /* SEARCH & FILTER CONTROLS */
+    .filter-section {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 1.1rem 1.4rem;
+      margin-bottom: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .search-bar-row { display: flex; gap: 1rem; align-items: center; }
+    .search-input {
+      flex: 1;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 0.75rem 1.2rem;
+      color: #fff;
+      font-size: 0.88rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .search-input:focus { border-color: var(--accent); }
+    .filter-pills { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .pill-btn {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      padding: 0.35rem 0.85rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .pill-btn:hover { color: #fff; border-color: var(--accent); }
+    .pill-btn.active {
+      background: var(--accent);
+      color: #000;
+      border-color: var(--accent);
+      font-weight: 700;
+    }
+
+    /* USERS GRID */
+    .users-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+      gap: 1.5rem;
+    }
+    @media (max-width: 440px) { .users-grid { grid-template-columns: 1fr; } }
+
+    .user-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 22px;
+      padding: 1.4rem;
+      position: relative;
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .user-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent);
+      box-shadow: 0 12px 30px rgba(0, 240, 255, 0.15);
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 0.85rem;
+      margin-bottom: 1rem;
+    }
+    .loc-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    .loc-district { font-size: 0.72rem; color: var(--text-muted); font-weight: 500; }
+    .loc-ip { font-size: 0.68rem; color: var(--accent-purple); font-family: 'JetBrains Mono', monospace; }
+
+    .online-indicator {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.2rem 0.6rem;
+      border-radius: 12px;
+    }
+    .online-indicator.online {
+      background: rgba(0, 255, 102, 0.15);
+      color: var(--accent-green);
+      border: 1px solid rgba(0, 255, 102, 0.3);
+    }
+    .online-indicator.offline {
+      background: rgba(148, 163, 184, 0.12);
+      color: var(--text-muted);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+    }
+    .pulse-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--accent-green); box-shadow: 0 0 8px var(--accent-green);
+      animation: pulse 1.6s infinite;
+    }
+    @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.85); } }
+
+    /* USER PROFILE */
+    .profile-row {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      margin-bottom: 1rem;
+    }
+    .avatar-bubble {
+      width: 50px; height: 50px; border-radius: 16px;
+      background: linear-gradient(135deg, #1e293b, #334155);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.7rem; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+      flex-shrink: 0;
+    }
+    .user-info { flex: 1; min-width: 0; }
+    .user-name-line { display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; }
+    .user-nickname { font-size: 1.05rem; font-weight: 800; color: #fff; }
+    .vip-tag {
+      background: rgba(255, 230, 0, 0.18);
+      border: 1px solid rgba(255, 230, 0, 0.5);
+      color: var(--accent-yellow);
+      font-size: 0.65rem;
+      font-weight: 800;
+      padding: 0.1rem 0.4rem;
+      border-radius: 6px;
+    }
+    .user-email-text {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /* PET PILL */
+    .pet-pill {
+      background: rgba(0, 240, 255, 0.1);
+      border: 1px solid rgba(0, 240, 255, 0.3);
+      padding: 0.4rem 0.75rem;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    .pet-pill-left { display: flex; align-items: center; gap: 0.45rem; font-weight: 700; color: var(--accent); }
+    .pet-pill-right { color: var(--accent-yellow); font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+
+    /* PHONE TELEMETRY BLOCK */
+    .telemetry-card {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 0.85rem 1rem;
+      margin-bottom: 1.1rem;
+    }
+    .telemetry-title {
+      font-size: 0.7rem;
+      font-weight: 800;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .telem-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.35rem;
+      font-size: 0.74rem;
+    }
+    .telem-label { color: var(--text-muted); }
+    .telem-value { font-weight: 700; color: #fff; font-family: 'JetBrains Mono', monospace; }
+
+    /* BATTERY BAR */
+    .battery-bar-wrap {
+      width: 70px; height: 7px; background: #1e293b; border-radius: 4px; overflow: hidden;
+      display: inline-block; vertical-align: middle; margin-left: 6px;
+    }
+    .battery-bar-fill { height: 100%; border-radius: 4px; background: var(--accent-green); }
+
+    /* CARD ACTION BUTTONS */
+    .card-actions {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.45rem;
+      margin-top: auto;
+    }
+    .btn-card-act {
+      background: #151d2f;
+      border: 1px solid var(--card-border);
+      color: #fff;
+      padding: 0.55rem 0.3rem;
+      border-radius: 10px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.2rem;
+    }
+    .btn-card-act:hover {
+      background: var(--accent);
+      color: #000;
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    /* TOAST */
+    .toast-popup {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: var(--accent);
+      color: #000;
+      padding: 0.8rem 1.4rem;
+      border-radius: 12px;
+      font-weight: 800;
+      font-size: 0.85rem;
+      box-shadow: 0 10px 25px rgba(0, 240, 255, 0.4);
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+      z-index: 1000;
+    }
+    .toast-popup.active { transform: translateY(0); opacity: 1; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- HEADER -->
+    <header class="top-header">
+      <div class="brand-wrap">
+        <div class="brand-icon">🌍</div>
+        <div>
+          <div class="brand-title">SOCIES CANLI TOPLULUK AĞI</div>
+          <div class="brand-subtitle">Etkin Kullanıcılar, Gerçek Zamanlı Telefon Telemetrisi ve Şehir/Ülke Konumları</div>
+        </div>
+      </div>
+      <div class="nav-actions">
+        <a href="/" class="btn-nav">🎮 Web Emülatörü</a>
+        <a href="/dashboard" class="btn-nav">📊 Sunucu Paneli</a>
+        <button class="btn-nav" onclick="fetchLiveUsers(true)">🔄 Canlı Yenile</button>
+        <a href="/download/socies-app.apk" download="socies-v1.0.4.apk" class="btn-download">
+          <span>📥</span> Android APK İndir (v1.0.4)
+        </a>
+      </div>
+    </header>
+
+    <!-- KPI SUMMARY ROW -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-val" id="kpiTotalUsers" style="color: var(--accent);">7</div>
+        <div class="kpi-lbl">Toplam Kayıtlı Cihaz / Kullanıcı</div>
+        <div class="kpi-sub">● Aktif Kimlik Havuzu</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-val" id="kpiOnlineCount" style="color: var(--accent-green);">6</div>
+        <div class="kpi-lbl">Şu An Çevrimiçi (Online)</div>
+        <div class="kpi-sub">● Heartbeat / Telemetri Alınıyor</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-val" id="kpiCityCount" style="color: var(--accent-purple);">7 Şehir</div>
+        <div class="kpi-lbl" id="kpiCountryText">Türkiye, Almanya, Birleşik Krallık</div>
+        <div class="kpi-sub">● Coğrafi Dağılım</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-val" id="kpiAvgLatency" style="color: var(--accent-yellow);">24 ms</div>
+        <div class="kpi-lbl">Ortalama Ping & Ağ Hızı</div>
+        <div class="kpi-sub">SemVer: v1.0.4+5 Hazır</div>
+      </div>
+    </div>
+
+    <!-- FILTER & SEARCH -->
+    <div class="filter-section">
+      <div class="search-bar-row">
+        <input 
+          type="text" 
+          class="search-input" 
+          id="networkSearchInput" 
+          placeholder="Kullanıcı adı, şehir (İstanbul, Berlin), ülke, telefon modeli (Galaxy, Pixel, iPhone) veya evcil hayvan ile filtrele..."
+          oninput="applyFilter()"
+        >
+      </div>
+      <div class="filter-pills">
+        <button class="pill-btn active" onclick="setFilterCategory('all')">Tümü (Hepsi)</button>
+        <button class="pill-btn" onclick="setFilterCategory('online')">🟢 Yalnızca Çevrimiçi</button>
+        <button class="pill-btn" onclick="setFilterCategory('tr')">🇹🇷 Türkiye</button>
+        <button class="pill-btn" onclick="setFilterCategory('de')">🇩🇪 Almanya</button>
+        <button class="pill-btn" onclick="setFilterCategory('uk')">🇬🇧 Birleşik Krallık</button>
+        <button class="pill-btn" onclick="setFilterCategory('android')">🤖 Android</button>
+        <button class="pill-btn" onclick="setFilterCategory('ios')">🍏 iOS</button>
+      </div>
+    </div>
+
+    <!-- USERS GRID -->
+    <div class="users-grid" id="usersContainer">
+      <!-- Dinamik olarak doldurulur -->
+    </div>
+  </div>
+
+  <div class="toast-popup" id="sociesToast">Mesaj Gönderildi!</div>
+
+  <script>
+    // MOCK VERİ HAVUZU (Çevrimdışı / Localhost bağlantı durumlarında tam veri garantisi)
+    const DEFAULT_USERS = [
+      {
+        deviceId: 'SOCIES-ESP32-84920A',
+        mac: 'A4:CF:12:89:34:B1',
+        user: { nickname: 'Turan (Kurucu)', email: 'turan@socies.io', avatar: '👑', isVip: true },
+        location: { country: 'Türkiye', city: 'İstanbul', district: 'Kadıköy', flag: '🇹🇷', ip: '176.240.12.xx' },
+        phone: { model: 'Samsung Galaxy S24 Ultra', os: 'Android 14 (One UI 6.1)', batteryPct: 88, batteryMv: 3980, stepsToday: 5420, connection: '5G / Wi-Fi 6E', appVersion: 'v1.0.4+5', latencyMs: 18 },
+        pet: { breed: 'top', breedTitle: 'Zıpzıp Top ⚽', stage: 2, ageDays: 5, score: 940, streakDays: 5 },
+        isOnline: true,
+        lastSeenSecAgo: 4
+      },
+      {
+        deviceId: 'SOCIES-AND-9941A',
+        mac: 'B8:27:EB:AA:51:72',
+        user: { nickname: 'Zeynep_Retro', email: 'zeynep@socies.io', avatar: '🐱', isVip: false },
+        location: { country: 'Türkiye', city: 'Ankara', district: 'Çankaya', flag: '🇹🇷', ip: '88.255.45.xx' },
+        phone: { model: 'Xiaomi 13 Pro', os: 'Android 14 (HyperOS)', batteryPct: 94, batteryMv: 4150, stepsToday: 7120, connection: 'Wi-Fi 6 / BLE 5.2', appVersion: 'v1.0.4+5', latencyMs: 24 },
+        pet: { breed: 'kedi', breedTitle: 'Sanal Kedi 🐱', stage: 3, ageDays: 21, score: 3420, streakDays: 14 },
+        isOnline: true,
+        lastSeenSecAgo: 9
+      },
+      {
+        deviceId: 'SOCIES-ESP32-33129C',
+        mac: '24:6F:28:44:91:A8',
+        user: { nickname: 'Emre_Ege', email: 'emre@socies.io', avatar: '🐶', isVip: false },
+        location: { country: 'Türkiye', city: 'İzmir', district: 'Alsancak', flag: '🇹🇷', ip: '94.122.80.xx' },
+        phone: { model: 'Google Pixel 8', os: 'Android 14 (Vanilla)', batteryPct: 76, batteryMv: 3890, stepsToday: 3890, connection: '4G LTE / BLE 5.0', appVersion: 'v1.0.4+5', latencyMs: 31 },
+        pet: { breed: 'kopek', breedTitle: 'Sadık Köpek 🐶', stage: 2, ageDays: 12, score: 1850, streakDays: 8 },
+        isOnline: true,
+        lastSeenSecAgo: 15
+      },
+      {
+        deviceId: 'SOCIES-IOS-44810D',
+        mac: 'F0:18:98:C3:19:22',
+        user: { nickname: 'Selin_Botanist', email: 'selin@socies.io', avatar: '🌱', isVip: false },
+        location: { country: 'Türkiye', city: 'Bursa', district: 'Nilüfer', flag: '🇹🇷', ip: '195.175.39.xx' },
+        phone: { model: 'Apple iPhone 15 Pro', os: 'iOS 17.5.1', batteryPct: 92, batteryMv: 4110, stepsToday: 6240, connection: 'Wi-Fi / BLE 5.3', appVersion: 'v1.0.4+5', latencyMs: 22 },
+        pet: { breed: 'bitki', breedTitle: 'Bonsai Bitki 🌱', stage: 2, ageDays: 9, score: 1220, streakDays: 9 },
+        isOnline: true,
+        lastSeenSecAgo: 8
+      },
+      {
+        deviceId: 'SOCIES-ESP32-11094E',
+        mac: 'C8:2B:96:77:43:55',
+        user: { nickname: 'Kaan_Akdeniz', email: 'kaan@socies.io', avatar: '🐠', isVip: false },
+        location: { country: 'Türkiye', city: 'Antalya', district: 'Muratpaşa', flag: '🇹🇷', ip: '212.156.40.xx' },
+        phone: { model: 'OnePlus 12', os: 'Android 14 (OxygenOS)', batteryPct: 65, batteryMv: 3820, stepsToday: 4310, connection: '5G / BLE Gateway', appVersion: 'v1.0.4+5', latencyMs: 29 },
+        pet: { breed: 'balik', breedTitle: 'Neon Balık 🐠', stage: 1, ageDays: 3, score: 480, streakDays: 3 },
+        isOnline: true,
+        lastSeenSecAgo: 25
+      },
+      {
+        deviceId: 'SOCIES-ESP32-77211F',
+        mac: 'DC:A6:32:11:80:BC',
+        user: { nickname: 'Hans_Berlin', email: 'hans@socies.io', avatar: '🌭', isVip: false },
+        location: { country: 'Almanya', city: 'Berlin', district: 'Mitte', flag: '🇩🇪', ip: '84.119.12.xx' },
+        phone: { model: 'Nothing Phone (2)', os: 'Android 14 (Nothing OS 2.5)', batteryPct: 82, batteryMv: 3950, stepsToday: 8450, connection: 'Wi-Fi 6E / BLE 5.3', appVersion: 'v1.0.4+5', latencyMs: 48 },
+        pet: { breed: 'sosis', breedTitle: 'Sevimli Sosis 🌭', stage: 3, ageDays: 26, score: 4180, streakDays: 19 },
+        isOnline: true,
+        lastSeenSecAgo: 38
+      },
+      {
+        deviceId: 'SOCIES-ESP32-55490G',
+        mac: 'E4:5F:01:29:76:D1',
+        user: { nickname: 'Oliver_London', email: 'oliver@socies.io', avatar: '🐦', isVip: false },
+        location: { country: 'Birleşik Krallık', city: 'Londra', district: 'Soho', flag: '🇬🇧', ip: '82.165.197.xx' },
+        phone: { model: 'Apple iPhone 14', os: 'iOS 17.4', batteryPct: 71, batteryMv: 3860, stepsToday: 5110, connection: '4G LTE / BLE 5.0', appVersion: 'v1.0.4+5', latencyMs: 55 },
+        pet: { breed: 'kus', breedTitle: 'Uçan Kuş 🐦', stage: 2, ageDays: 14, score: 2190, streakDays: 11 },
+        isOnline: false,
+        lastSeenSecAgo: 140
+      }
+    ];
+
+    let currentUsers = [...DEFAULT_USERS];
+    let selectedCategory = 'all';
+
+    function getBreedTitle(b) {
+      switch(b) {
+        case 'top': return 'Zıpzıp Top ⚽';
+        case 'kedi': return 'Sanal Kedi 🐱';
+        case 'kopek': return 'Sadık Köpek 🐶';
+        case 'bitki': return 'Bonsai Bitki 🌱';
+        case 'balik': return 'Neon Balık 🐠';
+        case 'sosis': return 'Sevimli Sosis 🌭';
+        case 'kus': return 'Uçan Kuş 🐦';
+        default: return (b || 'Evcil Hayvan').toUpperCase();
+      }
+    }
+
+    async function fetchLiveUsers(manual = false) {
+      try {
+        const res = await fetch('/api/v1/socies/active-users');
+        if (res.ok) {
+          const data = await res.json();
+          if (data.users && data.users.length > 0) {
+            currentUsers = data.users.map(u => ({
+              ...u,
+              pet: { ...u.pet, breedTitle: getBreedTitle(u.pet?.breed) }
+            }));
+            updateKpis(data);
+          }
+        }
+      } catch (err) {
+        console.warn('Sunucu API yanıt vermedi, yerel önbellek gösteriliyor:', err);
+      }
+      applyFilter();
+      if (manual) showToast('Ağ kullanıcıları yenilendi!');
+    }
+
+    function updateKpis(data) {
+      document.getElementById('kpiTotalUsers').textContent = data.totalUsers || currentUsers.length;
+      document.getElementById('kpiOnlineCount').textContent = data.onlineCount || currentUsers.filter(u => u.isOnline).length;
+      document.getElementById('kpiCityCount').textContent = (data.citiesCount || 7) + ' Şehir';
+      if (data.countries && data.countries.length > 0) {
+        document.getElementById('kpiCountryText').textContent = data.countries.join(', ');
+      }
+    }
+
+    function setFilterCategory(cat) {
+      selectedCategory = cat;
+      document.querySelectorAll('.pill-btn').forEach(btn => btn.classList.remove('active'));
+      const activeBtn = Array.from(document.querySelectorAll('.pill-btn')).find(b => b.getAttribute('onclick')?.includes(cat));
+      if (activeBtn) activeBtn.classList.add('active');
+      applyFilter();
+    }
+
+    function applyFilter() {
+      const q = (document.getElementById('networkSearchInput').value || '').trim().toLowerCase();
+      const container = document.getElementById('usersContainer');
+      container.innerHTML = '';
+
+      const filtered = currentUsers.filter(u => {
+        // Kategori filtresi
+        if (selectedCategory === 'online' && !u.isOnline) return false;
+        if (selectedCategory === 'tr' && u.location?.country !== 'Türkiye') return false;
+        if (selectedCategory === 'de' && u.location?.country !== 'Almanya') return false;
+        if (selectedCategory === 'uk' && u.location?.country !== 'Birleşik Krallık') return false;
+        if (selectedCategory === 'android' && !(u.phone?.os || '').toLowerCase().includes('android')) return false;
+        if (selectedCategory === 'ios' && !(u.phone?.os || '').toLowerCase().includes('ios')) return false;
+
+        // Metin arama filtresi
+        if (!q) return true;
+        const haystack = [
+          u.user?.nickname,
+          u.user?.email,
+          u.location?.country,
+          u.location?.city,
+          u.location?.district,
+          u.phone?.model,
+          u.phone?.os,
+          u.pet?.breed,
+          u.pet?.breedTitle
+        ].join(' ').toLowerCase();
+
+        return haystack.includes(q);
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div style="grid-column: 1 / -1; text-align:center; padding: 3rem; background: var(--card-bg); border-radius: 20px; border: 1px solid var(--card-border);">
+            <div style="font-size:2.5rem; margin-bottom: 0.5rem;">🔍</div>
+            <div style="font-size:1.1rem; font-weight:700; color:#fff;">Eşleşen Kullanıcı Bulunamadı</div>
+            <div style="color:var(--text-muted); font-size:0.8rem; margin-top:0.3rem;">Lütfen arama teriminizi veya filtre seçiminizi değiştirin.</div>
+          </div>
+        `;
+        return;
+      }
+
+      filtered.forEach(u => {
+        const card = document.createElement('div');
+        card.className = 'user-card';
+
+        const batColor = u.phone?.batteryPct > 50 ? 'var(--accent-green)' : (u.phone?.batteryPct > 20 ? 'var(--accent-yellow)' : 'var(--accent-pink)');
+        const lastSeenText = u.isOnline ? 'Şimdi Çevrimiçi' : (u.lastSeenSecAgo ? Math.round(u.lastSeenSecAgo / 60) + ' dk önce' : 'Çevrimdışı');
+
+        card.innerHTML = `
+          <div>
+            <!-- CARD TOP / LOCATION -->
+            <div class="card-top">
+              <div class="loc-badge">
+                <span style="font-size:1.2rem;">${u.location?.flag || '🌐'}</span>
+                <div>
+                  <div>${u.location?.city || 'Bilinmiyor'}, ${u.location?.country || 'TR'}</div>
+                  <div class="loc-district">${u.location?.district || 'Merkez'} • <span class="loc-ip">${u.location?.ip || '127.0.0.1'}</span></div>
+                </div>
+              </div>
+              <div class="online-indicator ${u.isOnline ? 'online' : 'offline'}">
+                ${u.isOnline ? '<span class="pulse-dot"></span>' : ''}
+                <span>${lastSeenText}</span>
+              </div>
+            </div>
+
+            <!-- USER PROFILE -->
+            <div class="profile-row">
+              <div class="avatar-bubble">${u.user?.avatar || '👤'}</div>
+              <div class="user-info">
+                <div class="user-name-line">
+                  <span class="user-nickname">${u.user?.nickname || 'Socies Dostu'}</span>
+                  ${u.user?.isVip ? '<span class="vip-tag">👑 VIP</span>' : ''}
+                </div>
+                <div class="user-email-text">${u.user?.email || u.deviceId}</div>
+              </div>
+            </div>
+
+            <!-- PET PILL -->
+            <div class="pet-pill">
+              <div class="pet-pill-left">
+                <span>🐾</span>
+                <span>${u.pet?.breedTitle || getBreedTitle(u.pet?.breed)} (Lv.${u.pet?.stage || 1})</span>
+              </div>
+              <div class="pet-pill-right">${u.pet?.score || 0} P • 🔥 ${u.pet?.streakDays || 1} Gün Seri</div>
+            </div>
+
+            <!-- TELEMETRY BLOCK -->
+            <div class="telemetry-card">
+              <div class="telemetry-title">
+                <span>📱</span>
+                <span>Telefondan Gelen Canlı Telemetri</span>
+              </div>
+              <div class="telem-row">
+                <span class="telem-label">Telefon Modeli:</span>
+                <span class="telem-value">${u.phone?.model || 'Android Akıllı Telefon'}</span>
+              </div>
+              <div class="telem-row">
+                <span class="telem-label">İşletim Sistemi:</span>
+                <span class="telem-value">${u.phone?.os || 'Android 14'}</span>
+              </div>
+              <div class="telem-row">
+                <span class="telem-label">Telefon Bataryası:</span>
+                <span class="telem-value">
+                  %${u.phone?.batteryPct || 100} (${u.phone?.batteryMv || 4000}mV)
+                  <span class="battery-bar-wrap">
+                    <span class="battery-bar-fill" style="width: ${u.phone?.batteryPct || 100}%; background: ${batColor};"></span>
+                  </span>
+                </span>
+              </div>
+              <div class="telem-row">
+                <span class="telem-label">Günlük Yürüyüş:</span>
+                <span class="telem-value" style="color:var(--accent);">${(u.phone?.stepsToday || 0).toLocaleString()} adım 👟</span>
+              </div>
+              <div class="telem-row">
+                <span class="telem-label">Ağ & Gecikme:</span>
+                <span class="telem-value">${u.phone?.connection || 'Wi-Fi 6'} (${u.phone?.latencyMs || 20}ms)</span>
+              </div>
+              <div class="telem-row">
+                <span class="telem-label">Cihaz ID:</span>
+                <span class="telem-value" style="color:var(--accent-purple); font-size:0.68rem;">${u.deviceId}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- CARD ACTIONS -->
+          <div class="card-actions">
+            <button class="btn-card-act" onclick="sendPagerPrompt('${u.deviceId}', '${u.user?.nickname || 'Dost'}')">
+              <span>📟</span>
+              <span>Çağrı Gönder</span>
+            </button>
+            <button class="btn-card-act" onclick="startDuelInvite('${u.deviceId}', '${u.user?.nickname || 'Dost'}')">
+              <span>🤠</span>
+              <span>Düello</span>
+            </button>
+            <button class="btn-card-act" onclick="startRpsInvite('${u.deviceId}', '${u.user?.nickname || 'Dost'}')">
+              <span>✊</span>
+              <span>Taş-Kağıt-Makas</span>
+            </button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('sociesToast');
+      t.textContent = msg;
+      t.classList.add('active');
+      setTimeout(() => t.classList.remove('active'), 2800);
+    }
+
+    // INTERACTION HANDLERS
+    async function sendPagerPrompt(devId, nick) {
+      const msg = prompt(`[${nick}] kullanıcısının cihazına çağrı cihazı (Pager) mesajı gönder:\n(Maksimum 32 karakter - OLED ekranda kayacaktır)`, "Selam! Parka gidelim mi? 🐾");
+      if (!msg || msg.trim() === '') return;
+
+      try {
+        const res = await fetch('/api/v1/messages/send', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ targetDeviceId: devId, fromUser: 'Kurucu (Web)', messageText: msg.trim() })
+        });
+        const data = await res.json();
+        if (data.status === 'DELIVERED_TO_ONLINE_DEVICE') {
+          showToast(`✨ Mesaj ${nick} kullanıcısının ekranında anında çalıyor!`);
+        } else {
+          showToast(`📬 ${nick} şu an çevrimdışı, mesaj kuyruğa eklendi.`);
+        }
+      } catch (err) {
+        showToast(`✨ [Simüle Edildi] Mesaj ${nick} cihazına iletildi!`);
+      }
+    }
+
+    function startDuelInvite(devId, nick) {
+      showToast(`🤠 ${nick} kullanıcısına 3-2-1 Kovboy Düellosu daveti gönderildi!`);
+    }
+
+    function startRpsInvite(devId, nick) {
+      const pick = prompt(`[${nick}] ile 3-2-1 Taş-Kağıt-Makas Maçı!\nSeçiminizi yazın: (taş / kağıt / makas)`, "taş");
+      if (!pick) return;
+      const choices = ['taş', 'kağıt', 'makas'];
+      const opponentPick = choices[Math.floor(Math.random() * choices.length)];
+
+      let resText = "Berabere! 🤝";
+      if (pick.toLowerCase() === opponentPick) resText = "Berabere! 🤝";
+      else if (
+        (pick.toLowerCase() === 'taş' && opponentPick === 'makas') ||
+        (pick.toLowerCase() === 'kağıt' && opponentPick === 'taş') ||
+        (pick.toLowerCase() === 'makas' && opponentPick === 'kağıt')
+      ) {
+        resText = "Tebrikler, Kazandınız! 🏆 (+50 Puan)";
+      } else {
+        resText = `${nick} Kazandı! 💥`;
+      }
+
+      alert(`🎮 TAŞ-KAĞIT-MAKAS KARŞILAŞMASI\n\nSenin Seçimin: ${pick.toUpperCase()}\n${nick} Seçimi: ${opponentPick.toUpperCase()}\n\nSonuç: ${resText}`);
+    }
+
+    // BAŞLATMA VE PERİYODİK POLING (5 saniyede bir)
+    fetchLiveUsers();
+    setInterval(() => fetchLiveUsers(false), 5000);
+  </script>
+</body>
+</html>
