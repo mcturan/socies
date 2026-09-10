@@ -12,6 +12,8 @@
 const http = require('http');
 const url = require('url');
 const crypto = require('crypto');
+const fs = require('fs');
+const pathModule = require('path');
 
 const PORT = process.env.PORT || 3000;
 
@@ -82,6 +84,19 @@ const server = http.createServer((req, res) => {
   // 1. CANLI İSTATİSTİK & YÖNETİM PANELİ (DASHBOARD)
   if (path === '/' || path === '/dashboard' || path === '/admin') {
     return serveDashboard(res);
+  }
+
+  // 1.1 DOĞRUDAN APK İNDİRME UÇ NOKTASI (ATTACHMENT DOWNLOAD)
+  if (path === '/download/socies-app.apk' || path === '/downloads/socies-app.apk' || path === '/socies-app.apk' || path === '/download/socies-v1.0.4.apk') {
+    const apkFile = pathModule.join(__dirname, '../downloads/socies-app.apk');
+    if (fs.existsSync(apkFile)) {
+      res.writeHead(200, {
+        'Content-Type': 'application/vnd.android.package-archive',
+        'Content-Disposition': 'attachment; filename="socies-v1.0.4.apk"',
+        'Access-Control-Allow-Origin': '*'
+      });
+      return fs.createReadStream(apkFile).pipe(res);
+    }
   }
 
   // 2. CİHAZ KAYDI (REGISTER)
@@ -242,10 +257,11 @@ const server = http.createServer((req, res) => {
         build: 5
       },
       versionCode: 5,
-      latestCommitHash: 'e5647da',
+      latestCommitHash: 'f0b3752',
       mandatoryUpdate: false,
       releaseNotes: 'Zıpzıp Top, Kaka mekaniği, 3-2-1 Taş-Kağıt-Makas ve Kovboy Düellosu eklendi.',
-      apkDownloadUrl: 'https://github.com/mcturan/socies/releases/latest/download/socies-app.apk'
+      apkDownloadUrl: '/download/socies-app.apk',
+      githubApkUrl: 'https://github.com/mcturan/socies/releases/download/v1.0.4/socies-app.apk'
     });
   }
 
