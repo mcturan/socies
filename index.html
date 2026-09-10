@@ -817,16 +817,16 @@
         <!-- KPI SUMMARY GRID -->
         <div class="roadmap-kpi-grid">
           <div class="roadmap-kpi">
-            <div class="kpi-num" style="color:var(--accent);">33</div>
+            <div class="kpi-num" style="color:var(--accent);">46</div>
             <div class="kpi-label">Toplam İstişare Edilen Madde</div>
           </div>
           <div class="roadmap-kpi">
-            <div class="kpi-num" style="color:var(--accent-green);">29</div>
-            <div class="kpi-label">✅ Tamamlanan & Canlıda (88%)</div>
+            <div class="kpi-num" style="color:var(--accent-green);">34</div>
+            <div class="kpi-label">✅ Tamamlanan & Canlıda (74%)</div>
           </div>
           <div class="roadmap-kpi">
-            <div class="kpi-num" style="color:var(--accent-orange);">4</div>
-            <div class="kpi-label">⏳ Gelecek Aşama / Planlamada (12%)</div>
+            <div class="kpi-num" style="color:var(--accent-orange);">12</div>
+            <div class="kpi-label">⏳ Gelecek Aşama / Planlamada (26%)</div>
           </div>
           <div class="roadmap-kpi">
             <div class="kpi-num" style="color:var(--accent-yellow);">v1.0.4+5</div>
@@ -1167,6 +1167,107 @@
               <td><b>Piksel Polaroid Albümü & Arkadaş Kreşi (Playdate)</b></td>
               <td>Evrimleştikçe nostaljik 1-bit fotoğraf kaydetme ve tatile giderken bebeği arkadaşın cihazına emanet etme.</td>
               <td><code>docs/</code></td>
+              <td><span class="status-badge planned">⏳ Planlamada</span></td>
+            </tr>
+
+            <!-- 11. SOCIES'İ DÜNYADA BENZERSİZ KILACAK 7 ÇIĞIR AÇAN İNOVASYON -->
+            <tr class="table-cat-row">
+              <td colspan="5">🚀 11. SOCIES'İ DÜNYADA BENZERSİZ KILACAK 7 ÇIĞIR AÇAN İNOVASYON (MADDE 17)</td>
+            </tr>
+            <tr>
+              <td><span class="cat-badge">Sosyalleşme</span></td>
+              <td><b>ESP-NOW ile "Cepte Karşılaşma / StreetPass" (İnternetsiz)</b></td>
+              <td>İki Socies sahibi sokakta, parkta veya okulda yan yana geldiğinde ESP32'lerin internetsiz veya telefonsuz milisaniyeler içinde el sıkışması; cepte cıvıldayarak <i>"Yeni arkadaşla karşılaşıldı: Pamuk (Lv.2 Kedi)!"</i> yazması.</td>
+              <td><code>firmware/</code><br><code>docs/muadiller_ve_ek_ozellikler.md</code></td>
+              <td><span class="status-badge planned">⏳ Planlamada</span></td>
+            </tr>
+            <tr>
+              <td><span class="cat-badge">Alışkanlık</span></td>
+              <td><b>Gerçek Hayat Alışkanlık Takibi (Habit Sync)</b></td>
+              <td>Bebeğin sahibine sadece yük olmaması; telefondan <i>"Su İçtim"</i>, <i>"Kitap Okudum"</i> veya <i>"Ders Çalıştım"</i> dendiğinde bebeğe süper besin ve evrim XP'si gitmesi.</td>
+              <td><code>pet_state.dart</code><br><code>docs/</code></td>
+              <td><span class="status-badge done">✅ Tamamlandı</span></td>
+            </tr>
+            <tr>
+              <td><span class="cat-badge">P2P Oyun</span></td>
+              <td><b>P2P Cihazdan Cihaza Mini Oyunlar & Donanım Düelloları</b></td>
+              <td>İki fiziksel cihaz yan yana getirildiğinde internete ihtiyaç olmadan ESP-NOW üzerinden 8-bit refleks düellosu ve taş-kağıt-makas oynamak; kazananın evrim kristali kazanması.</td>
+              <td><code>firmware/</code><br><code>index.html</code></td>
+              <td><span class="status-badge done">✅ Tamamlandı</span></td>
+            </tr>
+            <tr>
+              <td><span class="cat-badge">Görsel Editör</span></td>
+              <td><b>Açık Kaynak Web / Mobil Piksel Sprite Editörü</b></td>
+              <td>Kullanıcıların web veya mobil arayüzden 48x48 piksel matrisi üzerinde kendi karakterlerini veya şapka/gözlük gibi aksesuarlarını çizip BLE ile cihaza aktarabilmesi.</td>
+              <td><code>web/</code><br><code>mobile_app/</code></td>
+              <td><span class="status-badge planned">⏳ Planlamada</span></td>
+            </tr>
+            <tr>
+              <td><span class="cat-badge">Müzik / Ses</span></td>
+              <td><b>8-Bit Chiptune Beste Motoru & Zil Sesi Hediyeleşme</b></td>
+              <td>Piezo buzzer için telefondan 8-bit melodi besteleyebilme; oluşturulan özel melodiyi Bluetooth veya sunucu üzerinden arkadaşın cihazına "Çağrı Melodisi" olarak hediye edebilme.</td>
+              <td><code>mobile_app/</code><br><code>index.html</code></td>
+              <td><span class="status-badge planned">⏳ Planlamada</span></td>
+            </tr>
+            <tr>
+              <td><span class="cat-badge">Güç Yönetimi</span></td>
+              <td><b>Ultra Düşük Güç (45s Deep Sleep + RTC Uyanma)</b></td>
+              <td>45 saniye işlem yapılmadığında OLED ekranın kapanması; ESP32'nin derin uykuda sadece ~5µA akım çekmesi. 500mAh batarya ile 3-4 hafta kesintisiz pil ömrü.</td>
+              <td><code>firmware/socies_esp32.ino</code></td>
+              <td><span class="status-badge done">✅ Tamamlandı</span></td>
+            </tr>
+            <tr>
+              <td><span class="cat-badge">Evrim Ağacı</span></td>
+              <td><b>Çok Dallı Koza Metamorfozu (90 Günlük Yaşam Döngüsü)</b></td>
+              <td>90 günlük süreçte en çok hangi ihtiyaca özen gösterildiğine bağlı olarak canlının koza evresinden Sibernetik Kedi, Pastırma Kozası, Anka Kuşu veya Ejderha Balık gibi farklı sınıflarda doğması.</td>
+              <td><code>docs/</code><br><code>pet_state.dart</code></td>
+              <td><span class="status-badge done">✅ Tamamlandı</span></td>
+            </tr>
+            <tr>
+              <td><span class="cat-badge">Haptik İletişim</span></td>
+              <td><b>Mors Alfabesi ve Titreşimli Gizli Kodlar</b></td>
+              <td>Arkadaşınızdan gelen "Evet", "Hayır", "Geliyorum" gibi acil çağrıların ekrana bakmaya gerek kalmadan cebinizde mors alfabesi titreşimiyle (Bzz-Bzzz) hissedilmesi.</td>
+              <td><code>docs/muadiller_ve_ek_ozellikler.md</code></td>
+              <td><span class="status-badge planned">⏳ Planlamada</span></td>
+            </tr>
+            <tr>
+              <td><span class="cat-badge">Nostalji</span></td>
+              <td><b>90'lar Çağrı Kodları (Pager Numeric Codes)</b></td>
+              <td>Uzun metin yerine nostaljik çağrı kodları gönderme: <code>07734</code> (HELLO), <code>143</code> (I LOVE YOU), <code>911</code> (ACİL DÜELLO ÇAĞRISI).</td>
+              <td><code>server/server.js</code><br><code>index.html</code></td>
+              <td><span class="status-badge done">✅ Tamamlandı</span></td>
+            </tr>
+
+            <!-- 12. MOBİL ÇİZİM & SELFIE'DEN KARAKTER ÜRETİM MOTORU -->
+            <tr class="table-cat-row">
+              <td colspan="5">🎨 12. MOBİL ÇİZİM & SELFIE'DEN KARAKTER DÖNÜŞTÜRME MOTORU (YENİ İSTİŞARE)</td>
+            </tr>
+            <tr>
+              <td><span class="cat-badge">İnovasyon</span></td>
+              <td><b>Adım Adım Kılavuzlu Çizim (Guided Sketching & Auto-Fill)</b></td>
+              <td>Kullanıcının mobilde birkaç adımda kafa, göz ve gövde taslağını çizmesi; uygulamanın çizgileri Bézier eğrileriyle yumuşatıp araları doldurarak 1-bit OLED piksel karakterine dönüştürmesi.</td>
+              <td><code>mobile_app/</code><br><code>docs/</code></td>
+              <td><span class="status-badge planned">⏳ Planlamada</span></td>
+            </tr>
+            <tr>
+              <td><span class="cat-badge">İnovasyon</span></td>
+              <td><b>Otomatik Animasyon / Ara Kare İnterpolasyonu (Tweening)</b></td>
+              <td>Kullanıcının çizdiği tek bir duran kareden uygulamanın otomatik squash & stretch esnemesi, nefes alma ve 4 karelik yürüme animasyonu türetmesi.</td>
+              <td><code>mobile_app/</code></td>
+              <td><span class="status-badge planned">⏳ Planlamada</span></td>
+            </tr>
+            <tr>
+              <td><span class="cat-badge">AI / Vision</span></td>
+              <td><b>Selfie Fotoğrafından 1-Bit Piksel Avatar Üretimi</b></td>
+              <td>Kullanıcının kendi selfie'sini çekmesi; kenar algılama (Canny) ve Floyd-Steinberg dithering ile yüz hatlarının 48x48 OLED monokrom maskota dönüştürülerek BLE ile el konsoluna aktarılması.</td>
+              <td><code>mobile_app/</code><br><code>server/</code></td>
+              <td><span class="status-badge planned">⏳ Planlamada</span></td>
+            </tr>
+            <tr>
+              <td><span class="cat-badge">AI / Vision</span></td>
+              <td><b>AI Destekli Evcil Hayvan Hibritleştirme ("Beni Kedi Yap")</b></td>
+              <td>Selfie fotoğrafındaki yüz hatları, saç stili veya gözlükleri koruyarak kullanıcıyı sanal bebek evreninde 8-bit bir "Kedi-İnsan" veya "Robot Bebek" formuna sokan Vision yapay zeka servisi.</td>
+              <td><code>server/api</code></td>
               <td><span class="status-badge planned">⏳ Planlamada</span></td>
             </tr>
 
