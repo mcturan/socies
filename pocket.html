@@ -6,19 +6,18 @@
   <title>Socies Pocket - Retro El Konsolu</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700;800&family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700;800&family=Press+Start+2P&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --case-base: #4a287a;
-      --case-grad: linear-gradient(175deg, #6c3da8 0%, #3e1b69 100%);
-      --case-edge: #250f42;
-      --bezel-bg: #1c152b;
+      --case-grad: linear-gradient(180deg, #5b3294 0%, #371861 100%);
+      --case-edge: #220b40;
+      --bezel-bg: #140d24;
       --oled-bg: #000814;
       --oled-yellow: #ffb703;
       --oled-blue: #00f0ff;
-      --btn-grad: linear-gradient(135deg, #7c4cb8, #421e75);
-      --btn-active: #2b1150;
-      --btn-label: #d4bbf5;
+      --btn-grad: linear-gradient(180deg, #6c3da8, #3e1b69);
+      --btn-active: #270e47;
+      --btn-border: #2b1150;
     }
 
     * {
@@ -30,7 +29,7 @@
     }
 
     body {
-      background: #0d0614;
+      background: #09030e;
       min-height: 100vh;
       display: flex;
       justify-content: center;
@@ -43,17 +42,17 @@
     /* RETRO HANDHELD CASING */
     .handheld-chassis {
       width: 100%;
-      max-width: 390px;
+      max-width: 400px;
       height: 96vh;
       max-height: 820px;
       background: var(--case-grad);
       border: 4px solid var(--case-edge);
-      border-radius: 44px;
-      box-shadow: 0 16px 40px rgba(0,0,0,0.6), inset 0 2px 6px rgba(255,255,255,0.25), inset 0 -6px 12px rgba(0,0,0,0.4);
+      border-radius: 40px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.7), inset 0 2px 5px rgba(255,255,255,0.25), inset 0 -6px 12px rgba(0,0,0,0.5);
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 1.4rem 1.2rem;
+      padding: 1.2rem 1.2rem;
       position: relative;
     }
 
@@ -66,37 +65,36 @@
       margin-bottom: 0.8rem;
     }
     .power-led {
-      width: 8px;
-      height: 8px;
+      width: 9px;
+      height: 9px;
       background: #00ff66;
       border-radius: 50%;
       box-shadow: 0 0 10px #00ff66;
       animation: pulseLed 2s infinite ease-in-out;
     }
+    .device-id-badge {
+      font-size: 0.7rem;
+      background: rgba(0,0,0,0.4);
+      color: #00ff66;
+      padding: 0.2rem 0.6rem;
+      border-radius: 12px;
+      border: 1px solid rgba(0,255,102,0.3);
+      font-weight: 800;
+    }
     .retro-brand {
       font-family: 'Press Start 2P', monospace;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       color: #e2d1f9;
       letter-spacing: 2px;
       text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-    }
-    .speaker-grille {
-      display: flex;
-      gap: 3px;
-    }
-    .grille-line {
-      width: 3px;
-      height: 12px;
-      background: #250f42;
-      border-radius: 2px;
     }
 
     /* OLED SCREEN BEZEL */
     .screen-bezel {
       background: var(--bezel-bg);
       border: 3px solid #140d20;
-      border-radius: 24px;
-      padding: 12px 10px;
+      border-radius: 20px;
+      padding: 10px 8px;
       box-shadow: inset 0 4px 10px rgba(0,0,0,0.8), 0 2px 4px rgba(255,255,255,0.1);
       width: 100%;
       display: flex;
@@ -105,7 +103,7 @@
     }
     .bezel-label {
       font-size: 0.65rem;
-      color: #7b699c;
+      color: #8c7aa8;
       letter-spacing: 1px;
       margin-bottom: 6px;
       font-weight: 800;
@@ -114,54 +112,46 @@
     /* OLED CANVAS (128x64 native, scaled) */
     .oled-screen {
       background: var(--oled-bg);
-      border-radius: 8px;
+      border-radius: 6px;
       border: 2px solid #0a1128;
-      box-shadow: 0 0 15px rgba(0, 240, 255, 0.15), inset 0 0 10px rgba(0,0,0,0.9);
+      box-shadow: 0 0 18px rgba(0, 240, 255, 0.2), inset 0 0 10px rgba(0,0,0,0.9);
       image-rendering: pixelated;
       width: 100%;
-      max-width: 330px;
-      height: 165px;
+      max-width: 340px;
+      height: 170px;
     }
 
-    /* CONTROLS SECTION */
-    .controls-zone {
-      flex: 1;
+    /* MID SECTION (INFO & SPEAKER) */
+    .mid-status-bar {
       width: 100%;
       display: flex;
-      flex-direction: column;
-      justify-content: space-around;
+      justify-content: space-between;
       align-items: center;
-      margin-top: 1rem;
-    }
-
-    /* BUTTONS LAYOUT (ERGONOMIC VERTICAL / DPAD) */
-    .buttons-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.2rem;
-      width: 100%;
+      margin: 1rem 0 0.5rem 0;
       padding: 0 0.5rem;
+      color: #b79ced;
+      font-size: 0.75rem;
+      font-weight: 800;
     }
 
-    .dpad-col {
+    /* 4 HORIZONTAL BUTTONS AT THE BOTTOM */
+    .horizontal-buttons-row {
+      margin-top: auto;
+      margin-bottom: 0.5rem;
+      width: 100%;
       display: flex;
-      flex-direction: column;
+      justify-content: space-between;
       align-items: center;
-      gap: 0.8rem;
-    }
-    .action-col {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.8rem;
+      gap: 0.5rem;
+      padding: 0 0.2rem;
     }
 
-    .console-btn {
-      width: 72px;
-      height: 72px;
+    .retro-horiz-btn {
+      flex: 1;
+      height: 74px;
       background: var(--btn-grad);
-      border: 3px solid #301354;
-      border-radius: 50%;
+      border: 3px solid var(--btn-border);
+      border-radius: 20px;
       box-shadow: 0 8px 16px rgba(0,0,0,0.5), inset 0 2px 4px rgba(255,255,255,0.3);
       display: flex;
       flex-direction: column;
@@ -171,40 +161,41 @@
       position: relative;
       transition: transform 0.08s ease, background 0.08s ease;
     }
-    .console-btn:active, .console-btn.pressed {
-      transform: translateY(4px) scale(0.95);
+    .retro-horiz-btn:active, .retro-horiz-btn.pressed {
+      transform: translateY(4px) scale(0.96);
       background: var(--btn-active);
       box-shadow: 0 2px 6px rgba(0,0,0,0.6);
     }
-    .btn-icon {
-      font-size: 1.5rem;
+    .horiz-btn-icon {
+      font-size: 1.4rem;
+      font-weight: 900;
       color: #fff;
     }
-    .btn-text {
-      font-size: 0.65rem;
+    .horiz-btn-lbl {
+      font-size: 0.62rem;
       font-weight: 800;
-      color: var(--btn-label);
+      color: #d6bdf5;
       margin-top: 2px;
       letter-spacing: 0.5px;
     }
 
-    /* STATUS PAGER OVERLAY */
-    .pager-alert-toast {
+    /* PAGER ALERT OVERLAY */
+    .pager-popup {
       position: absolute;
-      top: 25%;
+      top: 22%;
       left: 50%;
       transform: translate(-50%, -50%);
-      background: rgba(0, 240, 255, 0.95);
+      background: rgba(0, 240, 255, 0.96);
       color: #000;
       font-family: 'Press Start 2P', monospace;
       font-size: 0.75rem;
       padding: 0.8rem 1.2rem;
-      border-radius: 12px;
-      box-shadow: 0 0 20px rgba(0,240,255,0.8);
+      border-radius: 14px;
+      box-shadow: 0 0 24px rgba(0,240,255,0.8);
       z-index: 50;
       display: none;
       text-align: center;
-      line-height: 1.5;
+      line-height: 1.6;
     }
 
     @keyframes pulseLed {
@@ -224,71 +215,64 @@
         <span style="font-size:0.65rem; color:#84cc16; font-weight:800;">PWR</span>
       </div>
       <div class="retro-brand">SOCIES</div>
-      <div class="speaker-grille">
-        <div class="grille-line"></div>
-        <div class="grille-line"></div>
-        <div class="grille-line"></div>
-        <div class="grille-line"></div>
-      </div>
+      <div class="device-id-badge" id="dispDeviceId">ID: 84920A</div>
     </div>
 
     <!-- OLED SCREEN BEZEL -->
     <div class="screen-bezel">
-      <div class="bezel-label">0.96" I2C OLED (128x64 DUAL MONOCHROME)</div>
+      <div class="bezel-label">0.96" SSD1315 OLED (128x64 DUAL MONOCHROME)</div>
       <canvas id="oledCanvas" class="oled-screen" width="128" height="64"></canvas>
     </div>
 
-    <!-- PAGER ALERT TOAST -->
-    <div id="pagerAlert" class="pager-alert-toast"></div>
+    <!-- PAGER TOAST -->
+    <div id="pagerPopup" class="pager-popup"></div>
 
-    <!-- CONTROLS ZONE -->
-    <div class="controls-zone">
-      <div class="buttons-grid">
-        
-        <!-- NAVIGATION DPAD -->
-        <div class="dpad-col">
-          <button class="console-btn" id="btnUp" onpointerdown="handleBtnPress('UP')" onpointerup="handleBtnRelease('UP')">
-            <span class="btn-icon">▲</span>
-            <span class="btn-text">YUKARI</span>
-          </button>
-          <button class="console-btn" id="btnDown" onpointerdown="handleBtnPress('DOWN')" onpointerup="handleBtnRelease('DOWN')">
-            <span class="btn-icon">▼</span>
-            <span class="btn-text">AŞAĞI</span>
-          </button>
-        </div>
+    <!-- MID INFO -->
+    <div class="mid-status-bar">
+      <span>MAC: A4:CF:12:89:34:B1</span>
+      <span id="bridgeLiveText" style="color:#00ff66;">🟢 BLE HAZIR</span>
+    </div>
 
-        <!-- ACTION BUTTONS -->
-        <div class="action-col">
-          <button class="console-btn" id="btnSelect" style="border-color:#059669;" onpointerdown="handleBtnPress('SELECT')" onpointerup="handleBtnRelease('SELECT')">
-            <span class="btn-icon" style="color:#34d399;">●</span>
-            <span class="btn-text">SEÇ (OK)</span>
-          </button>
-          <button class="console-btn" id="btnBack" style="border-color:#dc2626;" onpointerdown="handleBtnPress('BACK')" onpointerup="handleBtnRelease('BACK')">
-            <span class="btn-icon" style="color:#f87171;">✕</span>
-            <span class="btn-text">GERİ</span>
-          </button>
-        </div>
+    <!-- 4 HORIZONTAL BUTTONS AT BOTTOM (YAN YANA 4 TUŞ) -->
+    <div class="horizontal-buttons-row">
+      <!-- 1. SOL / GERİ AL -->
+      <button class="retro-horiz-btn" id="btnLeft" onpointerdown="handleBtnPress('LEFT')" onpointerup="handleBtnRelease('LEFT')">
+        <span class="horiz-btn-icon">◄</span>
+        <span class="horiz-btn-lbl">SOL</span>
+      </button>
 
-      </div>
+      <!-- 2. SAĞ / İLERİ -->
+      <button class="retro-horiz-btn" id="btnRight" onpointerdown="handleBtnPress('RIGHT')" onpointerup="handleBtnRelease('RIGHT')">
+        <span class="horiz-btn-icon">►</span>
+        <span class="horiz-btn-lbl">SAĞ</span>
+      </button>
 
-      <div style="font-size:0.75rem; color:#a78bfa; font-weight:700; margin-top:0.6rem;">
-        <span>📡 KÖPRÜ: </span><span id="bridgeStatus" style="color:#4ade80;">DİNLİYOR (Hazır)</span>
-      </div>
+      <!-- 3. SEÇ / ONAY -->
+      <button class="retro-horiz-btn" id="btnSelect" style="border-color:#059669;" onpointerdown="handleBtnPress('SELECT')" onpointerup="handleBtnRelease('SELECT')">
+        <span class="horiz-btn-icon" style="color:#34d399;">●</span>
+        <span class="horiz-btn-lbl">SEÇ</span>
+      </button>
+
+      <!-- 4. GERİ / MENÜ -->
+      <button class="retro-horiz-btn" id="btnBack" style="border-color:#dc2626;" onpointerdown="handleBtnPress('BACK')" onpointerup="handleBtnRelease('BACK')">
+        <span class="horiz-btn-icon" style="color:#f87171;">✕</span>
+        <span class="horiz-btn-lbl">GERİ</span>
+      </button>
     </div>
 
   </div>
 
   <script>
-    // --- WEB AUDIO 8-BIT SOUND SYNTHESIZER ---
+    // --- 8-BIT AUDIO SYNTHESIZER ---
     let audioCtx = null;
-    function playBeep(freq = 440, type = 'square', duration = 0.08) {
+    function playRetroBeep(freq = 440, type = 'square', duration = 0.08) {
       try {
         if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
         osc.type = type;
         osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-        gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
         gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
         osc.connect(gain);
         gain.connect(audioCtx.destination);
@@ -297,29 +281,44 @@
       } catch(e) {}
     }
 
-    // --- CONSOLE STATE ---
+    // --- CONSOLE STATE (7 SIMS NEEDS & MINI-GAMES) ---
     const consoleState = {
+      deviceId: '84920A',
+      mac: 'A4:CF:12:89:34:B1',
       batteryPct: 88,
       batteryMv: 3980,
       steps: 2450,
-      hunger: 85,
-      happy: 90,
-      mode: 'IDLE', // IDLE, MENU, EATING, PLAYING, SLEEPING, PAGER
+      
+      // 7 Sims Needs
+      needs: {
+        hunger: 85,
+        toilet: 80,
+        clean: 90,
+        sleep: 80,
+        fun: 85,
+        social: 75,
+        love: 90
+      },
+
+      mode: 'IDLE', // IDLE, MENU, GAME_RPS, GAME_COWBOY, GAME_FLAPPY, GAME_RHYTHM, EATING, SLEEPING, POOP
       menuIdx: 0,
-      menuItems: ['BESLE', 'OYNA', 'TEMIZLE', 'UYUT', 'STAT'],
+      menuItems: ['BESLE 🍗', 'TUVALET 🚽', 'BANYO 🧼', 'OYUNLAR 🎮', 'UYUT 💤', 'DUELLO ⚔️', 'STAT 📊'],
+      gamesList: ['TAS-KAGIT', 'KOVBOY', 'ZIPLAMA', 'RITIM'],
+      gameSubIdx: 0,
+      
+      hasPoop: false,
       petX: 48,
-      petY: 24,
       petDir: 1,
       animFrame: 0,
       customSprite: null,
-      lastEventMsg: ''
+      lastTickerText: 'SOCIES BLE HAZIR'
     };
 
     // --- OLED CANVAS RENDERER ---
     const canvas = document.getElementById('oledCanvas');
     const ctx = canvas.getContext('2d');
 
-    // 16x16 default retro cat sprite (1-bit)
+    // Default 16x16 Cat Sprite
     const retroCatSprite = [
       "0100000000000010",
       "1110000000000111",
@@ -353,20 +352,20 @@
       const battFill = Math.round((consoleState.batteryPct / 100) * 16);
       ctx.fillRect(104, 5, battFill, 5);
       
-      // Battery Text
       ctx.font = '7px "JetBrains Mono"';
       ctx.fillText(consoleState.batteryPct + '%', 82, 10);
 
-      // Hearts (Lives/Happiness)
-      const heartsCount = Math.ceil((consoleState.happy / 100) * 4);
+      // 4 Hearts (Overall Health)
+      const health = Math.round((consoleState.needs.hunger + consoleState.needs.fun + consoleState.needs.love) / 3);
+      const heartsCount = Math.ceil((health / 100) * 4);
       for(let i=0; i<heartsCount; i++) {
-        ctx.fillRect(4 + i * 11, 4, 8, 7);
+        ctx.fillRect(4 + i * 9, 4, 7, 7);
       }
 
-      // Step count in status
-      ctx.fillText('STP:' + consoleState.steps, 48, 10);
+      // Steps / Device ID
+      ctx.fillText('ID:' + consoleState.deviceId, 42, 10);
 
-      // Divider line between Yellow & Blue
+      // Divider line (Yellow / Blue)
       ctx.fillStyle = '#1e293b';
       ctx.fillRect(0, 15, 128, 1);
 
@@ -374,11 +373,17 @@
       ctx.fillStyle = '#00f0ff';
 
       if (consoleState.mode === 'MENU') {
-        renderMenu();
+        renderHorizontalMenu();
+      } else if (consoleState.mode === 'MENU_GAMES') {
+        renderGamesMenu();
+      } else if (consoleState.mode === 'GAME_RPS') {
+        renderGameRPS();
+      } else if (consoleState.mode === 'GAME_COWBOY') {
+        renderGameCowboy();
+      } else if (consoleState.mode === 'GAME_FLAPPY') {
+        renderGameFlappy();
       } else if (consoleState.mode === 'EATING') {
         renderEating();
-      } else if (consoleState.mode === 'PLAYING') {
-        renderPlaying();
       } else if (consoleState.mode === 'SLEEPING') {
         renderSleeping();
       } else {
@@ -391,59 +396,103 @@
 
     function renderIdlePet() {
       ctx.fillStyle = '#00f0ff';
-      
-      // Walking back and forth
-      if (consoleState.animFrame % 60 === 0) {
-        consoleState.petX += consoleState.petDir * 6;
-        if (consoleState.petX > 90) consoleState.petDir = -1;
+
+      // Walk back and forth
+      if (consoleState.animFrame % 50 === 0) {
+        consoleState.petX += consoleState.petDir * 5;
+        if (consoleState.petX > 85) consoleState.petDir = -1;
         if (consoleState.petX < 20) consoleState.petDir = 1;
       }
 
       const bob = (consoleState.animFrame % 16 < 8) ? 0 : 1;
-      drawSprite(consoleState.petX, 32 + bob);
+      drawSprite(consoleState.petX, 30 + bob);
 
-      // Message ticker
-      if (consoleState.lastEventMsg) {
+      // Poop icon if toilet needed
+      if (consoleState.hasPoop) {
+        ctx.fillRect(100, 42, 6, 6);
+        ctx.fillRect(102, 38, 2, 4);
         ctx.font = '7px "JetBrains Mono"';
-        ctx.fillText(consoleState.lastEventMsg, 10, 60);
-      } else {
-        ctx.font = '6px "JetBrains Mono"';
-        ctx.fillText('SOCIES BLE: ON', 6, 60);
+        ctx.fillText('💩', 108, 46);
       }
+
+      // Bottom Ticker
+      ctx.font = '7px "JetBrains Mono"';
+      ctx.fillText(consoleState.lastTickerText, 8, 60);
     }
 
-    function renderMenu() {
+    function renderHorizontalMenu() {
       ctx.fillStyle = '#00f0ff';
-      ctx.font = '9px "JetBrains Mono"';
-      ctx.fillText('=== MENÜ ===', 28, 26);
+      ctx.font = '8px "JetBrains Mono"';
+      ctx.fillText('=== ANA MENÜ ===', 24, 25);
       
-      consoleState.menuItems.forEach((item, idx) => {
-        const y = 38 + idx * 10;
-        if (idx === consoleState.menuIdx) {
-          ctx.fillText('> ' + item, 20, y);
-        } else {
-          ctx.fillText('  ' + item, 20, y);
+      const current = consoleState.menuItems[consoleState.menuIdx];
+      ctx.font = '9px "JetBrains Mono"';
+      ctx.fillText('◄  [' + current + ']  ►', 10, 42);
+      ctx.font = '7px "JetBrains Mono"';
+      ctx.fillText('SEÇ: Onayla | GERİ: Çık', 10, 58);
+    }
+
+    function renderGamesMenu() {
+      ctx.fillStyle = '#00f0ff';
+      ctx.font = '8px "JetBrains Mono"';
+      ctx.fillText('=== OYUN SEÇİMİ ===', 16, 25);
+      
+      const current = consoleState.gamesList[consoleState.gameSubIdx];
+      ctx.font = '9px "JetBrains Mono"';
+      ctx.fillText('◄  [' + current + ']  ►', 12, 42);
+      ctx.font = '7px "JetBrains Mono"';
+      ctx.fillText('SEÇ: Başlat | GERİ: İptal', 8, 58);
+    }
+
+    // --- MINI GAMES IN OLED ---
+    let cowboyTimer = 0;
+    let cowboyCanShoot = false;
+
+    function renderGameCowboy() {
+      ctx.fillStyle = '#00f0ff';
+      ctx.font = '8px "JetBrains Mono"';
+      ctx.fillText('KOVBOY DUELLOSU', 18, 25);
+      
+      if (!cowboyCanShoot) {
+        ctx.fillText('HAZIRLAN...', 36, 42);
+        if (Math.random() < 0.02 && cowboyTimer > 60) {
+          cowboyCanShoot = true;
+          playRetroBeep(988, 'sawtooth', 0.2);
         }
-      });
+      } else {
+        ctx.fillStyle = '#ffb703';
+        ctx.fillText('>> ATES ET! <<', 22, 42);
+      }
+      cowboyTimer++;
+    }
+
+    function renderGameRPS() {
+      ctx.fillStyle = '#00f0ff';
+      ctx.font = '8px "JetBrains Mono"';
+      ctx.fillText('TAS - KAGIT - MAKAS', 10, 25);
+      const hands = ['TAS ✊', 'KAGIT ✋', 'MAKAS ✌️'];
+      const hand = hands[Math.floor(consoleState.animFrame / 30) % 3];
+      ctx.font = '10px "JetBrains Mono"';
+      ctx.fillText(hand, 38, 44);
+    }
+
+    function renderGameFlappy() {
+      ctx.fillStyle = '#00f0ff';
+      ctx.font = '8px "JetBrains Mono"';
+      ctx.fillText('ZIPLAYAN BEBEK', 20, 25);
+      const jump = Math.abs(Math.sin(consoleState.animFrame * 0.15)) * 14;
+      drawSprite(40, 44 - jump);
+      // Obstacle pipe
+      const pipeX = (128 - (consoleState.animFrame * 2 % 140));
+      ctx.fillRect(pipeX, 36, 8, 16);
     }
 
     function renderEating() {
       ctx.fillStyle = '#00f0ff';
-      drawSprite(40, 32);
-      // Draw Cookie flying
-      ctx.fillRect(80, 36, 8, 8);
+      drawSprite(36, 32);
+      ctx.fillRect(72, 38, 8, 8);
       ctx.font = '8px "JetBrains Mono"';
-      ctx.fillText('YUM YUM! 🍪', 34, 25);
-    }
-
-    function renderPlaying() {
-      ctx.fillStyle = '#00f0ff';
-      const bounce = Math.abs(Math.sin(consoleState.animFrame * 0.2)) * 10;
-      drawSprite(30, 36 - bounce);
-      // Ball
-      ctx.fillRect(75, 42 - bounce * 0.5, 6, 6);
-      ctx.font = '8px "JetBrains Mono"';
-      ctx.fillText('OYUN! 🎾', 44, 25);
+      ctx.fillText('MAMA YIYOR! 🍗', 26, 25);
     }
 
     function renderSleeping() {
@@ -457,7 +506,6 @@
 
     function drawSprite(x, y) {
       if (consoleState.customSprite) {
-        // Draw 24x24 custom sprite
         for(let r=0; r<24; r++) {
           for(let c=0; c<24; c++) {
             if (consoleState.customSprite[r] && consoleState.customSprite[r][c]) {
@@ -466,7 +514,6 @@
           }
         }
       } else {
-        // Draw 16x16 default cat
         for(let r=0; r<16; r++) {
           for(let c=0; c<16; c++) {
             if (retroCatSprite[r][c] === '1') {
@@ -477,132 +524,165 @@
       }
     }
 
-    // --- BUTTON CONTROLS ---
+    // --- HORIZONTAL 4 BUTTON CONTROLLER ---
     function handleBtnPress(btn) {
-      if (window.navigator.vibrate) window.navigator.vibrate(40);
-      document.getElementById('btn' + btn.charAt(0) + btn.slice(1).toLowerCase())?.classList.add('pressed');
+      if (window.navigator.vibrate) window.navigator.vibrate(35);
       
-      playBeep(btn === 'SELECT' ? 880 : (btn === 'BACK' ? 330 : 587), 'square', 0.07);
+      const idMap = { 'LEFT': 'btnLeft', 'RIGHT': 'btnRight', 'SELECT': 'btnSelect', 'BACK': 'btnBack' };
+      document.getElementById(idMap[btn])?.classList.add('pressed');
 
-      if (btn === 'UP') {
+      playRetroBeep(btn === 'SELECT' ? 880 : (btn === 'BACK' ? 330 : 520), 'square', 0.06);
+
+      if (btn === 'LEFT') {
         if (consoleState.mode === 'MENU') {
           consoleState.menuIdx = (consoleState.menuIdx - 1 + consoleState.menuItems.length) % consoleState.menuItems.length;
+        } else if (consoleState.mode === 'MENU_GAMES') {
+          consoleState.gameSubIdx = (consoleState.gameSubIdx - 1 + consoleState.gamesList.length) % consoleState.gamesList.length;
         } else {
           consoleState.mode = 'MENU';
         }
-      } else if (btn === 'DOWN') {
+      } else if (btn === 'RIGHT') {
         if (consoleState.mode === 'MENU') {
           consoleState.menuIdx = (consoleState.menuIdx + 1) % consoleState.menuItems.length;
+        } else if (consoleState.mode === 'MENU_GAMES') {
+          consoleState.gameSubIdx = (consoleState.gameSubIdx + 1) % consoleState.gamesList.length;
         } else {
           consoleState.mode = 'MENU';
         }
       } else if (btn === 'SELECT') {
         if (consoleState.mode === 'MENU') {
-          const selected = consoleState.menuItems[consoleState.menuIdx];
-          triggerMenuAction(selected);
+          handleMenuSelect();
+        } else if (consoleState.mode === 'MENU_GAMES') {
+          handleGameSelect();
+        } else if (consoleState.mode === 'GAME_COWBOY') {
+          if (cowboyCanShoot) {
+            playRetroBeep(1200, 'sine', 0.3);
+            consoleState.lastTickerText = 'KAZANDIN! +50 XP';
+            consoleState.mode = 'IDLE';
+          }
         } else {
           consoleState.mode = 'MENU';
         }
       } else if (btn === 'BACK') {
         consoleState.mode = 'IDLE';
+        consoleState.lastTickerText = 'SOCIES BLE HAZIR';
       }
     }
 
     function handleBtnRelease(btn) {
-      document.getElementById('btn' + btn.charAt(0) + btn.slice(1).toLowerCase())?.classList.remove('pressed');
+      const idMap = { 'LEFT': 'btnLeft', 'RIGHT': 'btnRight', 'SELECT': 'btnSelect', 'BACK': 'btnBack' };
+      document.getElementById(idMap[btn])?.classList.remove('pressed');
     }
 
-    function triggerMenuAction(act) {
-      if (act === 'BESLE') {
+    function handleMenuSelect() {
+      const selected = consoleState.menuItems[consoleState.menuIdx];
+      if (selected.includes('BESLE')) {
         consoleState.mode = 'EATING';
-        consoleState.hunger = Math.min(100, consoleState.hunger + 15);
+        consoleState.needs.hunger = Math.min(100, consoleState.needs.hunger + 20);
         setTimeout(() => consoleState.mode = 'IDLE', 3000);
-      } else if (act === 'OYNA') {
-        consoleState.mode = 'PLAYING';
-        consoleState.happy = Math.min(100, consoleState.happy + 20);
-        setTimeout(() => consoleState.mode = 'IDLE', 3000);
-      } else if (act === 'UYUT') {
+      } else if (selected.includes('TUVALET')) {
+        consoleState.hasPoop = false;
+        consoleState.needs.toilet = 100;
+        consoleState.lastTickerText = 'TUVALET TEMIZLENDI!';
+        consoleState.mode = 'IDLE';
+      } else if (selected.includes('BANYO')) {
+        consoleState.needs.clean = 100;
+        consoleState.lastTickerText = 'BEBEK PIRIL PIRIL!';
+        consoleState.mode = 'IDLE';
+      } else if (selected.includes('OYUNLAR')) {
+        consoleState.mode = 'MENU_GAMES';
+      } else if (selected.includes('UYUT')) {
         consoleState.mode = 'SLEEPING';
         setTimeout(() => consoleState.mode = 'IDLE', 4000);
+      } else if (selected.includes('DUELLO')) {
+        consoleState.mode = 'GAME_COWBOY';
+        cowboyTimer = 0;
+        cowboyCanShoot = false;
+      } else {
+        consoleState.mode = 'IDLE';
+      }
+    }
+
+    function handleGameSelect() {
+      const g = consoleState.gamesList[consoleState.gameSubIdx];
+      if (g === 'KOVBOY') {
+        consoleState.mode = 'GAME_COWBOY';
+        cowboyTimer = 0;
+        cowboyCanShoot = false;
+      } else if (g === 'TAS-KAGIT') {
+        consoleState.mode = 'GAME_RPS';
+      } else if (g === 'ZIPLAMA') {
+        consoleState.mode = 'GAME_FLAPPY';
       } else {
         consoleState.mode = 'IDLE';
       }
     }
 
     // --- REALTIME BRIDGE RECEIVER ---
-    // 1. BroadcastChannel (Same browser/device)
     try {
       const bc = new BroadcastChannel('socies_device_bridge');
-      bc.onmessage = (e) => {
-        handleIncomingEvent(e.data);
-      };
+      bc.onmessage = (e) => handleBridgeIncoming(e.data);
     } catch(e) {}
 
-    // 2. Poll server bridge events (Different phones/networks)
-    let lastEventId = 0;
+    let lastEvId = 0;
     setInterval(() => {
-      fetch('/api/v1/bridge/events?since=' + lastEventId)
+      fetch('/api/v1/bridge/events?since=' + lastEvId)
         .then(r => r.json())
-        .then(data => {
-          if (data && data.events && data.events.length > 0) {
-            data.events.forEach(ev => {
-              lastEventId = Math.max(lastEventId, ev.id);
-              if (ev.sender === 'companion') {
-                handleIncomingEvent(ev);
-              }
+        .then(d => {
+          if (d && d.events && d.events.length > 0) {
+            d.events.forEach(ev => {
+              lastEvId = Math.max(lastEvId, ev.id);
+              if (ev.sender === 'companion') handleBridgeIncoming(ev);
             });
           }
         }).catch(() => {});
     }, 1000);
 
-    function handleIncomingEvent(event) {
+    function handleBridgeIncoming(event) {
       const type = event.type;
       const payload = event.payload || {};
 
-      playBeep(987, 'sine', 0.15);
+      playRetroBeep(880, 'sine', 0.15);
       if (window.navigator.vibrate) window.navigator.vibrate([100, 50, 100]);
 
       if (type === 'ACTION') {
         if (payload.action === 'FEED') {
           consoleState.mode = 'EATING';
-          consoleState.hunger = Math.min(100, consoleState.hunger + 15);
-          consoleState.lastEventMsg = 'MAMA GELDI! +15';
-          setTimeout(() => { consoleState.mode = 'IDLE'; consoleState.lastEventMsg = ''; }, 3000);
-        } else if (payload.action === 'PLAY') {
-          consoleState.mode = 'PLAYING';
-          consoleState.happy = Math.min(100, consoleState.happy + 15);
-          consoleState.lastEventMsg = 'OYUN ZAMANI!';
-          setTimeout(() => { consoleState.mode = 'IDLE'; consoleState.lastEventMsg = ''; }, 3000);
-        } else if (payload.action === 'SLEEP') {
-          consoleState.mode = 'SLEEPING';
-          consoleState.lastEventMsg = 'UYKU MODU...';
-          setTimeout(() => { consoleState.mode = 'IDLE'; consoleState.lastEventMsg = ''; }, 4000);
+          consoleState.needs.hunger = Math.min(100, consoleState.needs.hunger + 15);
+          consoleState.lastTickerText = 'TELEFONDAN MAMA GELDI!';
+          setTimeout(() => { consoleState.mode = 'IDLE'; consoleState.lastTickerText = 'SOCIES BLE HAZIR'; }, 3000);
+        } else if (payload.action === 'CLEAN_TOILET') {
+          consoleState.hasPoop = false;
+          consoleState.needs.toilet = 100;
+          consoleState.lastTickerText = 'TUVALET TEMIZLENDI!';
+        } else if (payload.action === 'BATH') {
+          consoleState.needs.clean = 100;
+          consoleState.lastTickerText = 'BANYO YAPILDI!';
+        } else if (payload.action === 'PLAY_GAME') {
+          consoleState.mode = 'GAME_COWBOY';
+          cowboyTimer = 0;
+          cowboyCanShoot = false;
         }
-      } else if (type === 'STEPS') {
-        consoleState.steps = payload.steps || (consoleState.steps + 500);
-        consoleState.lastEventMsg = 'ADIM SENKRON!';
-        setTimeout(() => consoleState.lastEventMsg = '', 3000);
+      } else if (type === 'HABIT') {
+        consoleState.lastTickerText = payload.title || 'ALISKANLIK TAMAM! +XP';
+        setTimeout(() => consoleState.lastTickerText = 'SOCIES BLE HAZIR', 3000);
       } else if (type === 'PAGER') {
-        showPagerAlert(payload.label || 'ÇAGRI', payload.code || '07734');
-      } else if (type === 'CUSTOM_SPRITE') {
+        showPager(payload.label || 'ÇAGRI', payload.code || '07734');
+      } else if (type === 'CUSTOM_AVATAR') {
         consoleState.customSprite = payload.grid;
-        consoleState.lastEventMsg = 'YENI KARAKTER YUKLENDI!';
-        setTimeout(() => consoleState.lastEventMsg = '', 4000);
-      } else if (type === 'PET_LOVE') {
-        consoleState.happy = payload.happy || 100;
-        consoleState.lastEventMsg = 'SEVGI DOLDU <3';
-        setTimeout(() => consoleState.lastEventMsg = '', 3000);
+        consoleState.lastTickerText = 'MODULER KARAKTER YUKLENDI!';
+        setTimeout(() => consoleState.lastTickerText = 'SOCIES BLE HAZIR', 3500);
       }
     }
 
-    function showPagerAlert(msg, code) {
-      const el = document.getElementById('pagerAlert');
-      el.innerHTML = `<div>📟 ÇAĞRI KODU</div><div style="font-size:1.1rem; margin:6px 0; color:#dc2626;">${code}</div><div>"${msg}"</div>`;
+    function showPager(lbl, code) {
+      const el = document.getElementById('pagerPopup');
+      el.innerHTML = `<div>📟 ÇAĞRI KODU</div><div style="font-size:1rem; margin:6px 0; color:#dc2626;">${code}</div><div>"${lbl}"</div>`;
       el.style.display = 'block';
       setTimeout(() => el.style.display = 'none', 4000);
     }
 
-    // Start rendering loop
+    // Start drawing loop
     drawOledScreen();
   </script>
 </body>
