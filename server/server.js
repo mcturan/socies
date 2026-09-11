@@ -174,29 +174,11 @@ const server = http.createServer((req, res) => {
   }
 
   // 1.1 YENİ BİRLEŞİK UYGULAMA (TEK UYGULAMA: KONSOL + YOLDAŞ + LİDERLİK + ARKADAŞLAR)
-  if (path === '/app' || path === '/mobile' || path === '/unified') {
+  if (path === '/app' || path === '/mobile' || path === '/unified' || path === '/companion' || path === '/pocket' || path === '/console') {
     const appPath = pathModule.join(__dirname, '../app.html');
     if (fs.existsSync(appPath)) {
       res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
       return fs.createReadStream(appPath).pipe(res);
-    }
-  }
-
-  // 1.1.b AYRI ÇOCUK UYGULAMASI (COMPANION)
-  if (path === '/companion' || path === '/companion.html') {
-    const companionPath = pathModule.join(__dirname, '../companion.html');
-    if (fs.existsSync(companionPath)) {
-      res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
-      return fs.createReadStream(companionPath).pipe(res);
-    }
-  }
-
-  // 1.2 TAM EKRAN RETRO EL KONSOLU EMÜLATÖRÜ (POCKET)
-  if (path === '/pocket' || path === '/pocket.html' || path === '/console') {
-    const pocketPath = pathModule.join(__dirname, '../pocket.html');
-    if (fs.existsSync(pocketPath)) {
-      res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
-      return fs.createReadStream(pocketPath).pipe(res);
     }
   }
 
@@ -227,30 +209,7 @@ const server = http.createServer((req, res) => {
     return serveDashboard(res);
   }
 
-  // 1.5 DOĞRUDAN APK İNDİRME UÇ NOKTALARI (DİĞER APK'LAR DAHİL)
-  if (path === '/download/socies-companion.apk') {
-    const apkFile = pathModule.join(__dirname, '../downloads/socies-companion.apk');
-    if (fs.existsSync(apkFile)) {
-      res.writeHead(200, {
-        'Content-Type': 'application/vnd.android.package-archive',
-        'Content-Disposition': 'attachment; filename="socies-companion.apk"',
-        'Access-Control-Allow-Origin': '*'
-      });
-      return fs.createReadStream(apkFile).pipe(res);
-    }
-  }
-
-  if (path === '/download/socies-pocket.apk') {
-    const apkFile = pathModule.join(__dirname, '../downloads/socies-pocket.apk');
-    if (fs.existsSync(apkFile)) {
-      res.writeHead(200, {
-        'Content-Type': 'application/vnd.android.package-archive',
-        'Content-Disposition': 'attachment; filename="socies-pocket.apk"',
-        'Access-Control-Allow-Origin': '*'
-      });
-      return fs.createReadStream(apkFile).pipe(res);
-    }
-  }
+  // 1.5 TEK BİRLEŞİK APK İNDİRME UÇ NOKTALARI
 
   if (path === '/download/socies-app.apk' || path === '/downloads/socies-app.apk' || path === '/socies-app.apk' || path === '/download/socies-v1.0.5.apk' || path === '/download/socies-v1.0.4.apk') {
     const apkFile = pathModule.join(__dirname, '../downloads/socies-app.apk');

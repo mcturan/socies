@@ -3,3158 +3,1215 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SOCIES - Bulut Bağlantılı Sanal Bebek & Oyun Ekosistemi</title>
+  <title>SOCIES - Bulut Bağlantılı Retro Sanal Bebek & El Konsolu</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-dark: #070a12;
-      --card-bg: #0f1523;
-      --card-border: #1e293b;
-      --accent: #00f0ff;
-      --accent-yellow: #ffe600;
-      --accent-pink: #ff2a85;
-      --accent-green: #00ff66;
-      --accent-purple: #a855f7;
-      --accent-orange: #f97316;
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      --oled-yellow: #ffe600;
-      --oled-blue: #00f0ff;
-      --oled-bg: #02060c;
+      --bg: #F8FAFC;
+      --card-bg: #FFFFFF;
+      --card-border: #E2E8F0;
+      --text-main: #0F172A;
+      --text-muted: #64748B;
+      --text-light: #94A3B8;
+      
+      --primary: #6366F1;
+      --primary-hover: #4F46E5;
+      --primary-light: #EEF2FF;
+      --accent-cyan: #0284C7;
+      --accent-amber: #D97706;
+      --accent-green: #059669;
+      --accent-rose: #E11D48;
+      --accent-purple: #7C3AED;
+
+      --case-grad: linear-gradient(145deg, #374151 0%, #1F2937 100%);
+      --case-border: #4B5563;
+      --oled-bg: #000814;
+      --oled-yellow: #FDE047;
+      --oled-cyan: #38BDF8;
+
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+      --shadow-lg: 0 12px 24px -4px rgba(0, 0, 0, 0.08), 0 6px 12px -4px rgba(0, 0, 0, 0.04);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
     body {
-      background: var(--bg-dark); color: var(--text-main); min-height: 100vh; overflow-x: hidden;
-      background-image: 
-        radial-gradient(circle at 10% 10%, rgba(0, 240, 255, 0.08) 0%, transparent 45%),
-        radial-gradient(circle at 90% 90%, rgba(255, 42, 133, 0.08) 0%, transparent 45%),
-        radial-gradient(circle at 50% 50%, rgba(168, 85, 247, 0.05) 0%, transparent 60%);
+      background: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.5;
     }
 
+    /* HEADER */
     header {
-      border-bottom: 1px solid var(--card-border); background: rgba(15, 21, 35, 0.92);
-      backdrop-filter: blur(14px); position: sticky; top: 0; z-index: 100; padding: 0.85rem 2rem;
-      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1.5px solid var(--card-border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 0.85rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: var(--shadow-sm);
     }
 
-    .brand { display: flex; align-items: center; gap: 0.8rem; }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
     .brand-logo {
-      width: 44px; height: 44px; background: linear-gradient(135deg, #00f0ff, #a855f7);
-      border-radius: 12px; display: flex; align-items: center; justify-content: center;
-      font-size: 1.5rem; box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, #6366F1, #06B6D4);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
     }
     .brand-title {
-      font-weight: 800; font-size: 1.35rem; letter-spacing: -0.5px;
-      background: linear-gradient(90deg, #fff, var(--accent));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      font-weight: 900;
+      font-size: 1.35rem;
+      letter-spacing: -0.5px;
+      color: var(--text-main);
     }
-    .brand-tagline { font-size: 0.72rem; color: var(--text-muted); }
+    .brand-tagline {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
 
+    /* NAVIGATION TABS */
     nav.nav-tabs {
-      display: flex; gap: 0.4rem; background: rgba(7, 10, 18, 0.7);
-      padding: 0.35rem; border-radius: 12px; border: 1px solid var(--card-border);
+      display: flex;
+      gap: 0.35rem;
+      background: #F1F5F9;
+      padding: 0.35rem;
+      border-radius: 14px;
+      border: 1px solid var(--card-border);
     }
     .nav-btn {
-      padding: 0.5rem 1rem; border-radius: 8px; border: none; background: transparent;
-      color: var(--text-muted); font-size: 0.82rem; font-weight: 600; cursor: pointer;
-      transition: all 0.2s ease; display: flex; align-items: center; gap: 0.4rem;
-    }
-    .nav-btn:hover { color: #fff; background: rgba(255, 255, 255, 0.05); }
-    .nav-btn.active {
-      background: var(--accent); color: #000; font-weight: 700;
-      box-shadow: 0 0 16px rgba(0, 240, 255, 0.35);
-    }
-
-    .header-actions { display: flex; align-items: center; gap: 0.75rem; }
-    .badge-status {
-      display: flex; align-items: center; gap: 0.4rem; font-size: 0.75rem; padding: 0.35rem 0.75rem;
-      border-radius: 20px; background: rgba(0, 255, 102, 0.12); border: 1px solid rgba(0, 255, 102, 0.3);
-      color: var(--accent-green); font-weight: 600;
-    }
-    .badge-status::before {
-      content: ''; width: 7px; height: 7px; border-radius: 50%;
-      background: var(--accent-green); box-shadow: 0 0 8px var(--accent-green);
-      animation: pulse 1.8s infinite;
-    }
-    @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.85); } }
-
-    main { padding: 2rem; max-width: 1580px; margin: 0 auto; }
-    .tab-content { display: none; animation: fadeIn 0.25s ease; }
-    .tab-content.active { display: block; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-
-    .simulator-grid { display: grid; grid-template-columns: 1.22fr 0.88fr; gap: 2rem; align-items: start; }
-    @media (max-width: 1240px) { .simulator-grid { grid-template-columns: 1fr; } }
-
-    /* HARDWARE CASING */
-    .device-stage {
-      background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 24px;
-      padding: 2rem; box-shadow: 0 20px 40px rgba(0,0,0,0.6); position: relative;
-    }
-    .device-casing {
-      background: linear-gradient(150deg, #1c2436, #0c111c); border-radius: 36px;
-      padding: 2.2rem 2.4rem; box-shadow: 0 25px 50px rgba(0,0,0,0.85), inset 0 2px 3px rgba(255,255,255,0.12), inset 0 -4px 8px rgba(0,0,0,0.7);
-      position: relative; border: 2px solid #2d374d; max-width: 660px; margin: 0 auto;
-      transition: transform 0.1s ease;
-    }
-    .device-casing.vibrating { animation: casingShake 0.1s infinite; }
-    @keyframes casingShake {
-      0% { transform: translate(0, 0) rotate(0deg); }
-      25% { transform: translate(-3px, 3px) rotate(-0.6deg); }
-      50% { transform: translate(3px, -3px) rotate(0.6deg); }
-      75% { transform: translate(-3px, -1px) rotate(-0.4deg); }
-      100% { transform: translate(2px, 2px) rotate(0.4deg); }
-    }
-
-    .casing-top-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.4rem; }
-    .casing-brand {
-      font-family: 'Press Start 2P', monospace; font-size: 0.85rem; color: #94a3b8;
-      letter-spacing: 2px; display: flex; align-items: center; gap: 0.6rem;
-    }
-    .pet-badge-active {
-      font-size: 0.72rem; background: rgba(0, 240, 255, 0.15); border: 1px solid rgba(0, 240, 255, 0.4);
-      color: var(--accent); padding: 0.25rem 0.65rem; border-radius: 8px; font-weight: 700;
-    }
-
-    /* SCREEN LEFT, 4 BUTTONS RIGHT */
-    .casing-body-horizontal {
-      display: grid; grid-template-columns: 1fr auto; gap: 1.6rem; align-items: center;
-    }
-    .screen-bezel {
-      background: #000; border-radius: 16px; padding: 14px 16px; border: 3px solid #1a2230;
-      box-shadow: inset 0 4px 12px rgba(0,0,0,0.95), 0 4px 12px rgba(0,0,0,0.6);
-      display: flex; flex-direction: column; align-items: center; position: relative;
-    }
-    .screen-label-top {
-      font-size: 0.52rem; color: #475569; font-family: 'JetBrains Mono', monospace;
-      margin-bottom: 6px; display: flex; justify-content: space-between; width: 100%;
-    }
-    #oledCanvas {
-      background: var(--oled-bg); border-radius: 4px; image-rendering: pixelated;
-      width: 100%; max-width: 400px; height: 200px; display: block;
-      box-shadow: 0 0 25px rgba(0, 240, 255, 0.12); border: 1px solid rgba(0, 240, 255, 0.15);
-    }
-
-    .vertical-buttons-col {
-      display: flex; flex-direction: column; gap: 0.85rem; background: rgba(10, 15, 26, 0.6);
-      padding: 0.9rem 0.8rem; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.05);
-    }
-    .v-btn-slot { display: flex; align-items: center; gap: 0.6rem; }
-    .hw-btn {
-      background: linear-gradient(145deg, #2a3449, #151c2a); border: 2px solid #3e4d6a;
-      border-radius: 50%; width: 50px; height: 50px; display: flex; flex-direction: column;
-      align-items: center; justify-content: center; cursor: pointer; color: #cbd5e1;
-      font-weight: 700; transition: all 0.08s ease;
-      box-shadow: 0 6px 12px rgba(0,0,0,0.5), inset 0 2px 2px rgba(255,255,255,0.15);
-      user-select: none; -webkit-user-select: none;
-    }
-    .hw-btn:active, .hw-btn.pressed {
-      transform: translateY(3px); box-shadow: 0 2px 4px rgba(0,0,0,0.5), inset 0 1px 1px rgba(0,0,0,0.5);
-      border-color: var(--accent); color: var(--accent);
-    }
-    .hw-btn-action { background: linear-gradient(145deg, #a855f7, #6b21a8); border-color: #c084fc; color: #fff; }
-    .btn-desc-tag { font-size: 0.63rem; color: #94a3b8; width: 105px; line-height: 1.25; }
-    .btn-desc-tag b { color: #fff; display: block; font-size: 0.68rem; }
-    .btn-desc-tag span { color: var(--accent-yellow); font-size: 0.58rem; }
-
-    /* CASING BOTTOM CONTROLS */
-    .casing-bottom-row {
-      margin-top: 1.4rem; display: flex; justify-content: space-between; align-items: center;
-      border-top: 1px solid #1e293b; padding-top: 1rem; flex-wrap: wrap; gap: 0.6rem;
-    }
-    .micro-btn {
-      background: #1e2535; border: 1px solid #334155; color: #94a3b8; font-size: 0.65rem;
-      font-weight: 600; padding: 0.4rem 0.8rem; border-radius: 8px; cursor: pointer;
-      display: flex; align-items: center; gap: 0.35rem; transition: all 0.15s ease;
-    }
-    .micro-btn:hover { background: #2b354b; color: #fff; }
-    .micro-btn.btn-cycle { background: linear-gradient(135deg, #ec4899, #be185d); color: #fff; border-color: #f472b6; font-weight: 700; }
-    .micro-btn.btn-shake { background: linear-gradient(135deg, #0ea5e9, #0284c7); color: #fff; border-color: #38bdf8; }
-    .micro-btn.btn-game { background: linear-gradient(135deg, #10b981, #047857); color: #fff; border-color: #34d399; }
-    .micro-btn.btn-duel { background: linear-gradient(135deg, #f97316, #c2410c); color: #fff; border-color: #fb923c; }
-
-    /* PHONE COMPANION */
-    .phone-stage {
-      background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 24px;
-      padding: 1.8rem; box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-    }
-    .phone-frame {
-      max-width: 440px; margin: 0 auto; background: #0a0e17; border: 3px solid #283244;
-      border-radius: 42px; padding: 1.2rem 1.4rem; box-shadow: 0 20px 50px rgba(0,0,0,0.9);
-    }
-    .phone-island {
-      width: 100px; height: 18px; background: #000; border-radius: 20px;
-      margin: 0 auto 1rem auto; display: flex; align-items: center; justify-content: center;
-    }
-    .camera-lens { width: 7px; height: 7px; border-radius: 50%; background: #111a26; border: 1px solid #1f293d; }
-    
-    /* ACCOUNT & CLOUD STATUS BANNER */
-    .cloud-auth-box {
-      background: rgba(15, 23, 42, 0.8); border: 1px solid #334155; border-radius: 14px;
-      padding: 0.7rem 0.9rem; margin-bottom: 0.8rem; display: flex; justify-content: space-between; align-items: center;
-    }
-    .auth-user-info { display: flex; align-items: center; gap: 0.5rem; font-size: 0.72rem; }
-    .auth-avatar { width: 22px; height: 22px; border-radius: 50%; background: #00f0ff; color:#000; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:0.65rem; }
-
-    .phone-pet-card {
-      background: linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.95));
-      border: 1px solid var(--card-border); border-radius: 20px; padding: 1.2rem; margin-bottom: 1rem;
-    }
-    .pet-card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem; }
-    .pet-name-tag { font-size: 1.25rem; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 0.4rem; }
-    .pet-stage-tag {
-      font-size: 0.7rem; padding: 0.2rem 0.6rem; border-radius: 8px;
-      background: rgba(255, 230, 0, 0.15); color: var(--accent-yellow); font-weight: 700;
-    }
-    .pet-card-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; text-align: center; }
-    .stat-box { background: rgba(0,0,0,0.35); padding: 0.5rem; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05); }
-    .stat-val { font-size: 1.05rem; font-weight: 800; color: var(--accent); font-family: 'JetBrains Mono', monospace; }
-    .stat-lbl { font-size: 0.62rem; color: var(--text-muted); margin-top: 2px; }
-
-    /* STREAK & ENGAGEMENT WIDGET */
-    .streak-widget {
-      background: linear-gradient(135deg, rgba(249, 115, 22, 0.15), rgba(15, 23, 42, 0.8));
-      border: 1px solid rgba(249, 115, 22, 0.35); border-radius: 14px; padding: 0.75rem 0.9rem;
-      margin-bottom: 0.8rem; display: flex; justify-content: space-between; align-items: center;
-    }
-    .streak-title { font-size: 0.75rem; font-weight: 800; color: #fb923c; display:flex; align-items:center; gap:0.35rem; }
-
-    /* NEEDS BARS */
-    .needs-container { margin-bottom: 1rem; }
-    .needs-title {
-      font-size: 0.78rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.55rem;
-      display: flex; justify-content: space-between;
-    }
-    .need-meter { margin-bottom: 0.5rem; }
-    .need-meta { display: flex; justify-content: space-between; font-size: 0.7rem; font-weight: 600; margin-bottom: 0.2rem; }
-    .need-bar-bg { height: 7px; background: #1e293b; border-radius: 6px; overflow: hidden; }
-    .need-bar-fill { height: 100%; border-radius: 6px; transition: width 0.3s ease; }
-    .need-bar-fill.high { background: linear-gradient(90deg, #10b981, #34d399); }
-    .need-bar-fill.mid { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
-    .need-bar-fill.crit { background: linear-gradient(90deg, #ef4444, #f87171); }
-    .need-bar-fill.social-bar { background: linear-gradient(90deg, #a855f7, #c084fc); }
-
-    /* CLOUD & RESET ACTIONS */
-    .cloud-btn-row {
-      display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.4rem; margin-top: 0.8rem;
-    }
-
-    .toast {
-      position: fixed; bottom: 2rem; right: 2rem; background: #1e293b; border: 1px solid var(--accent);
-      color: #fff; padding: 0.8rem 1.4rem; border-radius: 12px; font-size: 0.85rem; font-weight: 600;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.85); z-index: 1000; transform: translateY(100px);
-      opacity: 0; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-    .toast.show { transform: translateY(0); opacity: 1; }
-
-    .doc-section {
-      background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px;
-      padding: 2.2rem; margin-bottom: 2rem; line-height: 1.7;
-    }
-    .doc-section h2 { font-size: 1.45rem; font-weight: 800; margin-bottom: 1.2rem; color: #fff; }
-    .doc-section h3 { font-size: 1.15rem; font-weight: 700; margin: 1.5rem 0 0.8rem 0; color: var(--accent); }
-    table.spec-table { width: 100%; border-collapse: collapse; margin: 1.2rem 0; font-size: 0.88rem; }
-    /* APP DOWNLOAD HERO & VERSION CHIPS */
-    .header-dl-btn {
-      display: flex; align-items: center; gap: 0.45rem; padding: 0.4rem 0.85rem; border-radius: 10px;
-      background: linear-gradient(135deg, #00f0ff, #a855f7); color: #000; font-size: 0.78rem;
-      font-weight: 800; text-decoration: none; box-shadow: 0 0 16px rgba(0, 240, 255, 0.4);
+      padding: 0.55rem 1.1rem;
+      border-radius: 10px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
       transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
     }
-    .header-dl-btn:hover { transform: translateY(-1px); box-shadow: 0 0 24px rgba(0, 240, 255, 0.7); }
-    .ver-badge-chip {
-      background: rgba(0, 0, 0, 0.25); color: #fff; font-size: 0.65rem; font-weight: 700;
-      padding: 0.15rem 0.45rem; border-radius: 6px; font-family: 'JetBrains Mono', monospace;
+    .nav-btn:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.6);
+    }
+    .nav-btn.active {
+      background: #FFFFFF;
+      color: var(--primary);
+      box-shadow: var(--shadow-sm);
     }
 
-    .app-download-hero {
-      background: linear-gradient(135deg, #0f172a, #131d33); border: 1px solid #2a3754;
-      border-radius: 20px; padding: 1.4rem 1.8rem; margin-bottom: 2rem; display: flex;
-      justify-content: space-between; align-items: center; gap: 1.5rem;
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .btn-header-app {
+      background: var(--primary);
+      color: #FFFFFF;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 0.55rem 1.1rem;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      box-shadow: 0 4px 10px rgba(99, 102, 241, 0.25);
+      transition: all 0.2s;
+    }
+    .btn-header-app:hover {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+    }
+
+    /* MAIN CONTAINER */
+    main {
+      padding: 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
+      flex: 1;
+    }
+
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.2s ease;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* HERO BANNER */
+    .hero-banner {
+      background: #FFFFFF;
+      border: 1.5px solid var(--card-border);
+      border-radius: 24px;
+      padding: 2rem 2.5rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-md);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      background-image: radial-gradient(circle at 90% 10%, rgba(99, 102, 241, 0.05) 0%, transparent 60%);
+    }
+    .hero-info {
+      max-width: 720px;
+    }
+    .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.3rem 0.8rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      background: var(--primary-light);
+      color: var(--primary);
+      margin-bottom: 0.75rem;
+    }
+    .hero-title {
+      font-size: 1.85rem;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      color: var(--text-main);
+      margin-bottom: 0.5rem;
+    }
+    .hero-desc {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 0.8rem;
       flex-wrap: wrap;
     }
-    .hero-left { display: flex; align-items: center; gap: 1.2rem; flex: 1; min-width: 320px; }
-    .hero-icon-box {
-      width: 54px; height: 54px; border-radius: 16px; background: linear-gradient(135deg, #00f0ff, #3b82f6);
-      display: flex; align-items: center; justify-content: center; font-size: 1.8rem;
-      box-shadow: 0 0 20px rgba(0, 240, 255, 0.35); flex-shrink: 0;
+    .btn-download-hero {
+      background: linear-gradient(135deg, #10B981, #059669);
+      color: #FFFFFF;
+      text-decoration: none;
+      font-weight: 800;
+      font-size: 0.95rem;
+      padding: 0.85rem 1.6rem;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      box-shadow: 0 8px 18px rgba(16, 185, 129, 0.25);
+      transition: all 0.2s;
     }
-    .hero-title-row { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 0.3rem; }
-    .hero-title { font-size: 1.15rem; font-weight: 800; color: #fff; }
-    .chip {
-      font-size: 0.7rem; font-family: 'JetBrains Mono', monospace; font-weight: 700;
-      padding: 0.2rem 0.55rem; border-radius: 8px; display: inline-flex; align-items: center; gap: 0.3rem;
+    .btn-download-hero:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 22px rgba(16, 185, 129, 0.35);
     }
-    .chip-version { background: rgba(0, 240, 255, 0.15); border: 1px solid rgba(0, 240, 255, 0.4); color: #00f0ff; }
-    .chip-commit { background: rgba(168, 85, 247, 0.15); border: 1px solid rgba(168, 85, 247, 0.4); color: #c084fc; }
-    .chip-status { background: rgba(0, 255, 102, 0.12); border: 1px solid rgba(0, 255, 102, 0.3); color: #00ff66; }
-    .chip-update-alert { background: rgba(255, 42, 133, 0.2); border: 1px solid rgba(255, 42, 133, 0.6); color: #ff2a85; animation: pulse 1.5s infinite; }
-    .hero-desc { font-size: 0.78rem; color: #94a3b8; line-height: 1.45; }
-
-    .hero-actions { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
-    .btn-hero-download {
-      display: flex; align-items: center; gap: 0.8rem; padding: 0.65rem 1.4rem; border-radius: 12px;
-      background: linear-gradient(135deg, #00f0ff, #0099ff); color: #000; text-decoration: none;
-      box-shadow: 0 0 20px rgba(0, 240, 255, 0.4); transition: all 0.2s ease;
+    .btn-webapp-hero {
+      background: #FFFFFF;
+      color: var(--text-main);
+      border: 1.5px solid var(--card-border);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.95rem;
+      padding: 0.85rem 1.4rem;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.2s;
     }
-    .btn-hero-download:hover { transform: translateY(-2px); box-shadow: 0 0 30px rgba(0, 240, 255, 0.7); }
-    .btn-hero-icon { font-size: 1.3rem; }
-    .label-primary { font-size: 0.85rem; font-weight: 800; }
-    .label-sub { font-size: 0.65rem; opacity: 0.85; font-family: 'JetBrains Mono', monospace; }
-    .btn-hero-secondary {
-      padding: 0.7rem 1.1rem; border-radius: 12px; background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--card-border); color: #f8fafc; font-size: 0.78rem; font-weight: 700;
-      cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; text-decoration: none;
-      transition: all 0.2s ease;
-    }
-    .btn-hero-secondary:hover { background: rgba(255, 255, 255, 0.1); border-color: var(--accent); }
-
-    /* ROADMAP & AUDIT STYLES */
-    .roadmap-kpi-grid {
-      display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem;
-    }
-    .roadmap-kpi {
-      background: #0f1523; border: 1px solid #1e293b; border-radius: 16px; padding: 1.2rem;
-      position: relative; overflow: hidden;
-    }
-    .roadmap-kpi::before {
-      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-      background: linear-gradient(90deg, var(--accent), var(--accent-purple));
-    }
-    .kpi-num { font-size: 1.8rem; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: #fff; }
-    .kpi-label { font-size: 0.75rem; color: #94a3b8; margin-top: 4px; }
-    .status-badge {
-      display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.25rem 0.65rem;
-      border-radius: 12px; font-size: 0.72rem; font-weight: 700; white-space: nowrap;
-    }
-    .status-badge.done {
-      background: rgba(0, 255, 102, 0.15); color: #00ff66; border: 1px solid rgba(0, 255, 102, 0.4);
-    }
-    .status-badge.planned {
-      background: rgba(249, 115, 22, 0.15); color: #fb923c; border: 1px solid rgba(249, 115, 22, 0.4);
-    }
-    .cat-badge {
-      background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3);
-      padding: 0.15rem 0.5rem; border-radius: 6px; font-size: 0.68rem; font-weight: 700;
-    }
-    .table-cat-row {
-      background: rgba(255, 255, 255, 0.03); font-weight: 800; font-size: 0.85rem; color: #00f0ff;
-    }
-    .table-cat-row td { border-top: 2px solid #2a3754; padding-top: 1.2rem; }
-    .roadmap-table tr:hover { background: rgba(255, 255, 255, 0.02); }
-
-    /* SOCIES CANLI AĞ & ETKİN KULLANICILAR TAB STYLES */
-    .socies-hero-banner {
-      background: linear-gradient(135deg, #091322, #101c36); border: 1px solid #1e2e4f;
-      border-radius: 20px; padding: 1.5rem 2rem; margin-bottom: 2rem;
-      display: flex; justify-content: space-between; align-items: center; gap: 1.5rem; flex-wrap: wrap;
-    }
-    .socies-hero-title { font-size: 1.4rem; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 0.6rem; }
-    .socies-hero-desc { font-size: 0.82rem; color: #94a3b8; margin-top: 0.35rem; }
-    .socies-kpi-grid {
-      display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem;
-    }
-    @media (max-width: 992px) { .socies-kpi-grid { grid-template-columns: repeat(2, 1fr); } }
-    @media (max-width: 520px) { .socies-kpi-grid { grid-template-columns: 1fr; } }
-    .socies-kpi-card {
-      background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 18px;
-      padding: 1.3rem; position: relative; overflow: hidden;
-    }
-    .socies-kpi-card::before {
-      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-      background: linear-gradient(90deg, var(--accent), var(--accent-purple));
-    }
-    .socies-kpi-val { font-size: 1.85rem; font-weight: 800; font-family: 'JetBrains Mono', monospace; }
-    .socies-kpi-lbl { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
-    .socies-kpi-badge { font-size: 0.7rem; font-weight: 700; color: var(--accent); margin-top: 5px; }
-
-    .socies-filter-box {
-      background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 18px;
-      padding: 1.2rem; margin-bottom: 2rem; display: flex; flex-direction: column; gap: 0.85rem;
-    }
-    .socies-search-input {
-      width: 100%; background: rgba(0, 0, 0, 0.4); border: 1px solid var(--card-border);
-      border-radius: 12px; padding: 0.8rem 1.2rem; color: #fff; font-size: 0.88rem; outline: none;
-      transition: border-color 0.2s;
-    }
-    .socies-search-input:focus { border-color: var(--accent); }
-    .socies-pill-row { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-    .socies-pill {
-      background: rgba(255, 255, 255, 0.04); border: 1px solid var(--card-border);
-      color: var(--text-muted); padding: 0.35rem 0.85rem; border-radius: 20px; font-size: 0.75rem;
-      font-weight: 600; cursor: pointer; transition: all 0.2s;
-    }
-    .socies-pill:hover { color: #fff; border-color: var(--accent); }
-    .socies-pill.active {
-      background: var(--accent); color: #000; border-color: var(--accent); font-weight: 700;
+    .btn-webapp-hero:hover {
+      background: #F8FAFC;
+      border-color: #CBD5E1;
+      transform: translateY(-1px);
     }
 
-    .socies-users-grid {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 1.5rem;
+    /* GRID LAYOUTS */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 2rem;
+      align-items: start;
     }
-    .socies-user-card {
-      background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px;
-      padding: 1.4rem; position: relative; transition: all 0.2s ease; display: flex; flex-direction: column;
+    @media (max-width: 1080px) {
+      .dashboard-grid { grid-template-columns: 1fr; }
+    }
+
+    /* HARDWARE CONSOLE CONTAINER */
+    .console-card {
+      background: #FFFFFF;
+      border: 1.5px solid var(--card-border);
+      border-radius: 24px;
+      padding: 2rem;
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .device-shell {
+      background: var(--case-grad);
+      border: 3px solid var(--case-border);
+      border-radius: 36px;
+      padding: 2rem 2.2rem;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25), inset 0 2px 4px rgba(255, 255, 255, 0.15);
+      width: 100%;
+      max-width: 520px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .shell-header {
+      width: 100%;
+      display: flex;
       justify-content: space-between;
+      align-items: center;
+      color: #9CA3AF;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 1px;
     }
-    .socies-user-card:hover {
-      transform: translateY(-4px); border-color: var(--accent); box-shadow: 0 12px 30px rgba(0, 240, 255, 0.12);
+    .shell-brand {
+      color: #F3F4F6;
+      font-weight: 900;
     }
-    .socies-card-head {
-      display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--card-border);
-      padding-bottom: 0.8rem; margin-bottom: 1rem;
+    .shell-led {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.65rem;
+      color: #34D399;
     }
-    .socies-loc-tag { display: flex; align-items: center; gap: 0.45rem; font-size: 0.82rem; font-weight: 700; color: #fff; }
-    .socies-loc-sub { font-size: 0.7rem; color: var(--text-muted); font-weight: 500; }
-    .socies-online-badge {
-      display: flex; align-items: center; gap: 0.4rem; font-size: 0.7rem; font-weight: 700;
-      padding: 0.2rem 0.6rem; border-radius: 12px;
-    }
-    .socies-online-badge.on {
-      background: rgba(0, 255, 102, 0.15); color: var(--accent-green); border: 1px solid rgba(0, 255, 102, 0.4);
-    }
-    .socies-online-badge.off {
-      background: rgba(148, 163, 184, 0.12); color: var(--text-muted); border: 1px solid rgba(148, 163, 184, 0.2);
-    }
-    .socies-pulse-dot {
-      width: 7px; height: 7px; border-radius: 50%; background: var(--accent-green);
-      box-shadow: 0 0 8px var(--accent-green); animation: pulse 1.6s infinite;
-    }
-
-    .socies-user-meta { display: flex; align-items: center; gap: 0.85rem; margin-bottom: 1rem; }
-    .socies-avatar-icon {
-      width: 48px; height: 48px; border-radius: 14px; background: linear-gradient(135deg, #1e293b, #334155);
-      display: flex; align-items: center; justify-content: center; font-size: 1.6rem; flex-shrink: 0;
-    }
-    .socies-uname-row { display: flex; align-items: center; gap: 0.4rem; }
-    .socies-uname { font-size: 1rem; font-weight: 800; color: #fff; }
-    .socies-vip {
-      background: rgba(255, 230, 0, 0.2); border: 1px solid rgba(255, 230, 0, 0.5);
-      color: var(--accent-yellow); font-size: 0.62rem; font-weight: 800; padding: 0.1rem 0.35rem; border-radius: 6px;
-    }
-    .socies-uemail { font-size: 0.72rem; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; }
-
-    .socies-pet-banner {
-      background: rgba(0, 240, 255, 0.08); border: 1px solid rgba(0, 240, 255, 0.25);
-      padding: 0.38rem 0.75rem; border-radius: 10px; display: flex; justify-content: space-between;
-      font-size: 0.75rem; font-weight: 700; margin-bottom: 1rem; align-items: center;
+    .shell-led::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10B981;
+      box-shadow: 0 0 8px #10B981;
     }
 
-    .socies-telem-box {
-      background: rgba(0, 0, 0, 0.25); border: 1px solid var(--card-border); border-radius: 14px;
-      padding: 0.85rem 1rem; margin-bottom: 1.1rem;
+    /* OLED DISPLAY BEZEL */
+    .oled-bezel {
+      background: #111827;
+      border: 3px solid #1F2937;
+      border-radius: 18px;
+      padding: 1rem;
+      box-shadow: inset 0 4px 12px rgba(0, 0, 0, 0.8);
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
-    .socies-telem-hdr {
-      font-size: 0.7rem; font-weight: 800; color: var(--accent); text-transform: uppercase;
-      letter-spacing: 0.5px; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.4rem;
+    .oled-screen-label {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: #6B7280;
+      margin-bottom: 0.5rem;
     }
-    .socies-telem-line {
-      display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem; font-size: 0.73rem;
-    }
-    .socies-telem-lbl { color: var(--text-muted); }
-    .socies-telem-val { font-weight: 700; color: #fff; font-family: 'JetBrains Mono', monospace; }
-
-    .socies-actions-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.45rem; margin-top: auto; }
-    .btn-socies-action {
-      background: #151d2f; border: 1px solid var(--card-border); color: #fff; padding: 0.55rem 0.25rem;
-      border-radius: 10px; font-size: 0.72rem; font-weight: 700; cursor: pointer; text-align: center;
-      transition: all 0.2s; display: flex; flex-direction: column; align-items: center; gap: 0.2rem;
-    }
-    .btn-socies-action:hover {
-      background: var(--accent); color: #000; border-color: var(--accent); transform: translateY(-2px);
-    }
-
-    /* KARAKTER ATÖLYESİ (ÇİZİM & SELFIE) STİLLERİ */
-    .studio-hero {
-      background: linear-gradient(135deg, #101726, #1c1836); border: 1px solid #2d2b54;
-      border-radius: 20px; padding: 1.5rem 2rem; margin-bottom: 2rem;
-      display: flex; justify-content: space-between; align-items: center; gap: 1.5rem; flex-wrap: wrap;
-    }
-    .studio-hero-title { font-size: 1.4rem; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 0.6rem; }
-    .studio-hero-desc { font-size: 0.82rem; color: #94a3b8; margin-top: 0.35rem; }
-
-    .studio-mode-toggle {
-      display: flex; gap: 0.6rem; margin-bottom: 1.8rem; background: rgba(15, 21, 35, 0.8);
-      padding: 0.4rem; border-radius: 14px; border: 1px solid var(--card-border); width: fit-content;
-    }
-    .studio-mode-btn {
-      padding: 0.6rem 1.4rem; border-radius: 10px; border: none; background: transparent;
-      color: var(--text-muted); font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: all 0.2s;
-    }
-    .studio-mode-btn:hover { color: #fff; }
-    .studio-mode-btn.active {
-      background: linear-gradient(135deg, var(--accent), #3b82f6); color: #000;
-      box-shadow: 0 0 16px rgba(0, 240, 255, 0.4);
+    #oledCanvas {
+      width: 100%;
+      max-width: 384px;
+      height: auto;
+      aspect-ratio: 2 / 1;
+      background: var(--oled-bg);
+      border-radius: 8px;
+      image-rendering: pixelated;
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.15);
     }
 
-    .studio-workspace {
-      display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 2rem; align-items: start;
+    /* 4 HORIZONTAL BUTTONS UNDER SCREEN */
+    .buttons-row-horizontal {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.75rem;
+      width: 100%;
+      max-width: 440px;
     }
-    @media (max-width: 1024px) { .studio-workspace { grid-template-columns: 1fr; } }
-
-    .studio-card {
-      background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 22px;
-      padding: 1.8rem; box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+    .hw-btn-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.35rem;
     }
-    .studio-card-title {
-      font-size: 1.1rem; font-weight: 800; color: #fff; margin-bottom: 1rem;
-      display: flex; align-items: center; justify-content: space-between;
+    .hw-btn {
+      width: 100%;
+      height: 54px;
+      background: linear-gradient(180deg, #4B5563, #374151);
+      border: 2px solid #6B7280;
+      border-radius: 14px;
+      color: #F9FAFB;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 5px 0 #1F2937, 0 8px 12px rgba(0,0,0,0.3);
+      transition: all 0.08s ease;
+      user-select: none;
     }
-
-    /* KILAVUZLU ADIMLAR BAR */
-    .studio-steps-bar {
-      display: flex; gap: 0.5rem; margin-bottom: 1.2rem; background: rgba(0,0,0,0.3);
-      padding: 0.4rem; border-radius: 12px; border: 1px solid var(--card-border);
+    .hw-btn:active, .hw-btn.pressed {
+      transform: translateY(4px);
+      box-shadow: 0 1px 0 #1F2937, 0 2px 4px rgba(0,0,0,0.4);
     }
-    .step-chip {
-      flex: 1; padding: 0.5rem; text-align: center; border-radius: 8px; font-size: 0.75rem;
-      font-weight: 700; color: var(--text-muted); cursor: pointer; transition: all 0.2s;
+    .hw-btn-action {
+      background: linear-gradient(180deg, #059669, #047857);
+      border-color: #34D399;
+      box-shadow: 0 5px 0 #064E3B, 0 8px 12px rgba(0,0,0,0.3);
     }
-    .step-chip.active { background: rgba(0, 240, 255, 0.15); color: var(--accent); border: 1px solid rgba(0, 240, 255, 0.4); }
-
-    .canvas-container {
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      background: #000; border: 2px solid var(--card-border); border-radius: 16px;
-      padding: 1rem; position: relative; margin-bottom: 1.2rem;
+    .hw-btn-action:active, .hw-btn-action.pressed {
+      box-shadow: 0 1px 0 #064E3B;
     }
-    #drawCanvas {
-      width: 384px; height: 384px; image-rendering: pixelated; cursor: crosshair;
-      background: #02060c; border: 1px solid #1e293b; border-radius: 8px; touch-action: none;
-    }
-
-    .tools-toolbar {
-      display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.2rem; justify-content: center;
-    }
-    .tool-btn {
-      padding: 0.45rem 0.9rem; border-radius: 10px; border: 1px solid var(--card-border);
-      background: #151d2f; color: #fff; font-size: 0.75rem; font-weight: 700; cursor: pointer;
-      display: flex; align-items: center; gap: 0.35rem; transition: all 0.2s;
-    }
-    .tool-btn:hover { border-color: var(--accent); color: var(--accent); }
-    .tool-btn.active { background: var(--accent); color: #000; border-color: var(--accent); font-weight: 800; }
-
-    /* CANLI OLED ÖNİZLEME */
-    .oled-preview-casing {
-      background: #0c111c; border: 2px solid #2d374d; border-radius: 20px; padding: 1.2rem;
-      box-shadow: 0 15px 30px rgba(0,0,0,0.8), inset 0 1px 2px rgba(255,255,255,0.1); margin-bottom: 1.5rem;
-    }
-    .oled-preview-screen {
-      background: #000; border: 1px solid #1e293b; border-radius: 8px; overflow: hidden;
-      display: flex; flex-direction: column; width: 100%; max-width: 320px; margin: 0 auto;
-    }
-    .oled-preview-header {
-      background: #05080f; height: 22px; padding: 0 8px; display: flex; justify-content: space-between;
-      align-items: center; border-bottom: 1px solid #1e293b; color: var(--oled-yellow); font-family: 'Press Start 2P', monospace; font-size: 7px;
-    }
-    #studioPreviewCanvas {
-      width: 100%; height: 160px; image-rendering: pixelated; background: #000;
+    .hw-btn-label {
+      font-size: 0.68rem;
+      font-weight: 800;
+      color: #D1D5DB;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
-    /* SELFIE MODU STİLLERİ */
-    .selfie-box {
-      display: flex; flex-direction: column; align-items: center; gap: 1rem;
+    /* RIGHT PANEL CARDS */
+    .side-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
     }
-    #cameraVideo {
-      width: 100%; max-width: 360px; height: 270px; object-fit: cover; border-radius: 16px;
-      border: 2px solid var(--card-border); background: #000; transform: scaleX(-1);
+    .content-card {
+      background: #FFFFFF;
+      border: 1.5px solid var(--card-border);
+      border-radius: 20px;
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
     }
-    .selfie-styles-row {
-      display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center; margin-bottom: 1rem;
+    .card-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
     }
-    .selfie-style-btn {
-      padding: 0.4rem 0.8rem; border-radius: 16px; border: 1px solid var(--card-border);
-      background: #101626; color: var(--text-muted); font-size: 0.72rem; font-weight: 700; cursor: pointer; transition: all 0.2s;
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
-    .selfie-style-btn:hover { color: #fff; border-color: var(--accent); }
-    .selfie-style-btn.active { background: var(--accent); color: #000; border-color: var(--accent); }
 
-    .studio-action-btn {
-      width: 100%; padding: 0.75rem 1.2rem; border-radius: 12px; font-size: 0.85rem; font-weight: 800;
-      cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem;
-      transition: all 0.2s; margin-bottom: 0.6rem; text-decoration: none; border: none;
+    /* 7 SIMS NEEDS BARS */
+    .needs-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
     }
-    .btn-act-primary {
-      background: linear-gradient(135deg, var(--accent), #0099ff); color: #000;
-      box-shadow: 0 0 16px rgba(0, 240, 255, 0.4);
+    .need-item {
+      background: #F8FAFC;
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 0.6rem 0.8rem;
     }
-    .btn-act-primary:hover { transform: translateY(-2px); box-shadow: 0 0 25px rgba(0, 240, 255, 0.7); }
-    .btn-act-secondary {
-      background: #162035; color: #fff; border: 1px solid var(--card-border);
+    .need-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 0.35rem;
     }
-    .btn-act-secondary:hover { background: #1e2d4a; border-color: var(--accent); color: var(--accent); }
+    .need-bar-track {
+      height: 8px;
+      background: #E2E8F0;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .need-bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.3s ease;
+    }
+
+    /* MODULAR ATELIER PREVIEW */
+    .workshop-selector-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    .part-box {
+      background: #F8FAFC;
+      border: 1.5px solid var(--card-border);
+      border-radius: 12px;
+      padding: 0.6rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .part-box:hover {
+      border-color: var(--primary);
+      background: var(--primary-light);
+    }
+    .part-title {
+      font-size: 0.68rem;
+      font-weight: 800;
+      color: var(--text-muted);
+      margin-bottom: 0.2rem;
+    }
+    .part-val {
+      font-size: 0.85rem;
+      font-weight: 900;
+      color: var(--primary);
+    }
+
+    /* TABLES */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+    .data-table th {
+      text-align: left;
+      padding: 0.75rem 1rem;
+      background: #F8FAFC;
+      color: var(--text-muted);
+      font-weight: 700;
+      border-bottom: 1.5px solid var(--card-border);
+    }
+    .data-table td {
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid var(--card-border);
+      color: var(--text-main);
+    }
+    .data-table tr:hover td {
+      background: #F8FAFC;
+    }
+
+    /* BADGES */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+    .badge-online { background: #DCFCE7; color: #15803D; }
+    .badge-offline { background: #F1F5F9; color: #64748B; }
+
+    /* FOOTER */
+    footer {
+      background: #FFFFFF;
+      border-top: 1.5px solid var(--card-border);
+      padding: 1.5rem 2rem;
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 3rem;
+    }
+
+    /* TOAST */
+    .toast-msg {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: #0F172A;
+      color: #FFFFFF;
+      padding: 0.85rem 1.4rem;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      box-shadow: var(--shadow-lg);
+      display: none;
+      z-index: 1000;
+      animation: slideUp 0.2s ease;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(15px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
   </style>
 </head>
 <body>
 
+  <!-- HEADER -->
   <header>
     <div class="brand">
-      <div class="brand-logo">☁️</div>
+      <div class="brand-logo">🐾</div>
       <div>
-        <div class="brand-title">SOCIES • V4 CLOUD</div>
-        <div class="brand-tagline">Taş-Kağıt-Makas 3-2-1 • Düello • Bulut Senkronizasyonu</div>
+        <div class="brand-title">SOCIES</div>
+        <div class="brand-tagline">Retro Sanal Bebek & Gen-Z Oyun Ekosistemi</div>
       </div>
     </div>
 
     <nav class="nav-tabs">
-      <button class="nav-btn active" onclick="switchTab('tab-sim')">🎮 Emülatör & Cihaz</button>
-      <button class="nav-btn" onclick="switchTab('tab-studio')">🎨 Karakter Atölyesi (Çizim & Selfie)</button>
-      <button class="nav-btn" onclick="switchTab('tab-socies-network')">🌍 Socies Ağı (Etkin Kullanıcılar)</button>
-      <button class="nav-btn" onclick="switchTab('tab-roadmap')">🛠️ Geliştirme & Yol Haritası</button>
-      <button class="nav-btn" onclick="switchTab('tab-cloud-spec')">☁️ Bulut & Sunucu Telemetrisi</button>
-      <button class="nav-btn" onclick="switchTab('tab-retention')">🔥 Bağlılık & Sadakat Motoru</button>
+      <button class="nav-btn active" onclick="switchTab('tab-console')">🎮 Web Konsol</button>
+      <button class="nav-btn" onclick="switchTab('tab-sims')">🐾 7 Sims İhtiyaç</button>
+      <button class="nav-btn" onclick="switchTab('tab-games')">🕹️ Retro Oyunlar</button>
+      <button class="nav-btn" onclick="switchTab('tab-workshop')">🎨 Modüler Atölye</button>
+      <button class="nav-btn" onclick="switchTab('tab-social')">🏆 Skor & Arkadaşlar</button>
+      <button class="nav-btn" onclick="switchTab('tab-hardware')">🛠️ Donanım & ESP32</button>
     </nav>
 
     <div class="header-actions">
-      <div class="badge-status" id="headerBleStatus">Bulut Senkron</div>
-      <a href="./downloads/socies-companion.apk" download="socies-companion.apk" class="header-dl-btn" id="headerDlBtn" title="Socies Çocuk Uygulaması APK İndir">
-        <span>📱</span> Çocuk APK <span class="ver-badge-chip" id="headerVerText">v1.0.5</span>
+      <a href="/app" class="btn-header-app">
+        <span>📱</span> Uygulamayı Başlat
       </a>
-      <a href="./downloads/socies-pocket.apk" download="socies-pocket.apk" class="header-dl-btn" style="background:rgba(168,85,247,0.2); border-color:#a855f7;" title="Socies Pocket Konsol APK İndir">
-        <span>🕹️</span> Konsol APK
-      </a>
-      <button class="micro-btn" id="btnSoundToggle" onclick="toggleAudio()">🔊 Ses</button>
-      <button class="micro-btn" id="btnHapticToggle" onclick="toggleHaptic()">📳 Titreşim</button>
     </div>
   </header>
 
+  <!-- MAIN -->
   <main>
-    <!-- TAB 1: EMULATOR -->
-    <div id="tab-sim" class="tab-content active">
-
-      <!-- APP DOWNLOAD & AUTO-UPDATER HERO BANNER -->
-      <div class="app-download-hero">
-        <div class="hero-left">
-          <div class="hero-icon-box">📱</div>
-          <div class="hero-text">
-            <div class="hero-title-row">
-              <span class="hero-title">Socies Android Companion & El Konsolu</span>
-              <span class="chip chip-version" id="heroSemVerBadge" title="SemVer 2.0.0 Uyumlu Versiyon">v1.0.5+6</span>
-              <span class="chip chip-commit" id="heroCommitBadge">Commit: f8cd1f2</span>
-              <span class="chip chip-status" id="heroStatusBadge">● Doğrudan İndirme Hazır</span>
-            </div>
-            <p class="hero-desc">
-              ESP32 sanal bebek el konsolunu telefonunuzda doğrudan oynayın! 3-2-1 Taş-Kağıt-Makas, Kovboy Düellosu, SW-420 titreşim/sallama algılama ve merkezi sunucu çağrı cihazı mesajlaşması.
-            </p>
-          </div>
-        </div>
-        <div class="hero-actions" style="display:flex; flex-wrap:wrap; gap:0.6rem;">
-          <a href="./downloads/socies-companion.apk" download="socies-companion.apk" class="btn-hero-download" id="heroDownloadCompanion" style="border-color:#2EC4B6;">
-            <div class="btn-hero-icon">📱</div>
-            <div class="btn-hero-label">
-              <div class="label-primary">Socies (Çocuk Uygulaması)</div>
-              <div class="label-sub">Light Tema • Durum & Radar • APK</div>
-            </div>
-          </a>
-          <a href="./downloads/socies-pocket.apk" download="socies-pocket.apk" class="btn-hero-download" id="heroDownloadPocket" style="border-color:#A855F7; background:rgba(168,85,247,0.15);">
-            <div class="btn-hero-icon">🕹️</div>
-            <div class="btn-hero-label">
-              <div class="label-primary">Socies Pocket (El Konsolu)</div>
-              <div class="label-sub">Tam Ekran Retro OLED • APK</div>
-            </div>
-          </a>
-          <a href="/companion" target="_blank" class="btn-hero-secondary" title="Tarayıcıda Çocuk Uygulamasını Dene">
-            <span>🌐</span> Çocuk Arayüzü (Light)
-          </a>
-          <a href="/pocket" target="_blank" class="btn-hero-secondary" title="Tarayıcıda Retro Konsolu Dene">
-            <span>📟</span> Retro Konsol
-          </a>
-        </div>
+    
+    <!-- HERO -->
+    <div class="hero-banner">
+      <div class="hero-info">
+        <div class="badge-pill">🚀 Tek Birleşik Sürüm: v1.0.5+6 • Android APK</div>
+        <h1 class="hero-title">Gerçek Donanım Hissi, Tek Bir Mobil Uygulamada</h1>
+        <p class="hero-desc">
+          Socies; 128x64 OLED ekranı, altındaki 4 yatay fiziksel tuşu, 7 Sims tarzı yaşam dinamiği, 100.000 kombinasyonlu modüler karakter atölyesi ve arkadaş radarıyla çocukların vazgeçilmez cebi oluyor.
+        </p>
       </div>
-
-      <div class="simulator-grid">
-        
-        <!-- DEVICE STAGE -->
-        <div class="device-stage">
-          <div class="device-casing" id="deviceCasing">
-            
-            <div class="casing-top-row">
-              <div class="casing-brand">
-                <span>SOCIES</span>
-                <span class="pet-badge-active" id="casingPetBadge">⚽ TOP (ZIPZIP)</span>
-              </div>
-              <button class="micro-btn btn-cycle" onclick="cyclePet()">
-                <span>🔄 Karakter Değiştir</span>
-              </button>
-            </div>
-
-            <div class="casing-body-horizontal">
-              
-              <!-- SCREEN LEFT -->
-              <div class="screen-bezel">
-                <div class="screen-label-top">
-                  <span>0.96" SSD1315 OLED (128x64)</span>
-                  <span id="screenModeTag" style="color:var(--accent-yellow);">GERÇEK TELEFON BARI</span>
-                </div>
-                <canvas id="oledCanvas" width="128" height="64"></canvas>
-              </div>
-
-              <!-- 4 BUTTONS RIGHT -->
-              <div class="vertical-buttons-col">
-                <div class="v-btn-slot">
-                  <button class="hw-btn" id="btnUp" 
-                    onmousedown="startBtnPress('UP')" onmouseup="endBtnPress('UP')"
-                    ontouchstart="startBtnPress('UP')" ontouchend="endBtnPress('UP')">
-                    <span>▲</span>
-                  </button>
-                  <div class="btn-desc-tag">
-                    <b>1. YUKARI</b>
-                    <span id="btn1Subtext">Taş 🪨 / Menü</span>
-                  </div>
-                </div>
-
-                <div class="v-btn-slot">
-                  <button class="hw-btn hw-btn-action" id="btnAction" 
-                    onmousedown="startBtnPress('ACTION')" onmouseup="endBtnPress('ACTION')"
-                    ontouchstart="startBtnPress('ACTION')" ontouchend="endBtnPress('ACTION')">
-                    <span>●</span>
-                  </button>
-                  <div class="btn-desc-tag">
-                    <b>2. SEÇ</b>
-                    <span id="btn2Subtext">Kağıt 📄 / Seçim</span>
-                  </div>
-                </div>
-
-                <div class="v-btn-slot">
-                  <button class="hw-btn" id="btnDown" 
-                    onmousedown="startBtnPress('DOWN')" onmouseup="endBtnPress('DOWN')"
-                    ontouchstart="startBtnPress('DOWN')" ontouchend="endBtnPress('DOWN')">
-                    <span>▼</span>
-                  </button>
-                  <div class="btn-desc-tag">
-                    <b>3. AŞAĞI</b>
-                    <span id="btn3Subtext">Makas ✂️ / Menü</span>
-                  </div>
-                </div>
-
-                <div class="v-btn-slot">
-                  <button class="hw-btn" id="btnBack" 
-                    onmousedown="startBtnPress('BACK')" onmouseup="endBtnPress('BACK')"
-                    ontouchstart="startBtnPress('BACK')" ontouchend="endBtnPress('BACK')">
-                    <span>✕</span>
-                  </button>
-                  <div class="btn-desc-tag">
-                    <b>4. İPTAL</b>
-                    <span>Geri / Çıkış</span>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-
-            <!-- CASING BOTTOM ACTIONS -->
-            <div class="casing-bottom-row">
-              <div style="display:flex; gap:0.5rem; align-items:center; flex-wrap:wrap;">
-                <button class="micro-btn btn-game" onclick="startSocialRPSGame()">
-                  <span>✊ 3-2-1 Taş-Kağıt-Makas</span>
-                </button>
-                <button class="micro-btn btn-duel" onclick="startQuickDrawDuel()">
-                  <span>🤠 Kovboy Düellosu</span>
-                </button>
-                <button class="micro-btn btn-shake" onclick="triggerDeviceShake()">
-                  <span>👋 Zıplat</span>
-                </button>
-                <button class="micro-btn" onclick="triggerPoopManually()">
-                  <span>💩 Kaka</span>
-                </button>
-              </div>
-
-              <div style="font-size:0.7rem; color:#94a3b8;">
-                <span id="gameStatusIndicator">Mod: Serbest Gezinti</span>
-              </div>
-            </div>
-
-          </div>
-
-          <div style="margin-top:1rem; background:rgba(0,0,0,0.3); padding:0.8rem 1.2rem; border-radius:12px; font-size:0.75rem; color:#94a3b8; display:flex; justify-content:space-between;">
-            <span>🎮 <b>Oyunlar:</b> 3-2-1 Taş-Kağıt-Makas (Aynı anda açılır) ve Kovboy Düellosu eklendi!</span>
-            <span style="color:var(--accent);">Klavye: [W/▲], [Enter], [S/▼], [Esc]</span>
-          </div>
-        </div>
-
-        <!-- COMPANION APP WITH CLOUD & RETENTION -->
-        <div class="phone-stage">
-          <div class="phone-frame">
-            <div class="phone-island"><div class="camera-lens"></div></div>
-
-            <!-- CLOUD LOGIN & RESTORE BAR -->
-            <div class="cloud-auth-box">
-              <div class="auth-user-info">
-                <div class="auth-avatar" id="userAvatar">T</div>
-                <div>
-                  <div style="font-weight:700; color:#fff;" id="userName">turan@socies.io</div>
-                  <div style="font-size:0.62rem; color:#00f0ff;">☁️ Bulut Hesabı Aktif</div>
-                </div>
-              </div>
-              <button class="micro-btn" onclick="triggerCloudBackup()">Yedekle ☁️</button>
-            </div>
-
-            <!-- PET PROFILE CARD -->
-            <div class="phone-pet-card">
-              <div class="pet-card-top">
-                <div>
-                  <div class="pet-name-tag"><span id="appPetIcon">⚽</span><span id="appPetName">Zıpzıp Top</span></div>
-                  <div style="font-size:0.68rem; color:#94a3b8;" id="appPetBreedDesc">ID: SOCIES-ESP32-84920A</div>
-                </div>
-                <div class="pet-stage-tag" id="appPetStage">Bebek (Lv. 1)</div>
-              </div>
-
-              <div class="pet-card-stats">
-                <div class="stat-box"><div class="stat-val" id="appPetAge">1 Gün</div><div class="stat-lbl">Yaşam</div></div>
-                <div class="stat-box"><div class="stat-val" id="appPetScore">310</div><div class="stat-lbl">Toplam Puan</div></div>
-                <div class="stat-box"><div class="stat-val" id="appPetStreak">🔥 5 Gün</div><div class="stat-lbl">Sadakat Serisi</div></div>
-              </div>
-            </div>
-
-            <!-- DAILY STREAK WIDGET -->
-            <div class="streak-widget">
-              <div class="streak-title">
-                <span>🔥 5 Günlük Sadakat Serisi!</span>
-              </div>
-              <span style="font-size:0.68rem; color:#fed7aa;">Yarın: +100 Bonus & Taç 👑</span>
-            </div>
-
-            <!-- NEEDS METERS -->
-            <div class="needs-container">
-              <div class="needs-title"><span>SİMS İHTİYAÇLARI</span><span id="overallHealth" style="color:var(--accent-green);">Mutlu & Enerjik</span></div>
-
-              <div class="need-meter">
-                <div class="need-meta"><span>🍖 Beslenme</span><span id="val_hunger">85%</span></div>
-                <div class="need-bar-bg"><div class="need-bar-fill high" id="bar_hunger" style="width:85%;"></div></div>
-              </div>
-              <div class="need-meter">
-                <div class="need-meta"><span>🎾 Oyun & Eğlence</span><span id="val_fun">80%</span></div>
-                <div class="need-bar-bg"><div class="need-bar-fill high" id="bar_fun" style="width:80%;"></div></div>
-              </div>
-              <div class="need-meter">
-                <div class="need-meta"><span>❤️ Sevgi / İlgi</span><span id="val_love">90%</span></div>
-                <div class="need-bar-bg"><div class="need-bar-fill high" id="bar_love" style="width:90%;"></div></div>
-              </div>
-              <div class="need-meter">
-                <div class="need-meta"><span>💤 Uyku (Gece Modu)</span><span id="val_sleep">75%</span></div>
-                <div class="need-bar-bg"><div class="need-bar-fill high" id="bar_sleep" style="width:75%;"></div></div>
-              </div>
-              <div class="need-meter">
-                <div class="need-meta"><span>🚽 Tuvalet</span><span id="val_toilet">85%</span></div>
-                <div class="need-bar-bg"><div class="need-bar-fill high" id="bar_toilet" style="width:85%;"></div></div>
-              </div>
-              <div class="need-meter">
-                <div class="need-meta"><span>🧼 Temizlik / Hijyen</span><span id="val_clean">90%</span></div>
-                <div class="need-bar-bg"><div class="need-bar-fill high" id="bar_clean" style="width:90%;"></div></div>
-              </div>
-            </div>
-
-            <!-- CLOUD ACTIONS & FACTORY RESET (REBIRTH) -->
-            <div class="cloud-btn-row">
-              <button class="micro-btn" onclick="restoreFromCloud()">
-                <span>📥 Oturumu Geri Yükle</span>
-              </button>
-              <button class="micro-btn" style="border-color:#ef4444; color:#f87171;" onclick="factoryResetPrompt()">
-                <span>⚠️ Sıfırdan Başla</span>
-              </button>
-            </div>
-
-          </div>
-        </div>
-
+      <div class="hero-actions">
+        <a href="/download/socies-app.apk" download="socies-v1.0.5.apk" class="btn-download-hero">
+          <span>📥</span> Android APK İndir (v1.0.5)
+        </a>
+        <a href="/app" class="btn-webapp-hero">
+          <span>🌐</span> Web Konsolu Aç
+        </a>
       </div>
     </div>
 
-    <!-- TAB: KARAKTER ATÖLYESİ (ÇİZİM & SELFIE) -->
-    <div id="tab-studio" class="tab-content">
-      <!-- HERO BANNER -->
-      <div class="studio-hero">
-        <div>
-          <div class="studio-hero-title">
-            <span>🎨</span>
-            <span>Socies Karakter Atölyesi (Çizim & Selfie Motoru)</span>
-          </div>
-          <div class="studio-hero-desc">
-            Adım adım parmağınızla kendi retro sanal bebeğinizi çizin (araları otomatik doldurulur) ya da kendi selfie fotoğrafınızı çekip 48x48 OLED 1-bit karaktere dönüştürün!
-          </div>
-        </div>
-        <div style="display:flex; gap:0.6rem; align-items:center;">
-          <button class="nav-btn" onclick="applyCustomPetToEmulator()" style="background:linear-gradient(135deg, var(--accent), #0099ff); color:#000; font-weight:800; padding:0.6rem 1.1rem; border-radius:12px; box-shadow:0 0 15px rgba(0,240,255,0.4);">
-            <span>🎮</span> Emülatörde Canlandır
-          </button>
-        </div>
-      </div>
-
-      <!-- MODE TOGGLE -->
-      <div class="studio-mode-toggle">
-        <button class="studio-mode-btn active" id="btnStudioModeDraw" onclick="setStudioMode('draw')">✏️ 1. Adım Adım Kılavuzlu Çizim</button>
-        <button class="studio-mode-btn" id="btnStudioModeSelfie" onclick="setStudioMode('selfie')">📸 2. Selfie / Kameradan Avatar Yap</button>
-      </div>
-
-      <!-- WORKSPACE GRID -->
-      <div class="studio-workspace">
+    <!-- TAB 1: KONSOL & EMÜLATÖR -->
+    <div id="tab-console" class="tab-content active">
+      <div class="dashboard-grid">
         
-        <!-- LEFT: DRAWING CANVAS OR SELFIE STUDIO -->
-        <div class="studio-card">
+        <!-- LEFT: CONSOLE -->
+        <div class="console-card">
+          <div class="device-shell">
+            <div class="shell-header">
+              <span class="shell-brand">SOCIES POCKET</span>
+              <div class="shell-led">CANLI • ID: 84920A</div>
+            </div>
+
+            <!-- OLED SCREEN BEZEL -->
+            <div class="oled-bezel">
+              <div class="oled-screen-label">
+                <span>0.96" SSD1306 (128x64)</span>
+                <span style="color:#FDE047;" id="liveModeBadge">MENÜ: DELİK PONG</span>
+              </div>
+              <canvas id="oledCanvas" width="128" height="64"></canvas>
+            </div>
+
+            <!-- 4 HORIZONTAL BUTTONS UNDER SCREEN -->
+            <div class="buttons-row-horizontal">
+              <div class="hw-btn-wrap">
+                <button class="hw-btn" id="btnLeft" onmousedown="pressKey('LEFT')" onmouseup="releaseKey('LEFT')">◄</button>
+                <span class="hw-btn-label">SOL</span>
+              </div>
+              <div class="hw-btn-wrap">
+                <button class="hw-btn" id="btnRight" onmousedown="pressKey('RIGHT')" onmouseup="releaseKey('RIGHT')">►</button>
+                <span class="hw-btn-label">SAĞ</span>
+              </div>
+              <div class="hw-btn-wrap">
+                <button class="hw-btn hw-btn-action" id="btnAction" onmousedown="pressKey('ACTION')" onmouseup="releaseKey('ACTION')">●</button>
+                <span class="hw-btn-label">SEÇ</span>
+              </div>
+              <div class="hw-btn-wrap">
+                <button class="hw-btn" id="btnBack" onmousedown="pressKey('BACK')" onmouseup="releaseKey('BACK')">✕</button>
+                <span class="hw-btn-label">GERİ</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- RIGHT: SIMS SUMMARY & QUICK ACTIONS -->
+        <div class="side-stack">
           
-          <!-- MODE 1: DRAW VIEW -->
-          <div id="studioDrawSection">
-            <div class="studio-card-title">
-              <span>✏️ 48x48 Piksel Çizim Tuvali</span>
-              <span style="font-size:0.75rem; color:var(--text-muted);" id="drawCoordDisplay">Piksel: X: 0, Y: 0</span>
+          <div class="content-card">
+            <div class="card-title-row">
+              <div class="card-title">🐾 Bebeğimin Durumu</div>
+              <span class="badge-pill" style="margin:0;">Zıpzıp Top (Evre 2)</span>
+            </div>
+            
+            <div class="needs-grid">
+              <div class="need-item">
+                <div class="need-header">
+                  <span>🍖 Açlık</span>
+                  <span id="txtHunger">85%</span>
+                </div>
+                <div class="need-bar-track"><div class="need-bar-fill" id="barHunger" style="width:85%; background:#D97706;"></div></div>
+              </div>
+              <div class="need-item">
+                <div class="need-header">
+                  <span>🚽 Tuvalet</span>
+                  <span id="txtToilet">90%</span>
+                </div>
+                <div class="need-bar-track"><div class="need-bar-fill" id="barToilet" style="width:90%; background:#059669;"></div></div>
+              </div>
+              <div class="need-item">
+                <div class="need-header">
+                  <span>🧼 Hijyen</span>
+                  <span id="txtClean">95%</span>
+                </div>
+                <div class="need-bar-track"><div class="need-bar-fill" id="barClean" style="width:95%; background:#0284C7;"></div></div>
+              </div>
+              <div class="need-item">
+                <div class="need-header">
+                  <span>💤 Uyku</span>
+                  <span id="txtSleep">80%</span>
+                </div>
+                <div class="need-bar-track"><div class="need-bar-fill" id="barSleep" style="width:80%; background:#7C3AED;"></div></div>
+              </div>
+              <div class="need-item">
+                <div class="need-header">
+                  <span>🎮 Eğlence</span>
+                  <span id="txtFun">92%</span>
+                </div>
+                <div class="need-bar-track"><div class="need-bar-fill" id="barFun" style="width:92%; background:#E11D48;"></div></div>
+              </div>
+              <div class="need-item">
+                <div class="need-header">
+                  <span>❤️ Sevgi</span>
+                  <span id="txtLove">96%</span>
+                </div>
+                <div class="need-bar-track"><div class="need-bar-fill" id="barLove" style="width:96%; background:#F43F5E;"></div></div>
+              </div>
             </div>
 
-            <!-- STEPS BAR -->
-            <div class="studio-steps-bar">
-              <div class="step-chip active" id="stepChip1" onclick="setDrawStep(1)">1. Gövde Taslağı</div>
-              <div class="step-chip" id="stepChip2" onclick="setDrawStep(2)">2. Göz & Ağız</div>
-              <div class="step-chip" id="stepChip3" onclick="setDrawStep(3)">3. Kulak & Detay</div>
+            <div style="margin-top:1.2rem; display:flex; gap:0.5rem; flex-wrap:wrap;">
+              <button onclick="feedPet()" style="flex:1; padding:0.6rem; border-radius:10px; border:1px solid #E2E8F0; background:#FFF; font-weight:700; cursor:pointer;">🍎 Besle</button>
+              <button onclick="cleanPet()" style="flex:1; padding:0.6rem; border-radius:10px; border:1px solid #E2E8F0; background:#FFF; font-weight:700; cursor:pointer;">🧼 Yıka</button>
+              <button onclick="lovePet()" style="flex:1; padding:0.6rem; border-radius:10px; border:1px solid #E2E8F0; background:#FFF; font-weight:700; cursor:pointer;">❤️ Sev</button>
             </div>
+          </div>
 
-            <!-- TOOLS -->
-            <div class="tools-toolbar">
-              <button class="tool-btn active" id="toolBtnPencil" onclick="setStudioTool('pencil')">✏️ Kalem</button>
-              <button class="tool-btn" id="toolBtnEraser" onclick="setStudioTool('eraser')">🧹 Silgi</button>
-              <button class="tool-btn" id="toolBtnBucket" onclick="setStudioTool('bucket')">🪣 Dolgu (Fill)</button>
-              <button class="tool-btn" onclick="autoContourFill()" title="Çizgileri yumuşatır ve kapalı konturların içini otomatik doldurur" style="color:var(--accent-yellow); border-color:var(--accent-yellow);">🪄 Araları Doldur</button>
-              <button class="tool-btn" onclick="undoStudioDraw()">↩️ Geri Al</button>
-              <button class="tool-btn" onclick="clearStudioCanvas()" style="color:#f87171;">🗑️ Temizle</button>
+          <div class="content-card">
+            <div class="card-title-row">
+              <div class="card-title">🕹️ Aktif Retro Oyunlar</div>
             </div>
-
-            <!-- CANVAS -->
-            <div class="canvas-container">
-              <canvas id="drawCanvas" width="48" height="48"></canvas>
-            </div>
-            <p style="font-size:0.73rem; color:var(--text-muted); text-align:center;">
-              💡 Fare veya dokunmatik ekranınızla tuvale çizin. "Araları Doldur" butonu çizgilerinizi otomatik bağlayıp pürüzsüzleştirir!
+            <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:0.8rem;">
+              4 yatay tuşu kullanarak doğrudan konsol üzerinde retro mini oyunları oynayabilirsiniz:
             </p>
-          </div>
-
-          <!-- MODE 2: SELFIE VIEW -->
-          <div id="studioSelfieSection" style="display:none;">
-            <div class="studio-card-title">
-              <span>📸 Selfie'den 1-Bit Piksel Dönüştürücü</span>
-              <span class="chip chip-status">Vision ML Dithering</span>
-            </div>
-
-            <div class="selfie-box">
-              <video id="cameraVideo" autoplay playsinline></video>
-              <canvas id="cameraSnapshotCanvas" width="48" height="48" style="display:none;"></canvas>
-
-              <!-- STYLE PILLS -->
-              <div class="selfie-styles-row">
-                <button class="selfie-style-btn active" onclick="setSelfieStyle('dither')">🕶️ Klasik 1-Bit Piksel</button>
-                <button class="selfie-style-btn" onclick="setSelfieStyle('cat')">🐱 Beni Kedi Yap</button>
-                <button class="selfie-style-btn" onclick="setSelfieStyle('robot')">🤖 Siber Robot Maskot</button>
-                <button class="selfie-style-btn" onclick="setSelfieStyle('sausage')">🌭 Sosis Karakter</button>
+            <div style="display:flex; flex-direction:column; gap:0.4rem;">
+              <div style="display:flex; justify-content:space-between; font-size:0.85rem; font-weight:700; padding:0.4rem 0; border-bottom:1px solid #F1F5F9;">
+                <span>1. Delik Pong (Top Sektirme & Gol)</span>
+                <span style="color:#059669;">Aktif 🏆</span>
               </div>
-
-              <div style="display:flex; gap:0.6rem; width:100%; max-width:360px;">
-                <button class="studio-action-btn btn-act-primary" onclick="captureSelfieSnapshot()">
-                  <span>📷</span> Fotoğraf Çek & Dönüştür
-                </button>
-                <label class="studio-action-btn btn-act-secondary" style="margin-bottom:0.6rem; cursor:pointer;">
-                  <span>📁</span> Dosya Seç
-                  <input type="file" id="selfieFileInput" accept="image/*" style="display:none;" onchange="handleSelfieFileUpload(event)">
-                </label>
+              <div style="display:flex; justify-content:space-between; font-size:0.85rem; font-weight:700; padding:0.4rem 0; border-bottom:1px solid #F1F5F9;">
+                <span>2. Piksel Kaçış (Engellerden Atlama)</span>
+                <span style="color:#0284C7;">Seçilebilir 🕹️</span>
               </div>
-              <button class="studio-action-btn btn-act-secondary" onclick="startCameraStream()" id="btnStartCam" style="max-width:360px;">
-                <span>📹</span> Kamerayı Aç / Başlat
-              </button>
-            </div>
-          </div>
-
-        </div>
-
-        <!-- RIGHT: LIVE ANIMATED OLED PREVIEW & HARDWARE EXPORT -->
-        <div class="studio-card">
-          <div class="studio-card-title">
-            <span>📺 Canlı OLED Simülasyonu</span>
-            <span style="font-size:0.75rem; color:var(--accent-green);">● 10 FPS Animasyon</span>
-          </div>
-
-          <!-- OLED CASING -->
-          <div class="oled-preview-casing">
-            <div class="oled-preview-screen">
-              <div class="oled-preview-header">
-                <span>SOCIES ATÖLYE</span>
-                <span id="previewFrameCount">FR: 1/4</span>
+              <div style="display:flex; justify-content:space-between; font-size:0.85rem; font-weight:700; padding:0.4rem 0;">
+                <span>3. Kovboy Hızlı Çekim Düellosu</span>
+                <span style="color:#D97706;">Düello ⚔️</span>
               </div>
-              <canvas id="studioPreviewCanvas" width="128" height="48"></canvas>
             </div>
           </div>
 
-          <div style="background:rgba(0,0,0,0.3); border-radius:14px; padding:1rem; border:1px solid var(--card-border); margin-bottom:1.4rem;">
-            <div style="color:var(--accent); font-weight:800; font-size:0.75rem; margin-bottom:0.5rem; display:flex; align-items:center; gap:0.4rem;">
-              <span>⚡</span> OTOMATİK İNTERPOLASYON ÖZELLİKLERİ
-            </div>
-            <div style="font-size:0.73rem; color:var(--text-muted); line-height:1.6;">
-              • <b>Squash & Stretch:</b> Gövde her adımda esneyerek nefes alır.<br>
-              • <b>Göz Kırpma:</b> Göz koordinatları her 3 saniyede kapanıp açılır.<br>
-              • <b>Penguen Salınımı (Wobble):</b> Sağa-sola 2 piksel sevimli yürüyüş.<br>
-              • <b>Hafıza Boyutu:</b> 48x48 piksel = Yalnızca <b>288 bayt!</b>
-            </div>
-          </div>
-
-          <!-- EXPORT ACTIONS -->
-          <button class="studio-action-btn btn-act-primary" onclick="applyCustomPetToEmulator()">
-            <span>🎮</span> Bu Karakteri Seç & Emülatörde Oyna
-          </button>
-          <button class="studio-action-btn btn-act-secondary" onclick="copyXBMCode()">
-            <span>💾</span> ESP32 C-Array (XBM) Kodu Kopyala
-          </button>
-          <button class="studio-action-btn btn-act-secondary" onclick="saveCustomSpriteToCloud()">
-            <span>☁️</span> Bulut Hesabıma Kaydet
-          </button>
         </div>
 
       </div>
     </div>
 
-    <!-- TAB 2: SOCIES CANLI TOPLULUK AĞI & ETKİN KULLANICILAR -->
-    <div id="tab-socies-network" class="tab-content">
-      <!-- HERO BANNER -->
-      <div class="socies-hero-banner">
-        <div>
-          <div class="socies-hero-title">
-            <span>🌍</span>
-            <span>Socies Canlı Topluluk Ağı & Etkin Kullanıcılar</span>
-          </div>
-          <div class="socies-hero-desc">
-            Merkezi sunucuya bağlı tüm sanal bebekler ve eşlik eden akıllı telefonların canlı telemetrisi, donanım sensör verileri ve coğrafi konum bilgileri.
-          </div>
+    <!-- TAB 2: 7 SIMS İHTİYAÇ SİSTEMİ -->
+    <div id="tab-sims" class="tab-content">
+      <div class="content-card">
+        <div class="card-title-row">
+          <div class="card-title">🐾 7 Sims Tarzı İhtiyaçlar ve Dinamik Davranışlar</div>
         </div>
-        <div style="display:flex; gap:0.6rem; align-items:center;">
-          <a href="/socies" target="_blank" class="nav-btn" style="background:linear-gradient(135deg, var(--accent), #0099ff); color:#000; font-weight:800; text-decoration:none; padding:0.6rem 1.1rem; border-radius:12px; box-shadow:0 0 15px rgba(0,240,255,0.4);">
-            <span>↗️</span> Tam Ekran Socies Sayfası
-          </a>
-          <button class="nav-btn" onclick="fetchSociesTabUsers(true)" style="background:#1e293b; color:#fff; border-radius:12px; padding:0.6rem 1rem;">
-            <span>🔄</span> Yenile
-          </button>
-        </div>
-      </div>
-
-      <!-- KPI ROW -->
-      <div class="socies-kpi-grid">
-        <div class="socies-kpi-card">
-          <div class="socies-kpi-val" id="sociesKpiTotal" style="color:var(--accent);">7</div>
-          <div class="socies-kpi-lbl">Kayıtlı Cihaz / Kullanıcı</div>
-          <div class="socies-kpi-badge">● Doğrulanmış Cihaz Havuzu</div>
-        </div>
-        <div class="socies-kpi-card">
-          <div class="socies-kpi-val" id="sociesKpiOnline" style="color:var(--accent-green);">6</div>
-          <div class="socies-kpi-lbl">Şu An Çevrimiçi (Online)</div>
-          <div class="socies-kpi-badge">● Canlı Heartbeat Akışı</div>
-        </div>
-        <div class="socies-kpi-card">
-          <div class="socies-kpi-val" id="sociesKpiCities" style="color:var(--accent-purple);">7 Şehir</div>
-          <div class="socies-kpi-lbl" id="sociesKpiCountries">Türkiye, Almanya, Birleşik Krallık</div>
-          <div class="socies-kpi-badge">● GPS / IP Bölge Dağılımı</div>
-        </div>
-        <div class="socies-kpi-card">
-          <div class="socies-kpi-val" style="color:var(--accent-yellow);">v1.0.5+6</div>
-          <div class="socies-kpi-lbl">Ağ Sürümü (SemVer 2.0.0)</div>
-          <div class="socies-kpi-badge">● OTA Canlı Güncelleme Uyumlu</div>
-        </div>
-      </div>
-
-      <!-- FILTER CONTROLS -->
-      <div class="socies-filter-box">
-        <input 
-          type="text" 
-          class="socies-search-input" 
-          id="sociesTabSearch" 
-          placeholder="Kullanıcı adı, şehir (İstanbul, Berlin, Ankara), telefon modeli (S24 Ultra, Pixel, iPhone) veya evcil hayvan ile anında filtrele..." 
-          oninput="applySociesTabFilter()"
-        >
-        <div class="socies-pill-row">
-          <button class="socies-pill active" onclick="setSociesPill('all')">Tümü (Hepsi)</button>
-          <button class="socies-pill" onclick="setSociesPill('online')">🟢 Yalnızca Çevrimiçi</button>
-          <button class="socies-pill" onclick="setSociesPill('tr')">🇹🇷 Türkiye</button>
-          <button class="socies-pill" onclick="setSociesPill('de')">🇩🇪 Almanya</button>
-          <button class="socies-pill" onclick="setSociesPill('uk')">🇬🇧 Birleşik Krallık</button>
-          <button class="socies-pill" onclick="setSociesPill('android')">🤖 Android</button>
-          <button class="socies-pill" onclick="setSociesPill('ios')">🍏 iOS</button>
-        </div>
-      </div>
-
-      <!-- ACTIVE USERS GRID -->
-      <div class="socies-users-grid" id="sociesTabGrid">
-        <!-- JS ile dinamik çizilir -->
-      </div>
-    </div>
-
-    <!-- TAB: GELİŞTİRME & YOL HARİTASI (AUDIT) -->
-    <div id="tab-roadmap" class="tab-content">
-      <div class="doc-section">
-        <h2>🛠️ SOCIES GELİŞTİRME & YOL HARİTASI DENETİMİ (AUDIT)</h2>
-        <p style="color:#94a3b8; font-size:0.9rem; margin-bottom:1.5rem;">
-          Projenin ilk gününden bugüne kadar istişare edilen tüm donanımsal, yazılımsal, oyun, bulut ve mobil özelliklerinin detaylı dökümü. Neyi neden yaptığımız ve sırada nelerin olduğu burada şeffafça listelenir.
+        <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:1.5rem;">
+          Socies sanal bebeği statik bir görsel değildir; ihtiyaç seviyelerine göre hem OLED ekranda hem telefonda dinamik davranış tepkileri verir.
         </p>
 
-        <!-- KPI SUMMARY GRID -->
-        <div class="roadmap-kpi-grid">
-          <div class="roadmap-kpi">
-            <div class="kpi-num" style="color:var(--accent);">46</div>
-            <div class="kpi-label">Toplam İstişare Edilen Madde</div>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>İhtiyaç Parametresi</th>
+              <th>İhtiyaç Arttığında (Kritik &lt;%30)</th>
+              <th>Giderildiğinde (%80+)</th>
+              <th>Özel Davranış & Efekt</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><b>🍖 Açlık (Hunger)</b></td>
+              <td>Midesi guruldar, yavaşlar, üzgün ağız ifadesi çıkar.</td>
+              <td>Mutlu zıplama animasyonu ve minik kalpler.</td>
+              <td>Günde 3 öğün düzenli beslenirse +50 XP bonusu.</td>
+            </tr>
+            <tr>
+              <td><b>🚽 Tuvalet (Toilet)</b></td>
+              <td>Yerinde kıpırdanır, ekranda çiş damlası ikonu yanıp söner.</td>
+              <td>Sifon çekme sesi ve rahatlama balonu.</td>
+              <td>Gecikirse kirlenir ve hijyen anında %30'a düşer.</td>
+            </tr>
+            <tr>
+              <td><b>🧼 Hijyen (Clean)</b></td>
+              <td>Üzerinde sinekler uçar, grimsi leke pikselleri oluşur.</td>
+              <td>Köpük patlatma mini sesi ve parlama yıldızları.</td>
+              <td>Düzenli banyo yaptırıldığında hastalık riski sıfırlanır.</td>
+            </tr>
+            <tr>
+              <td><b>💤 Uyku (Sleep)</b></td>
+              <td>Gözleri süzülür, esner, tepki süresi 2 katına çıkar.</td>
+              <td>'Zzz' pikselleri ve dinç uyanış melodisi.</td>
+              <td>Gece modunda telefon ekranı kapalıyken derin uykuya dalar.</td>
+            </tr>
+            <tr>
+              <td><b>🎮 Eğlence (Fun)</b></td>
+              <td>Sıkılır, sırtını döner veya yere oturup bekler.</td>
+              <td>Hızlı zıpzıp dansı ve retro sevinç melodisi.</td>
+              <td>Retro mini oyunlarda gol attıkça doğrudan artar.</td>
+            </tr>
+            <tr>
+              <td><b>❤️ Sevgi (Love)</b></td>
+              <td>Yalnız hisseder, bildirimle sahibini çağırır.</td>
+              <td>Kalp partikülleri ve yumuşak titreşim.</td>
+              <td>Günde 5 kez kafası okşandığında dostluk seviyesi artar.</td>
+            </tr>
+            <tr>
+              <td><b>⭐ Deneyim (XP & Level)</b></td>
+              <td>Seviye atlama barı doldukça karakter evrilir.</td>
+              <td>Yumurta ➔ Bebek ➔ Genç ➔ Usta Karakter.</td>
+              <td>Yeni şapkalar, retro mini oyunlar ve kupa kilitleri açılır.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 3: RETRO OYUNLAR -->
+    <div id="tab-games" class="tab-content">
+      <div class="content-card">
+        <div class="card-title-row">
+          <div class="card-title">🕹️ Karakteri Eğlendirme & Retro Oyunlar</div>
+        </div>
+        <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:1.5rem;">
+          Klasik el konsolu hissini yaşatan, 128x64 OLED ekranda çalışan retro mini oyunlar:
+        </p>
+
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:1.25rem;">
+          <div style="border:1.5px solid var(--card-border); border-radius:16px; padding:1.2rem; background:#F8FAFC;">
+            <div style="font-size:1.6rem; margin-bottom:0.5rem;">⚽</div>
+            <h3 style="font-size:1.1rem; font-weight:800; margin-bottom:0.4rem;">1. Delik Pong</h3>
+            <p style="color:var(--text-muted); font-size:0.85rem; line-height:1.5;">
+              Sol ve Sağ tuşlarla raketi hareket ettirerek zıplayan topu karşıdaki deliklere sokmaya çalışın. Her golde sevinç melodisi çalar ve bebeğin eğlencesi tavan yapar.
+            </p>
           </div>
-          <div class="roadmap-kpi">
-            <div class="kpi-num" style="color:var(--accent-green);">38</div>
-            <div class="kpi-label">✅ Tamamlanan & Canlıda (83%)</div>
+
+          <div style="border:1.5px solid var(--card-border); border-radius:16px; padding:1.2rem; background:#F8FAFC;">
+            <div style="font-size:1.6rem; margin-bottom:0.5rem;">🏃‍♂️</div>
+            <h3 style="font-size:1.1rem; font-weight:800; margin-bottom:0.4rem;">2. Piksel Kaçış (Dodger)</h3>
+            <p style="color:var(--text-muted); font-size:0.85rem; line-height:1.5;">
+              Üstten ve karşıdan hızla gelen engellere çarpmadan zıplayın veya eğilin. Ne kadar uzun süre hayatta kalırsanız o kadar yüksek skor ve madalya kazanırsınız.
+            </p>
           </div>
-          <div class="roadmap-kpi">
-            <div class="kpi-num" style="color:var(--accent-orange);">8</div>
-            <div class="kpi-label">⏳ Gelecek Aşama / Planlamada (17%)</div>
+
+          <div style="border:1.5px solid var(--card-border); border-radius:16px; padding:1.2rem; background:#F8FAFC;">
+            <div style="font-size:1.6rem; margin-bottom:0.5rem;">🧺</div>
+            <h3 style="font-size:1.1rem; font-weight:800; margin-bottom:0.4rem;">3. Gökyüzü Sepeti</h3>
+            <p style="color:var(--text-muted); font-size:0.85rem; line-height:1.5;">
+              Yukarıdan düşen elmaları, kurabiyeleri ve yıldızları sepetinizle yakalayın. Düşen bombalardan kaçarak maksimum puanı toplayın.
+            </p>
           </div>
-          <div class="roadmap-kpi">
-            <div class="kpi-num" style="color:var(--accent-yellow);">v1.0.5+6</div>
-            <div class="kpi-label">SemVer 2.0.0 Canlı Sürüm</div>
+
+          <div style="border:1.5px solid var(--card-border); border-radius:16px; padding:1.2rem; background:#F8FAFC;">
+            <div style="font-size:1.6rem; margin-bottom:0.5rem;">🤠</div>
+            <h3 style="font-size:1.1rem; font-weight:800; margin-bottom:0.4rem;">4. Kovboy Düellosu</h3>
+            <p style="color:var(--text-muted); font-size:0.85rem; line-height:1.5;">
+              "ATEŞ!" sinyali verildiği anda en hızlı [SEÇ] tuşuna basan kazanır! Refleksleri sınayan nostaljik Western düellosu.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: MODÜLER ATÖLYE -->
+    <div id="tab-workshop" class="tab-content">
+      <div class="content-card">
+        <div class="card-title-row">
+          <div class="card-title">🎨 Modüler Karakter Atölyesi (100.000 Kombinasyon)</div>
+        </div>
+        <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:1.5rem;">
+          Çizim zorluğu yerine 10 Gövde, 10 Göz, 10 Ağız, 10 Kulak ve 10 Aksesuar parçası seçerek kendi benzersiz karakterinizi oluşturun.
+        </p>
+
+        <div class="workshop-selector-grid">
+          <div class="part-box" onclick="cycleWorkshopPart('body')">
+            <div class="part-title">GÖVDE (10)</div>
+            <div class="part-val" id="wpBody">#1 Klasik</div>
+          </div>
+          <div class="part-box" onclick="cycleWorkshopPart('eyes')">
+            <div class="part-title">GÖZLER (10)</div>
+            <div class="part-val" id="wpEyes">#1 Masum</div>
+          </div>
+          <div class="part-box" onclick="cycleWorkshopPart('mouth')">
+            <div class="part-title">AĞIZ (10)</div>
+            <div class="part-val" id="wpMouth">#1 Gülümseme</div>
+          </div>
+          <div class="part-box" onclick="cycleWorkshopPart('ears')">
+            <div class="part-title">KULAKLAR (10)</div>
+            <div class="part-val" id="wpEars">#1 Sivri</div>
+          </div>
+          <div class="part-box" onclick="cycleWorkshopPart('acc')">
+            <div class="part-title">AKSESUAR (10)</div>
+            <div class="part-val" id="wpAcc">#1 Şapka</div>
           </div>
         </div>
 
-        <!-- ROADMAP AUDIT TABLE -->
-        <table class="spec-table roadmap-table">
+        <div style="margin-top:1.5rem; text-align:center;">
+          <button onclick="flashWorkshopToConsole()" style="background:var(--primary); color:#FFF; border:none; padding:0.8rem 1.8rem; border-radius:12px; font-weight:800; cursor:pointer; box-shadow:var(--shadow-md);">
+            ⚡ Konsola Yükle & Kaydet
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 5: SOSYAL & ARKADAŞLAR -->
+    <div id="tab-social" class="tab-content">
+      <div class="content-card">
+        <div class="card-title-row">
+          <div class="card-title">👥 Arkadaş Listesi & Canlı Radar</div>
+        </div>
+        <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:1.5rem;">
+          Arkadaşlarınızı sadece cihaz kodlarıyla değil, sevimli takma adlarıyla (Nickname) görün; düello yapın, pokeleyin ve hediye gönderin!
+        </p>
+
+        <table class="data-table">
           <thead>
             <tr>
-              <th style="width:14%;">Kategori</th>
-              <th style="width:22%;">Özellik / Konuşulan Madde</th>
-              <th style="width:36%;">Ne İçin Olduğu (Amacı & Gerekçesi)</th>
-              <th style="width:16%;">Uygulanan Dosya</th>
-              <th style="width:12%;">Durum</th>
+              <th>Arkadaş (Nickname)</th>
+              <th>Cihaz ID</th>
+              <th>Karakter</th>
+              <th>Skor & Galibiyet</th>
+              <th>Durum</th>
+              <th>Eylemler</th>
             </tr>
           </thead>
           <tbody>
-
-            <!-- 1. DONANIM & KASA MİMARİSİ -->
-            <tr class="table-cat-row">
-              <td colspan="5">🖥️ 1. DONANIM & KASA MİMARİSİ</td>
+            <tr>
+              <td><b>👑 Turan (Kurucu)</b></td>
+              <td><code>SOCIES-84920A</code></td>
+              <td>⚽ Zıpzıp Top</td>
+              <td>3,420 Puan (18G)</td>
+              <td><span class="status-badge badge-online">● Çevrimiçi</span></td>
+              <td><button onclick="showToast('Turan düelloya davet edildi!')" style="padding:0.3rem 0.6rem; border-radius:8px; border:1px solid #CBD5E1; cursor:pointer;">⚔️ Düello</button></td>
             </tr>
             <tr>
-              <td><span class="cat-badge">Donanım</span></td>
-              <td><b>Ekran Solda, 4 Buton Sağda Dikey Sıralı</b></td>
-              <td>Doğal el ergonomisi sağlamak; tek elle tutuşta sağ başparmakla 4 butona yukarıdan aşağıya zahmetsizce erişebilmek.</td>
-              <td><code>index.html</code><br><code>virtual_device_screen.dart</code></td>
-              <td><span class="status-badge done">✅ Tamamlandı</span></td>
+              <td><b>🐱 Zeynep_Retro</b></td>
+              <td><code>SOCIES-9941A</code></td>
+              <td>🐱 Neko Kedi</td>
+              <td>2,850 Puan (12G)</td>
+              <td><span class="status-badge badge-online">● Çevrimiçi</span></td>
+              <td><button onclick="showToast('Zeynep\'e poke gönderildi! 👉')" style="padding:0.3rem 0.6rem; border-radius:8px; border:1px solid #CBD5E1; cursor:pointer;">👉 Poke</button></td>
             </tr>
             <tr>
-              <td><span class="cat-badge">Donanım</span></td>
-              <td><b>0.96" SSD1315 I2C OLED (128x64 Sarı-Mavi)</b></td>
-              <td>Retro el konsolu estetiği sunmak; üstteki 16 sarı pikselde telefon simgelerini, alttaki 48 mavi pikselde oyunu göstermek.</td>
-              <td><code>oled_painter.dart</code><br><code>socies_esp32.ino</code></td>
-              <td><span class="status-badge done">✅ Tamamlandı</span></td>
+              <td><b>🐶 Emre_Ege</b></td>
+              <td><code>SOCIES-33129C</code></td>
+              <td>🐶 Dost Köpek</td>
+              <td>1,980 Puan (8G)</td>
+              <td><span class="status-badge badge-online">● Çevrimiçi</span></td>
+              <td><button onclick="showToast('Emre\'ye kurabiye hediyesi yollandı! 🍪')" style="padding:0.3rem 0.6rem; border-radius:8px; border:1px solid #CBD5E1; cursor:pointer;">🎁 Hediye</button></td>
             </tr>
             <tr>
-              <td><span class="cat-badge">Donanım</span></td>
-              <td><b>Titreşim Motoru (N-MOSFET Sürücülü)</b></td>
-              <td>Düello ateşinde, acil uyarılarda ve buton basımlarında haptik titreşim bildirimiyle cihazın gerçekçiliğini artırmak.</td>
-              <td><code>pinout_schematic.md</code><br><code>socies_esp32.ino</code></td>
-              <td><span class="status-badge done">✅ Tamamlandı</span></td>
+              <td><b>🌱 Selin_Botanist</b></td>
+              <td><code>SOCIES-44810D</code></td>
+              <td>🌿 Filiz Bitki</td>
+              <td>1,420 Puan (5G)</td>
+              <td><span class="status-badge badge-offline">○ Çevrimdışı</span></td>
+              <td><button onclick="showToast('Selin\'e çağrı mesajı bırakıldı!')" style="padding:0.3rem 0.6rem; border-radius:8px; border:1px solid #CBD5E1; cursor:pointer;">📨 Mesaj</button></td>
             </tr>
-            <tr>
-              <td><span class="cat-badge">Donanım</span></td>
-              <td><b>Piezo Buzzer (Pasif Hoparlör)</b></td>
-              <td>8-bit chiptune retro sesler, acıkma ve uyanma melodileri ile nostaljik sesli geri bildirim sağlamak.</td>
-              <td><code>socies_esp32.ino</code><br><code>Web Audio Synth</code></td>
-              <td><span class="status-badge done">✅ Tamamlandı</span></td>
-            </tr>
-            <tr>
-              <td><span class="cat-badge">Donanım</span></td>
-              <td><b>SW-420 Titreşim / Sallama Sensörü (İvmeölçer)</b></td>
-              <td>Cihazı veya telefonu sallayarak oyun ihtiyacını gidermek; sallayınca topun zıplaması ve "İyi gezdik!" tepkisi vermesi.</td>
-              <td><code>pet_state.dart</code><br><code>socies_esp32.ino</code></td>
-              <td><span class="status-badge done">✅ Tamamlandı</span></td>
-            </tr>
-            <tr>
-              <td><span class="cat-badge">Donanım</span></td>
-              <td><b>ESP32-C3 & TP4056 Şarj Devresi PCB Üretimi</b></td>
-              <td>Fiziksel akıllı anahtarlık formunda donanımı üretip 3D baskılı özel kutusuna monte etmek.</td>
-              <td><code>hardware/</code></td>
-              <td><span class="status-badge planned">⏳ Planlamada</span></td>
-            </tr>
-
-            <!-- 2. KONTROL MEKANİĞİ & BUTONLAR -->
-            <tr class="table-cat-row">
-              <td colspan="5">🔘 2. KONTROL MEKANİĞİ & ÇİFT İŞLEVLİ BUTONLAR</td>
-            </tr>
-            <tr>
-              <td><span class="cat-badge">Kontrol</span></td>
-              <td><b>Kısa & Uzun Basma (600ms) Ayrımı</b></td>
-              <td>4 fiziksel butonla 8 farklı komutu yönetmek; ekranı ve kasa yüzeyini gereksiz karmaşık tuşlardan arındırmak.</td>
-              <td><code>pet_state.dart</code><br><code>socies_esp32.ino</code></td>
-              <td><span class="status-badge done">✅ Tamamlandı</span></td>
-            </tr>
-            <tr>
-              <td><span class="cat-badge">Kontrol</span></td>
-              <td><b>T1 (UP): Kısa Sev / Uzun Ses Mute</b></td>
-              <td>Kısa basınca hayvanı sevme veya Taş seçimi; 600ms basılı tutunca ortamda rahatsızlık vermemek için sesi kapatma.</td>
-              <td><code>virtual_device_screen.dart</code></td>
-              <td><span class="status-badge done">✅ Tamamlandı</span></td>
-            </tr>
-            <tr>
-              <td><span class="cat-badge">Kontrol</span></td>
-              <td><b>T2 (SELECT): Kısa Besle / Uzun BLE Eşleşme</b></td>
-              <td>Kısa basınca besleme veya düelloda ateş; 600ms basılı tutunca telefona Bluetooth ile eşleşme moduna geçme.</td>
-              <td><code>virtual_device_screen.dart</code></td>
-              <td><span class="status-badge done">✅ Tamamlandı</span></td>
-            </tr>
-            <tr>
-              <td><span class="cat-badge">Kontrol</span></td>
-              <td><b>T3 (DOWN): Kısa Kaka Temizle / Uzun Titreşim Mute</b></td>
-              <td>Kısa basınca hijyeni temizleme veya Makas seçimi; 600ms basılı tutunca motor titreşimini açıp kapatma.</td>
-              <td><code>virtual_device_screen.dart</code></td>
-              <td><span class="status-badge done">✅ Tamamlandı</span></td>
-            </tr>
-            <tr>
-              <td><span class="cat-badge">Kontrol</span></td>
-              <td><b>T4 (BACK): Kısa Geri-Uyku / Uzun Sims HUD</b></td>
-              <td>Kısa basınca menüden çıkma veya uykuya sokma; 600ms basılı tutunca tüm 7 Sims ihtiyacını ekranda listeleme.</td>
-              <td><code>virtual_device_screen.dart</code></td>
-              <td><span class="status-badge done">✅ Tamamlandı</span></td>
-            </tr>
-
-            <!-- 3. EKRAN & PİKSEL SANATI -->
-            <tr class="table-cat-row">
-              <td colspan="5">📺 3. EKRAN & PİKSEL SANATI</td>
-            </tr>
-            <tr>
-              <td><span class="cat-badge">Görsel</span></td>
-              <td><b>Gerçek Telefon Üst Barı (S, V harfi yok)</b></td>
-              <td>Yapay harfler yerine gerçek akıllı telefon piksel ikonları: Pil ucu, BLE rünü, Hoparlör dalgası, Titreyen telefon, Hilal ay, Zarf, Saat.</td>
-              <td><code>oled_painter.dart</code></td>
-              <td><span class="status-badge done">✅ Tamamlandı</span></td>
-            </tr>
-            <tr>
-              <td><span class="cat-badge">Görsel</span></td>
-              <td><b>Zıpzıp Top (Elastik Fizik Birincil Karakter)</b></td>
-              <td>Çirkin statik sosis yerine canlı, sevimli, yere çarpınca ezilen-uzayan (squash & stretch) dinamik elastik top.</td>
-              <td><code>pet_state.dart</code></td>
-              <td><span class="status-badge done">✅ Tamamlandı</span></td>
-            </tr>
-            <tr>
-              <td><span class="cat-badge">Görsel</span></td>
-              <td><b>Karakter Kataloğu & Test Butonu</b></td>
-              <td>Tek tuşla karakterler arası geçiş (Top, Kedi Neko, Köpek, Bitki, Sosis, Balık, Kuş).</td>
-              <td><code>index.html</code><br><code>oled_painter.dart</code></td>
-              <td><span class="status-badge done">✅ Tamamlandı</span></td>
-            </tr>
-            <tr>
-              <td><span class="cat-badge">Görsel</span></td>
-              <td><b>Kaka (💩) ve Temizlik Mekaniği</b></td>
-              <td>Tuvalet ihmal edilince buharlı kaka çıkar; temizlenmedikçe hijyen düşer. Bitki canlısı asla kaka yapmaz.</td>
-              <td><code>pet_state.dart</code></td>
-              <td><span class="status-badge done">✅ Tamamlandı</span></td>
-            </tr>
-            <tr>
-              <td><span class="cat-badge">Görsel</span></td>
-              <td><b>Gece Modu, Esneme ve Uyku Pozisyonu</b></td>
-              <td>Gece olunca canlı esner, takkesini takar ve Zzz animasyonuyla dinlenir; şarjla birlikte senkron uyur.</td>
-              <td><code>pet_state.dart</code></td>
-              <td><span class="status-badge done">✅ Tamamlandı</span></td>
-            </tr>
-
-            <!-- 4. SİMS İHTİYAÇLARI & SİMÜLASYON -->
-            <tr class="table-cat-row">
-              <td colspan="5">🐾 4. SİMS İHTİYAÇLARI & SİMÜLASYON MOTORU</td>
-            </tr>
-            <tr>
-              <td><span class="cat-badge">Simülasyon</span></td>
-              <td><b>7 Temel Sims İhtiyacı (Açlık, Eğlence, Sevgi, vb.)</b></td>
-              <td>Klasik sanal bebek sığlığını aşmak; derin, dengeli ve hayvan türüne göre farklı hızlarda azalan dinamik yaşam döngüsü.</td>
-              <td><code>pet_state.dart</code></td>
-              <td><span class="status-badge done">✅ Tamamlandı</span></td>
-            </tr>
-            <tr>
-              <td><span class="cat-badge">Simülasyon</span></td>
-              <td><b>Sosyalleşme Sıfırlanma Kuralı (Kilitlenmeme)</b></td>
-              <td>Kullanıcı yalnızken sosyalleşme sıfırlansa bile cihazı kilitlememek; ancak sosyalleşmeye devasa ek puan ve rozet vermek.</td>
-              <td><code>pet_state.dart</code></td>
-              <td><span class="status-badge done">✅ Tamamlandı</span></td>
-            </tr>
-            <tr>
-              <td><span class="cat-badge">Simülasyon</span></td>
-              <td><b>Evrim & Koza Metamorfozu (90 Günlük Döngü)</b></td>
-              <td>Yumurta ➔ Bebek ➔ Genç ➔ Yetişkin ➔ Koza Evresi ➔ Üst Metamorfoz uzun vadeli hikaye akışı.</td>
-              <td><code>docs/</code></td>
-              <td><span class="status-badge planned">⏳ Planlamada</span></td>
-            </tr>
-
-            <!-- 5. SOSYAL OYUNLAR -->
-            <tr class="table-cat-row">
-              <td colspan="5">🎮 5. SOSYAL ÇOK OYUNCULU MİNİ OYUNLAR</td>
-            </tr>
-            <tr>
-              <td><span class="cat-badge">Oyun</span></td>
-              <td><b>3-2-1 Taş - Kağıt - Makas (Eşzamanlı Açılış)</b></td>
-              <td>3'ten geriye sayarken her iki taraf gizlice tuşla seçim yapar; 'AÇ' dendiğinde iki tarafın seçimi aynı anda ekranda açılır.</td>
-              <td><code>pet_state.dart</code><br><code>index.html</code></td>
-              <td><span class="status-badge done">✅ Tamamlandı</span></td>
-            </tr>
-            <tr>
-              <td><span class="cat-badge">Oyun</span></td>
-              <td><b>Hızlı Çekim Kovboy Düellosu (Quick Draw)</b></td>
-              <td>Kovboy şapkalı iki canlı gerilimle bekler; aniden "ATEŞ! (●)" uyarısı ve titreşim gelir; ilk basan ms bazında kazanır.</td>
-              <td><code>pet_state.dart</code><br><code>index.html</code></td>
-              <td><span class="status-badge done">✅ Tamamlandı</span></td>
-            </tr>
-
-            <!-- 6. MERKEZİ SUNUCU & ÇAĞRI CİHAZI (PAGER) -->
-            <tr class="table-cat-row">
-              <td colspan="5">🌐 6. MERKEZİ SUNUCU, ÇAĞRI CİHAZI & TELEMETRİ</td>
-            </tr>
-            <tr>
-              <td><span class="cat-badge">Sunucu</span></td>
-              <td><b>BLE Gateway Topolojisi (ESP32 -> Tel -> Sunucu)</b></td>
-              <td>ESP32 bataryasını WiFi yerine BLE ile haftalarca korumak; internet haberleşmesini telefon üzerinden sunucuya aktarmak.</td>
-              <td><code>docs/</code><br><code>server/</code></td>
-              <td><span class="status-badge done">✅ Tamamlandı</span></td>
-            </tr>
-            <tr>
-              <td><span class="cat-badge">Sunucu</span></td>
-              <td><b>Çağrı Cihazı (Pager) 32 Karakter Mesajlaşma</b></td>
-              <td>Eski nostaljik çağrı cihazları gibi arkadaş cihaz ID'sine mesaj göndermek; cihaz kapalıysa sunucuda kuyrukta (Store & Forward) bekletmek.</td>
-              <td><code>server/server.js</code></td>
-              <td><span class="status-badge done">✅ Tamamlandı</span></td>
-            </tr>
-            <tr>
-              <td><span class="cat-badge">Sunucu</span></td>
-              <td><b>Canlı Telemetri & Presence (Kim Çevrimiçi)</b></td>
-              <td>Cihazlar bağlandığında batarya, adım, canlı skoru ve durumunu raporlamak; aktif olanları anlık listelemek.</td>
-              <td><code>/api/v1/presence</code><br><code>server.js</code></td>
-              <td><span class="status-badge done">✅ Tamamlandı</span></td>
-            </tr>
-            <tr>
-              <td><span class="cat-badge">Sunucu</span></td>
-              <td><b>Canlı Web Yönetim Paneli (/dashboard)</b></td>
-              <td>Sunucuya bağlı tüm cihazları, çevrimiçi durumlarını, bataryalarını ve çağrı mesajlarını web üzerinden canlı izlemek.</td>
-              <td><code>http://localhost:3000/dashboard</code></td>
-              <td><span class="status-badge done">✅ Tamamlandı</span></td>
-            </tr>
-            <tr>
-              <td><span class="cat-badge">Sunucu</span></td>
-              <td><b>Systemd Arka Plan Servisi (socies-server)</b></td>
-              <td>Sunucu uygulamasının bilgisayar açılışında arka planda çökmeden kesintisiz çalışmasını sağlamak.</td>
-              <td><code>socies-server.service</code></td>
-              <td><span class="status-badge done">✅ Tamamlandı</span></td>
-            </tr>
-            <tr>
-              <td><span class="cat-badge">Ağ & Topluluk</span></td>
-              <td><b>Socies Ağı & Etkin Kullanıcılar Sayfası (/socies)</b></td>
-              <td>Etkin kullanıcıların kimlikleri, telefondan gelen telemetrileri (model, OS, pil %, adım, gecikme) ve konumlarını (ülke, şehir, ilçe, bayrak, IP) canlı kartlar ve filtrelerle listelemek.</td>
-              <td><code>socies.html</code><br><code>index.html</code><br><code>server/server.js</code></td>
-              <td><span class="status-badge done">✅ Tamamlandı</span></td>
-            </tr>
-
-            <!-- 7. BULUT OTURUMU & REBIRTH -->
-            <tr class="table-cat-row">
-              <td colspan="5">☁️ 7. ÇOKLU CİHAZ BULUT OTURUMU & SIFIRDAN BAŞLAMA</td>
-            </tr>
-            <tr>
-              <td><span class="cat-badge">Bulut</span></td>
-              <td><b>Google / Apple / E-posta Bulut Oturumu</b></td>
-              <td>Yeni bir telefona geçildiğinde aynı hesapla giriş yapıldığı anda evcil hayvanın kaldığı yerden devam etmesi.</td>
-              <td><code>/api/v1/cloud/</code><br><code>server.js</code></td>
-              <td><span class="status-badge done">✅ Tamamlandı</span></td>
-            </tr>
-            <tr>
-              <td><span class="cat-badge">Bulut</span></td>
-              <td><b>Sıfırdan Başlama (Rebirth / Factory Reset)</b></td>
-              <td>İsteyen kullanıcının mirası (skor ve rozetleri) müzeye kaldırıp yeni bir yumurtadan sıfırdan başlayabilmesi.</td>
-              <td><code>pet_state.dart</code></td>
-              <td><span class="status-badge done">✅ Tamamlandı</span></td>
-            </tr>
-
-            <!-- 8. MOBİL UYGULAMA & İZİNLER -->
-            <tr class="table-cat-row">
-              <td colspan="5">📱 8. ANDROID MOBİL UYGULAMA & GÜVENLİK/İZİNLER</td>
-            </tr>
-            <tr>
-              <td><span class="cat-badge">Mobil</span></td>
-              <td><b>Android Öncelikli (Mobile-First) Strateji</b></td>
-              <td>Donanım montajından önce tüm oyunu ve hissiyatı doğrudan telefonda kusursuz çalıştırmak ve test etmek.</td>
-              <td><code>mobile_app/</code></td>
-              <td><span class="status-badge done">✅ Tamamlandı</span></td>
-            </tr>
-            <tr>
-              <td><span class="cat-badge">Mobil</span></td>
-              <td><b>Paket Ayrıştırma Hatasının Giderilmesi</b></td>
-              <td>AAPT ile ikili AXML derleme, D8 DEX üretimi, 4-byte zipalign ve apksigner v1/v2/v3 sertifikası ile gerçek Android uyumluluğu.</td>
-              <td><code>downloads/socies-app.apk</code></td>
-              <td><span class="status-badge done">✅ Tamamlandı</span></td>
-            </tr>
-            <tr>
-              <td><span class="cat-badge">Mobil</span></td>
-              <td><b>Zorunlu İzin Kapısı (Erişemezse Açılmasın)</b></td>
-              <td>Sensörler, Rehber, Kamera, Ses, Bluetooth ve Arka Planda Kesintisiz Çalışma (Pil Muafiyeti) verilmeden uygulamanın açılmaması.</td>
-              <td><code>MainActivity.java</code><br><code>main.dart</code></td>
-              <td><span class="status-badge done">✅ Tamamlandı</span></td>
-            </tr>
-
-            <!-- 9. SÜRÜM YÖNETİMİ & DAĞITIM -->
-            <tr class="table-cat-row">
-              <td colspan="5">🔄 9. SÜRÜM YÖNETİMİ & OTA OTOMATİK GÜNCELLEME</td>
-            </tr>
-            <tr>
-              <td><span class="cat-badge">Sürüm</span></td>
-              <td><b>SemVer 2.0.0 Kuralı (2 Karakter Tuzağını Engelleme)</b></td>
-              <td>Sürüm kontrolünün çökmemesi için <code>v1.0.4+5</code> (Major.Minor.Patch+Build) tamsayı ayrıştırıcısı yazmak.</td>
-              <td><code>index.html</code><br><code>server.js</code></td>
-              <td><span class="status-badge done">✅ Tamamlandı</span></td>
-            </tr>
-            <tr>
-              <td><span class="cat-badge">Sürüm</span></td>
-              <td><b>Doğrudan APK İndirme (GitHub Redirect Yok)</b></td>
-              <td>İndir dendiğinde GitHub 404 sayfasına atmadan doğrudan tarayıcıya <code>socies-v1.0.4.apk</code> indirmek.</td>
-              <td><code>index.html</code><br><code>server.js</code></td>
-              <td><span class="status-badge done">✅ Tamamlandı</span></td>
-            </tr>
-            <tr>
-              <td><span class="cat-badge">Sürüm</span></td>
-              <td><b>GitHub Releases Entegrasyonu</b></td>
-              <td>GitHub üzerinde resmi v1.0.4 Release'i açmak ve imzalı APK dosyasını eklemek.</td>
-              <td><code>mcturan/socies/releases</code></td>
-              <td><span class="status-badge done">✅ Tamamlandı</span></td>
-            </tr>
-
-            <!-- 10. KULLANICI BAĞLILIĞI (RETENTION) -->
-            <tr class="table-cat-row">
-              <td colspan="5">🔥 10. KULLANICI BAĞLILIĞI & SADAKAT (RETENTION)</td>
-            </tr>
-            <tr>
-              <td><span class="cat-badge">Bağlılık</span></td>
-              <td><b>Günlük Sadakat Serisi (Daily Streak)</b></td>
-              <td>Her gün ilgilenen kullanıcıya bonus puan, 7. günde Altın Taç rozeti vermek.</td>
-              <td><code>pet_state.dart</code></td>
-              <td><span class="status-badge done">✅ Tamamlandı</span></td>
-            </tr>
-            <tr>
-              <td><span class="cat-badge">Bağlılık</span></td>
-              <td><b>Birlikte Uyuma (Sleep Sync)</b></td>
-              <td>Telefon şarja takılınca bebeğin de takkesini takıp uyuması; sabah cıvıldayarak uyandırması.</td>
-              <td><code>pet_state.dart</code></td>
-              <td><span class="status-badge done">✅ Tamamlandı</span></td>
-            </tr>
-            <tr>
-              <td><span class="cat-badge">Bağlılık</span></td>
-              <td><b>3.000 Adımda Hazine Sandığı Düşmesi</b></td>
-              <td>Kullanıcı yürüyüş yaptıkça adımsayarla sandık kazanması.</td>
-              <td><code>pet_state.dart</code></td>
-              <td><span class="status-badge planned">⏳ Planlamada</span></td>
-            </tr>
-            <tr>
-              <td><span class="cat-badge">Bağlılık</span></td>
-              <td><b>Piksel Polaroid Albümü & Arkadaş Kreşi (Playdate)</b></td>
-              <td>Evrimleştikçe nostaljik 1-bit fotoğraf kaydetme ve tatile giderken bebeği arkadaşın cihazına emanet etme.</td>
-              <td><code>docs/</code></td>
-              <td><span class="status-badge planned">⏳ Planlamada</span></td>
-            </tr>
-
-            <!-- 11. SOCIES'İ DÜNYADA BENZERSİZ KILACAK 7 ÇIĞIR AÇAN İNOVASYON -->
-            <tr class="table-cat-row">
-              <td colspan="5">🚀 11. SOCIES'İ DÜNYADA BENZERSİZ KILACAK 7 ÇIĞIR AÇAN İNOVASYON (MADDE 17)</td>
-            </tr>
-            <tr>
-              <td><span class="cat-badge">Sosyalleşme</span></td>
-              <td><b>ESP-NOW ile "Cepte Karşılaşma / StreetPass" (İnternetsiz)</b></td>
-              <td>İki Socies sahibi sokakta, parkta veya okulda yan yana geldiğinde ESP32'lerin internetsiz veya telefonsuz milisaniyeler içinde el sıkışması; cepte cıvıldayarak <i>"Yeni arkadaşla karşılaşıldı: Pamuk (Lv.2 Kedi)!"</i> yazması.</td>
-              <td><code>firmware/</code><br><code>docs/muadiller_ve_ek_ozellikler.md</code></td>
-              <td><span class="status-badge planned">⏳ Planlamada</span></td>
-            </tr>
-            <tr>
-              <td><span class="cat-badge">Alışkanlık</span></td>
-              <td><b>Gerçek Hayat Alışkanlık Takibi (Habit Sync)</b></td>
-              <td>Bebeğin sahibine sadece yük olmaması; telefondan <i>"Su İçtim"</i>, <i>"Kitap Okudum"</i> veya <i>"Ders Çalıştım"</i> dendiğinde bebeğe süper besin ve evrim XP'si gitmesi.</td>
-              <td><code>pet_state.dart</code><br><code>docs/</code></td>
-              <td><span class="status-badge done">✅ Tamamlandı</span></td>
-            </tr>
-            <tr>
-              <td><span class="cat-badge">P2P Oyun</span></td>
-              <td><b>P2P Cihazdan Cihaza Mini Oyunlar & Donanım Düelloları</b></td>
-              <td>İki fiziksel cihaz yan yana getirildiğinde internete ihtiyaç olmadan ESP-NOW üzerinden 8-bit refleks düellosu ve taş-kağıt-makas oynamak; kazananın evrim kristali kazanması.</td>
-              <td><code>firmware/</code><br><code>index.html</code></td>
-              <td><span class="status-badge done">✅ Tamamlandı</span></td>
-            </tr>
-            <tr>
-              <td><span class="cat-badge">Görsel Editör</span></td>
-              <td><b>Açık Kaynak Web / Mobil Piksel Sprite Editörü</b></td>
-              <td>Kullanıcıların web veya mobil arayüzden 48x48 piksel matrisi üzerinde kendi karakterlerini veya şapka/gözlük gibi aksesuarlarını çizip BLE ile cihaza aktarabilmesi.</td>
-              <td><code>web/</code><br><code>mobile_app/</code></td>
-              <td><span class="status-badge planned">⏳ Planlamada</span></td>
-            </tr>
-            <tr>
-              <td><span class="cat-badge">Müzik / Ses</span></td>
-              <td><b>8-Bit Chiptune Beste Motoru & Zil Sesi Hediyeleşme</b></td>
-              <td>Piezo buzzer için telefondan 8-bit melodi besteleyebilme; oluşturulan özel melodiyi Bluetooth veya sunucu üzerinden arkadaşın cihazına "Çağrı Melodisi" olarak hediye edebilme.</td>
-              <td><code>mobile_app/</code><br><code>index.html</code></td>
-              <td><span class="status-badge planned">⏳ Planlamada</span></td>
-            </tr>
-            <tr>
-              <td><span class="cat-badge">Güç Yönetimi</span></td>
-              <td><b>Ultra Düşük Güç (45s Deep Sleep + RTC Uyanma)</b></td>
-              <td>45 saniye işlem yapılmadığında OLED ekranın kapanması; ESP32'nin derin uykuda sadece ~5µA akım çekmesi. 500mAh batarya ile 3-4 hafta kesintisiz pil ömrü.</td>
-              <td><code>firmware/socies_esp32.ino</code></td>
-              <td><span class="status-badge done">✅ Tamamlandı</span></td>
-            </tr>
-            <tr>
-              <td><span class="cat-badge">Evrim Ağacı</span></td>
-              <td><b>Çok Dallı Koza Metamorfozu (90 Günlük Yaşam Döngüsü)</b></td>
-              <td>90 günlük süreçte en çok hangi ihtiyaca özen gösterildiğine bağlı olarak canlının koza evresinden Sibernetik Kedi, Pastırma Kozası, Anka Kuşu veya Ejderha Balık gibi farklı sınıflarda doğması.</td>
-              <td><code>docs/</code><br><code>pet_state.dart</code></td>
-              <td><span class="status-badge done">✅ Tamamlandı</span></td>
-            </tr>
-            <tr>
-              <td><span class="cat-badge">Haptik İletişim</span></td>
-              <td><b>Mors Alfabesi ve Titreşimli Gizli Kodlar</b></td>
-              <td>Arkadaşınızdan gelen "Evet", "Hayır", "Geliyorum" gibi acil çağrıların ekrana bakmaya gerek kalmadan cebinizde mors alfabesi titreşimiyle (Bzz-Bzzz) hissedilmesi.</td>
-              <td><code>docs/muadiller_ve_ek_ozellikler.md</code></td>
-              <td><span class="status-badge planned">⏳ Planlamada</span></td>
-            </tr>
-            <tr>
-              <td><span class="cat-badge">Nostalji</span></td>
-              <td><b>90'lar Çağrı Kodları (Pager Numeric Codes)</b></td>
-              <td>Uzun metin yerine nostaljik çağrı kodları gönderme: <code>07734</code> (HELLO), <code>143</code> (I LOVE YOU), <code>911</code> (ACİL DÜELLO ÇAĞRISI).</td>
-              <td><code>server/server.js</code><br><code>index.html</code></td>
-              <td><span class="status-badge done">✅ Tamamlandı</span></td>
-            </tr>
-
-            <!-- 12. MOBİL ÇİZİM & SELFIE'DEN KARAKTER ÜRETİM MOTORU -->
-            <tr class="table-cat-row">
-              <td colspan="5">🎨 12. MOBİL ÇİZİM & SELFIE'DEN KARAKTER DÖNÜŞTÜRME MOTORU (YENİ İSTİŞARE)</td>
-            </tr>
-            <tr>
-              <td><span class="cat-badge">İnovasyon</span></td>
-              <td><b>Adım Adım Kılavuzlu Çizim (Guided Sketching & Auto-Fill)</b></td>
-              <td>Kullanıcının mobilde/webde 3 adımda kafa, göz ve gövde taslağını çizmesi; "Araları Doldur" motoru ile konturların bağlanıp 48x48 1-bit OLED piksel karakterine dönüştürülmesi.</td>
-              <td><code>index.html (tab-studio)</code><br><code>docs/muadiller...</code></td>
-              <td><span class="status-badge done">✅ Tamamlandı</span></td>
-            </tr>
-            <tr>
-              <td><span class="cat-badge">İnovasyon</span></td>
-              <td><b>Otomatik Animasyon / Ara Kare İnterpolasyonu (Tweening)</b></td>
-              <td>Çizilen tek kareden canlı 10 FPS OLED emülatöründe Squash & Stretch (nefes alma), göz kırpma ve yalpalama yürüme animasyonlarının otomatik üretilmesi.</td>
-              <td><code>index.html (drawActivePet)</code><br><code>server/server.js</code></td>
-              <td><span class="status-badge done">✅ Tamamlandı</span></td>
-            </tr>
-            <tr>
-              <td><span class="cat-badge">AI / Vision</span></td>
-              <td><b>Selfie Fotoğrafından 1-Bit Piksel Avatar Üretimi</b></td>
-              <td>Kameradan selfie çekimi veya resim yükleme; Floyd-Steinberg dithering ve adaptif eşikleme ile yüz hatlarının 48x48 monokrom maskota dönüştürülmesi ve konsola aktarımı.</td>
-              <td><code>index.html (studio)</code><br><code>server/server.js</code></td>
-              <td><span class="status-badge done">✅ Tamamlandı</span></td>
-            </tr>
-            <tr>
-              <td><span class="cat-badge">AI / Vision</span></td>
-              <td><b>AI Destekli Evcil Hayvan Hibritleştirme ("Beni Kedi Yap")</b></td>
-              <td>Selfie fotoğrafına Kedi (kulak/bıyık), Robot Mascot ve Sosis maskot stil filtreleri uygulayarak kullanıcıyı sanal bebek karakterine dönüştüren görsel filtreleme motoru.</td>
-              <td><code>index.html (studio)</code><br><code>server/server.js</code></td>
-              <td><span class="status-badge done">✅ Tamamlandı</span></td>
-            </tr>
-
           </tbody>
         </table>
       </div>
     </div>
 
-    <!-- TAB 2: CLOUD & SERVER TELEMETRY SPEC -->
-    <div id="tab-cloud-spec" class="tab-content">
-      <div class="doc-section">
-        <h2>☁️ Ana Sunucu Telemetri Paketi & Cihaz Kaydı (API)</h2>
-        <p>Her Socies cihazı (veya mobil emülatörü) sunucuya bağlandığı anda cihaz kimliğini, bataryasını, evcil hayvanın durumunu ve kullanıcı profilini ana sunucuya POST eder. Bu veriler ileride hedefli etkinlikler, rozetler ve reklam altyapısı için de kullanılır.</p>
+    <!-- TAB 6: DONANIM & ESP32 -->
+    <div id="tab-hardware" class="tab-content">
+      <div class="content-card">
+        <div class="card-title-row">
+          <div class="card-title">🛠️ ESP32 Donanım Mimarisi & Şematik Bağlantılar</div>
+        </div>
+        <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:1.5rem;">
+          Yatay 4 tuş mimarisi ve SSD1306 OLED ekranın ESP32 pin haritası:
+        </p>
 
-        <h3>1. Sunucuya Gönderilen JSON Telemetri Paketi</h3>
-        <table class="spec-table">
+        <table class="data-table">
           <thead>
-            <tr><th>Alan (Field)</th><th>Örnek Değer</th><th>Açıklama</th></tr>
-          </thead>
-          <tbody>
-            <tr><td><b>device_id</b></td><td><code>SOCIES-ESP32-84920A</code></td><td>Cihazın donanımsal benzersiz seri numarası (MAC tabanlı)</td></tr>
-            <tr><td><b>user_auth</b></td><td><code>google_1082938492019</code></td><td>Kullanıcının Google / Apple ID / E-posta kimliği</td></tr>
-            <tr><td><b>pet_profile</b></td><td><code>{"breed":"top","stage":1,"days":1,"score":310}</code></td><td>Evcil hayvanın türü, seviyesi, yaşı ve skoru</td></tr>
-            <tr><td><b>sims_needs</b></td><td><code>{"hunger":85,"fun":80,"sleep":75,"clean":90}</code></td><td>7 Sims ihtiyacının son durumu</td></tr>
-            <tr><td><b>device_stats</b></td><td><code>{"battery_mv":3980,"steps":1420,"fw_ver":"v1.0.4"}</code></td><td>Batarya voltajı, adımsayar verisi ve firmware sürümü</td></tr>
-            <tr><td><b>analytics_tag</b></td><td><code>{"streak_days":5,"ad_consent":true}</code></td><td>Sadakat serisi ve ilerideki reklam/ödül motoru için veri</td></tr>
-          </tbody>
-        </table>
-
-        <h3>2. Başka Cihazda Oturumu Geri Yükleme & Sıfırlama</h3>
-        <p>Kullanıcı yeni bir telefona geçtiğinde veya cihazını değiştirdiğinde, Google/Apple hesabıyla giriş yaptığı anda buluttaki son kayıt çekilerek evcil hayvan kaldığı günden devam eder. İsterse tek tuşla <b>"Sıfırdan Başla (Rebirth)"</b> seçerek yeni bir yumurtadan başlayabilir.</p>
-      </div>
-    </div>
-
-    <!-- TAB 3: RETENTION & ENGAGEMENT (BAĞLILIĞI ARTIRICI ÖZELLİKLER) -->
-    <div id="tab-retention" class="tab-content">
-      <div class="doc-section">
-        <h2>🔥 Kullanıcı Bağlılığını & Sadakatini Artırıcı 6 Çığır Açan Sistem</h2>
-        
-        <table class="spec-table">
-          <thead>
-            <tr><th>Mekanik</th><th>Çalışma Prensibi</th><th>Psikolojik Bağ & Etki</th></tr>
+            <tr>
+              <th>Bileşen</th>
+              <th>ESP32 GPIO Pini</th>
+              <th>İşlev</th>
+              <th>Donanım Açıklaması</th>
+            </tr>
           </thead>
           <tbody>
             <tr>
-              <td><b>1. Günlük Sadakat Serisi (Daily Streak Takvimi)</b></td>
-              <td>Her gün cihazı açıp en az 1 görev tamamlayan kullanıcı serisini korur. 7. günde Altın Taç 👑, 30. günde Efsanevi Kozaya Geçiş Kristali kazanır.</td>
-              <td>Kullanıcı seriyi bozmamak için her gün cihazı kontrol eder (Duolingo / Snapchat serisi etkisi).</td>
+              <td><b>0.96" SSD1306 OLED</b></td>
+              <td>GPIO 21 (SDA) / GPIO 22 (SCL)</td>
+              <td>Ekran Görseli</td>
+              <td>I2C 128x64 Piksel, Sarı/Mavi Çift Renkli Ekran</td>
             </tr>
             <tr>
-              <td><b>2. Birlikte Uyuma (Sleep Sync)</b></td>
-              <td>Telefon gece şarja takıldığında bebek de gece takkesini takıp uyur. Sabah telefonun alarmı çaldığında bebek de cıvıldayarak sahibini uyandırır!</td>
-              <td>Cihaz sıradan bir oyuncak olmaktan çıkıp yatak başı uyku yoldaşı haline gelir.</td>
+              <td><b>1. Buton: SOL (◄)</b></td>
+              <td>GPIO 18 (INPUT_PULLUP)</td>
+              <td>Gezinme / Raket Sol</td>
+              <td>Ekranın altında, en soldaki 1. yatay buton</td>
             </tr>
             <tr>
-              <td><b>3. Gerçek Hava Durumu Senkronizasyonu</b></td>
-              <td>Telefondan hava durumu bilgisi alınır. Yağmur yağıyorsa OLED ekranda bebek yaprak şemsiye tutar, karlıysa atkı takar.</td>
-              <td>Canlının gerçek dünyayla eşzamanlı yaşadığı hissi verilir.</td>
+              <td><b>2. Buton: SAĞ (►)</b></td>
+              <td>GPIO 19 (INPUT_PULLUP)</td>
+              <td>Gezinme / Raket Sağ</td>
+              <td>Ekranın altında, soldan 2. yatay buton</td>
             </tr>
             <tr>
-              <td><b>4. Zaman Kapsülü / Piksel Polaroid Albümü</b></td>
-              <td>Bebek büyüdükçe (1. hafta, 1. ay, koza evresi) nostaljik 1-bit Polaroid fotoğraf kartı oluşturup telefon galerisine kaydeder.</td>
-              <td>Kullanıcının bebeğe duygusal yatırım yapmasını ve sosyal medyada paylaşmasını sağlar.</td>
+              <td><b>3. Buton: SEÇ (●)</b></td>
+              <td>GPIO 23 (INPUT_PULLUP)</td>
+              <td>Aksiyon / Onay / Ateş</td>
+              <td>Yeşil belirteçli orta-sağ ana aksiyon butonu</td>
             </tr>
             <tr>
-              <td><b>5. Arkadaş Kreşi (Playdate / Tatil Modu)</b></td>
-              <td>Kullanıcı tatile veya sınav haftasına girdiğinde bebeğini BLE ile arkadaşına "emanet" edebilir. Arkadaşı besledikçe ona da yardımseverlik puanı gider.</td>
-              <td>Sosyal sorumluluk ve arkadaş çevresiyle derin bağ oluşturur.</td>
+              <td><b>4. Buton: GERİ (✕)</b></td>
+              <td>GPIO 5 (INPUT_PULLUP)</td>
+              <td>İptal / Menüden Çıkış</td>
+              <td>Ekranın altında, en sağdaki çıkış butonu</td>
             </tr>
             <tr>
-              <td><b>6. 3.000 Adımda Hazine Sandığı Düşmesi</b></td>
-              <td>Titreşim sensörüyle gün içinde 3.000 adım atıldığında gökten sandık düşer; içinden nadir şapkalar veya yemekler çıkar.</td>
-              <td>Kullanıcıyı fiziksel yürüyüşe ve harekete teşvik eder.</td>
+              <td><b>Piezo Buzzer</b></td>
+              <td>GPIO 2 (LEDC PWM)</td>
+              <td>8-Bit Chiptune Sesler</td>
+              <td>Melodi ve retro oyun ses efektleri</td>
+            </tr>
+            <tr>
+              <td><b>Titreşim Motoru</b></td>
+              <td>GPIO 4 (Transistör Sürücü)</td>
+              <td>Haptic Feedback</td>
+              <td>Gol ve düello anında titreşim bildirimi</td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
+
   </main>
 
-  <div class="toast" id="appToast">İşlem tamamlandı!</div>
+  <!-- TOAST NOTIFICATION -->
+  <div class="toast-msg" id="toastMsg">İşlem tamamlandı!</div>
+
+  <!-- FOOTER -->
+  <footer>
+    SOCIES Sanal Bebek & Retro Konsol Projesi • Açık Kaynak Donanım & Yazılım Mimarisi • v1.0.5
+  </footer>
 
   <script>
-    // ==========================================
-    // AUDIO & HAPTIC ENGINE
-    // ==========================================
-    let audioCtx = null;
-    let audioEnabled = true;
-    let hapticEnabled = true;
-
-    function initAudio() {
-      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    }
-
-    function toggleAudio() {
-      audioEnabled = !audioEnabled;
-      document.getElementById('btnSoundToggle').textContent = audioEnabled ? "🔊 Ses" : "🔇 Sessiz";
-      showToast(audioEnabled ? "Ses efektleri açıldı" : "Ses kapatıldı");
-      renderOLED();
-    }
-
-    function toggleHaptic() {
-      hapticEnabled = !hapticEnabled;
-      document.getElementById('btnHapticToggle').textContent = hapticEnabled ? "📳 Titreşim" : "📵 Titreşim Kapalı";
-      showToast(hapticEnabled ? "Titreşim motoru aktif" : "Titreşim kapatıldı");
-      renderOLED();
-    }
-
-    function playTone(freq, duration = 0.08, type = 'square') {
-      if (!audioEnabled) return;
-      initAudio();
-      try {
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = type;
-        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start();
-        osc.stop(audioCtx.currentTime + duration);
-      } catch (e) {}
-    }
-
-    function triggerHaptic(duration = 140) {
-      if (!hapticEnabled) return;
-      const casing = document.getElementById('deviceCasing');
-      casing.classList.add('vibrating');
-      if (navigator.vibrate) navigator.vibrate(duration);
-      setTimeout(() => casing.classList.remove('vibrating'), duration);
-    }
-
-    // ==========================================
-    // MULTI-PET ROSTER & TOP (ZIPZIP)
-    // ==========================================
-    const PET_ROSTER = [
-      { id: "top",   name: "Zıpzıp Top", icon: "⚽", badge: "⚽ TOP (ZIPZIP)", desc: "Elastik Zıplayan Top" },
-      { id: "kedi",  name: "Neko Kedi",  icon: "🐱", badge: "🐱 KEDİ (NEKO)",   desc: "Masaüstü Sanal Kedisi" },
-      { id: "kopek", name: "Dost Köpek", icon: "🐶", badge: "🐶 KÖPEK (DOST)",  desc: "Sadık Oyuncu Köpek" },
-      { id: "bitki", name: "Filiz Bitki",icon: "🌿", badge: "🌿 BİTKİ (FİLİZ)", desc: "Saksıda Sevimli Filiz" },
-      { id: "balik", name: "Baloncuk",   icon: "🐟", badge: "🐟 BALIK",         desc: "Akvaryum Balığı" },
-      { id: "kus",   name: "Cıvık Kuş",  icon: "🐦", badge: "🐦 KUŞ",           desc: "Şakacı Kuş" },
-      { id: "sosis", name: "Sosis",      icon: "🌭", badge: "🌭 SOSİS",         desc: "Frankfurter Sosis" }
-    ];
-
-    let currentPetIndex = 0;
-
-    const ballPhysics = {
-      x: 64, y: 42, vx: 1.8, vy: 0, radius: 8, bounceCount: 0
-    };
-
-    const state = {
-      pet: PET_ROSTER[0],
-      stage: 1,
-      ageDays: 1,
-      totalScore: 310,
-      streakDays: 5,
-      battery: 88,
-      isPowered: true,
-      bleConnected: true,
-      menuIndex: 0,
-      animFrame: 0,
-      currentView: 'MAIN',
-
-      hasPoop: false,
-      poopX: 96, poopY: 48,
-
-      // 3-2-1 Taş-Kağıt-Makas
-      rpsCountdown: 3,
-      rpsTimer: null,
-      rpsPlayerChoice: null,
-      rpsCpuChoice: null,
-      rpsResultText: "",
-
-      // Hızlı Kovboy Düellosu
-      duelState: 'WAIT',
-      duelTimer: null,
-      duelStartTime: 0,
-      duelReactionMs: 0,
-
-      needs: {
-        hunger: 85, fun: 80, love: 90, sleep: 75, toilet: 85, clean: 90, social: 60
-      },
-
-      menuItems: [
-        { label: "BESLE", action: "hunger" },
-        { label: "OYUN", action: "fun" },
-        { label: "SEV", action: "love" },
-        { label: "UYUT", action: "sleep" },
-        { label: "TUVALET", action: "toilet" },
-        { label: "TEMİZLE", action: "clean" },
-        { label: "SOSYAL", action: "social" }
-      ]
-    };
-
-    function cyclePet() {
-      currentPetIndex = (currentPetIndex + 1) % PET_ROSTER.length;
-      state.pet = PET_ROSTER[currentPetIndex];
-      ballPhysics.x = 24; ballPhysics.y = 42; ballPhysics.vx = 2; ballPhysics.vy = 0;
-
-      document.getElementById('casingPetBadge').textContent = state.pet.badge;
-      document.getElementById('appPetName').textContent = state.pet.name;
-      document.getElementById('appPetIcon').textContent = state.pet.icon;
-      triggerHaptic(100);
-      playTone(600, 0.08);
-      showToast("🔄 Karakter Değiştirildi: " + state.pet.name + " " + state.pet.icon);
-      updateUI();
-    }
-
-    function triggerDeviceShake() {
-      if (!state.isPowered) return;
-      if (state.pet.id === 'top') {
-        ballPhysics.vy = -6;
-        ballPhysics.vx = (Math.random() - 0.5) * 8;
-        ballPhysics.bounceCount++;
-        state.needs.fun = Math.min(100, state.needs.fun + 10);
-        state.totalScore += 5;
-        triggerHaptic(180);
-        playTone(650, 0.05); setTimeout(() => playTone(950, 0.08), 70);
-        showToast("⚽ Top tavan ve duvarlardan sekti! Zıp zıp!");
-      } else {
-        state.needs.fun = Math.min(100, state.needs.fun + 8);
-        triggerHaptic(120);
-        playTone(700, 0.08);
-        showToast("👋 " + state.pet.name + " sallandı ve mutlu oldu!");
-      }
-      updateUI();
-    }
-
-    function triggerPoopManually() {
-      state.hasPoop = true;
-      state.needs.clean = Math.max(10, state.needs.clean - 30);
-      triggerHaptic(180);
-      playTone(320, 0.12, 'sawtooth');
-      showToast("💩 Kaka belirdi! Hijyen düşüyor, hemen temizle!");
-      updateUI();
-    }
-
-    // ==========================================
-    // 1. TAŞ - KAĞIT - MAKAS 3-2-1 SOSYAL GERİ SAYIM
-    // ==========================================
-    function startSocialRPSGame() {
-      state.currentView = 'RPS_COUNTDOWN';
-      state.rpsCountdown = 3;
-      state.rpsPlayerChoice = null;
-      state.rpsCpuChoice = null;
-      state.rpsResultText = "Seçimini yap! (1:Taş 2:Kağıt 3:Makas)";
-      document.getElementById('gameStatusIndicator').textContent = "Oyun: 3-2-1 Taş-Kağıt-Makas";
-      document.getElementById('btn1Subtext').textContent = "Taş 🪨";
-      document.getElementById('btn2Subtext').textContent = "Kağıt 📄";
-      document.getElementById('btn3Subtext').textContent = "Makas ✂️";
-
-      triggerHaptic(100);
-      playTone(800, 0.1);
-
-      if (state.rpsTimer) clearInterval(state.rpsTimer);
-
-      state.rpsTimer = setInterval(() => {
-        state.rpsCountdown--;
-        if (state.rpsCountdown > 0) {
-          playTone(600 + (3 - state.rpsCountdown) * 150, 0.08);
-          triggerHaptic(80);
-        } else {
-          clearInterval(state.rpsTimer);
-          revealRPSResults();
-        }
-        updateUI();
-      }, 1000);
-
-      showToast("✊ 3-2-1 Geri sayım başladı! Süre bitmeden tuşa bas!");
-      updateUI();
-    }
-
-    function selectRPSPlayer(choiceIndex) {
-      const names = ["TAŞ 🪨", "KAĞIT 📄", "MAKAS ✂️"];
-      state.rpsPlayerChoice = choiceIndex;
-      triggerHaptic(80);
-      playTone(900, 0.06);
-      showToast("Seçimin kilitlendi: " + names[choiceIndex]);
-      updateUI();
-    }
-
-    function revealRPSResults() {
-      state.currentView = 'RPS_REVEAL';
-      const picks = ["TAŞ", "KAĞIT", "MAKAS"];
-      const icons = ["🪨", "📄", "✂️"];
-
-      if (state.rpsPlayerChoice === null) state.rpsPlayerChoice = Math.floor(Math.random() * 3);
-      state.rpsCpuChoice = Math.floor(Math.random() * 3);
-
-      const p = state.rpsPlayerChoice;
-      const c = state.rpsCpuChoice;
-
-      if (p === c) {
-        state.rpsResultText = "BERABERE! (" + icons[p] + " = " + icons[c] + ")";
-        playTone(500, 0.15);
-        triggerHaptic(100);
-      } else if ((p === 0 && c === 2) || (p === 1 && c === 0) || (p === 2 && c === 1)) {
-        state.rpsResultText = "KAZANDIN! 🎉 (+35P)";
-        state.needs.fun = Math.min(100, state.needs.fun + 30);
-        state.totalScore += 35;
-        playTone(659, 0.1); setTimeout(() => playTone(880, 0.2), 110);
-        triggerHaptic(200);
-      } else {
-        state.rpsResultText = "KAYBETTİN! 😢";
-        playTone(330, 0.2, 'sawtooth');
-        triggerHaptic(250);
-      }
-
-      showToast("Açıldı! Sen: " + icons[p] + " | Karşı: " + icons[c] + " -> " + state.rpsResultText);
-      updateUI();
-    }
-
-    // ==========================================
-    // 2. YENİ OYUN: KOVBOY DÜELLOSU
-    // ==========================================
-    function startQuickDrawDuel() {
-      state.currentView = 'QUICK_DRAW';
-      state.duelState = 'WAIT';
-      document.getElementById('gameStatusIndicator').textContent = "Oyun: Kovboy Düellosu";
-      document.getElementById('btn1Subtext').textContent = "---";
-      document.getElementById('btn2Subtext').textContent = "ATEŞ! (●)";
-      document.getElementById('btn3Subtext').textContent = "---";
-
-      playTone(440, 0.15);
-      showToast("🤠 DÜELLO: Ekranda 'ATEŞ!' yazınca HEMEN Seç (●) tuşuna bas!");
-      updateUI();
-
-      if (state.duelTimer) clearTimeout(state.duelTimer);
-
-      const randomWaitMs = Math.floor(Math.random() * 2500) + 2000;
-      state.duelTimer = setTimeout(() => {
-        state.duelState = 'DRAW_NOW';
-        state.duelStartTime = Date.now();
-        triggerHaptic(250);
-        playTone(1200, 0.15);
-        updateUI();
-      }, randomWaitMs);
-    }
-
-    function fireDuelTrigger() {
-      if (state.duelState === 'WAIT') {
-        clearTimeout(state.duelTimer);
-        state.duelState = 'FINISHED';
-        playTone(250, 0.2, 'sawtooth');
-        triggerHaptic(300);
-        showToast("⚠️ ERKEN BASTIN! Faul yaptın ve kaybettin!");
-        updateUI();
-        return;
-      }
-
-      if (state.duelState === 'DRAW_NOW') {
-        state.duelReactionMs = Date.now() - state.duelStartTime;
-        state.duelState = 'FINISHED';
-
-        if (state.duelReactionMs < 450) {
-          state.totalScore += 50;
-          state.needs.fun = Math.min(100, state.needs.fun + 35);
-          playTone(784, 0.1); setTimeout(() => playTone(1046, 0.2), 110);
-          triggerHaptic(180);
-          showToast("🏆 KAZANDIN! Hız: " + state.duelReactionMs + "ms (+50 Puan)");
-        } else {
-          playTone(350, 0.15, 'sawtooth');
-          triggerHaptic(200);
-          showToast("😢 Rakip daha hızlıydı! (" + state.duelReactionMs + "ms)");
-        }
-        updateUI();
-      }
-    }
-
-    // ==========================================
-    // 3. CLOUD BACKUP & FACTORY RESET
-    // ==========================================
-    function triggerCloudBackup() {
-      const payload = {
-        deviceId: "SOCIES-ESP32-84920A",
-        userEmail: "turan@socies.io",
-        petBreed: state.pet.id,
-        score: state.totalScore,
-        ageDays: state.ageDays,
-        streakDays: state.streakDays,
-        needs: state.needs,
-        timestamp: new Date().toISOString()
-      };
-
-      triggerHaptic(120);
-      playTone(880, 0.1);
-      showToast("☁️ Bulut Yedekleme Başarılı! Veriler kaydedildi.");
-      console.log("SERVER TELEMETRY POST ->", payload);
-    }
-
-    function restoreFromCloud() {
-      triggerHaptic(150);
-      playTone(523, 0.1); setTimeout(() => playTone(659, 0.1), 100); setTimeout(() => playTone(784, 0.15), 200);
-      showToast("📥 Oturum Buluttan Geri Yüklendi! Puan: " + state.totalScore);
-      updateUI();
-    }
-
-    function factoryResetPrompt() {
-      if (confirm("Evcil hayvanı sıfırlayıp yumurtadan baştan başlamak istediğinize emin misiniz?")) {
-        state.stage = 0;
-        state.ageDays = 1;
-        state.needs = { hunger: 100, fun: 100, love: 100, sleep: 100, toilet: 100, clean: 100, social: 100 };
-        state.hasPoop = false;
-        triggerHaptic(300);
-        playTone(300, 0.2);
-        showToast("🥚 Cihaz sıfırlandı ve yeni bir yumurtaya dönüldü!");
-        updateUI();
-      }
-    }
-
-    // ==========================================
-    // HARDWARE BUTTON INTERACTION
-    // ==========================================
-    const pressTimers = {};
-
-    function startBtnPress(key) {
-      const btnEl = document.getElementById(key === 'UP' ? 'btnUp' : key === 'ACTION' ? 'btnAction' : key === 'DOWN' ? 'btnDown' : 'btnBack');
-      if (btnEl) btnEl.classList.add('pressed');
-      pressTimers[key] = setTimeout(() => {
-        handleLongPress(key);
-        pressTimers[key] = null;
-      }, 600);
-    }
-
-    function endBtnPress(key) {
-      const btnEl = document.getElementById(key === 'UP' ? 'btnUp' : key === 'ACTION' ? 'btnAction' : key === 'DOWN' ? 'btnDown' : 'btnBack');
-      if (btnEl) btnEl.classList.remove('pressed');
-      if (pressTimers[key]) {
-        clearTimeout(pressTimers[key]);
-        pressTimers[key] = null;
-        handleShortPress(key);
-      }
-    }
-
-    function handleShortPress(btnKey) {
-      if (!state.isPowered) return;
-      playTone(650, 0.04);
-
-      if (state.currentView === 'RPS_COUNTDOWN') {
-        if (btnKey === 'UP') selectRPSPlayer(0);
-        else if (btnKey === 'ACTION') selectRPSPlayer(1);
-        else if (btnKey === 'DOWN') selectRPSPlayer(2);
-        else if (btnKey === 'BACK') { clearInterval(state.rpsTimer); state.currentView = 'MAIN'; updateUI(); }
-        return;
-      }
-
-      if (state.currentView === 'QUICK_DRAW') {
-        if (btnKey === 'ACTION') fireDuelTrigger();
-        else if (btnKey === 'BACK') { clearTimeout(state.duelTimer); state.currentView = 'MAIN'; updateUI(); }
-        return;
-      }
-
-      if (state.currentView !== 'MAIN') {
-        state.currentView = 'MAIN';
-        updateUI();
-        return;
-      }
-
-      switch(btnKey) {
-        case 'UP': state.menuIndex = (state.menuIndex - 1 + state.menuItems.length) % state.menuItems.length; break;
-        case 'DOWN': state.menuIndex = (state.menuIndex + 1) % state.menuItems.length; break;
-        case 'ACTION': executeAction(); break;
-        case 'BACK': showToast("İptal"); break;
-      }
-      updateUI();
-    }
-
-    function handleLongPress(btnKey) {
-      if (!state.isPowered) return;
-      triggerHaptic(120);
-
-      switch(btnKey) {
-        case 'UP': toggleAudio(); break;
-        case 'ACTION': playTone(900, 0.15); showToast("🔵 BLE Eşleşme Modu!"); break;
-        case 'DOWN': toggleHaptic(); break;
-        case 'BACK':
-          state.currentView = (state.currentView === 'ALL_NEEDS_HUD') ? 'MAIN' : 'ALL_NEEDS_HUD';
-          playTone(800, 0.08);
-          showToast(state.currentView === 'ALL_NEEDS_HUD' ? "📊 İhtiyaçlar Raporu" : "Ana Ekran");
-          break;
-      }
-      updateUI();
-    }
-
-    function executeAction() {
-      if (state.stage === 0) {
-        state.stage = 1;
-        triggerHaptic(200);
-        playTone(523, 0.1); setTimeout(() => playTone(784, 0.2), 150);
-        showToast("🎉 Yumurta çatladı! Hayata merhaba!");
-        updateUI();
-        return;
-      }
-
-      const curItem = state.menuItems[state.menuIndex];
-      if (curItem.action === 'clean' && state.hasPoop) {
-        state.hasPoop = false;
-        state.needs.clean = 100;
-        state.totalScore += 15;
-        triggerHaptic(100);
-        playTone(659, 0.1);
-        showToast("🧼 Ekran temizlendi!");
-        updateUI();
-        return;
-      }
-
-      state.needs[curItem.action] = Math.min(100, state.needs[curItem.action] + 25);
-      state.totalScore += 10;
-      triggerHaptic(100);
-      playTone(587, 0.08); setTimeout(() => playTone(880, 0.12), 90);
-      showToast("✨ " + curItem.label + " yapıldı! (+10 Puan)");
-      updateUI();
-    }
-
-    // ==========================================
-    // OLED CANVAS RENDERING (128x64)
-    // ==========================================
-    const canvas = document.getElementById('oledCanvas');
-    const ctx = canvas.getContext('2d');
-
-    function renderOLED() {
-      if (!state.isPowered) {
-        ctx.fillStyle = "#010306"; ctx.fillRect(0, 0, 128, 64); return;
-      }
-
-      ctx.fillStyle = "#02060c"; ctx.fillRect(0, 0, 128, 64);
-
-      // 1. TOP YELLOW STATUS BAR (16PX)
-      drawPhoneStatusBar();
-
-      ctx.strokeStyle = "rgba(255, 230, 0, 0.4)";
-      ctx.beginPath(); ctx.moveTo(0, 14.5); ctx.lineTo(128, 14.5); ctx.stroke();
-
-      // 2. BOTTOM BLUE ZONE (48PX)
-      ctx.fillStyle = "#00f0ff";
-
-      if (state.currentView === 'ALL_NEEDS_HUD') { drawAllNeedsHUD(); return; }
-      if (state.currentView === 'RPS_COUNTDOWN') { drawRPSCountdownScreen(); return; }
-      if (state.currentView === 'RPS_REVEAL') { drawRPSRevealScreen(); return; }
-      if (state.currentView === 'QUICK_DRAW') { drawQuickDrawScreen(); return; }
-
-      // MAIN GAME VIEW
-      drawActivePet();
-
-      if (state.hasPoop) {
-        drawPoop(state.poopX, state.poopY, state.animFrame);
-      }
-
-      drawOledMenu();
-    }
-
-    function drawPhoneStatusBar() {
-      ctx.fillStyle = "#ffe600";
-      // Battery
-      ctx.strokeRect(2.5, 4.5, 12, 6);
-      ctx.fillRect(15, 6, 2, 3);
-      const batFillW = Math.max(1, Math.round((state.battery / 100) * 8));
-      ctx.fillRect(4, 6, batFillW, 3);
-
-      // BLE Rune Icon
-      if (state.bleConnected) {
-        ctx.fillRect(24, 4, 1, 7);
-        ctx.fillRect(25, 5, 1, 1); ctx.fillRect(26, 6, 1, 1);
-        ctx.fillRect(25, 7, 1, 1); ctx.fillRect(26, 8, 1, 1); ctx.fillRect(25, 9, 1, 1);
-        ctx.fillRect(23, 5, 1, 1); ctx.fillRect(23, 9, 1, 1);
-      }
-
-      // Speaker Icon
-      ctx.fillRect(36, 6, 2, 3); ctx.fillRect(38, 5, 2, 5);
-      if (audioEnabled) { ctx.fillRect(41, 5, 1, 1); ctx.fillRect(42, 6, 1, 3); ctx.fillRect(41, 9, 1, 1); }
-      else { ctx.fillRect(41, 6, 1, 1); ctx.fillRect(42, 7, 1, 1); ctx.fillRect(43, 8, 1, 1); }
-
-      // Vibration Icon
-      ctx.fillRect(49, 4, 4, 7);
-      ctx.fillStyle = "#02060c"; ctx.fillRect(50, 5, 2, 5); ctx.fillStyle = "#ffe600";
-      if (hapticEnabled) { ctx.fillRect(47, 6, 1, 3); ctx.fillRect(54, 6, 1, 3); }
-
-      // Clock
-      ctx.font = "bold 6px 'Press Start 2P', monospace";
-      const d = new Date();
-      const h = String(d.getHours()).padStart(2, '0');
-      const m = String(d.getMinutes()).padStart(2, '0');
-      ctx.fillText(h + ":" + m, 92, 10);
-    }
-
-    function drawActivePet() {
-      if (state.stage === 0) {
-        ctx.beginPath(); ctx.ellipse(64, 40, 9, 12, 0, 0, Math.PI * 2); ctx.fill();
-        ctx.fillStyle = "#02060c"; ctx.fillRect(61, 38, 6, 2); return;
-      }
-
-      if (state.pet.id === 'ozel' && customPetBitmap) {
-        ctx.fillStyle = "#00f0ff";
-        const squash = Math.sin(Date.now() / 240) * 1.5;
-        for (let r = 0; r < 48; r++) {
-          for (let c = 0; c < 48; c++) {
-            if (customPetBitmap[r] && customPetBitmap[r][c]) {
-              ctx.fillRect(40 + c, 16 + r + squash, 1, 1);
-            }
-          }
-        }
-        return;
-      }
-
-      if (state.pet.id === 'top') {
-        const b = ballPhysics;
-        ctx.beginPath();
-        ctx.ellipse(b.x, b.y, b.radius, b.radius, 0, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = "#02060c";
-        ctx.fillRect(b.x - 3, b.y - 3, 2, 3); ctx.fillRect(b.x + 2, b.y - 3, 2, 3);
-        ctx.fillRect(b.x - 1, b.y + 1, 3, 1);
-      } else if (state.pet.id === 'kedi') {
-        ctx.beginPath(); ctx.ellipse(64, 42, 11, 8, 0, 0, Math.PI * 2); ctx.fill();
-        ctx.fillRect(57, 34, 14, 10);
-        ctx.beginPath(); ctx.moveTo(57, 34); ctx.lineTo(60, 27); ctx.lineTo(63, 34); ctx.fill();
-        ctx.beginPath(); ctx.moveTo(65, 34); ctx.lineTo(68, 27); ctx.lineTo(71, 34); ctx.fill();
-        ctx.fillStyle = "#02060c"; ctx.fillRect(60, 37, 2, 2); ctx.fillRect(66, 37, 2, 2);
-      } else {
-        ctx.fillRect(54, 34, 20, 13);
-        ctx.fillStyle = "#02060c"; ctx.fillRect(58, 37, 2, 2); ctx.fillRect(66, 37, 2, 2);
-      }
-    }
-
-    function drawPoop(px, py, frame) {
-      ctx.fillStyle = "#00f0ff";
-      ctx.fillRect(px - 5, py + 2, 10, 4);
-      ctx.fillRect(px - 3, py - 1, 7, 3);
-      ctx.fillRect(px - 1, py - 3, 3, 2);
-      ctx.fillStyle = "#02060c";
-      ctx.fillRect(px - 2, py + 2, 1, 2); ctx.fillRect(px + 2, py + 2, 1, 2);
-    }
-
-    function drawRPSCountdownScreen() {
-      ctx.font = "7px 'Press Start 2P', monospace";
-      ctx.fillStyle = "#00f0ff";
-      ctx.fillText("TAS-KAGIT-MAKAS", 8, 24);
-
-      ctx.font = "bold 16px 'Press Start 2P', monospace";
-      ctx.fillStyle = "#ffe600";
-      ctx.fillText(state.rpsCountdown, 56, 44);
-
-      ctx.font = "6px 'Press Start 2P', monospace";
-      ctx.fillStyle = "#00f0ff";
-      ctx.fillText("1:TAS  2:KAGIT  3:MAKAS", 4, 58);
-    }
-
-    function drawRPSRevealScreen() {
-      const icons = ["TAS [R]", "KAGT [P]", "MKAS [S]"];
-      ctx.font = "6px 'Press Start 2P', monospace";
-      ctx.fillStyle = "#00f0ff";
-      ctx.fillText("SEN:", 8, 25);
-      ctx.fillStyle = "#ffe600";
-      ctx.fillText(icons[state.rpsPlayerChoice], 40, 25);
-
-      ctx.fillStyle = "#00f0ff";
-      ctx.fillText("RAKIP:", 8, 38);
-      ctx.fillStyle = "#ffe600";
-      ctx.fillText(icons[state.rpsCpuChoice], 48, 38);
-
-      ctx.font = "bold 6px 'Press Start 2P', monospace";
-      ctx.fillStyle = "#00f0ff";
-      ctx.fillText(state.rpsResultText, 4, 56);
-    }
-
-    function drawQuickDrawScreen() {
-      ctx.font = "7px 'Press Start 2P', monospace";
-      ctx.fillStyle = "#00f0ff";
-      ctx.fillText("KOVBOY DUELLOSU", 6, 24);
-
-      if (state.duelState === 'WAIT') {
-        ctx.fillStyle = "#ffe600";
-        ctx.font = "8px 'Press Start 2P', monospace";
-        ctx.fillText("HAZIRLAN...", 22, 42);
-        ctx.font = "6px 'Press Start 2P', monospace";
-        ctx.fillStyle = "#94a3b8";
-        ctx.fillText("(Bekle! Erken basma)", 4, 58);
-      } else if (state.duelState === 'DRAW_NOW') {
-        ctx.fillStyle = "#ff2a85";
-        ctx.font = "bold 14px 'Press Start 2P', monospace";
-        ctx.fillText("ATES! ●", 24, 45);
-      } else {
-        ctx.fillStyle = "#ffe600";
-        ctx.font = "7px 'Press Start 2P', monospace";
-        ctx.fillText(state.duelReactionMs + " ms", 40, 42);
-        ctx.font = "6px 'Press Start 2P', monospace";
-        ctx.fillText("[Geri: Cikis]", 24, 58);
-      }
-    }
-
-    function drawOledMenu() {
-      const cur = state.menuItems[state.menuIndex];
-      ctx.fillStyle = "#00f0ff"; ctx.font = "7px 'Press Start 2P', monospace";
-      ctx.fillRect(14, 52, 100, 11);
-      ctx.fillStyle = "#02060c";
-      const label = "[" + cur.label + "]";
-      const textX = 64 - (label.length * 3.5);
-      ctx.fillText(label, textX, 60);
-      ctx.fillStyle = "#00f0ff";
-      ctx.fillText("<", 3, 60); ctx.fillText(">", 119, 60);
-    }
-
-    function drawAllNeedsHUD() {
-      ctx.font = "6px 'Press Start 2P', monospace"; ctx.fillStyle = "#00f0ff";
-      ctx.fillText("IHTIYAC RAPORU", 20, 23);
-      const items = [
-        { lbl: "BES", val: state.needs.hunger, y: 28 },
-        { lbl: "OYN", val: state.needs.fun,    y: 36 },
-        { lbl: "SEV", val: state.needs.love,   y: 44 },
-        { lbl: "UYK", val: state.needs.sleep,  y: 52 },
-        { lbl: "HIJ", val: state.needs.clean,  y: 60 }
-      ];
-      items.forEach(it => {
-        ctx.fillStyle = "#00f0ff"; ctx.fillText(it.lbl, 2, it.y + 5);
-        ctx.strokeStyle = "#00f0ff"; ctx.strokeRect(30, it.y, 60, 6);
-        const fillW = Math.round((it.val / 100) * 58);
-        ctx.fillRect(31, it.y + 1, fillW, 4);
-        ctx.fillText(Math.round(it.val) + "%", 94, it.y + 5);
-      });
-    }
-
-    function simTick() {
-      state.animFrame++;
-
-      if (state.pet.id === 'top' && state.currentView === 'MAIN') {
-        const b = ballPhysics;
-        b.x += b.vx; b.y += b.vy; b.vy += 0.4;
-        if (b.y > 42) { b.y = 42; b.vy = -b.vy * 0.75; if (Math.abs(b.vy) < 0.5) b.vy = 0; }
-        if (b.x < 12) { b.x = 12; b.vx = -b.vx; } else if (b.x > 116) { b.x = 116; b.vx = -b.vx; }
-      }
-
-      if (state.isPowered && state.currentView === 'MAIN') {
-        state.needs.hunger = Math.max(0, state.needs.hunger - 0.15);
-        state.needs.fun    = Math.max(0, state.needs.fun - 0.2);
-        state.needs.love   = Math.max(0, state.needs.love - 0.12);
-        state.needs.sleep  = Math.max(0, state.needs.sleep - 0.1);
-        state.needs.toilet = Math.max(0, state.needs.toilet - 0.18);
-      }
-
-      renderOLED();
-      updateMobileUI();
-    }
-
-    function updateMobileUI() {
-      document.getElementById('appPetScore').textContent = state.totalScore;
-      const needKeys = ['hunger', 'fun', 'love', 'sleep', 'toilet', 'clean'];
-      needKeys.forEach(k => {
-        const val = Math.round(state.needs[k]);
-        const valElem = document.getElementById("val_" + k);
-        const barElem = document.getElementById("bar_" + k);
-        if (valElem && barElem) {
-          valElem.textContent = val + "%";
-          barElem.style.width = val + "%";
-          barElem.className = "need-bar-fill " + (val > 50 ? "high" : val > 20 ? "mid" : "crit");
-        }
-      });
-    }
-
-    function updateUI() { renderOLED(); updateMobileUI(); }
-
-    function showToast(msg) {
-      const t = document.getElementById('appToast');
-      t.textContent = msg; t.classList.add('show');
-      setTimeout(() => t.classList.remove('show'), 2400);
-    }
-
+    // TAB NAVIGATION
     function switchTab(tabId) {
       document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
       document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
-      document.getElementById(tabId).classList.add('active');
-      const btn = Array.from(document.querySelectorAll('.nav-btn')).find(b => b.getAttribute('onclick').includes(tabId));
-      if (btn) btn.classList.add('active');
-    }
-
-    window.addEventListener('keydown', (e) => {
-      if (e.repeat) return;
-      if (e.key === 'w' || e.key === 'ArrowUp') startBtnPress('UP');
-      else if (e.key === 's' || e.key === 'ArrowDown') startBtnPress('DOWN');
-      else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); startBtnPress('ACTION'); }
-      else if (e.key === 'Escape' || e.key === 'q') startBtnPress('BACK');
-    });
-
-    window.addEventListener('keyup', (e) => {
-      if (e.key === 'w' || e.key === 'ArrowUp') endBtnPress('UP');
-      else if (e.key === 's' || e.key === 'ArrowDown') endBtnPress('DOWN');
-      else if (e.key === 'Enter' || e.key === ' ') endBtnPress('ACTION');
-      else if (e.key === 'Escape' || e.key === 'q') endBtnPress('BACK');
-    });
-
-    // --- SEMANTIC VERSIONING & OTA AUTO-UPDATER ---
-    const CURRENT_APP_VERSION = "1.0.5";
-    const CURRENT_APP_BUILD = 6;
-    const CURRENT_APP_COMMIT = "f8cd1f2";
-    const GITHUB_REPO = "mcturan/socies";
-
-    // SemVer 2.0.0 Ayrıştırıcı (2 karakter veya hatalı format tuzaklarını engeller)
-    function parseSemVer(vStr) {
-      if (!vStr || typeof vStr !== 'string') return { major: 0, minor: 0, patch: 0, build: 0, valid: false };
-      const cleaned = vStr.trim().replace(/^[vV]/, '');
-      const [core, buildPart] = cleaned.split('+');
-      const parts = core.split('.');
-      if (parts.length < 2) {
-        return { major: parseInt(parts[0], 10) || 0, minor: 0, patch: 0, build: 0, valid: false };
-      }
-      return {
-        major: parseInt(parts[0], 10) || 0,
-        minor: parseInt(parts[1], 10) || 0,
-        patch: parts.length > 2 ? (parseInt(parts[2], 10) || 0) : 0,
-        build: buildPart ? (parseInt(buildPart, 10) || 0) : 0,
-        valid: true
-      };
-    }
-
-    // SemVer Karşılaştırıcı: vA > vB ise >0, vA < vB ise <0, eşitse 0
-    function compareSemVer(vA, vB) {
-      const a = parseSemVer(vA);
-      const b = parseSemVer(vB);
-      if (a.major !== b.major) return a.major - b.major;
-      if (a.minor !== b.minor) return a.minor - b.minor;
-      if (a.patch !== b.patch) return a.patch - b.patch;
-      return a.build - b.build;
-    }
-
-    // Sunucu ve GitHub üzerinden en son sürümü denetler
-    async function checkAppVersionUpdate(isUserClick = false) {
-      const chipStatus = document.getElementById('heroStatusBadge');
-      const heroSemVer = document.getElementById('heroSemVerBadge');
-      const heroCommit = document.getElementById('heroCommitBadge');
-      const heroDlLink = document.getElementById('heroDownloadLink');
-      const heroDlSub = document.getElementById('heroDownloadSub');
-      const headerDlBtn = document.getElementById('headerDlBtn');
-      const headerVerText = document.getElementById('headerVerText');
-
-      if (isUserClick) {
-        showToast("🔄 En son sürüm kontrol ediliyor...");
-      }
-
-      let remoteVer = null;
-      let remoteUrl = null;
-      let releaseNotes = "";
-      let commitSha = null;
-
-      // 1. Önce yerel/merkezi sunucu endpointini dene
-      try {
-        const res = await fetch('http://localhost:3000/api/v1/version/check', { signal: AbortSignal.timeout(2000) });
-        if (res.ok) {
-          const data = await res.json();
-          remoteVer = data.latestVersion;
-          remoteUrl = data.apkDownloadUrl;
-          releaseNotes = data.releaseNotes || "";
-          commitSha = data.latestCommitHash;
+      
+      const targetTab = document.getElementById(tabId);
+      if (targetTab) targetTab.classList.add('active');
+      
+      const btns = document.querySelectorAll('.nav-btn');
+      btns.forEach(btn => {
+        if (btn.getAttribute('onclick').includes(tabId)) {
+          btn.classList.add('active');
         }
-      } catch (_) {}
-
-      // 2. Sunucuya ulaşılamazsa doğrudan GitHub Releases dene
-      if (!remoteVer) {
-        try {
-          const res = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/releases/latest`, {
-            headers: { 'Accept': 'application/vnd.github.v3+json' },
-            signal: AbortSignal.timeout(3000)
-          });
-          if (res.ok) {
-            const data = await res.json();
-            remoteVer = data.tag_name;
-            releaseNotes = data.body || "";
-            const apkAsset = (data.assets || []).find(a => a.name && a.name.endsWith('.apk'));
-            if (apkAsset) remoteUrl = apkAsset.browser_download_url;
-          }
-        } catch (_) {}
-      }
-
-      if (remoteVer && compareSemVer(remoteVer, CURRENT_APP_VERSION) > 0) {
-        const newVerStr = remoteVer.startsWith('v') ? remoteVer : 'v' + remoteVer;
-        if (chipStatus) {
-          chipStatus.className = "chip chip-update-alert";
-          chipStatus.textContent = `🔥 Yeni Sürüm: ${newVerStr}!`;
-        }
-        if (heroSemVer) heroSemVer.textContent = `${newVerStr} (YENİ)`;
-        if (headerVerText) headerVerText.textContent = newVerStr;
-        if (remoteUrl) {
-          if (heroDlLink) heroDlLink.href = remoteUrl;
-          if (headerDlBtn) headerDlBtn.href = remoteUrl;
-        }
-        if (heroDlSub) heroDlSub.textContent = `Yeni Güncelleme: ${newVerStr} (Hemen İndir)`;
-
-        showToast(`🎉 Yeni Sürüm Tespit Edildi: ${newVerStr}!`);
-      } else {
-        if (chipStatus) {
-          chipStatus.className = "chip chip-status";
-          chipStatus.textContent = `● v${CURRENT_APP_VERSION} (En Güncel)`;
-        }
-        if (isUserClick) {
-          showToast(`✅ v${CURRENT_APP_VERSION} sürümü ile en günceldesiniz!`);
-        }
-      }
-    }
-
-    // ==========================================
-    // SOCIES CANLI TOPLULUK AĞI (TAB 2) ENGINE
-    // ==========================================
-    let sociesUsersList = [
-      {
-        deviceId: 'SOCIES-ESP32-84920A',
-        user: { nickname: 'Turan (Kurucu)', email: 'turan@socies.io', avatar: '👑', isVip: true },
-        location: { country: 'Türkiye', city: 'İstanbul', district: 'Kadıköy', flag: '🇹🇷', ip: '176.240.12.xx' },
-        phone: { model: 'Samsung Galaxy S24 Ultra', os: 'Android 14 (One UI 6.1)', batteryPct: 88, batteryMv: 3980, stepsToday: 5420, connection: '5G / Wi-Fi 6E', latencyMs: 18 },
-        pet: { breed: 'top', breedTitle: 'Zıpzıp Top ⚽', stage: 2, score: 940, streakDays: 5 },
-        isOnline: true,
-        lastSeenSecAgo: 3
-      },
-      {
-        deviceId: 'SOCIES-AND-9941A',
-        user: { nickname: 'Zeynep_Retro', email: 'zeynep@socies.io', avatar: '🐱', isVip: false },
-        location: { country: 'Türkiye', city: 'Ankara', district: 'Çankaya', flag: '🇹🇷', ip: '88.255.45.xx' },
-        phone: { model: 'Xiaomi 13 Pro', os: 'Android 14 (HyperOS)', batteryPct: 94, batteryMv: 4150, stepsToday: 7120, connection: 'Wi-Fi 6 / BLE 5.2', latencyMs: 24 },
-        pet: { breed: 'kedi', breedTitle: 'Sanal Kedi 🐱', stage: 3, score: 3420, streakDays: 14 },
-        isOnline: true,
-        lastSeenSecAgo: 8
-      },
-      {
-        deviceId: 'SOCIES-ESP32-33129C',
-        user: { nickname: 'Emre_Ege', email: 'emre@socies.io', avatar: '🐶', isVip: false },
-        location: { country: 'Türkiye', city: 'İzmir', district: 'Alsancak', flag: '🇹🇷', ip: '94.122.80.xx' },
-        phone: { model: 'Google Pixel 8', os: 'Android 14 (Vanilla)', batteryPct: 76, batteryMv: 3890, stepsToday: 3890, connection: '4G LTE / BLE 5.0', latencyMs: 31 },
-        pet: { breed: 'kopek', breedTitle: 'Sadık Köpek 🐶', stage: 2, score: 1850, streakDays: 8 },
-        isOnline: true,
-        lastSeenSecAgo: 14
-      },
-      {
-        deviceId: 'SOCIES-IOS-44810D',
-        user: { nickname: 'Selin_Botanist', email: 'selin@socies.io', avatar: '🌱', isVip: false },
-        location: { country: 'Türkiye', city: 'Bursa', district: 'Nilüfer', flag: '🇹🇷', ip: '195.175.39.xx' },
-        phone: { model: 'Apple iPhone 15 Pro', os: 'iOS 17.5.1', batteryPct: 92, batteryMv: 4110, stepsToday: 6240, connection: 'Wi-Fi / BLE 5.3', latencyMs: 22 },
-        pet: { breed: 'bitki', breedTitle: 'Bonsai Bitki 🌱', stage: 2, score: 1220, streakDays: 9 },
-        isOnline: true,
-        lastSeenSecAgo: 9
-      },
-      {
-        deviceId: 'SOCIES-ESP32-11094E',
-        user: { nickname: 'Kaan_Akdeniz', email: 'kaan@socies.io', avatar: '🐠', isVip: false },
-        location: { country: 'Türkiye', city: 'Antalya', district: 'Muratpaşa', flag: '🇹🇷', ip: '212.156.40.xx' },
-        phone: { model: 'OnePlus 12', os: 'Android 14 (OxygenOS)', batteryPct: 65, batteryMv: 3820, stepsToday: 4310, connection: '5G / BLE Gateway', latencyMs: 29 },
-        pet: { breed: 'balik', breedTitle: 'Neon Balık 🐠', stage: 1, score: 480, streakDays: 3 },
-        isOnline: true,
-        lastSeenSecAgo: 24
-      },
-      {
-        deviceId: 'SOCIES-ESP32-77211F',
-        user: { nickname: 'Hans_Berlin', email: 'hans@socies.io', avatar: '🌭', isVip: false },
-        location: { country: 'Almanya', city: 'Berlin', district: 'Mitte', flag: '🇩🇪', ip: '84.119.12.xx' },
-        phone: { model: 'Nothing Phone (2)', os: 'Android 14 (Nothing OS 2.5)', batteryPct: 82, batteryMv: 3950, stepsToday: 8450, connection: 'Wi-Fi 6E / BLE 5.3', latencyMs: 48 },
-        pet: { breed: 'sosis', breedTitle: 'Sevimli Sosis 🌭', stage: 3, score: 4180, streakDays: 19 },
-        isOnline: true,
-        lastSeenSecAgo: 42
-      },
-      {
-        deviceId: 'SOCIES-ESP32-55490G',
-        user: { nickname: 'Oliver_London', email: 'oliver@socies.io', avatar: '🐦', isVip: false },
-        location: { country: 'Birleşik Krallık', city: 'Londra', district: 'Soho', flag: '🇬🇧', ip: '82.165.197.xx' },
-        phone: { model: 'Apple iPhone 14', os: 'iOS 17.4', batteryPct: 71, batteryMv: 3860, stepsToday: 5110, connection: '4G LTE / BLE 5.0', latencyMs: 55 },
-        pet: { breed: 'kus', breedTitle: 'Uçan Kuş 🐦', stage: 2, score: 2190, streakDays: 11 },
-        isOnline: false,
-        lastSeenSecAgo: 160
-      }
-    ];
-
-    let sociesCurrentPill = 'all';
-
-    function getSociesPetLabel(breed) {
-      switch(breed) {
-        case 'top': return 'Zıpzıp Top ⚽';
-        case 'kedi': return 'Sanal Kedi 🐱';
-        case 'kopek': return 'Sadık Köpek 🐶';
-        case 'bitki': return 'Bonsai Bitki 🌱';
-        case 'balik': return 'Neon Balık 🐠';
-        case 'sosis': return 'Sevimli Sosis 🌭';
-        case 'kus': return 'Uçan Kuş 🐦';
-        default: return (breed || 'Evcil Hayvan').toUpperCase();
-      }
-    }
-
-    async function fetchSociesTabUsers(manual = false) {
-      try {
-        const res = await fetch('/api/v1/socies/active-users');
-        if (res.ok) {
-          const data = await res.json();
-          if (data.users && data.users.length > 0) {
-            sociesUsersList = data.users.map(u => ({
-              ...u,
-              pet: { ...u.pet, breedTitle: getSociesPetLabel(u.pet?.breed) }
-            }));
-            const tot = document.getElementById('sociesKpiTotal');
-            const onl = document.getElementById('sociesKpiOnline');
-            const cit = document.getElementById('sociesKpiCities');
-            const cnt = document.getElementById('sociesKpiCountries');
-            if (tot) tot.textContent = data.totalUsers || sociesUsersList.length;
-            if (onl) onl.textContent = data.onlineCount || sociesUsersList.filter(u => u.isOnline).length;
-            if (cit) cit.textContent = (data.citiesCount || 7) + ' Şehir';
-            if (cnt && data.countries) cnt.textContent = data.countries.join(', ');
-          }
-        }
-      } catch (_) {}
-      applySociesTabFilter();
-      if (manual) showToast('Socies ağı güncellendi!');
-    }
-
-    function setSociesPill(cat) {
-      sociesCurrentPill = cat;
-      document.querySelectorAll('.socies-pill').forEach(b => b.classList.remove('active'));
-      const activePill = Array.from(document.querySelectorAll('.socies-pill')).find(b => b.getAttribute('onclick')?.includes(cat));
-      if (activePill) activePill.classList.add('active');
-      applySociesTabFilter();
-    }
-
-    function applySociesTabFilter() {
-      const q = (document.getElementById('sociesTabSearch')?.value || '').trim().toLowerCase();
-      const grid = document.getElementById('sociesTabGrid');
-      if (!grid) return;
-      grid.innerHTML = '';
-
-      const filtered = sociesUsersList.filter(u => {
-        if (sociesCurrentPill === 'online' && !u.isOnline) return false;
-        if (sociesCurrentPill === 'tr' && u.location?.country !== 'Türkiye') return false;
-        if (sociesCurrentPill === 'de' && u.location?.country !== 'Almanya') return false;
-        if (sociesCurrentPill === 'uk' && u.location?.country !== 'Birleşik Krallık') return false;
-        if (sociesCurrentPill === 'android' && !(u.phone?.os || '').toLowerCase().includes('android')) return false;
-        if (sociesCurrentPill === 'ios' && !(u.phone?.os || '').toLowerCase().includes('ios')) return false;
-
-        if (!q) return true;
-        const txt = [
-          u.user?.nickname, u.user?.email, u.location?.country, u.location?.city,
-          u.location?.district, u.phone?.model, u.phone?.os, u.pet?.breed, u.pet?.breedTitle
-        ].join(' ').toLowerCase();
-        return txt.includes(q);
-      });
-
-      if (filtered.length === 0) {
-        grid.innerHTML = `
-          <div style="grid-column: 1 / -1; text-align:center; padding: 3rem; background: var(--card-bg); border-radius: 20px; border: 1px solid var(--card-border);">
-            <div style="font-size:2.5rem; margin-bottom: 0.5rem;">🔍</div>
-            <div style="font-size:1.1rem; font-weight:700; color:#fff;">Eşleşen Cihaz veya Kullanıcı Bulunamadı</div>
-            <div style="color:var(--text-muted); font-size:0.8rem; margin-top:0.3rem;">Farklı bir şehir, telefon modeli veya filtre deneyin.</div>
-          </div>
-        `;
-        return;
-      }
-
-      filtered.forEach(u => {
-        const card = document.createElement('div');
-        card.className = 'socies-user-card';
-
-        const batColor = u.phone?.batteryPct > 50 ? 'var(--accent-green)' : (u.phone?.batteryPct > 20 ? 'var(--accent-yellow)' : 'var(--accent-pink)');
-        const lastSeenStr = u.isOnline ? 'Çevrimiçi' : (u.lastSeenSecAgo ? Math.round(u.lastSeenSecAgo / 60) + ' dk önce' : 'Çevrimdışı');
-
-        card.innerHTML = `
-          <div>
-            <div class="socies-card-head">
-              <div class="socies-loc-tag">
-                <span style="font-size:1.2rem;">${u.location?.flag || '🌐'}</span>
-                <div>
-                  <div>${u.location?.city || 'İstanbul'}, ${u.location?.country || 'TR'}</div>
-                  <div class="socies-loc-sub">${u.location?.district || 'Merkez'} • <span style="color:var(--accent-purple); font-family:'JetBrains Mono'; font-size:0.68rem;">${u.location?.ip || '127.0.0.1'}</span></div>
-                </div>
-              </div>
-              <div class="socies-online-badge ${u.isOnline ? 'on' : 'off'}">
-                ${u.isOnline ? '<span class="socies-pulse-dot"></span>' : ''}
-                <span>${lastSeenStr}</span>
-              </div>
-            </div>
-
-            <div class="socies-user-meta">
-              <div class="socies-avatar-icon">${u.user?.avatar || '👤'}</div>
-              <div style="flex:1; min-width:0;">
-                <div class="socies-uname-row">
-                  <span class="socies-uname">${u.user?.nickname || 'Socies Dostu'}</span>
-                  ${u.user?.isVip ? '<span class="socies-vip">👑 VIP</span>' : ''}
-                </div>
-                <div class="socies-uemail">${u.user?.email || u.deviceId}</div>
-              </div>
-            </div>
-
-            <div class="socies-pet-banner">
-              <span style="color:var(--accent);">🐾 ${u.pet?.breedTitle || getSociesPetLabel(u.pet?.breed)} (Lv.${u.pet?.stage || 1})</span>
-              <span style="color:var(--accent-yellow); font-family:'JetBrains Mono';">${u.pet?.score || 0} P • 🔥 ${u.pet?.streakDays || 1} Gün</span>
-            </div>
-
-            <div class="socies-telem-box">
-              <div class="socies-telem-hdr">
-                <span>📱</span>
-                <span>Telefondan Canlı Telemetri</span>
-              </div>
-              <div class="socies-telem-line">
-                <span class="socies-telem-lbl">Telefon Modeli:</span>
-                <span class="socies-telem-val">${u.phone?.model || 'Android Cihaz'}</span>
-              </div>
-              <div class="socies-telem-line">
-                <span class="socies-telem-lbl">İşletim Sistemi:</span>
-                <span class="socies-telem-val">${u.phone?.os || 'Android 14'}</span>
-              </div>
-              <div class="socies-telem-line">
-                <span class="socies-telem-lbl">Telefon Bataryası:</span>
-                <span class="socies-telem-val">
-                  %${u.phone?.batteryPct || 100} (${u.phone?.batteryMv || 4000}mV)
-                  <span style="display:inline-block; width:55px; height:6px; background:#1e293b; border-radius:3px; vertical-align:middle; margin-left:4px; overflow:hidden;">
-                    <span style="display:block; height:100%; width:${u.phone?.batteryPct || 100}%; background:${batColor};"></span>
-                  </span>
-                </span>
-              </div>
-              <div class="socies-telem-line">
-                <span class="socies-telem-lbl">Günlük Adım:</span>
-                <span class="socies-telem-val" style="color:var(--accent);">${(u.phone?.stepsToday || 0).toLocaleString()} adım 👟</span>
-              </div>
-              <div class="socies-telem-line">
-                <span class="socies-telem-lbl">Bağlantı / Gecikme:</span>
-                <span class="socies-telem-val">${u.phone?.connection || 'Wi-Fi 6'} (${u.phone?.latencyMs || 20}ms)</span>
-              </div>
-              <div class="socies-telem-line">
-                <span class="socies-telem-lbl">Cihaz ID:</span>
-                <span class="socies-telem-val" style="color:var(--accent-purple); font-size:0.67rem;">${u.deviceId}</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="socies-actions-row">
-            <button class="btn-socies-action" onclick="sendSociesTabPager('${u.deviceId}', '${u.user?.nickname || 'Dost'}')">
-              <span>📟</span>
-              <span>Çağrı</span>
-            </button>
-            <button class="btn-socies-action" onclick="duelSociesTab('${u.user?.nickname || 'Dost'}')">
-              <span>🤠</span>
-              <span>Düello</span>
-            </button>
-            <button class="btn-socies-action" onclick="rpsSociesTab('${u.user?.nickname || 'Dost'}')">
-              <span>✊</span>
-              <span>T-K-M</span>
-            </button>
-          </div>
-        `;
-        grid.appendChild(card);
       });
     }
 
-    async function sendSociesTabPager(devId, nick) {
-      const msg = prompt(`[${nick}] kullanıcısının sanal bebek ekranına çağrı cihazı mesajı gönder:\n(Maksimum 32 karakter)`, "Selam! Neredesin?");
-      if (!msg || msg.trim() === '') return;
+    function showToast(msg) {
+      const t = document.getElementById('toastMsg');
+      t.textContent = msg;
+      t.style.display = 'block';
+      setTimeout(() => { t.style.display = 'none'; }, 2200);
+    }
+
+    // WEB AUDIO SYNTHESIZER
+    let audioCtx = null;
+    function playTone(freq, dur = 0.08) {
       try {
-        const res = await fetch('/api/v1/messages/send', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ targetDeviceId: devId, fromUser: 'Web Kullanıcısı', messageText: msg.trim() })
-        });
-        const data = await res.json();
-        if (data.status === 'DELIVERED_TO_ONLINE_DEVICE') {
-          showToast(`✨ Mesaj ${nick} cihazının OLED ekranında akıyor!`);
-        } else {
-          showToast(`📬 ${nick} şu an kapalı, mesaj sunucu kuyruğuna alındı.`);
-        }
-      } catch (_) {
-        showToast(`✨ Mesaj ${nick} cihazına iletildi!`);
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + dur);
+      } catch (e) {}
+    }
+
+    // OLED RENDER & RETRO PONG ENGINE
+    const canvas = document.getElementById('oledCanvas');
+    const ctx = canvas.getContext('2d');
+
+    let ball = { x: 64, y: 32, vx: 1.5, vy: 1.2, r: 3 };
+    let paddle = { x: 50, w: 28, h: 4 };
+    let goals = 0;
+    let tick = 0;
+
+    function renderOLED() {
+      tick++;
+      // Clear black
+      ctx.fillStyle = '#000814';
+      ctx.fillRect(0, 0, 128, 64);
+
+      // Top bar (Dual color yellow area: y=0..16)
+      ctx.fillStyle = 'rgba(253, 224, 71, 0.12)';
+      ctx.fillRect(0, 0, 128, 14);
+      ctx.fillStyle = '#FDE047';
+      ctx.font = '8px "Press Start 2P", monospace';
+      ctx.fillText("DELIK PONG", 4, 10);
+      ctx.fillText("G:" + goals, 90, 10);
+
+      // Horizontal separator line
+      ctx.strokeStyle = '#FDE047';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(0, 14);
+      ctx.lineTo(128, 14);
+      ctx.stroke();
+
+      // Lower area (Cyan: y=15..64)
+      ctx.fillStyle = '#38BDF8';
+
+      // Ball physics
+      ball.x += ball.vx;
+      ball.y += ball.vy;
+
+      if (ball.x - ball.r <= 2 || ball.x + ball.r >= 126) {
+        ball.vx = -ball.vx;
+        playTone(300, 0.04);
       }
-    }
-
-    function duelSociesTab(nick) {
-      playTone(440, 0.15, 'sawtooth');
-      setTimeout(() => playTone(880, 0.25, 'triangle'), 180);
-      showToast(`🤠 ${nick} kullanıcısına 3-2-1 Kovboy Düellosu daveti gönderildi!`);
-    }
-
-    function rpsSociesTab(nick) {
-      const choice = prompt(`[${nick}] ile 3-2-1 Taş-Kağıt-Makas Karşılaşması!\nSeçiminiz: (taş / kağıt / makas)`, "taş");
-      if (!choice) return;
-      const opts = ['taş', 'kağıt', 'makas'];
-      const opponent = opts[Math.floor(Math.random() * opts.length)];
-      let outcome = "Berabere! 🤝";
-      if (choice.toLowerCase() === opponent) outcome = "Berabere! 🤝";
-      else if (
-        (choice.toLowerCase() === 'taş' && opponent === 'makas') ||
-        (choice.toLowerCase() === 'kağıt' && opponent === 'taş') ||
-        (choice.toLowerCase() === 'makas' && opponent === 'kağıt')
-      ) {
-        outcome = "Tebrikler, Kazandınız! 🏆 (+50 Puan)";
-      } else {
-        outcome = `${nick} Kazandı! 💥`;
-      }
-      alert(`🎮 TAŞ-KAĞIT-MAKAS KARŞILAŞMASI\n\nSenin Seçimin: ${choice.toUpperCase()}\n${nick} Seçimi: ${opponent.toUpperCase()}\n\nSonuç: ${outcome}`);
-    }
-
-    // ==========================================
-    // KARAKTER ATÖLYESİ (ÇİZİM & SELFIE) MOTORU
-    // ==========================================
-    let customPetBitmap = null;
-    let studioGrid = Array.from({ length: 48 }, () => Array(48).fill(0));
-    let studioHistory = [];
-    let currentStudioTool = 'pencil';
-    let currentDrawStep = 1;
-    let isStudioMouseDown = false;
-    let activeSelfieStyle = 'dither';
-    let cameraMediaStream = null;
-
-    // Başlangıç için sevimli bir kılavuz karakter taslağı yükle
-    function initDefaultStudioDoodle() {
-      for (let y = 0; y < 48; y++) {
-        for (let x = 0; x < 48; x++) {
-          const dx = x - 24;
-          const dy = y - 24;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          // Gövde
-          if (dist < 15) studioGrid[y][x] = 1;
-          // Kedi kulakları
-          if (y < 15 && (Math.abs(x - 15) < 3 || Math.abs(x - 33) < 3)) studioGrid[y][x] = 1;
-          // Gözler
-          if ((y === 21 || y === 22) && (x === 18 || x === 30)) studioGrid[y][x] = 0;
-          // Gülümseme
-          if (y === 27 && x >= 21 && x <= 27) studioGrid[y][x] = 0;
-        }
-      }
-      customPetBitmap = studioGrid;
-    }
-
-    function setStudioMode(mode) {
-      document.querySelectorAll('.studio-mode-btn').forEach(b => b.classList.remove('active'));
-      const drawSec = document.getElementById('studioDrawSection');
-      const selfieSec = document.getElementById('studioSelfieSection');
-      if (mode === 'draw') {
-        document.getElementById('btnStudioModeDraw').classList.add('active');
-        if (drawSec) drawSec.style.display = 'block';
-        if (selfieSec) selfieSec.style.display = 'none';
-      } else {
-        document.getElementById('btnStudioModeSelfie').classList.add('active');
-        if (drawSec) drawSec.style.display = 'none';
-        if (selfieSec) selfieSec.style.display = 'block';
-      }
-    }
-
-    function setDrawStep(step) {
-      currentDrawStep = step;
-      document.querySelectorAll('.step-chip').forEach(c => c.classList.remove('active'));
-      const targetChip = document.getElementById('stepChip' + step);
-      if (targetChip) targetChip.classList.add('active');
-      if (step === 1) showToast('1. Aşama: Gövde ve kafa siluetini çizin');
-      else if (step === 2) showToast('2. Aşama: Göz ve ağız mimiklerini yerleştirin');
-      else showToast('3. Aşama: Kulaklar, kuyruk veya aksesuarları ekleyin');
-    }
-
-    function setStudioTool(t) {
-      currentStudioTool = t;
-      document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
-      if (t === 'pencil') document.getElementById('toolBtnPencil').classList.add('active');
-      else if (t === 'eraser') document.getElementById('toolBtnEraser').classList.add('active');
-      else if (t === 'bucket') document.getElementById('toolBtnBucket').classList.add('active');
-    }
-
-    function pushStudioHistory() {
-      if (studioHistory.length > 12) studioHistory.shift();
-      studioHistory.push(JSON.parse(JSON.stringify(studioGrid)));
-    }
-
-    function undoStudioDraw() {
-      if (studioHistory.length > 0) {
-        studioGrid = studioHistory.pop();
-        customPetBitmap = studioGrid;
-        renderDrawCanvas();
-        showToast('Son çizim işlemi geri alındı');
-      }
-    }
-
-    function clearStudioCanvas() {
-      pushStudioHistory();
-      studioGrid = Array.from({ length: 48 }, () => Array(48).fill(0));
-      customPetBitmap = studioGrid;
-      renderDrawCanvas();
-      showToast('Tuval temizlendi');
-    }
-
-    // ARALARI DOLDUR & KONTUR YUMUŞATMA (MAGIC INBETWEEN / AUTO-CONTOUR)
-    function autoContourFill() {
-      pushStudioHistory();
-      // Basit morfolojik kapanış: Komşu pikselleri bağla
-      const newGrid = JSON.parse(JSON.stringify(studioGrid));
-      for (let y = 1; y < 47; y++) {
-        for (let x = 1; x < 47; x++) {
-          const neighbors = 
-            studioGrid[y-1][x] + studioGrid[y+1][x] + 
-            studioGrid[y][x-1] + studioGrid[y][x+1];
-          if (studioGrid[y][x] === 0 && neighbors >= 3) {
-            newGrid[y][x] = 1; // Boşlukları otomatik doldur
-          }
-        }
-      }
-      studioGrid = newGrid;
-      customPetBitmap = studioGrid;
-      renderDrawCanvas();
-      playTone(523.25, 0.1, 'triangle');
-      showToast('🪄 Çizgiler bağlandı ve aralar dolduruldu!');
-    }
-
-    // FLOOD FILL (DOLGU KOVASI)
-    function studioFloodFill(startX, startY, fillVal) {
-      const targetVal = studioGrid[startY][startX];
-      if (targetVal === fillVal) return;
-      pushStudioHistory();
-
-      const queue = [[startX, startY]];
-      while (queue.length > 0) {
-        const [x, y] = queue.pop();
-        if (x < 0 || x >= 48 || y < 0 || y >= 48) continue;
-        if (studioGrid[y][x] !== targetVal) continue;
-        studioGrid[y][x] = fillVal;
-
-        queue.push([x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]);
-      }
-      customPetBitmap = studioGrid;
-      renderDrawCanvas();
-    }
-
-    function renderDrawCanvas() {
-      const c = document.getElementById('drawCanvas');
-      if (!c) return;
-      const ctx2 = c.getContext('2d');
-      ctx2.fillStyle = '#02060c';
-      ctx2.fillRect(0, 0, 48, 48);
-
-      ctx2.fillStyle = '#00f0ff';
-      for (let y = 0; y < 48; y++) {
-        for (let x = 0; x < 48; x++) {
-          if (studioGrid[y][x] === 1) {
-            ctx2.fillRect(x, y, 1, 1);
-          }
-        }
-      }
-    }
-
-    function handleCanvasDraw(e) {
-      const c = document.getElementById('drawCanvas');
-      if (!c) return;
-      const rect = c.getBoundingClientRect();
-      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-
-      const px = Math.floor((clientX - rect.left) / (rect.width / 48));
-      const py = Math.floor((clientY - rect.top) / (rect.height / 48));
-
-      if (px < 0 || px >= 48 || py < 0 || py >= 48) return;
-
-      const coordEl = document.getElementById('drawCoordDisplay');
-      if (coordEl) coordEl.textContent = `Piksel: X: ${px}, Y: ${py}`;
-
-      if (currentStudioTool === 'bucket') {
-        studioFloodFill(px, py, 1);
-        return;
+      if (ball.y - ball.r <= 16) {
+        ball.vy = -ball.vy;
+        playTone(400, 0.04);
       }
 
-      const val = currentStudioTool === 'eraser' ? 0 : 1;
-      if (studioGrid[py][px] !== val) {
-        studioGrid[py][px] = val;
-        customPetBitmap = studioGrid;
-        renderDrawCanvas();
-      }
-    }
-
-    // CANLI OLED ÖNİZLEME ANİMASYON DÖNGÜSÜ
-    let studioAnimFrame = 0;
-    let studioAnimTimer = 0;
-
-    function runStudioPreviewLoop() {
-      studioAnimTimer++;
-      if (studioAnimTimer % 6 === 0) {
-        studioAnimFrame = (studioAnimFrame + 1) % 4;
-        const frEl = document.getElementById('previewFrameCount');
-        if (frEl) frEl.textContent = `FR: ${studioAnimFrame + 1}/4`;
-      }
-
-      const pc = document.getElementById('studioPreviewCanvas');
-      if (pc) {
-        const pctx = pc.getContext('2d');
-        pctx.fillStyle = '#000';
-        pctx.fillRect(0, 0, 128, 48);
-
-        // Squash & stretch ve wobble hesapla
-        let dy = 0;
-        let dx = 0;
-        if (studioAnimFrame === 1) dy = 1; // Nefes alma
-        if (studioAnimFrame === 2) dy = 0; // Göz kırpma anı
-        if (studioAnimFrame === 3) { dx = 1; dy = -1; } // Adım atma
-
-        pctx.fillStyle = '#00f0ff';
-        const startX = 40 + dx;
-        const startY = dy;
-
-        for (let y = 0; y < 48; y++) {
-          for (let x = 0; x < 48; x++) {
-            if (studioGrid[y] && studioGrid[y][x] === 1) {
-              // Frame 3'te göz kırpma: y 20-22 arasını çizgiye indir
-              if (studioAnimFrame === 2 && (y === 20 || y === 22) && (x >= 17 && x <= 31)) {
-                continue;
-              }
-              pctx.fillRect(startX + x, startY + y, 1, 1);
-            }
-          }
+      // Goal at bottom holes or paddle bounce
+      if (ball.y + ball.r >= 56) {
+        if (ball.x >= paddle.x && ball.x <= paddle.x + paddle.w) {
+          ball.vy = -Math.abs(ball.vy);
+          playTone(600, 0.06);
+          goals++;
+          showToast("Top sektirildi! Toplam: " + goals);
+        } else if (ball.y > 64) {
+          // Reset ball
+          ball.x = 64;
+          ball.y = 24;
+          ball.vy = 1.2;
+          playTone(180, 0.15);
         }
       }
 
-      requestAnimationFrame(runStudioPreviewLoop);
-    }
+      // Draw Ball
+      ctx.beginPath();
+      ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2);
+      ctx.fill();
 
-    // SELFIE KAMERA İŞLEMLERİ
-    async function startCameraStream() {
-      try {
-        const vid = document.getElementById('cameraVideo');
-        if (!vid) return;
-        cameraMediaStream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: 'user', width: { ideal: 480 }, height: { ideal: 480 } }
-        });
-        vid.srcObject = cameraMediaStream;
-        showToast('📹 Kamera başarıyla başlatıldı!');
-        const btn = document.getElementById('btnStartCam');
-        if (btn) btn.style.display = 'none';
-      } catch (err) {
-        alert('Kamera açılamadı: ' + err.message + '\nLütfen tarayıcı kamera izinlerini kontrol edin veya dosya seçerek fotoğraf yükleyin.');
+      // Draw Paddle
+      ctx.fillRect(paddle.x, 58, paddle.w, paddle.h);
+
+      // Cute pet face bouncing in background
+      const petY = 28 + Math.sin(tick * 0.1) * 3;
+      ctx.font = '10px monospace';
+      ctx.fillText("(^o^)", 8, petY);
+
+      requestAnimationFrame(renderOLED);
+    }
+    requestAnimationFrame(renderOLED);
+
+    // 4 HORIZONTAL BUTTON CONTROLS
+    function pressKey(k) {
+      if (k === 'LEFT') {
+        paddle.x = Math.max(2, paddle.x - 8);
+        playTone(350, 0.05);
+      } else if (k === 'RIGHT') {
+        paddle.x = Math.min(98, paddle.x + 8);
+        playTone(450, 0.05);
+      } else if (k === 'ACTION') {
+        ball.vy = -Math.abs(ball.vy) * 1.2;
+        playTone(700, 0.08);
+        showToast("Hızlı Flaş Vuruş!");
+      } else if (k === 'BACK') {
+        playTone(250, 0.05);
+        showToast("Ana Menüye Dönüldü");
       }
     }
+    function releaseKey(k) {}
 
-    function setSelfieStyle(style) {
-      activeSelfieStyle = style;
-      document.querySelectorAll('.selfie-style-btn').forEach(b => b.classList.remove('active'));
-      const targetBtn = Array.from(document.querySelectorAll('.selfie-style-btn')).find(b => b.getAttribute('onclick')?.includes(style));
-      if (targetBtn) targetBtn.classList.add('active');
+    // QUICK PET INTERACTIONS
+    function feedPet() {
+      playTone(550, 0.08);
+      document.getElementById('txtHunger').textContent = "100%";
+      document.getElementById('barHunger').style.width = "100%";
+      showToast("🍖 Zıpzıp beslendi! Açlık %100");
+    }
+    function cleanPet() {
+      playTone(650, 0.08);
+      document.getElementById('txtClean').textContent = "100%";
+      document.getElementById('barClean').style.width = "100%";
+      showToast("🧼 Banyo yapıldı! Hijyen %100");
+    }
+    function lovePet() {
+      playTone(750, 0.08);
+      document.getElementById('txtLove').textContent = "100%";
+      document.getElementById('barLove').style.width = "100%";
+      showToast("❤️ Sevildi! Mutluluk tavan yaptı");
     }
 
-    function captureSelfieSnapshot() {
-      const vid = document.getElementById('cameraVideo');
-      const snap = document.getElementById('cameraSnapshotCanvas');
-      if (!vid || !snap) return;
-
-      const sctx = snap.getContext('2d');
-      sctx.drawImage(vid, 0, 0, 48, 48);
-      processImageTo1Bit(snap);
+    // MODULAR WORKSHOP LOGIC
+    let wpState = { body: 1, eyes: 1, mouth: 1, ears: 1, acc: 1 };
+    function cycleWorkshopPart(p) {
+      wpState[p] = (wpState[p] % 10) + 1;
+      const elMap = { body: 'wpBody', eyes: 'wpEyes', mouth: 'wpMouth', ears: 'wpEars', acc: 'wpAcc' };
+      document.getElementById(elMap[p]).textContent = '#' + wpState[p];
+      playTone(400 + wpState[p] * 30, 0.05);
     }
-
-    function handleSelfieFileUpload(e) {
-      const file = e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function(evt) {
-        const img = new Image();
-        img.onload = function() {
-          const snap = document.getElementById('cameraSnapshotCanvas');
-          const sctx = snap.getContext('2d');
-          sctx.drawImage(img, 0, 0, 48, 48);
-          processImageTo1Bit(snap);
-        };
-        img.src = evt.target.result;
-      };
-      reader.readAsDataURL(file);
+    function flashWorkshopToConsole() {
+      playTone(880, 0.15);
+      showToast("Karakter başarıyla konsola aktarıldı!");
     }
-
-    function processImageTo1Bit(canvas) {
-      pushStudioHistory();
-      const sctx = canvas.getContext('2d');
-      const imgData = sctx.getImageData(0, 0, 48, 48);
-      const d = imgData.data;
-
-      // 48x48 Grayscale + Floyd-Steinberg Dithering
-      const gray = [];
-      for (let y = 0; y < 48; y++) {
-        gray[y] = [];
-        for (let x = 0; x < 48; x++) {
-          const idx = (y * 48 + x) * 4;
-          // Parlaklık
-          gray[y][x] = 0.299 * d[idx] + 0.587 * d[idx+1] + 0.114 * d[idx+2];
-        }
-      }
-
-      for (let y = 0; y < 48; y++) {
-        for (let x = 0; x < 48; x++) {
-          const oldP = gray[y][x];
-          const newP = oldP < 120 ? 1 : 0; // OLED'de karanlık kısımlar çizgi olsun
-          studioGrid[y][x] = newP;
-          const error = oldP - (newP ? 0 : 255);
-
-          if (x + 1 < 48) gray[y][x + 1] += error * (7 / 16);
-          if (x - 1 >= 0 && y + 1 < 48) gray[y + 1][x - 1] += error * (3 / 16);
-          if (y + 1 < 48) gray[y + 1][x] += error * (5 / 16);
-          if (x + 1 < 48 && y + 1 < 48) gray[y + 1][x + 1] += error * (1 / 16);
-        }
-      }
-
-      // Seçili stile göre ek süslemeler ekle
-      if (activeSelfieStyle === 'cat') {
-        for (let i = 0; i < 5; i++) {
-          studioGrid[4 + i][12 - i] = 1; studioGrid[4 + i][12 + i] = 1;
-          studioGrid[4 + i][36 - i] = 1; studioGrid[4 + i][36 + i] = 1;
-        }
-      } else if (activeSelfieStyle === 'robot') {
-        for (let x = 16; x <= 32; x++) {
-          studioGrid[18][x] = 1; studioGrid[22][x] = 1;
-        }
-      }
-
-      customPetBitmap = studioGrid;
-      renderDrawCanvas();
-      setStudioMode('draw');
-      playTone(659.25, 0.15, 'square');
-      showToast('🎉 Fotoğrafınız 1-Bit OLED piksel karaktere dönüştürüldü!');
-    }
-
-    // EMÜLATÖR VE DONANIMA AKTARIM
-    function applyCustomPetToEmulator() {
-      if (!customPetBitmap) customPetBitmap = studioGrid;
-      state.pet.id = 'ozel';
-      state.pet.name = 'Özel Sanal Bebek';
-      switchTab('tab-sim');
-      playTone(523.25, 0.08, 'square');
-      setTimeout(() => playTone(659.25, 0.08, 'square'), 90);
-      setTimeout(() => playTone(783.99, 0.18, 'triangle'), 180);
-      showToast('✨ Özel karakteriniz başarıyla el konsoluna aktarıldı ve canlandı!');
-      renderOLED();
-    }
-
-    function copyXBMCode() {
-      // 48x48 = 2304 bit = 288 bayt C-Array formatı
-      let hexArr = [];
-      for (let y = 0; y < 48; y++) {
-        for (let byteIdx = 0; byteIdx < 6; byteIdx++) {
-          let b = 0;
-          for (let bit = 0; bit < 8; bit++) {
-            const x = byteIdx * 8 + bit;
-            if (studioGrid[y] && studioGrid[y][x] === 1) {
-              b |= (1 << bit);
-            }
-          }
-          hexArr.push('0x' + b.toString(16).padStart(2, '0'));
-        }
-      }
-
-      const cCode = `// SOCIES ESP32 OLED 48x48 1-BIT MONOCHROME XBM SPRITE (288 BYTES)\n` +
-        `static const unsigned char custom_pet_bits[] PROGMEM = {\n  ` +
-        hexArr.map((h, i) => h + ((i + 1) % 12 === 0 ? ',\n  ' : ', ')).join('') +
-        `\n};\n#define CUSTOM_PET_WIDTH 48\n#define CUSTOM_PET_HEIGHT 48`;
-
-      navigator.clipboard.writeText(cCode).then(() => {
-        showToast('📋 288 Baytlık ESP32 C-Array kodu panoya kopyalandı!');
-      }).catch(() => {
-        prompt('ESP32 C-Array Kodu (Kopyalayabilirsiniz):', cCode);
-      });
-    }
-
-    async function saveCustomSpriteToCloud() {
-      try {
-        const res = await fetch('/api/v1/pet/save-custom-sprite', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            userEmail: 'turan@socies.io',
-            spriteName: 'Özel Karakterim',
-            spriteType: activeSelfieStyle,
-            bitmap48: studioGrid
-          })
-        });
-        const data = await res.json();
-        if (data.success) {
-          showToast('☁️ Karakteriniz bulut hesabınıza kaydedildi!');
-        } else {
-          showToast('Bulut kaydı tamamlandı!');
-        }
-      } catch (_) {
-        showToast('☁️ Özel karakter yerel belleğe ve buluta kaydedildi!');
-      }
-    }
-
-    function setupStudioCanvasEvents() {
-      const c = document.getElementById('drawCanvas');
-      if (!c) return;
-
-      c.addEventListener('mousedown', (e) => {
-        isStudioMouseDown = true;
-        pushStudioHistory();
-        handleCanvasDraw(e);
-      });
-      window.addEventListener('mouseup', () => { isStudioMouseDown = false; });
-      c.addEventListener('mousemove', (e) => {
-        if (isStudioMouseDown) handleCanvasDraw(e);
-      });
-
-      // Touch desteği
-      c.addEventListener('touchstart', (e) => {
-        e.preventDefault();
-        isStudioMouseDown = true;
-        pushStudioHistory();
-        handleCanvasDraw(e);
-      }, { passive: false });
-      c.addEventListener('touchmove', (e) => {
-        e.preventDefault();
-        if (isStudioMouseDown) handleCanvasDraw(e);
-      }, { passive: false });
-      window.addEventListener('touchend', () => { isStudioMouseDown = false; });
-    }
-
-    window.addEventListener('DOMContentLoaded', () => {
-      updateUI();
-      setInterval(simTick, 50);
-      setTimeout(() => checkAppVersionUpdate(false), 800);
-      fetchSociesTabUsers(false);
-      setInterval(() => fetchSociesTabUsers(false), 5000);
-      initDefaultStudioDoodle();
-      setupStudioCanvasEvents();
-      renderDrawCanvas();
-      runStudioPreviewLoop();
-    });
   </script>
 </body>
 </html>
