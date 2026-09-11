@@ -1,0 +1,1358 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Socies - Sanal Bebek & Konsol</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800;900&family=JetBrains+Mono:wght@700;800&family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #F8FAFC;
+      --card-bg: #FFFFFF;
+      --card-border: #E2E8F0;
+      --text: #0F172A;
+      --text-muted: #64748B;
+      
+      --cyan: #06B6D4;
+      --emerald: #10B981;
+      --amber: #F59E0B;
+      --rose: #F43F5E;
+      --indigo: #6366F1;
+      --purple: #8B5CF6;
+
+      --case-grad: linear-gradient(180deg, #5b3294 0%, #371861 100%);
+      --case-edge: #220b40;
+      --bezel-bg: #140d24;
+      --oled-bg: #000814;
+      --btn-grad: linear-gradient(180deg, #6c3da8, #3e1b69);
+      --btn-active: #270e47;
+      
+      --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 0 5.5rem 0;
+      overflow-x: hidden;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 460px;
+      padding: 0.8rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    /* TOP PROFILE BAR */
+    .top-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--card-bg);
+      border: 1.5px solid var(--card-border);
+      border-radius: 20px;
+      padding: 0.6rem 0.9rem;
+      box-shadow: var(--card-shadow);
+    }
+    .player-profile {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .player-avatar {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #6366F1, #8B5CF6);
+      border-radius: 12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.3rem;
+      color: #fff;
+    }
+    .player-info {
+      display: flex;
+      flex-direction: column;
+    }
+    .player-name {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .player-sub {
+      font-size: 0.75rem;
+      color: var(--indigo);
+      font-weight: 700;
+    }
+    .top-header-badges {
+      display: flex;
+      gap: 0.4rem;
+    }
+    .badge-chip {
+      background: #F1F5F9;
+      color: var(--text);
+      padding: 0.35rem 0.6rem;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      border: 1px solid #E2E8F0;
+    }
+
+    /* TAB CONTENTS */
+    .tab-view {
+      display: none;
+      width: 100%;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .tab-view.active {
+      display: flex;
+    }
+
+    /* ========================================================================= */
+    /* 1. RETRO CONSOLE EMULATOR (TAB-CONSOLE) */
+    /* ========================================================================= */
+    .console-box {
+      width: 100%;
+      background: var(--case-grad);
+      border: 4px solid var(--case-edge);
+      border-radius: 32px;
+      box-shadow: 0 16px 36px rgba(0,0,0,0.4), inset 0 2px 5px rgba(255,255,255,0.25);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1rem;
+      position: relative;
+    }
+    .console-header-row {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.6rem;
+    }
+    .power-led {
+      width: 8px;
+      height: 8px;
+      background: #00ff66;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #00ff66;
+    }
+    .console-brand-text {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.8rem;
+      color: #e2d1f9;
+      letter-spacing: 2px;
+    }
+    .console-id-tag {
+      font-size: 0.65rem;
+      background: rgba(0,0,0,0.5);
+      color: #00ff66;
+      padding: 0.15rem 0.5rem;
+      border-radius: 10px;
+      font-weight: 800;
+    }
+
+    .screen-bezel {
+      background: var(--bezel-bg);
+      border: 3px solid #140d20;
+      border-radius: 18px;
+      padding: 8px 6px;
+      box-shadow: inset 0 4px 10px rgba(0,0,0,0.8);
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .oled-screen {
+      background: var(--oled-bg);
+      border-radius: 6px;
+      border: 2px solid #0a1128;
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.15);
+      image-rendering: pixelated;
+      width: 100%;
+      max-width: 320px;
+      height: 160px;
+    }
+
+    .mid-status-txt {
+      font-size: 0.72rem;
+      color: #c4b5fd;
+      font-weight: 800;
+      margin: 0.8rem 0 0.5rem 0;
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      padding: 0 0.4rem;
+    }
+
+    /* 4 HORIZONTAL BUTTONS AT BOTTOM */
+    .horizontal-buttons-row {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      gap: 0.4rem;
+      margin-top: 0.2rem;
+    }
+    .retro-horiz-btn {
+      flex: 1;
+      height: 68px;
+      background: var(--btn-grad);
+      border: 2.5px solid #2b1150;
+      border-radius: 18px;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.5), inset 0 2px 4px rgba(255,255,255,0.3);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: transform 0.08s ease;
+    }
+    .retro-horiz-btn:active, .retro-horiz-btn.pressed {
+      transform: translateY(3px) scale(0.96);
+      background: var(--btn-active);
+    }
+    .horiz-btn-icon {
+      font-size: 1.3rem;
+      font-weight: 900;
+      color: #fff;
+    }
+    .horiz-btn-lbl {
+      font-size: 0.6rem;
+      font-weight: 800;
+      color: #d6bdf5;
+      margin-top: 2px;
+    }
+
+    /* ========================================================================= */
+    /* 2. PET & 7 SIMS NEEDS HUD (TAB-PET) */
+    /* ========================================================================= */
+    .pet-hero-card {
+      background: var(--card-bg);
+      border: 1.5px solid var(--card-border);
+      border-radius: 24px;
+      padding: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: var(--card-shadow);
+      position: relative;
+    }
+    .pet-avatar-bubble {
+      width: 120px;
+      height: 120px;
+      background: radial-gradient(circle, #EFF6FF 0%, #DBEAFE 60%, #BFDBFE 100%);
+      border-radius: 50%;
+      border: 3px solid #93C5FD;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 10px 20px rgba(59, 130, 246, 0.15);
+      cursor: pointer;
+      position: relative;
+    }
+    .pet-canvas-preview {
+      image-rendering: pixelated;
+      width: 80px;
+      height: 80px;
+    }
+    .pet-title-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.6rem;
+      font-size: 1.2rem;
+      font-weight: 900;
+    }
+
+    .needs-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5rem;
+      width: 100%;
+    }
+    .need-pill {
+      background: var(--card-bg);
+      border: 1.5px solid var(--card-border);
+      border-radius: 16px;
+      padding: 0.6rem 0.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.2rem;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+      transition: transform 0.1s;
+    }
+    .need-pill:active { transform: scale(0.94); }
+    .need-icon { font-size: 1.4rem; }
+    .need-name { font-size: 0.72rem; font-weight: 800; color: var(--text); }
+    .need-bar {
+      width: 100%;
+      height: 6px;
+      background: #E2E8F0;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .need-fill { height: 100%; border-radius: 6px; }
+
+    /* ========================================================================= */
+    /* 3. MINI GAMES ARENA (TAB-GAMES) */
+    /* ========================================================================= */
+    .games-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.7rem;
+      width: 100%;
+    }
+    .game-card {
+      background: var(--card-bg);
+      border: 1.5px solid var(--card-border);
+      border-radius: 20px;
+      padding: 1rem 0.8rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 0.3rem;
+      cursor: pointer;
+      box-shadow: var(--card-shadow);
+      transition: transform 0.1s;
+    }
+    .game-card:active { transform: scale(0.95); }
+    .game-badge-type {
+      font-size: 0.65rem;
+      font-weight: 800;
+      padding: 0.15rem 0.4rem;
+      border-radius: 8px;
+    }
+    .type-console { background: #EEF2FF; color: var(--indigo); }
+    .type-duel { background: #FEE2E2; color: var(--rose); }
+
+    /* ========================================================================= */
+    /* 4. MODULAR AVATAR COMBINATOR (TAB-STUDIO) */
+    /* ========================================================================= */
+    .studio-card {
+      background: var(--card-bg);
+      border: 1.5px solid var(--card-border);
+      border-radius: 24px;
+      padding: 1.2rem;
+      box-shadow: var(--card-shadow);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .combinator-box {
+      width: 130px;
+      height: 130px;
+      background: #000814;
+      border-radius: 18px;
+      border: 3px solid var(--amber);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 0 20px rgba(245, 158, 11, 0.2);
+    }
+    .combinator-canvas {
+      image-rendering: pixelated;
+      width: 100px;
+      height: 100px;
+    }
+    .selector-row {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 14px;
+      padding: 0.4rem 0.7rem;
+    }
+    .btn-step {
+      width: 32px;
+      height: 32px;
+      background: #FFFFFF;
+      border: 1px solid #CBD5E1;
+      border-radius: 8px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .btn-action-primary {
+      background: linear-gradient(135deg, #10B981, #059669);
+      color: #fff;
+      border: none;
+      padding: 0.8rem 1.4rem;
+      border-radius: 18px;
+      font-size: 0.95rem;
+      font-weight: 800;
+      cursor: pointer;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3);
+    }
+
+    /* ========================================================================= */
+    /* 5. LEADERBOARD & RANKINGS (TAB-RANK) */
+    /* ========================================================================= */
+    .rank-tabs-row {
+      display: flex;
+      gap: 0.5rem;
+      width: 100%;
+    }
+    .rank-tab-btn {
+      flex: 1;
+      padding: 0.6rem;
+      border-radius: 14px;
+      border: 1.5px solid var(--card-border);
+      background: #FFFFFF;
+      font-weight: 800;
+      font-size: 0.85rem;
+      cursor: pointer;
+      color: var(--text-muted);
+    }
+    .rank-tab-btn.active {
+      background: var(--indigo);
+      color: #fff;
+      border-color: var(--indigo);
+    }
+    .rank-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      width: 100%;
+    }
+    .rank-item {
+      background: var(--card-bg);
+      border: 1.5px solid var(--card-border);
+      border-radius: 18px;
+      padding: 0.7rem 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+    }
+    .rank-left {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+    .rank-number {
+      font-weight: 900;
+      font-size: 1rem;
+      width: 24px;
+      text-align: center;
+    }
+
+    /* ========================================================================= */
+    /* 6. FRIENDS & RADAR (TAB-FRIENDS) */
+    /* ========================================================================= */
+    .search-friend-box {
+      display: flex;
+      gap: 0.5rem;
+      width: 100%;
+    }
+    .search-friend-input {
+      flex: 1;
+      padding: 0.7rem 1rem;
+      border-radius: 16px;
+      border: 1.5px solid var(--card-border);
+      font-size: 0.88rem;
+      font-weight: 700;
+      background: #FFFFFF;
+    }
+    .friends-list-box {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      width: 100%;
+    }
+    .friend-card {
+      background: var(--card-bg);
+      border: 1.5px solid var(--card-border);
+      border-radius: 20px;
+      padding: 0.9rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: var(--card-shadow);
+    }
+    .friend-actions {
+      display: flex;
+      gap: 0.35rem;
+    }
+    .btn-micro {
+      padding: 0.4rem 0.6rem;
+      border-radius: 12px;
+      border: 1px solid #CBD5E1;
+      background: #F8FAFC;
+      font-size: 0.75rem;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    /* BOTTOM NAV BAR (6 TABS) */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 4.8rem;
+      background: #FFFFFF;
+      border-top: 2px solid #E2E8F0;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 0 0.5rem;
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.04);
+      z-index: 100;
+    }
+    .nav-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 0.7rem;
+      font-weight: 800;
+      transition: all 0.15s;
+    }
+    .nav-btn.active {
+      color: var(--indigo);
+      transform: translateY(-2px);
+    }
+    .nav-icon { font-size: 1.35rem; }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- TOP BAR -->
+    <div class="top-header">
+      <div class="player-profile">
+        <div class="player-avatar">👑</div>
+        <div class="player-info">
+          <span class="player-name">Turan <small style="color:var(--emerald);">Lv.5</small></span>
+          <span class="player-sub">XP: 1420/2000 • 250 ⭐</span>
+        </div>
+      </div>
+      <div class="top-header-badges">
+        <div class="badge-chip" title="Eşleşen Konsol">
+          <span>📟</span>
+          <span id="badgeDeviceId">84920A</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- TAB 1: 🎮 EL KONSOLU EMÜLATÖRÜ (ANA SAYFA) -->
+    <!-- ===================================================================== -->
+    <div id="tab-console" class="tab-view active">
+      <div class="console-box">
+        <div class="console-header-row">
+          <div style="display:flex; align-items:center; gap:5px;">
+            <div class="power-led"></div>
+            <span style="font-size:0.6rem; color:#84cc16; font-weight:800;">PWR</span>
+          </div>
+          <div class="console-brand-text">SOCIES</div>
+          <div class="console-id-tag">ID: 84920A</div>
+        </div>
+
+        <!-- 128x64 OLED CANVAS -->
+        <div class="screen-bezel">
+          <canvas id="oledCanvas" class="oled-screen" width="128" height="64"></canvas>
+        </div>
+
+        <div class="mid-status-txt">
+          <span>MAC: A4:CF:12:89:34:B1</span>
+          <span style="color:#00ff66;" id="txtConsoleOnline">🟢 AKTİF</span>
+        </div>
+
+        <!-- 4 HORIZONTAL BUTTONS AT BOTTOM (◄ SOL, SAĞ ►, ● SEÇ, ✕ GERİ) -->
+        <div class="horizontal-buttons-row">
+          <button class="retro-horiz-btn" id="btnConsoleLeft" onpointerdown="handleConsoleBtn('LEFT')">
+            <span class="horiz-btn-icon">◄</span>
+            <span class="horiz-btn-lbl">SOL</span>
+          </button>
+          <button class="retro-horiz-btn" id="btnConsoleRight" onpointerdown="handleConsoleBtn('RIGHT')">
+            <span class="horiz-btn-icon">►</span>
+            <span class="horiz-btn-lbl">SAĞ</span>
+          </button>
+          <button class="retro-horiz-btn" id="btnConsoleSelect" style="border-color:#059669;" onpointerdown="handleConsoleBtn('SELECT')">
+            <span class="horiz-btn-icon" style="color:#34d399;">●</span>
+            <span class="horiz-btn-lbl">SEÇ</span>
+          </button>
+          <button class="retro-horiz-btn" id="btnConsoleBack" style="border-color:#dc2626;" onpointerdown="handleConsoleBtn('BACK')">
+            <span class="horiz-btn-icon" style="color:#f87171;">✕</span>
+            <span class="horiz-btn-lbl">GERİ</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- TAB 2: 🐾 BEBEĞİM & 7 SİMS HUD -->
+    <!-- ===================================================================== -->
+    <div id="tab-pet" class="tab-view">
+      <div class="pet-hero-card">
+        <div class="pet-avatar-bubble" onclick="petLoveTouch()">
+          <canvas id="petTouchCanvas" class="pet-canvas-preview" width="24" height="24"></canvas>
+        </div>
+        <div class="pet-title-row">
+          <span>Pufi 🐱</span>
+          <span style="font-size:0.8rem; background:#ECFDF5; color:var(--emerald); padding:0.2rem 0.6rem; border-radius:12px;">%88 Sağlık</span>
+        </div>
+        <div style="font-size:0.85rem; color:var(--text-muted); font-weight:700; margin-top:2px;">
+          Sanal Kedi • 5 Günlük Mutlu Bebek
+        </div>
+      </div>
+
+      <!-- 7 SIMS NEEDS HUD -->
+      <div class="needs-grid">
+        <div class="need-pill" onclick="performNeedAction('FEED', '🍗 Beslendi! Konsola mama uçtu.')">
+          <span class="need-icon">🍗</span>
+          <span class="need-name">Açlık</span>
+          <div class="need-bar"><div class="need-fill" style="width:85%; background:#EF4444;"></div></div>
+        </div>
+        <div class="need-pill" onclick="performNeedAction('CLEAN_TOILET', '🚽 Tuvalet temizlendi!')">
+          <span class="need-icon">🚽</span>
+          <span class="need-name">Tuvalet</span>
+          <div class="need-bar"><div class="need-fill" style="width:75%; background:#F59E0B;"></div></div>
+        </div>
+        <div class="need-pill" onclick="performNeedAction('BATH', '🧼 Köpük banyosu yapıldı!')">
+          <span class="need-icon">🧼</span>
+          <span class="need-name">Hijyen</span>
+          <div class="need-bar"><div class="need-fill" style="width:90%; background:#10B981;"></div></div>
+        </div>
+        <div class="need-pill" onclick="performNeedAction('SLEEP', '💤 Işıklar kapandı, bebek uyuyor.')">
+          <span class="need-icon">💤</span>
+          <span class="need-name">Uyku</span>
+          <div class="need-bar"><div class="need-fill" style="width:70%; background:#6366F1;"></div></div>
+        </div>
+        <div class="need-pill" onclick="switchTab('tab-games')">
+          <span class="need-icon">🎮</span>
+          <span class="need-name">Eğlence</span>
+          <div class="need-bar"><div class="need-fill" style="width:95%; background:#06B6D4;"></div></div>
+        </div>
+        <div class="need-pill" onclick="petLoveTouch()">
+          <span class="need-icon">💖</span>
+          <span class="need-name">Sevgi</span>
+          <div class="need-bar"><div class="need-fill" style="width:90%; background:#EC4899;"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- TAB 3: 🕹️ OYUNLAR & RETRO ARENA -->
+    <!-- ===================================================================== -->
+    <div id="tab-games" class="tab-view">
+      <div style="font-weight:900; font-size:1.1rem; margin-bottom:0.2rem;">Retro Mini Oyun Arenası</div>
+      
+      <div class="games-grid">
+        <!-- 1. CEP PONG (DELİK SEKTİRME) -->
+        <div class="game-card" onclick="launchGameOnConsole('PONG')">
+          <span style="font-size:2rem;">🏓</span>
+          <div style="font-weight:800; font-size:0.95rem;">Delik Pong</div>
+          <div style="font-size:0.75rem; color:var(--text-muted);">Topu sektirip deliğe sok</div>
+          <span class="game-badge-type type-console">Konsol & VS</span>
+        </div>
+
+        <!-- 2. PIXEL DODGER (YUKARI-AŞAĞI KAÇIŞ) -->
+        <div class="game-card" onclick="launchGameOnConsole('DODGER')">
+          <span style="font-size:2rem;">🏃</span>
+          <div style="font-weight:800; font-size:0.95rem;">Piksel Kaçış</div>
+          <div style="font-size:0.75rem; color:var(--text-muted);">Yukarı zıpla / aşağı eğil</div>
+          <span class="game-badge-type type-console">Yüksek Skor</span>
+        </div>
+
+        <!-- 3. SKY DROPPER (GÖKYÜZÜ SEPETİ) -->
+        <div class="game-card" onclick="launchGameOnConsole('CATCHER')">
+          <span style="font-size:2rem;">🍎</span>
+          <div style="font-weight:800; font-size:0.95rem;">Gökyüzü Sepeti</div>
+          <div style="font-size:0.75rem; color:var(--text-muted);">Elmaları topla, bombadan kaç</div>
+          <span class="game-badge-type type-console">Konsol Oyunu</span>
+        </div>
+
+        <!-- 4. KOVBOY DÜELLOSU -->
+        <div class="game-card" onclick="launchGameOnConsole('COWBOY')">
+          <span style="font-size:2rem;">🤠</span>
+          <div style="font-weight:800; font-size:0.95rem;">Kovboy Düellosu</div>
+          <div style="font-size:0.75rem; color:var(--text-muted);">Refleks hız testi (BANG!)</div>
+          <span class="game-badge-type type-duel">P2P Düello</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- TAB 4: 🎨 MODÜLER ATÖLYE (AVATAR COMBINATOR) -->
+    <!-- ===================================================================== -->
+    <div id="tab-studio" class="tab-view">
+      <div class="studio-card">
+        <div style="width:100%; display:flex; justify-content:space-between; align-items:center;">
+          <span style="font-weight:900; font-size:1.05rem;">Modüler Karakter Atölyesi</span>
+          <span style="font-size:0.75rem; background:#FEF3C7; color:#B45309; padding:0.2rem 0.5rem; border-radius:10px; font-weight:800;">100.000 Kombinasyon</span>
+        </div>
+
+        <div class="combinator-box">
+          <canvas id="combinatorCanvas" class="combinator-canvas" width="24" height="24"></canvas>
+        </div>
+
+        <!-- 5 CATEGORY STEPPERS (10 EACH) -->
+        <div style="display:flex; flex-direction:column; gap:0.5rem; width:100%;">
+          <div class="selector-row">
+            <span style="font-weight:800; font-size:0.85rem;">1. Gövde & Kafa:</span>
+            <div style="display:flex; align-items:center; gap:0.5rem;">
+              <button class="btn-step" onclick="stepModularPart('body', -1)">◄</button>
+              <span id="lblPartBody" style="font-size:0.82rem; font-weight:800; min-width:80px; text-align:center;">Tombiş Kedi</span>
+              <button class="btn-step" onclick="stepModularPart('body', 1)">►</button>
+            </div>
+          </div>
+
+          <div class="selector-row">
+            <span style="font-weight:800; font-size:0.85rem;">2. Göz İfadesi:</span>
+            <div style="display:flex; align-items:center; gap:0.5rem;">
+              <button class="btn-step" onclick="stepModularPart('eyes', -1)">◄</button>
+              <span id="lblPartEyes" style="font-size:0.82rem; font-weight:800; min-width:80px; text-align:center;">Anime Işıltılı</span>
+              <button class="btn-step" onclick="stepModularPart('eyes', 1)">►</button>
+            </div>
+          </div>
+
+          <div class="selector-row">
+            <span style="font-weight:800; font-size:0.85rem;">3. Ağız & Mimik:</span>
+            <div style="display:flex; align-items:center; gap:0.5rem;">
+              <button class="btn-step" onclick="stepModularPart('mouth', -1)">◄</button>
+              <span id="lblPartMouth" style="font-size:0.82rem; font-weight:800; min-width:80px; text-align:center;">Kedi Bıyığı</span>
+              <button class="btn-step" onclick="stepModularPart('mouth', 1)">►</button>
+            </div>
+          </div>
+
+          <div class="selector-row">
+            <span style="font-weight:800; font-size:0.85rem;">4. Kulak & Başlık:</span>
+            <div style="display:flex; align-items:center; gap:0.5rem;">
+              <button class="btn-step" onclick="stepModularPart('ears', -1)">◄</button>
+              <span id="lblPartEars" style="font-size:0.82rem; font-weight:800; min-width:80px; text-align:center;">Sivri Kulak</span>
+              <button class="btn-step" onclick="stepModularPart('ears', 1)">►</button>
+            </div>
+          </div>
+
+          <div class="selector-row">
+            <span style="font-weight:800; font-size:0.85rem;">5. Aksesuar / Uzuv:</span>
+            <div style="display:flex; align-items:center; gap:0.5rem;">
+              <button class="btn-step" onclick="stepModularPart('acc', -1)">◄</button>
+              <span id="lblPartAcc" style="font-size:0.82rem; font-weight:800; min-width:80px; text-align:center;">Uçan Kanat</span>
+              <button class="btn-step" onclick="stepModularPart('acc', 1)">►</button>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn-action-primary" onclick="sendAvatarToConsole()">
+          <span>🎮</span> Konsola Yükle (ID: 84920A)
+        </button>
+      </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- TAB 5: 🏆 SKOR TABLOSU (LEADERBOARD) -->
+    <!-- ===================================================================== -->
+    <div id="tab-rank" class="tab-view">
+      <div class="rank-tabs-row">
+        <button class="rank-tab-btn active" id="btnRankFriends" onclick="setRankView('friends')">👥 Arkadaşlarım (4)</button>
+        <button class="rank-tab-btn" id="btnRankGlobal" onclick="setRankView('global')">🌍 Genel Sıralama (Top 10)</button>
+      </div>
+
+      <div class="rank-list" id="rankListContainer">
+        <!-- Injected via JavaScript -->
+      </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- TAB 6: 👥 ARKADAŞLAR & RADAR -->
+    <!-- ===================================================================== -->
+    <div id="tab-friends" class="tab-view">
+      <!-- SEARCH BOX -->
+      <div class="search-friend-box">
+        <input type="text" id="friendSearchInput" class="search-friend-input" placeholder="Nickname veya Cihaz ID ara (örn: Zeynep, 84920A)...">
+        <button class="btn-action-primary" style="width:auto; padding:0.6rem 1rem;" onclick="addFriendAction()">Ekle</button>
+      </div>
+
+      <div class="friends-list-box" id="friendsListContainer">
+        <!-- Friend Cards Injected via JavaScript -->
+      </div>
+    </div>
+
+  </div>
+
+  <!-- BOTTOM NAVIGATION (6 TABS) -->
+  <nav class="bottom-nav">
+    <div class="nav-btn active" id="navConsole" onclick="switchTab('tab-console')">
+      <span class="nav-icon">🎮</span>
+      <span>Konsol</span>
+    </div>
+    <div class="nav-btn" id="navPet" onclick="switchTab('tab-pet')">
+      <span class="nav-icon">🐾</span>
+      <span>Bebeğim</span>
+    </div>
+    <div class="nav-btn" id="navGames" onclick="switchTab('tab-games')">
+      <span class="nav-icon">🕹️</span>
+      <span>Oyunlar</span>
+    </div>
+    <div class="nav-btn" id="navStudio" onclick="switchTab('tab-studio')">
+      <span class="nav-icon">🎨</span>
+      <span>Atölye</span>
+    </div>
+    <div class="nav-btn" id="navRank" onclick="switchTab('tab-rank')">
+      <span class="nav-icon">🏆</span>
+      <span>Sıralama</span>
+    </div>
+    <div class="nav-btn" id="navFriends" onclick="switchTab('tab-friends')">
+      <span class="nav-icon">👥</span>
+      <span>Arkadaşlar</span>
+    </div>
+  </nav>
+
+  <script>
+    // --- APP & DATA STORE ---
+    const appData = {
+      deviceId: '84920A',
+      mac: 'A4:CF:12:89:34:B1',
+      nickname: 'Turan (Kurucu)',
+      rankMode: 'friends',
+      
+      // Friends with Nicknames and Device IDs
+      friends: [
+        { nickname: 'Zeynep_Retro', deviceId: '9941A', avatar: '🐱', petName: 'Pamuk', score: 3420, steps: 7120, isOnline: true },
+        { nickname: 'Emre_Ege', deviceId: '33129C', avatar: '🐶', petName: 'Karabaş', score: 2850, steps: 5890, isOnline: true },
+        { nickname: 'Selin_Botanist', deviceId: '44810D', avatar: '🌱', petName: 'Bonsai', score: 2220, steps: 6240, isOnline: true },
+        { nickname: 'Kaan_Akdeniz', deviceId: '11094E', avatar: '🐠', petName: 'Nemo', score: 1480, steps: 4310, isOnline: false }
+      ],
+
+      // Global Players
+      globalLeaderboard: [
+        { rank: 1, nickname: 'Hans_Berlin', deviceId: '77211F', avatar: '🌭', score: 4880, steps: 11450 },
+        { rank: 2, nickname: 'Zeynep_Retro', deviceId: '9941A', avatar: '🐱', score: 3420, steps: 7120 },
+        { rank: 3, nickname: 'Emre_Ege', deviceId: '33129C', avatar: '🐶', score: 2850, steps: 5890 },
+        { rank: 4, nickname: 'Turan (Sen)', deviceId: '84920A', avatar: '👑', score: 2450, steps: 4820 },
+        { rank: 5, nickname: 'Oliver_London', deviceId: '55490G', avatar: '🐦', score: 2190, steps: 5110 }
+      ],
+
+      // Combinator Selected Parts
+      parts: { body: 0, eyes: 0, mouth: 0, ears: 0, acc: 0 }
+    };
+
+    const partLabels = {
+      body: ['Tombiş Kedi', 'Sadık Köpek', 'Robot Kasa', 'Zıpzıp Top', 'Sevimli Sosis', 'Uzaylı Dost', 'Ejder Yavru', 'Bonsai Bitki', 'Minik Kuş', 'Canavar Kafa'],
+      eyes: ['Anime Işıltılı', 'Retro Çizgi', 'Gözlüklü', 'Şaşkın Pörtlek', 'Siber Vizör', 'Göz Kırpan', 'Uykulu Göz', 'Alevli Kızgın', 'Yıldızlı Göz', 'Şirin Çift'],
+      mouth: ['Kedi Bıyığı', 'Dil Çıkaran', 'Gülümseme', 'Dişli Sırıtış', 'Minik "o"', 'Dondurma Yiyen', 'Retro Bıyık', 'Ciddi Düz', 'Şaşkın Açık', 'Toka / Maske'],
+      ears: ['Sivri Kulak', 'Sarkık Kulak', 'Uzaylı Anteni', 'Şeytan Boynuz', 'Gamer Kulaklık', 'Sihirli Şapka', 'Melek Halesi', 'Çiçek Toka', 'Tavşan Kulak', 'Robot Tepe'],
+      acc: ['Uçan Kanat', 'Kaykay', 'Kahraman Pelerin', 'Minik Kılıç', 'Kıvrık Kuyruk', 'Robot Tekerlek', 'Büyücü Asası', 'Sırt Çantası', 'Boks Eldiveni', 'Altın Kalkan']
+    };
+
+    // --- SOUND SYNTHESIZER ---
+    let aCtx = null;
+    function beep(f = 520, d = 0.08) {
+      try {
+        if (!aCtx) aCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const o = aCtx.createOscillator();
+        const g = aCtx.createGain();
+        o.frequency.setValueAtTime(f, aCtx.currentTime);
+        g.gain.setValueAtTime(0.12, aCtx.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, aCtx.currentTime + d);
+        o.connect(g); g.connect(aCtx.destination);
+        o.start(); o.stop(aCtx.currentTime + d);
+      } catch(e) {}
+    }
+
+    // =========================================================================
+    // 128x64 OLED CONSOLE FIRMWARE SIMULATION
+    // =========================================================================
+    const oled = {
+      canvas: document.getElementById('oledCanvas'),
+      ctx: document.getElementById('oledCanvas').getContext('2d'),
+      mode: 'IDLE', // IDLE, MENU, PONG, DODGER, COWBOY, EATING
+      menuIdx: 0,
+      menuItems: ['BESLE', 'TUVALET', 'BANYO', 'OYUNLAR', 'UYUT'],
+      petX: 48, petDir: 1, animFrame: 0,
+      
+      // Pong Game State
+      pong: { ballX: 64, ballY: 36, vx: 2, vy: 1, padX: 48, score: 0 },
+      // Dodger Game State
+      dodger: { petY: 42, isJumping: false, isDucking: false, rockX: 120, score: 0 },
+      // Cowboy Game State
+      cowboy: { canShoot: false, timer: 0 }
+    };
+
+    function drawOledLoop() {
+      oled.ctx.fillStyle = '#000814';
+      oled.ctx.fillRect(0, 0, 128, 64);
+
+      // 1. TOP YELLOW STATUS BAR (16px)
+      oled.ctx.fillStyle = '#ffb703';
+      oled.ctx.strokeRect(102, 3, 20, 9);
+      oled.ctx.fillRect(122, 5, 2, 5);
+      oled.ctx.fillRect(104, 5, 14, 5); // 85% battery
+      oled.ctx.font = '7px "JetBrains Mono"';
+      oled.ctx.fillText('88%', 82, 10);
+      
+      // Hearts
+      for(let i=0; i<4; i++) oled.ctx.fillRect(4 + i*9, 4, 7, 7);
+      oled.ctx.fillText('ID:84920A', 42, 10);
+
+      // Divider line
+      oled.ctx.fillStyle = '#1e293b';
+      oled.ctx.fillRect(0, 15, 128, 1);
+
+      // 2. BOTTOM BLUE GAMEPLAY (48px)
+      oled.ctx.fillStyle = '#00f0ff';
+
+      if (oled.mode === 'MENU') {
+        renderOledMenu();
+      } else if (oled.mode === 'PONG') {
+        renderOledPong();
+      } else if (oled.mode === 'DODGER') {
+        renderOledDodger();
+      } else if (oled.mode === 'COWBOY') {
+        renderOledCowboy();
+      } else if (oled.mode === 'EATING') {
+        oled.ctx.fillText('YUM YUM! 🍗', 36, 30);
+        drawModularSpriteToOled(40, 36);
+      } else {
+        renderOledIdle();
+      }
+
+      oled.animFrame++;
+      requestAnimationFrame(drawOledLoop);
+    }
+
+    function renderOledIdle() {
+      oled.ctx.fillStyle = '#00f0ff';
+      if (oled.animFrame % 60 === 0) {
+        oled.petX += oled.petDir * 6;
+        if (oled.petX > 88) oled.petDir = -1;
+        if (oled.petX < 20) oled.petDir = 1;
+      }
+      const bob = (oled.animFrame % 16 < 8) ? 0 : 1;
+      drawModularSpriteToOled(oled.petX, 32 + bob);
+
+      oled.ctx.font = '7px "JetBrains Mono"';
+      oled.ctx.fillText('SOCIES BLE HAZIR', 16, 60);
+    }
+
+    function renderOledMenu() {
+      oled.ctx.fillStyle = '#00f0ff';
+      oled.ctx.font = '8px "JetBrains Mono"';
+      oled.ctx.fillText('=== ANA MENU ===', 24, 26);
+      const curr = oled.menuItems[oled.menuIdx];
+      oled.ctx.font = '9px "JetBrains Mono"';
+      oled.ctx.fillText('◄  [' + curr + ']  ►', 12, 42);
+      oled.ctx.font = '7px "JetBrains Mono"';
+      oled.ctx.fillText('SEC: Onayla | GERI: Cik', 10, 58);
+    }
+
+    // RETRO GAME 1: PONG (DELİK SEKTİRME)
+    function renderOledPong() {
+      oled.ctx.fillStyle = '#00f0ff';
+      oled.ctx.font = '7px "JetBrains Mono"';
+      oled.ctx.fillText('PONG SKOR:' + oled.pong.score, 6, 25);
+
+      // Holes / Goals
+      oled.ctx.strokeRect(4, 30, 4, 18);
+      oled.ctx.strokeRect(120, 30, 4, 18);
+
+      // Move Ball
+      oled.pong.ballX += oled.pong.vx;
+      oled.pong.ballY += oled.pong.vy;
+
+      if (oled.pong.ballY <= 18 || oled.pong.ballY >= 58) oled.pong.vy *= -1;
+
+      // Paddle hit
+      if (oled.pong.ballX <= oled.pong.padX + 20 && oled.pong.ballX >= oled.pong.padX && oled.pong.ballY >= 52) {
+        oled.pong.vy = -Math.abs(oled.pong.vy);
+        oled.pong.score += 10;
+        beep(780, 0.05);
+      }
+
+      // Goal scored
+      if (oled.pong.ballX <= 6 || oled.pong.ballX >= 122) {
+        oled.pong.vx *= -1;
+        oled.pong.score += 50;
+        beep(980, 0.1);
+      }
+
+      // Draw Ball & Paddle
+      oled.ctx.fillRect(oled.pong.ballX, oled.pong.ballY, 3, 3);
+      oled.ctx.fillRect(oled.pong.padX, 55, 24, 3);
+    }
+
+    // RETRO GAME 2: DODGER (YUKARI/AŞAĞI KAÇIŞ)
+    function renderOledDodger() {
+      oled.ctx.fillStyle = '#00f0ff';
+      oled.ctx.font = '7px "JetBrains Mono"';
+      oled.ctx.fillText('DODGER SKOR:' + oled.dodger.score, 6, 25);
+
+      oled.dodger.rockX -= 3;
+      if (oled.dodger.rockX < -10) {
+        oled.dodger.rockX = 130;
+        oled.dodger.score += 20;
+      }
+
+      // Draw obstacle
+      oled.ctx.fillRect(oled.dodger.rockX, 44, 8, 8);
+
+      // Draw Pet (Jumping or Ducking)
+      const py = oled.dodger.isJumping ? 26 : (oled.dodger.isDucking ? 48 : 38);
+      drawModularSpriteToOled(30, py);
+    }
+
+    function renderOledCowboy() {
+      oled.ctx.fillStyle = '#00f0ff';
+      oled.ctx.font = '8px "JetBrains Mono"';
+      oled.ctx.fillText('KOVBOY DUELLOSU', 16, 26);
+      if (!oled.cowboy.canShoot) {
+        oled.ctx.fillText('HAZIRLAN...', 34, 42);
+        if (oled.cowboy.timer > 50 && Math.random() < 0.03) {
+          oled.cowboy.canShoot = true;
+          beep(990, 0.2);
+        }
+      } else {
+        oled.ctx.fillStyle = '#ffb703';
+        oled.ctx.fillText('>> ATES ET! <<', 18, 42);
+      }
+      oled.cowboy.timer++;
+    }
+
+    // 4 HORIZONTAL BUTTON HANDLER
+    function handleConsoleBtn(btn) {
+      if (window.navigator.vibrate) window.navigator.vibrate(30);
+      beep(btn === 'SELECT' ? 880 : (btn === 'BACK' ? 330 : 520));
+
+      if (oled.mode === 'PONG') {
+        if (btn === 'LEFT') oled.pong.padX = Math.max(10, oled.pong.padX - 8);
+        if (btn === 'RIGHT') oled.pong.padX = Math.min(94, oled.pong.padX + 8);
+        if (btn === 'BACK') oled.mode = 'IDLE';
+        return;
+      }
+
+      if (oled.mode === 'DODGER') {
+        if (btn === 'LEFT') {
+          // Down / Duck
+          oled.dodger.isDucking = true;
+          setTimeout(() => oled.dodger.isDucking = false, 600);
+        }
+        if (btn === 'RIGHT') {
+          // Up / Jump
+          oled.dodger.isJumping = true;
+          setTimeout(() => oled.dodger.isJumping = false, 600);
+        }
+        if (btn === 'BACK') oled.mode = 'IDLE';
+        return;
+      }
+
+      if (oled.mode === 'COWBOY') {
+        if (btn === 'SELECT' && oled.cowboy.canShoot) {
+          beep(1200, 0.3);
+          showGlobalToast('🤠 DÜELLOYU KAZANDIN! +50 XP');
+          oled.mode = 'IDLE';
+        } else if (btn === 'BACK') {
+          oled.mode = 'IDLE';
+        }
+        return;
+      }
+
+      if (btn === 'LEFT') {
+        oled.menuIdx = (oled.menuIdx - 1 + oled.menuItems.length) % oled.menuItems.length;
+        oled.mode = 'MENU';
+      } else if (btn === 'RIGHT') {
+        oled.menuIdx = (oled.menuIdx + 1) % oled.menuItems.length;
+        oled.mode = 'MENU';
+      } else if (btn === 'SELECT') {
+        if (oled.mode === 'MENU') {
+          const act = oled.menuItems[oled.menuIdx];
+          if (act === 'BESLE') {
+            oled.mode = 'EATING';
+            setTimeout(() => oled.mode = 'IDLE', 2500);
+          } else if (act === 'OYUNLAR') {
+            oled.mode = 'PONG';
+            oled.pong.score = 0;
+          } else {
+            oled.mode = 'IDLE';
+          }
+        } else {
+          oled.mode = 'MENU';
+        }
+      } else if (btn === 'BACK') {
+        oled.mode = 'IDLE';
+      }
+    }
+
+    drawOledLoop();
+
+    // =========================================================================
+    // MODULAR AVATAR SYNTHESIS (10x10x10x10x10)
+    // =========================================================================
+    function stepModularPart(cat, dir) {
+      const len = partLabels[cat].length;
+      appData.parts[cat] = (appData.parts[cat] + dir + len) % len;
+      document.getElementById('lblPart' + cat.charAt(0).toUpperCase() + cat.slice(1)).innerText = partLabels[cat][appData.parts[cat]];
+      renderCombinator();
+    }
+
+    function generateAvatarMatrix() {
+      const g = Array(24).fill(null).map(() => Array(24).fill(0));
+      // Base oval
+      for(let r=6; r<20; r++) {
+        for(let c=5; c<19; c++) {
+          if ((c-12)*(c-12) + (r-13)*(r-13) <= 36) g[r][c] = 1;
+        }
+      }
+      // Ears
+      if (appData.parts.ears % 2 === 0) {
+        g[4][6]=1; g[5][6]=1; g[5][7]=1; g[4][17]=1; g[5][17]=1; g[5][16]=1;
+      } else {
+        g[5][5]=1; g[6][4]=1; g[7][4]=1; g[5][18]=1; g[6][19]=1; g[7][19]=1;
+      }
+      // Eyes
+      if (appData.parts.eyes === 0) {
+        g[10][8]=0; g[10][9]=0; g[11][9]=0; g[10][14]=0; g[10][15]=0; g[11][14]=0;
+      } else {
+        g[11][8]=0; g[11][9]=0; g[11][14]=0; g[11][15]=0;
+      }
+      // Mouth
+      g[14][11]=0; g[14][12]=0;
+      // Feet
+      g[20][8]=1; g[20][9]=1; g[20][14]=1; g[20][15]=1;
+      return g;
+    }
+
+    const combCanv = document.getElementById('combinatorCanvas');
+    const combCtx = combCanv.getContext('2d');
+    const touchCanv = document.getElementById('petTouchCanvas');
+    const touchCtx = touchCanv.getContext('2d');
+
+    function renderCombinator() {
+      const m = generateAvatarMatrix();
+      combCtx.fillStyle = '#000814';
+      combCtx.fillRect(0, 0, 24, 24);
+      touchCtx.clearRect(0, 0, 24, 24);
+
+      for(let r=0; r<24; r++) {
+        for(let c=0; c<24; c++) {
+          if (m[r][c]) {
+            combCtx.fillStyle = '#00f0ff';
+            combCtx.fillRect(c, r, 1, 1);
+            touchCtx.fillStyle = '#0F172A';
+            touchCtx.fillRect(c, r, 1, 1);
+          }
+        }
+      }
+    }
+    renderCombinator();
+
+    function drawModularSpriteToOled(x, y) {
+      const m = generateAvatarMatrix();
+      for(let r=0; r<24; r++) {
+        for(let c=0; c<24; c++) {
+          if (m[r][c]) oled.ctx.fillRect(x + c - 4, y + r - 10, 1, 1);
+        }
+      }
+    }
+
+    function sendAvatarToConsole() {
+      beep(880, 0.15);
+      showGlobalToast('🚀 100.000 kombinasyonlu avatar konsola aktarıldı!');
+    }
+
+    // =========================================================================
+    // LEADERBOARD RENDERING
+    // =========================================================================
+    function setRankView(mode) {
+      appData.rankMode = mode;
+      document.getElementById('btnRankFriends').classList.toggle('active', mode === 'friends');
+      document.getElementById('btnRankGlobal').classList.toggle('active', mode === 'global');
+      renderLeaderboard();
+    }
+
+    function renderLeaderboard() {
+      const container = document.getElementById('rankListContainer');
+      container.innerHTML = '';
+      const list = appData.rankMode === 'friends' ? appData.friends : appData.globalLeaderboard;
+
+      list.forEach((u, i) => {
+        const medal = (i === 0) ? '🥇' : (i === 1 ? '🥈' : (i === 2 ? '🥉' : `#${i+1}`));
+        const card = document.createElement('div');
+        card.className = 'rank-item';
+        card.innerHTML = `
+          <div class="rank-left">
+            <span class="rank-number">${medal}</span>
+            <span style="font-size:1.5rem;">${u.avatar || '🐾'}</span>
+            <div>
+              <div style="font-weight:800; font-size:0.9rem;">${u.nickname}</div>
+              <div style="font-size:0.75rem; color:var(--text-muted);">ID: ${u.deviceId} • 👟 ${u.steps.toLocaleString()} Adım</div>
+            </div>
+          </div>
+          <div style="font-weight:900; font-size:0.95rem; color:var(--indigo);">
+            ${u.score.toLocaleString()} XP
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+    renderLeaderboard();
+
+    // =========================================================================
+    // FRIENDS LIST & INTERACTIONS (POKE, DUELLO, 90s PAGER)
+    // =========================================================================
+    function renderFriendsList() {
+      const c = document.getElementById('friendsListContainer');
+      c.innerHTML = '';
+      appData.friends.forEach(f => {
+        const card = document.createElement('div');
+        card.className = 'friend-card';
+        card.innerHTML = `
+          <div style="display:flex; align-items:center; gap:0.6rem;">
+            <span style="font-size:1.8rem;">${f.avatar}</span>
+            <div>
+              <div style="font-weight:800; font-size:0.92rem; display:flex; align-items:center; gap:0.4rem;">
+                ${f.nickname}
+                <span style="width:8px; height:8px; border-radius:50%; background:${f.isOnline ? '#10B981':'#94A3B8'}; display:inline-block;"></span>
+              </div>
+              <div style="font-size:0.75rem; color:var(--text-muted);">Pet: ${f.petName} • ID: ${f.deviceId}</div>
+            </div>
+          </div>
+          <div class="friend-actions">
+            <button class="btn-micro" style="color:var(--rose);" onclick="pokeFriend('${f.nickname}')">👉 Dürt</button>
+            <button class="btn-micro" style="color:var(--indigo);" onclick="duelFriend('${f.nickname}')">⚔️ Düello</button>
+            <button class="btn-micro" style="color:var(--amber);" onclick="sendGiftFriend('${f.nickname}')">🎁 Hediye</button>
+          </div>
+        `;
+        c.appendChild(card);
+      });
+    }
+    renderFriendsList();
+
+    function pokeFriend(name) {
+      beep(700, 0.1);
+      showGlobalToast(`👉 ${name} dürtüldü! Konsolu cebinde titriyor.`);
+    }
+
+    function duelFriend(name) {
+      beep(880, 0.15);
+      showGlobalToast(`⚔️ ${name} kullanıcısına Kovboy Düellosu daveti gitti!`);
+      oled.mode = 'COWBOY';
+      oled.cowboy.timer = 0;
+      oled.cowboy.canShoot = false;
+      switchTab('tab-console');
+    }
+
+    function sendGiftFriend(name) {
+      beep(950, 0.15);
+      showGlobalToast(`🎁 ${name} kullanıcısına Altın Kurabiye hediye edildi!`);
+    }
+
+    function addFriendAction() {
+      const val = document.getElementById('friendSearchInput').value.trim();
+      if (!val) return;
+      appData.friends.push({
+        nickname: val,
+        deviceId: '77' + Math.floor(Math.random()*900),
+        avatar: '🐱',
+        petName: 'Dost',
+        score: 1200,
+        steps: 3200,
+        isOnline: true
+      });
+      document.getElementById('friendSearchInput').value = '';
+      renderFriendsList();
+      showGlobalToast(`🟢 "${val}" arkadaş listenize eklendi!`);
+    }
+
+    // ACTIONS & HUD
+    function performNeedAction(act, msg) {
+      beep(650, 0.08);
+      showGlobalToast(msg);
+      if (act === 'FEED') {
+        oled.mode = 'EATING';
+        setTimeout(() => oled.mode = 'IDLE', 2500);
+      }
+    }
+
+    function petLoveTouch() {
+      beep(880, 0.1);
+      showGlobalToast('💖 Pufi sana sevgiyle sarıldı!');
+    }
+
+    function launchGameOnConsole(game) {
+      beep(750, 0.1);
+      showGlobalToast(`🎮 ${game} oyunu konsolda başlatıldı!`);
+      oled.mode = game;
+      switchTab('tab-console');
+    }
+
+    function showGlobalToast(msg) {
+      const ex = document.getElementById('toastAlert');
+      if (ex) ex.remove();
+      const t = document.createElement('div');
+      t.id = 'toastAlert';
+      t.innerText = msg;
+      t.style.position = 'fixed';
+      t.style.top = '1rem';
+      t.style.left = '50%';
+      t.style.transform = 'translateX(-50%)';
+      t.style.background = '#1E293B';
+      t.style.color = '#fff';
+      t.style.padding = '0.7rem 1.4rem';
+      t.style.borderRadius = '20px';
+      t.style.fontSize = '0.85rem';
+      t.style.fontWeight = '800';
+      t.style.boxShadow = '0 10px 25px rgba(0,0,0,0.25)';
+      t.style.zIndex = '9999';
+      document.body.appendChild(t);
+      setTimeout(() => t.remove(), 2500);
+    }
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-view').forEach(el => el.classList.remove('active'));
+      document.getElementById(tabId)?.classList.add('active');
+
+      document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+      const idMap = {
+        'tab-console': 'navConsole',
+        'tab-pet': 'navPet',
+        'tab-games': 'navGames',
+        'tab-studio': 'navStudio',
+        'tab-rank': 'navRank',
+        'tab-friends': 'navFriends'
+      };
+      if (idMap[tabId]) document.getElementById(idMap[tabId])?.classList.add('active');
+    }
+  </script>
+</body>
+</html>

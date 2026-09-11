@@ -173,8 +173,17 @@ const server = http.createServer((req, res) => {
     return serveSociesNetworkPage(res);
   }
 
-  // 1.1 ÇOCUK DOSTU LIGHT TEMA KULLANICI UYGULAMASI (COMPANION)
-  if (path === '/companion' || path === '/companion.html' || path === '/app') {
+  // 1.1 YENİ BİRLEŞİK UYGULAMA (TEK UYGULAMA: KONSOL + YOLDAŞ + LİDERLİK + ARKADAŞLAR)
+  if (path === '/app' || path === '/mobile' || path === '/unified') {
+    const appPath = pathModule.join(__dirname, '../app.html');
+    if (fs.existsSync(appPath)) {
+      res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+      return fs.createReadStream(appPath).pipe(res);
+    }
+  }
+
+  // 1.1.b AYRI ÇOCUK UYGULAMASI (COMPANION)
+  if (path === '/companion' || path === '/companion.html') {
     const companionPath = pathModule.join(__dirname, '../companion.html');
     if (fs.existsSync(companionPath)) {
       res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
