@@ -661,7 +661,21 @@
       <button class="btn-update-action" id="btnRunUpdate" onclick="proceedAppUpdate()">
         <span>⚡</span> Hemen Güncelle & Yükle
       </button>
-      <button class="btn-update-dismiss" onclick="dismissUpdateModal()">Daha Sonra Hatırlat</button>
+    </div>
+  </div>
+
+  <!-- SERVER SETTINGS MODAL -->
+  <div id="serverModal" class="update-overlay" style="display:none;">
+    <div class="update-dialog">
+      <div class="update-icon-badge" style="background:linear-gradient(135deg,#6366F1,#0284C7);">🌐</div>
+      <div class="update-title">Sunucu Bağlantısı</div>
+      <div class="update-pill" id="serverStatusTag">Kontrol Ediliyor...</div>
+      <p style="font-size:0.82rem; color:var(--text-muted); text-align:center;">
+        Merkezi Socies sunucusunun IP veya alan adını girin (Örn: 192.168.1.118:3000 veya 192.168.1.2:3000):
+      </p>
+      <input type="text" id="inputServerUrl" class="search-friend-input" style="width:100%; font-size:0.88rem; padding:0.6rem;" placeholder="http://192.168.1.118:3000">
+      <button class="btn-update-action" onclick="saveServerUrl()">⚡ Test Et & Bağlan</button>
+      <button class="btn-update-dismiss" onclick="closeServerModal()">Kapat</button>
     </div>
   </div>
 
@@ -669,19 +683,23 @@
     
     <!-- TOP BAR -->
     <div class="top-header">
-      <div class="player-profile">
-        <div class="player-avatar">👑</div>
+      <div class="player-profile" onclick="changeNicknamePrompt()" style="cursor:pointer;" title="İsmini Değiştir">
+        <div class="player-avatar" id="txtPlayerAvatar">👑</div>
         <div class="player-info">
-          <span class="player-name">Turan <small style="color:var(--emerald);">Lv.5</small></span>
-          <span class="player-sub">XP: 1420/2000 • 250 ⭐</span>
+          <span class="player-name"><span id="txtPlayerName">Turan</span> <small style="color:var(--emerald);" id="txtPlayerLevel">Lv.5</small> ✏️</span>
+          <span class="player-sub" id="txtPlayerXp">XP: 1420/2000 • 250 ⭐</span>
         </div>
       </div>
       <div class="top-header-badges">
+        <div class="badge-chip" id="badgeServerNet" onclick="openServerModal()" title="Sunucu: Dokunarak Değiştir" style="cursor:pointer; background:#ECFDF5; border-color:#A7F3D0; color:#059669;">
+          <span id="icoServerNet">🟢</span>
+          <span id="txtServerNet">192.168.1.118</span>
+        </div>
         <div class="badge-chip" id="badgeAppVersion" onclick="manualCheckUpdate()" title="Sürüm: Dokunarak Kontrol Et" style="cursor:pointer;">
           <span>🚀</span>
           <span id="txtCurrentVersion">v1.0.5</span>
         </div>
-        <div class="badge-chip" title="Eşleşen Konsol">
+        <div class="badge-chip" title="Cihaz Kimliği (Hardware ID)">
           <span>📟</span>
           <span id="badgeDeviceId">84920A</span>
         </div>
@@ -755,33 +773,33 @@
       <div class="needs-grid">
         <div class="need-pill" onclick="performNeedAction('FEED', '🍗 Beslendi! Konsola mama uçtu.')">
           <span class="need-icon">🍗</span>
-          <span class="need-name">Açlık</span>
-          <div class="need-bar"><div class="need-fill" style="width:85%; background:#EF4444;"></div></div>
+          <span class="need-name">Açlık (<span id="txtValHunger">85%</span>)</span>
+          <div class="need-bar"><div class="need-fill" id="fillHunger" style="width:85%; background:#EF4444;"></div></div>
         </div>
         <div class="need-pill" onclick="performNeedAction('CLEAN_TOILET', '🚽 Tuvalet temizlendi!')">
           <span class="need-icon">🚽</span>
-          <span class="need-name">Tuvalet</span>
-          <div class="need-bar"><div class="need-fill" style="width:75%; background:#F59E0B;"></div></div>
+          <span class="need-name">Tuvalet (<span id="txtValToilet">75%</span>)</span>
+          <div class="need-bar"><div class="need-fill" id="fillToilet" style="width:75%; background:#F59E0B;"></div></div>
         </div>
         <div class="need-pill" onclick="performNeedAction('BATH', '🧼 Köpük banyosu yapıldı!')">
           <span class="need-icon">🧼</span>
-          <span class="need-name">Hijyen</span>
-          <div class="need-bar"><div class="need-fill" style="width:90%; background:#10B981;"></div></div>
+          <span class="need-name">Hijyen (<span id="txtValBath">90%</span>)</span>
+          <div class="need-bar"><div class="need-fill" id="fillBath" style="width:90%; background:#10B981;"></div></div>
         </div>
         <div class="need-pill" onclick="performNeedAction('SLEEP', '💤 Işıklar kapandı, bebek uyuyor.')">
           <span class="need-icon">💤</span>
-          <span class="need-name">Uyku</span>
-          <div class="need-bar"><div class="need-fill" style="width:70%; background:#6366F1;"></div></div>
+          <span class="need-name">Uyku (<span id="txtValSleep">70%</span>)</span>
+          <div class="need-bar"><div class="need-fill" id="fillSleep" style="width:70%; background:#6366F1;"></div></div>
         </div>
         <div class="need-pill" onclick="switchTab('tab-games')">
           <span class="need-icon">🎮</span>
-          <span class="need-name">Eğlence</span>
-          <div class="need-bar"><div class="need-fill" style="width:95%; background:#06B6D4;"></div></div>
+          <span class="need-name">Eğlence (<span id="txtValFun">95%</span>)</span>
+          <div class="need-bar"><div class="need-fill" id="fillFun" style="width:95%; background:#06B6D4;"></div></div>
         </div>
         <div class="need-pill" onclick="petLoveTouch()">
           <span class="need-icon">💖</span>
-          <span class="need-name">Sevgi</span>
-          <div class="need-bar"><div class="need-fill" style="width:90%; background:#EC4899;"></div></div>
+          <span class="need-name">Sevgi (<span id="txtValLove">90%</span>)</span>
+          <div class="need-bar"><div class="need-fill" id="fillLove" style="width:90%; background:#EC4899;"></div></div>
         </div>
       </div>
     </div>
@@ -955,29 +973,43 @@
   </nav>
 
   <script>
-    // --- APP & DATA STORE ---
+    // --- APP & DATA STORE (PERSISTENT & REAL) ---
+    function getOrCreateDeviceId() {
+      let id = localStorage.getItem('socies_device_id');
+      if (!id) {
+        id = '84920A'; // Kurucu varsayılanı, diğer cihazlar için SOCIES-xxxx
+        localStorage.setItem('socies_device_id', id);
+      }
+      return id;
+    }
+
     const appData = {
-      deviceId: '84920A',
+      deviceId: getOrCreateDeviceId(),
       mac: 'A4:CF:12:89:34:B1',
-      nickname: 'Turan (Kurucu)',
+      nickname: localStorage.getItem('socies_nickname') || 'Turan (Kurucu)',
+      avatar: localStorage.getItem('socies_avatar') || '👑',
+      serverUrl: localStorage.getItem('socies_server_url') || 'http://192.168.1.118:3000',
+      isServerConnected: false,
       rankMode: 'friends',
       
-      // Friends with Nicknames and Device IDs
-      friends: [
-        { nickname: 'Zeynep_Retro', deviceId: '9941A', avatar: '🐱', petName: 'Pamuk', score: 3420, steps: 7120, isOnline: true },
-        { nickname: 'Emre_Ege', deviceId: '33129C', avatar: '🐶', petName: 'Karabaş', score: 2850, steps: 5890, isOnline: true },
-        { nickname: 'Selin_Botanist', deviceId: '44810D', avatar: '🌱', petName: 'Bonsai', score: 2220, steps: 6240, isOnline: true },
-        { nickname: 'Kaan_Akdeniz', deviceId: '11094E', avatar: '🐠', petName: 'Nemo', score: 1480, steps: 4310, isOnline: false }
-      ],
+      // 7 Sims İhtiyaç Değerleri & XP
+      needs: {
+        hunger: 85,
+        toilet: 75,
+        clean: 90,
+        sleep: 70,
+        fun: 95,
+        love: 90,
+        xp: 1420,
+        level: 5,
+        lastTick: Date.now()
+      },
 
-      // Global Players
-      globalLeaderboard: [
-        { rank: 1, nickname: 'Hans_Berlin', deviceId: '77211F', avatar: '🌭', score: 4880, steps: 11450 },
-        { rank: 2, nickname: 'Zeynep_Retro', deviceId: '9941A', avatar: '🐱', score: 3420, steps: 7120 },
-        { rank: 3, nickname: 'Emre_Ege', deviceId: '33129C', avatar: '🐶', score: 2850, steps: 5890 },
-        { rank: 4, nickname: 'Turan (Sen)', deviceId: '84920A', avatar: '👑', score: 2450, steps: 4820 },
-        { rank: 5, nickname: 'Oliver_London', deviceId: '55490G', avatar: '🐦', score: 2190, steps: 5110 }
-      ],
+      // Gerçek SQLite Sunucudan çekilen Arkadaşlar & Radar
+      friends: [],
+
+      // Gerçek SQLite Sunucudan çekilen Liderlik Tablosu
+      globalLeaderboard: [],
 
       // Combinator Selected Parts
       parts: { body: 0, eyes: 0, mouth: 0, ears: 0, acc: 0 }
@@ -1120,6 +1152,7 @@
         oled.pong.vx *= -1;
         oled.pong.score += 50;
         beep(980, 0.1);
+        reportGameScore('PONG', oled.pong.score);
       }
 
       // Draw Ball & Paddle
@@ -1137,6 +1170,7 @@
       if (oled.dodger.rockX < -10) {
         oled.dodger.rockX = 130;
         oled.dodger.score += 20;
+        if (oled.dodger.score % 60 === 0) reportGameScore('DODGER', oled.dodger.score);
       }
 
       // Draw obstacle
@@ -1465,17 +1499,289 @@
     // =========================================================================
     // LEADERBOARD RENDERING
     // =========================================================================
+    // =========================================================================
+    // SERVER DISCOVERY & CONNECTION ENGINE
+    // =========================================================================
+    function updateServerBadge(connected, host) {
+      appData.isServerConnected = connected;
+      const elBadge = document.getElementById('badgeServerNet');
+      const elIco = document.getElementById('icoServerNet');
+      const elTxt = document.getElementById('txtServerNet');
+      if (elBadge && elTxt) {
+        if (connected) {
+          elBadge.style.background = '#ECFDF5';
+          elBadge.style.borderColor = '#A7F3D0';
+          elBadge.style.color = '#059669';
+          elIco.innerText = '🟢';
+          elTxt.innerText = host.replace(/^https?:\/\//, '');
+        } else {
+          elBadge.style.background = '#FEF2F2';
+          elBadge.style.borderColor = '#FECACA';
+          elBadge.style.color = '#DC2626';
+          elIco.innerText = '🔴';
+          elTxt.innerText = 'Çevrimdışı';
+        }
+      }
+    }
+
+    async function discoverAndConnectServer() {
+      console.log('[NET] Sunucu bağlantısı taranıyor...');
+      const candidates = [];
+      const saved = localStorage.getItem('socies_server_url');
+      if (saved) candidates.push(saved);
+      if (window.location.origin && window.location.origin.startsWith('http')) {
+        candidates.push(window.location.origin);
+      }
+      candidates.push('http://192.168.1.118:3000');
+      candidates.push('http://192.168.1.2:3000');
+      candidates.push('http://localhost:3000');
+
+      let foundHost = null;
+      for (const h of candidates) {
+        try {
+          const res = await fetch(h + '/api/v1/ping', { signal: AbortSignal.timeout(1800) });
+          if (res.ok) {
+            foundHost = h;
+            break;
+          }
+        } catch(e) {}
+      }
+
+      if (foundHost) {
+        appData.serverUrl = foundHost;
+        localStorage.setItem('socies_server_url', foundHost);
+        updateServerBadge(true, foundHost);
+        console.log('[NET] Sunucuya bağlanıldı:', foundHost);
+        syncDeviceRegistration();
+        fetchLiveDevices();
+        fetchLiveLeaderboard();
+      } else {
+        updateServerBadge(false, appData.serverUrl);
+        console.log('[NET] Sunucu henüz bulunamadı, yerel mod aktif.');
+      }
+    }
+
+    function openServerModal() {
+      document.getElementById('inputServerUrl').value = appData.serverUrl;
+      document.getElementById('serverStatusTag').innerText = appData.isServerConnected ? '🟢 Bağlantı Aktif' : '🔴 Çevrimdışı';
+      document.getElementById('serverModal').style.display = 'flex';
+    }
+
+    function closeServerModal() {
+      document.getElementById('serverModal').style.display = 'none';
+    }
+
+    async function saveServerUrl() {
+      let val = document.getElementById('inputServerUrl').value.trim();
+      if (!val) return;
+      if (!val.startsWith('http://') && !val.startsWith('https://')) val = 'http://' + val;
+      showGlobalToast('🔍 Sunucu test ediliyor...');
+      try {
+        const res = await fetch(val + '/api/v1/ping', { signal: AbortSignal.timeout(3000) });
+        if (res.ok) {
+          appData.serverUrl = val;
+          localStorage.setItem('socies_server_url', val);
+          updateServerBadge(true, val);
+          showGlobalToast('✅ Sunucuya başarıyla bağlandı!');
+          closeServerModal();
+          syncDeviceRegistration();
+          fetchLiveDevices();
+          fetchLiveLeaderboard();
+        } else {
+          showGlobalToast('❌ Sunucu yanıt vermedi (HTTP ' + res.status + ')');
+        }
+      } catch(e) {
+        showGlobalToast('❌ Bağlantı başarısız: ' + e.message);
+      }
+    }
+
+    // =========================================================================
+    // NICKNAME & IDENTITY (FAZ 2)
+    // =========================================================================
+    function changeNicknamePrompt() {
+      const current = appData.nickname;
+      const yeni = prompt('Yeni Nickname girin (Maks 18 karakter):', current);
+      if (yeni && yeni.trim() && yeni.trim() !== current) {
+        appData.nickname = yeni.trim().slice(0, 18);
+        localStorage.setItem('socies_nickname', appData.nickname);
+        updateProfileUI();
+        syncDeviceRegistration();
+        showGlobalToast(`👑 Nickname güncellendi: ${appData.nickname}`);
+      }
+    }
+
+    function updateProfileUI() {
+      document.getElementById('txtPlayerName').innerText = appData.nickname;
+      document.getElementById('txtPlayerAvatar').innerText = appData.avatar;
+      document.getElementById('badgeDeviceId').innerText = appData.deviceId;
+      document.getElementById('txtPlayerLevel').innerText = `Lv.${appData.needs.level || 5}`;
+      document.getElementById('txtPlayerXp').innerText = `XP: ${appData.needs.xp}/2000 • 250 ⭐`;
+    }
+
+    async function syncDeviceRegistration() {
+      if (!appData.serverUrl) return;
+      try {
+        await fetch(appData.serverUrl + '/api/v1/devices/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            deviceId: appData.deviceId,
+            nickname: appData.nickname,
+            avatar: appData.avatar,
+            userEmail: `${appData.deviceId.toLowerCase()}@socies.io`,
+            pet: { breed: 'top', stage: 2, score: appData.needs.xp },
+            needs: appData.needs,
+            stats: { model: 'Socies App', steps: 4820 }
+          })
+        });
+      } catch(e) {}
+    }
+
+    // =========================================================================
+    // 7 SIMS NEEDS & DELTA-TIME PERSISTENCE (FAZ 1)
+    // =========================================================================
+    function initNeedsEngine() {
+      const saved = localStorage.getItem('socies_pet_needs');
+      if (saved) {
+        try {
+          const p = JSON.parse(saved);
+          appData.needs = Object.assign(appData.needs, p);
+          if (p.lastTick) {
+            const elapsedMins = Math.min(720, Math.floor((Date.now() - p.lastTick) / 60000));
+            if (elapsedMins > 5) {
+              const hungerDrop = Math.min(50, Math.floor(elapsedMins / 15) * 3);
+              const funDrop = Math.min(50, Math.floor(elapsedMins / 20) * 2);
+              const sleepDrop = Math.min(40, Math.floor(elapsedMins / 30) * 2);
+              appData.needs.hunger = Math.max(10, appData.needs.hunger - hungerDrop);
+              appData.needs.fun = Math.max(10, appData.needs.fun - funDrop);
+              appData.needs.sleep = Math.max(10, appData.needs.sleep - sleepDrop);
+              showGlobalToast(`🐾 Bebek seni ${elapsedMins} dakika bekledi!`);
+            }
+          }
+        } catch(e) {}
+      }
+      appData.needs.lastTick = Date.now();
+      saveNeeds();
+      updateNeedsUI();
+
+      // Periyodik doğal acıkma (Her 45 saniyede bir ufak düşüş)
+      setInterval(() => {
+        appData.needs.hunger = Math.max(5, appData.needs.hunger - 1);
+        appData.needs.fun = Math.max(5, appData.needs.fun - 1);
+        appData.needs.lastTick = Date.now();
+        saveNeeds();
+        updateNeedsUI();
+        syncTelemetry();
+      }, 45000);
+    }
+
+    function saveNeeds() {
+      localStorage.setItem('socies_pet_needs', JSON.stringify(appData.needs));
+    }
+
+    function updateNeedsUI() {
+      const setBar = (fillId, txtId, val) => {
+        const f = document.getElementById(fillId);
+        const t = document.getElementById(txtId);
+        if (f) f.style.width = Math.min(100, Math.max(0, val)) + '%';
+        if (t) t.innerText = Math.round(val) + '%';
+      };
+      setBar('fillHunger', 'txtValHunger', appData.needs.hunger);
+      setBar('fillToilet', 'txtValToilet', appData.needs.toilet);
+      setBar('fillBath', 'txtValBath', appData.needs.clean);
+      setBar('fillSleep', 'txtValSleep', appData.needs.sleep);
+      setBar('fillFun', 'txtValFun', appData.needs.fun);
+      setBar('fillLove', 'txtValLove', appData.needs.love);
+      updateProfileUI();
+    }
+
+    async function syncTelemetry() {
+      if (!appData.serverUrl) return;
+      try {
+        await fetch(appData.serverUrl + '/api/v1/telemetry', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            deviceId: appData.deviceId,
+            needs: appData.needs,
+            score: appData.needs.xp
+          })
+        });
+      } catch(e) {}
+    }
+
+    function performNeedAction(act, msg) {
+      beep(650, 0.08);
+      showGlobalToast(msg);
+      if (act === 'FEED') {
+        appData.needs.hunger = Math.min(100, appData.needs.hunger + 25);
+        oled.mode = 'EATING';
+        setTimeout(() => oled.mode = 'IDLE', 2500);
+      } else if (act === 'CLEAN_TOILET') {
+        appData.needs.toilet = 100;
+        appData.needs.clean = Math.min(100, appData.needs.clean + 15);
+      } else if (act === 'BATH') {
+        appData.needs.clean = 100;
+      } else if (act === 'SLEEP') {
+        appData.needs.sleep = 100;
+      }
+      appData.needs.xp += 15;
+      saveNeeds();
+      updateNeedsUI();
+      syncTelemetry();
+    }
+
+    function petLoveTouch() {
+      beep(880, 0.1);
+      appData.needs.love = Math.min(100, appData.needs.love + 10);
+      appData.needs.xp += 10;
+      saveNeeds();
+      updateNeedsUI();
+      syncTelemetry();
+      showGlobalToast('💖 Pufi sana sevgiyle sarıldı! (+10 XP)');
+    }
+
+    // =========================================================================
+    // REAL LEADERBOARD (FAZ 4 - SQLITE BACKED)
+    // =========================================================================
     function setRankView(mode) {
       appData.rankMode = mode;
       document.getElementById('btnRankFriends').classList.toggle('active', mode === 'friends');
       document.getElementById('btnRankGlobal').classList.toggle('active', mode === 'global');
-      renderLeaderboard();
+      if (mode === 'global') fetchLiveLeaderboard();
+      else renderLeaderboard();
+    }
+
+    async function fetchLiveLeaderboard() {
+      if (!appData.serverUrl) return;
+      try {
+        const res = await fetch(appData.serverUrl + '/api/v1/leaderboard/top');
+        if (res.ok) {
+          const data = await res.json();
+          if (data.leaderboard && data.leaderboard.length > 0) {
+            appData.globalLeaderboard = data.leaderboard.map((r, i) => ({
+              rank: i + 1,
+              nickname: r.nickname,
+              deviceId: r.device_id,
+              avatar: (r.nickname && r.nickname.includes('Turan')) ? '👑' : '🐾',
+              score: r.top_score,
+              steps: 4500 + i * 800
+            }));
+            renderLeaderboard();
+          }
+        }
+      } catch(e) {}
     }
 
     function renderLeaderboard() {
       const container = document.getElementById('rankListContainer');
       container.innerHTML = '';
-      const list = appData.rankMode === 'friends' ? appData.friends : appData.globalLeaderboard;
+      const list = (appData.rankMode === 'friends' && appData.friends.length > 0) ? appData.friends : appData.globalLeaderboard;
+
+      if (list.length === 0) {
+        container.innerHTML = '<div style="text-align:center; padding:2rem; color:var(--text-muted);">Sıralama yükleniyor...</div>';
+        return;
+      }
 
       list.forEach((u, i) => {
         const medal = (i === 0) ? '🥇' : (i === 1 ? '🥈' : (i === 2 ? '🥉' : `#${i+1}`));
@@ -1487,98 +1793,213 @@
             <span style="font-size:1.5rem;">${u.avatar || '🐾'}</span>
             <div>
               <div style="font-weight:800; font-size:0.9rem;">${u.nickname}</div>
-              <div style="font-size:0.75rem; color:var(--text-muted);">ID: ${u.deviceId} • 👟 ${u.steps.toLocaleString()} Adım</div>
+              <div style="font-size:0.75rem; color:var(--text-muted);">ID: ${u.deviceId} • 👟 ${(u.steps || 0).toLocaleString()} Adım</div>
             </div>
           </div>
           <div style="font-weight:900; font-size:0.95rem; color:var(--indigo);">
-            ${u.score.toLocaleString()} XP
+            ${(u.score || 0).toLocaleString()} XP
           </div>
         `;
         container.appendChild(card);
       });
     }
-    renderLeaderboard();
+
+    async function submitGameScore(game, score) {
+      if (!appData.serverUrl || score <= 0) return;
+      try {
+        await fetch(appData.serverUrl + '/api/v1/leaderboard/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            deviceId: appData.deviceId,
+            nickname: appData.nickname,
+            game: game,
+            score: score
+          })
+        });
+        fetchLiveLeaderboard();
+      } catch(e) {}
+    }
 
     // =========================================================================
-    // FRIENDS LIST & INTERACTIONS (POKE, DUELLO, 90s PAGER)
+    // REAL FRIENDS & RADAR (FAZ 3 - SQLITE BACKED)
     // =========================================================================
+    async function fetchLiveDevices() {
+      if (!appData.serverUrl) return;
+      try {
+        const res = await fetch(appData.serverUrl + '/api/v1/devices/list');
+        if (res.ok) {
+          const data = await res.json();
+          if (data.devices && data.devices.length > 0) {
+            appData.friends = data.devices.map(d => ({
+              nickname: d.nickname,
+              deviceId: d.deviceId,
+              avatar: d.avatar || '🐾',
+              petName: d.pet?.breed ? (d.pet.breed.toUpperCase()) : 'Dost',
+              score: d.score || 1000,
+              steps: d.steps || 0,
+              isOnline: d.isOnline,
+              isSelf: d.deviceId === appData.deviceId
+            }));
+            renderFriendsList();
+          }
+        }
+      } catch(e) {}
+    }
+
     function renderFriendsList() {
       const c = document.getElementById('friendsListContainer');
       c.innerHTML = '';
+
+      if (appData.friends.length === 0) {
+        c.innerHTML = '<div style="text-align:center; padding:2rem; color:var(--text-muted);">Radar taranıyor...</div>';
+        return;
+      }
+
       appData.friends.forEach(f => {
+        const isMe = f.deviceId === appData.deviceId;
         const card = document.createElement('div');
         card.className = 'friend-card';
+        card.style.background = isMe ? '#F1F5F9' : '#FFFFFF';
         card.innerHTML = `
           <div style="display:flex; align-items:center; gap:0.6rem;">
             <span style="font-size:1.8rem;">${f.avatar}</span>
             <div>
               <div style="font-weight:800; font-size:0.92rem; display:flex; align-items:center; gap:0.4rem;">
-                ${f.nickname}
-                <span style="width:8px; height:8px; border-radius:50%; background:${f.isOnline ? '#10B981':'#94A3B8'}; display:inline-block;"></span>
+                ${f.nickname} ${isMe ? '<small style="color:var(--indigo);">(Sen)</small>' : ''}
+                <span style="width:8px; height:8px; border-radius:50%; background:${f.isOnline ? '#10B981':'#94A3B8'}; display:inline-block;" title="${f.isOnline ? 'Çevrimiçi':'Çevrimdışı'}"></span>
               </div>
-              <div style="font-size:0.75rem; color:var(--text-muted);">Pet: ${f.petName} • ID: ${f.deviceId}</div>
+              <div style="font-size:0.75rem; color:var(--text-muted);">ID: ${f.deviceId} • Skor: ${f.score}</div>
             </div>
           </div>
           <div class="friend-actions">
-            <button class="btn-micro" style="color:var(--rose);" onclick="pokeFriend('${f.nickname}')">👉 Dürt</button>
-            <button class="btn-micro" style="color:var(--indigo);" onclick="duelFriend('${f.nickname}')">⚔️ Düello</button>
-            <button class="btn-micro" style="color:var(--amber);" onclick="sendGiftFriend('${f.nickname}')">🎁 Hediye</button>
+            ${isMe ? '<span style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">Bu Senin Cihazın</span>' : `
+              <button class="btn-micro" style="color:var(--rose);" onclick="pokeFriend('${f.deviceId}', '${f.nickname}')">👉 Dürt</button>
+              <button class="btn-micro" style="color:var(--indigo);" onclick="duelFriend('${f.deviceId}', '${f.nickname}')">⚔️ Düello</button>
+              <button class="btn-micro" style="color:var(--amber);" onclick="sendGiftFriend('${f.deviceId}', '${f.nickname}')">🎁 Hediye</button>
+            `}
           </div>
         `;
         c.appendChild(card);
       });
     }
-    renderFriendsList();
 
-    function pokeFriend(name) {
+    async function pokeFriend(targetDev, name) {
       beep(700, 0.1);
-      showGlobalToast(`👉 ${name} dürtüldü! Konsolu cebinde titriyor.`);
+      showGlobalToast(`👉 ${name} dürtülüyor...`);
+      if (!appData.serverUrl) return;
+      try {
+        const res = await fetch(appData.serverUrl + '/api/v1/pokes/send', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            fromDev: appData.deviceId,
+            fromNick: appData.nickname,
+            targetDev: targetDev,
+            pokeType: 'POKE'
+          })
+        });
+        if (res.ok) {
+          showGlobalToast(`✨ ${name} kullanıcısına poke iletildi! Cihazı titriyor.`);
+        }
+      } catch(e) {
+        showGlobalToast('⚠️ Dürtme gönderilemedi: Sunucuya ulaşılamıyor.');
+      }
     }
 
-    function duelFriend(name) {
+    async function duelFriend(targetDev, name) {
       beep(880, 0.15);
       showGlobalToast(`⚔️ ${name} kullanıcısına Kovboy Düellosu daveti gitti!`);
+      if (appData.serverUrl) {
+        fetch(appData.serverUrl + '/api/v1/pokes/send', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            fromDev: appData.deviceId,
+            fromNick: appData.nickname,
+            targetDev: targetDev,
+            pokeType: 'DUEL'
+          })
+        }).catch(() => {});
+      }
       oled.mode = 'COWBOY';
       oled.cowboy.timer = 0;
       oled.cowboy.canShoot = false;
       switchTab('tab-console');
     }
 
-    function sendGiftFriend(name) {
+    async function sendGiftFriend(targetDev, name) {
       beep(950, 0.15);
       showGlobalToast(`🎁 ${name} kullanıcısına Altın Kurabiye hediye edildi!`);
+      if (appData.serverUrl) {
+        fetch(appData.serverUrl + '/api/v1/pokes/send', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            fromDev: appData.deviceId,
+            fromNick: appData.nickname,
+            targetDev: targetDev,
+            pokeType: 'GIFT'
+          })
+        }).catch(() => {});
+      }
     }
 
     function addFriendAction() {
       const val = document.getElementById('friendSearchInput').value.trim();
       if (!val) return;
-      appData.friends.push({
-        nickname: val,
-        deviceId: '77' + Math.floor(Math.random()*900),
-        avatar: '🐱',
-        petName: 'Dost',
-        score: 1200,
-        steps: 3200,
-        isOnline: true
-      });
-      document.getElementById('friendSearchInput').value = '';
-      renderFriendsList();
-      showGlobalToast(`🟢 "${val}" arkadaş listenize eklendi!`);
-    }
-
-    // ACTIONS & HUD
-    function performNeedAction(act, msg) {
-      beep(650, 0.08);
-      showGlobalToast(msg);
-      if (act === 'FEED') {
-        oled.mode = 'EATING';
-        setTimeout(() => oled.mode = 'IDLE', 2500);
+      // Filtrele veya radarda ara
+      const found = appData.friends.find(f => f.nickname.toLowerCase().includes(val.toLowerCase()) || f.deviceId.includes(val));
+      if (found) {
+        showGlobalToast(`🟢 "${found.nickname}" radarda bulundu!`);
+      } else {
+        showGlobalToast(`ℹ️ "${val}" adına sahip cihaz aranıyor...`);
+        fetchLiveDevices();
       }
+      document.getElementById('friendSearchInput').value = '';
     }
 
-    function petLoveTouch() {
-      beep(880, 0.1);
-      showGlobalToast('💖 Pufi sana sevgiyle sarıldı!');
+    // =========================================================================
+    // INCOMING POKE & EVENT POLLING (FAZ 3)
+    // =========================================================================
+    async function pollIncomingEvents() {
+      if (!appData.serverUrl) return;
+      try {
+        const res = await fetch(`${appData.serverUrl}/api/v1/pokes/pending?targetDev=${appData.deviceId}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.pokes && data.pokes.length > 0) {
+            data.pokes.forEach(p => {
+              beep(920, 0.25);
+              if (navigator.vibrate) navigator.vibrate([150, 80, 150]);
+              if (p.poke_type === 'DUEL') {
+                showGlobalToast(`⚔️ [${p.from_nick}] seni Kovboy Düellosuna çağırdı!`);
+                oled.mode = 'COWBOY';
+                switchTab('tab-console');
+              } else if (p.poke_type === 'GIFT') {
+                showGlobalToast(`🎁 [${p.from_nick}] sana Altın Kurabiye hediye etti! (+50 XP)`);
+                appData.needs.xp += 50;
+                saveNeeds();
+                updateNeedsUI();
+              } else {
+                showGlobalToast(`👉 [${p.from_nick}] seni dürttü! Konsolun titriyor!`);
+              }
+            });
+          }
+        }
+      } catch(e) {}
+    }
+    setInterval(pollIncomingEvents, 4000);
+
+    // Mini oyun skor bitişlerinde SQLite'a kaydetme kancası
+    function reportGameScore(game, score) {
+      if (score > 0) {
+        appData.needs.xp += score;
+        saveNeeds();
+        updateNeedsUI();
+        submitGameScore(game, score);
+        showGlobalToast(`🏆 ${game} oyununda ${score} Puan kazandın! Liderlik tablosuna işlendi.`);
+      }
     }
 
     function launchGameOnConsole(game) {
@@ -1607,7 +2028,7 @@
       t.style.boxShadow = '0 10px 25px rgba(0,0,0,0.25)';
       t.style.zIndex = '9999';
       document.body.appendChild(t);
-      setTimeout(() => t.remove(), 2500);
+      setTimeout(() => t.remove(), 2800);
     }
 
     function switchTab(tabId) {
@@ -1716,9 +2137,12 @@
       }, 500);
     }
 
-    // Uygulama açılışında otomatik kontrol
+    // Uygulama açılışında otomatik kontrol ve canlı başlatıcılar
     window.addEventListener('load', () => {
-      setTimeout(() => checkAppVersionOnBoot(false), 1200);
+      initNeedsEngine();
+      updateProfileUI();
+      discoverAndConnectServer();
+      setTimeout(() => checkAppVersionOnBoot(false), 1500);
     });
   </script>
 </body>

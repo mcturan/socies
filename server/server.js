@@ -17,7 +17,57 @@ const pathModule = require('path');
 
 const PORT = process.env.PORT || 3000;
 
-// IN-MEMORY VERİTABANI (İleride PostgreSQL / Redis / SQLite ile genişletilebilir)
+// =========================================================================
+// KALICI SQLITE VERİTABANI (Disk Persistence: server/socies.db)
+// =========================================================================
+const { DatabaseSync } = require('node:sqlite');
+const dbPath = pathModule.join(__dirname, 'socies.db');
+const db = new DatabaseSync(dbPath);
+
+// Tabloları Oluştur
+db.exec(`
+  CREATE TABLE IF NOT EXISTS devices (
+    device_id TEXT PRIMARY KEY,
+    nickname TEXT,
+    avatar TEXT,
+    user_email TEXT,
+    pet_json TEXT,
+    needs_json TEXT,
+    stats_json TEXT,
+    score INTEGER DEFAULT 0,
+    steps INTEGER DEFAULT 0,
+    last_seen INTEGER,
+    is_online INTEGER DEFAULT 1
+  );
+  CREATE TABLE IF NOT EXISTS pokes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    from_dev TEXT,
+    from_nick TEXT,
+    target_dev TEXT,
+    poke_type TEXT DEFAULT 'POKE',
+    is_read INTEGER DEFAULT 0,
+    created_at INTEGER
+  );
+  CREATE TABLE IF NOT EXISTS messages (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    from_dev TEXT,
+    from_nick TEXT,
+    target_dev TEXT,
+    message_text TEXT,
+    is_delivered INTEGER DEFAULT 0,
+    created_at INTEGER
+  );
+  CREATE TABLE IF NOT EXISTS leaderboard (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    device_id TEXT,
+    nickname TEXT,
+    game TEXT,
+    score INTEGER,
+    created_at INTEGER
+  );
+`);
+
+// IN-MEMORY CACHE & WEBSOCKET KÖPRÜSÜ
 const database = {
   devices: new Map(),        // deviceId -> { deviceId, mac, userEmail, pet, needs, stats, lastSeen, isOnline }
   users: new Map(),          // userEmail -> { email, activeDeviceId, cloudSave, createdAt }
@@ -115,17 +165,50 @@ const initialDevices = [
   }
 ];
 
-initialDevices.forEach(d => {
-  database.devices.set(d.deviceId, d);
-  database.users.set(d.user.email, {
-    userEmail: d.user.email,
-    activeDeviceId: d.deviceId,
-    petState: d.pet,
-    totalScore: d.pet.score,
-    streakDays: d.pet.streakDays,
-    createdAt: new Date(Date.now() - d.pet.ageDays * 86400000).toISOString()
+// SQLite to memory synchronization
+try {
+  const rowCount = db.prepare('SELECT COUNT(*) AS c FROM devices').get();
+  if (rowCount.c === 0) {
+    const insertStmt = db.prepare(`
+      INSERT INTO devices (device_id, nickname, avatar, user_email, pet_json, needs_json, stats_json, score, steps, last_seen, is_online)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `);
+    initialDevices.forEach(d => {
+      insertStmt.run(
+        d.deviceId,
+        d.user.nickname,
+        d.user.avatar,
+        d.user.email,
+        JSON.stringify(d.pet),
+        JSON.stringify(d.needs),
+        JSON.stringify(d.phone || {}),
+        d.pet.score || 0,
+        d.phone?.stepsToday || 0,
+        d.lastSeen,
+        d.isOnline ? 1 : 0
+      );
+    });
+  }
+
+  // Load all devices from SQLite into memory map
+  const allRows = db.prepare('SELECT * FROM devices').all();
+  allRows.forEach(r => {
+    database.devices.set(r.device_id, {
+      deviceId: r.device_id,
+      mac: 'A4:CF:12:89:34:B1',
+      user: { nickname: r.nickname, email: r.user_email, avatar: r.avatar, isVip: r.nickname.includes('Kurucu') },
+      pet: JSON.parse(r.pet_json || '{}'),
+      needs: JSON.parse(r.needs_json || '{}'),
+      stats: JSON.parse(r.stats_json || '{}'),
+      score: r.score,
+      steps: r.steps,
+      lastSeen: r.last_seen,
+      isOnline: (Date.now() - r.last_seen) < 180000
+    });
   });
-});
+} catch(e) {
+  console.error('[DB SYNC ERROR]', e);
+}
 
 // YARDIMCI JSON YANIT FONKSİYONU
 function sendJSON(res, statusCode, data) {
@@ -223,35 +306,185 @@ const server = http.createServer((req, res) => {
     }
   }
 
-  // 2. CİHAZ KAYDI (REGISTER)
+  // 1.6 SUNUCU CANLILIK & PING KONTROLÜ (HEALTH / PING)
+  if (path === '/api/v1/ping' && method === 'GET') {
+    return sendJSON(res, 200, {
+      status: 'OK',
+      serverTime: Date.now(),
+      serverHost: req.headers.host || '192.168.1.118:3000',
+      clientIp: req.socket.remoteAddress,
+      registeredDevicesCount: db.prepare('SELECT COUNT(*) AS c FROM devices').get().c
+    });
+  }
+
+  // 2. CİHAZ KAYDI & NICKNAME GÜNCELLEME (REGISTER)
   if (path === '/api/v1/devices/register' && method === 'POST') {
     return parseBody(req, (body) => {
-      const { deviceId, mac, userEmail, pet, stats } = body;
+      const { deviceId, nickname, avatar, userEmail, pet, needs, stats } = body;
       if (!deviceId) return sendJSON(res, 400, { error: 'deviceId zorunludur' });
 
-      const deviceData = {
-        deviceId,
-        mac: mac || 'Bilinmiyor',
-        userEmail: userEmail || 'misafir@socies.io',
-        pet: pet || { breed: 'top', stage: 1, ageDays: 1, score: 0 },
-        needs: body.needs || { hunger: 100, fun: 100, love: 100, sleep: 100, toilet: 100, clean: 100, social: 100 },
-        stats: stats || { batteryMv: 4000, batteryPct: 100, steps: 0, fwVer: 'v1.0.0' },
-        lastSeen: Date.now(),
-        isOnline: true
-      };
+      const nick = nickname || `Oyuncu_${deviceId.slice(-4)}`;
+      const av = avatar || '🐾';
+      const email = userEmail || `${deviceId.toLowerCase()}@socies.io`;
+      const now = Date.now();
 
-      database.devices.set(deviceId, deviceData);
+      try {
+        const stmt = db.prepare(`
+          INSERT INTO devices (device_id, nickname, avatar, user_email, pet_json, needs_json, stats_json, score, steps, last_seen, is_online)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)
+          ON CONFLICT(device_id) DO UPDATE SET
+            nickname = excluded.nickname,
+            avatar = excluded.avatar,
+            user_email = excluded.user_email,
+            pet_json = COALESCE(excluded.pet_json, pet_json),
+            needs_json = COALESCE(excluded.needs_json, needs_json),
+            stats_json = COALESCE(excluded.stats_json, stats_json),
+            last_seen = excluded.last_seen,
+            is_online = 1
+        `);
+        stmt.run(
+          deviceId,
+          nick,
+          av,
+          email,
+          JSON.stringify(pet || {}),
+          JSON.stringify(needs || {}),
+          JSON.stringify(stats || {}),
+          pet?.score || 0,
+          stats?.steps || 0,
+          now
+        );
 
-      // Çevrimdışı kuyrukta bekleyen mesaj var mı?
-      const pendingMsgs = database.offlineMessages.get(deviceId) || [];
+        database.devices.set(deviceId, {
+          deviceId,
+          mac: 'A4:CF:12:89:34:B1',
+          user: { nickname: nick, email, avatar: av, isVip: nick.includes('Kurucu') },
+          pet: pet || { breed: 'top', stage: 1, ageDays: 1, score: 0 },
+          needs: needs || { hunger: 100, fun: 100, love: 100, sleep: 100, toilet: 100, clean: 100, social: 100 },
+          stats: stats || { batteryMv: 4000, batteryPct: 100, steps: 0, fwVer: 'v1.0.5' },
+          lastSeen: now,
+          isOnline: true
+        });
 
-      sendJSON(res, 200, {
-        success: true,
-        message: 'Cihaz başarıyla sunucuya kaydedildi',
-        registeredAt: new Date().toISOString(),
-        pendingMessagesCount: pendingMsgs.length
-      });
+        // Bekleyen poke ve mesaj sayısını öğren
+        const pokesCount = db.prepare('SELECT COUNT(*) AS c FROM pokes WHERE target_dev = ? AND is_read = 0').get(deviceId).c;
+        const msgsCount = db.prepare('SELECT COUNT(*) AS c FROM messages WHERE target_dev = ? AND is_delivered = 0').get(deviceId).c;
+
+        sendJSON(res, 200, {
+          success: true,
+          message: 'Cihaz başarıyla kaydedildi & veritabanında güncellendi',
+          deviceId,
+          nickname: nick,
+          registeredAt: new Date(now).toISOString(),
+          pendingPokesCount: pokesCount,
+          pendingMessagesCount: msgsCount
+        });
+      } catch(err) {
+        console.error('[REGISTER ERROR]', err);
+        sendJSON(res, 500, { error: 'Kayıt veritabanına yazılamadı: ' + err.message });
+      }
     });
+  }
+
+  // 2.1 CİHAZ VE ARKADAŞ LİSTESİ (RADAR / USERS LIST)
+  if (path === '/api/v1/devices/list' && method === 'GET') {
+    try {
+      const rows = db.prepare('SELECT * FROM devices ORDER BY last_seen DESC LIMIT 50').all();
+      const devices = rows.map(r => ({
+        deviceId: r.device_id,
+        nickname: r.nickname,
+        avatar: r.avatar,
+        pet: JSON.parse(r.pet_json || '{}'),
+        needs: JSON.parse(r.needs_json || '{}'),
+        stats: JSON.parse(r.stats_json || '{}'),
+        score: r.score,
+        steps: r.steps,
+        lastSeen: r.last_seen,
+        isOnline: (Date.now() - r.last_seen) < 180000
+      }));
+
+      return sendJSON(res, 200, { success: true, count: devices.length, devices });
+    } catch(e) {
+      return sendJSON(res, 500, { error: e.message });
+    }
+  }
+
+  // 2.2 CANLI DÜRTME (POKE) GÖNDERME
+  if (path === '/api/v1/pokes/send' && method === 'POST') {
+    return parseBody(req, (body) => {
+      const { fromDev, fromNick, targetDev, pokeType } = body;
+      if (!targetDev || !fromDev) return sendJSON(res, 400, { error: 'fromDev ve targetDev zorunludur' });
+
+      try {
+        db.prepare('INSERT INTO pokes (from_dev, from_nick, target_dev, poke_type, is_read, created_at) VALUES (?, ?, ?, ?, 0, ?)').run(
+          fromDev, fromNick || 'Dost', targetDev, pokeType || 'POKE', Date.now()
+        );
+        database.systemStats.totalPokesSent++;
+
+        return sendJSON(res, 200, {
+          success: true,
+          message: `${targetDev} cihazına ${pokeType || 'POKE'} başarıyla iletildi`
+        });
+      } catch(e) {
+        return sendJSON(res, 500, { error: e.message });
+      }
+    });
+  }
+
+  // 2.3 BEKLEYEN POKE'LARI ÇEKME (POLL POKES)
+  if (path.startsWith('/api/v1/pokes/pending') && method === 'GET') {
+    const targetDev = parsedUrl.query.targetDev;
+    if (!targetDev) return sendJSON(res, 400, { error: 'targetDev parametresi gerekli' });
+
+    try {
+      const pokes = db.prepare('SELECT * FROM pokes WHERE target_dev = ? AND is_read = 0 ORDER BY created_at ASC').all(targetDev);
+      if (pokes.length > 0) {
+        db.prepare('UPDATE pokes SET is_read = 1 WHERE target_dev = ?').run(targetDev);
+      }
+      return sendJSON(res, 200, { success: true, count: pokes.length, pokes });
+    } catch(e) {
+      return sendJSON(res, 500, { error: e.message });
+    }
+  }
+
+  // 2.4 CANLI SKOR TABLOSUNA SKOR GÖNDERME (LEADERBOARD SUBMIT)
+  if (path === '/api/v1/leaderboard/submit' && method === 'POST') {
+    return parseBody(req, (body) => {
+      const { deviceId, nickname, game, score } = body;
+      if (!deviceId || score === undefined) return sendJSON(res, 400, { error: 'deviceId ve score gerekli' });
+
+      try {
+        db.prepare('INSERT INTO leaderboard (device_id, nickname, game, score, created_at) VALUES (?, ?, ?, ?, ?)').run(
+          deviceId, nickname || 'Oyuncu', game || 'PONG', parseInt(score, 10), Date.now()
+        );
+        db.prepare('UPDATE devices SET score = MAX(score, ?) WHERE device_id = ?').run(parseInt(score, 10), deviceId);
+
+        return sendJSON(res, 200, { success: true, message: 'Skor veritabanına işlendi' });
+      } catch(e) {
+        return sendJSON(res, 500, { error: e.message });
+      }
+    });
+  }
+
+  // 2.5 LİDERLİK TABLOSUNU ÇEKME (GET LEADERBOARD)
+  if (path === '/api/v1/leaderboard/top' && method === 'GET') {
+    try {
+      const topScores = db.prepare(`
+        SELECT device_id, nickname, MAX(score) AS top_score, MAX(created_at) AS last_active
+        FROM (
+          SELECT device_id, nickname, score, created_at FROM leaderboard
+          UNION ALL
+          SELECT device_id, nickname, score, last_seen AS created_at FROM devices
+        )
+        GROUP BY device_id, nickname
+        ORDER BY top_score DESC
+        LIMIT 25
+      `).all();
+
+      return sendJSON(res, 200, { success: true, leaderboard: topScores });
+    } catch(e) {
+      return sendJSON(res, 500, { error: e.message });
+    }
   }
 
   // 3. CANLI TELEMETRİ BİLDİRİMİ (TELEMETRY)
@@ -265,6 +498,26 @@ const server = http.createServer((req, res) => {
       if (needs) dev.needs = needs;
       if (stats) dev.stats = stats;
       dev.lastSeen = Date.now();
+      dev.isOnline = true;
+      database.devices.set(deviceId, dev);
+
+      try {
+        db.prepare(`
+          UPDATE devices SET
+            needs_json = COALESCE(?, needs_json),
+            stats_json = COALESCE(?, stats_json),
+            pet_json = COALESCE(?, pet_json),
+            last_seen = ?,
+            is_online = 1
+          WHERE device_id = ?
+        `).run(
+          needs ? JSON.stringify(needs) : null,
+          stats ? JSON.stringify(stats) : null,
+          pet ? JSON.stringify(pet) : null,
+          dev.lastSeen,
+          deviceId
+        );
+      } catch(e) {}
       dev.isOnline = true;
       database.devices.set(deviceId, dev);
 
