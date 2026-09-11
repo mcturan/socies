@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Socies Pocket - Retro El Konsolu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700;800&family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --case-base: #4a287a;
+      --case-grad: linear-gradient(175deg, #6c3da8 0%, #3e1b69 100%);
+      --case-edge: #250f42;
+      --bezel-bg: #1c152b;
+      --oled-bg: #000814;
+      --oled-yellow: #ffb703;
+      --oled-blue: #00f0ff;
+      --btn-grad: linear-gradient(135deg, #7c4cb8, #421e75);
+      --btn-active: #2b1150;
+      --btn-label: #d4bbf5;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    body {
+      background: #0d0614;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'JetBrains Mono', monospace;
+      padding: 0.5rem;
+      overflow: hidden;
+    }
+
+    /* RETRO HANDHELD CASING */
+    .handheld-chassis {
+      width: 100%;
+      max-width: 390px;
+      height: 96vh;
+      max-height: 820px;
+      background: var(--case-grad);
+      border: 4px solid var(--case-edge);
+      border-radius: 44px;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.6), inset 0 2px 6px rgba(255,255,255,0.25), inset 0 -6px 12px rgba(0,0,0,0.4);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1.4rem 1.2rem;
+      position: relative;
+    }
+
+    /* TOP ACCENTS */
+    .chassis-top {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.8rem;
+    }
+    .power-led {
+      width: 8px;
+      height: 8px;
+      background: #00ff66;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #00ff66;
+      animation: pulseLed 2s infinite ease-in-out;
+    }
+    .retro-brand {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.95rem;
+      color: #e2d1f9;
+      letter-spacing: 2px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+    .speaker-grille {
+      display: flex;
+      gap: 3px;
+    }
+    .grille-line {
+      width: 3px;
+      height: 12px;
+      background: #250f42;
+      border-radius: 2px;
+    }
+
+    /* OLED SCREEN BEZEL */
+    .screen-bezel {
+      background: var(--bezel-bg);
+      border: 3px solid #140d20;
+      border-radius: 24px;
+      padding: 12px 10px;
+      box-shadow: inset 0 4px 10px rgba(0,0,0,0.8), 0 2px 4px rgba(255,255,255,0.1);
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .bezel-label {
+      font-size: 0.65rem;
+      color: #7b699c;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+      font-weight: 800;
+    }
+
+    /* OLED CANVAS (128x64 native, scaled) */
+    .oled-screen {
+      background: var(--oled-bg);
+      border-radius: 8px;
+      border: 2px solid #0a1128;
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.15), inset 0 0 10px rgba(0,0,0,0.9);
+      image-rendering: pixelated;
+      width: 100%;
+      max-width: 330px;
+      height: 165px;
+    }
+
+    /* CONTROLS SECTION */
+    .controls-zone {
+      flex: 1;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      align-items: center;
+      margin-top: 1rem;
+    }
+
+    /* BUTTONS LAYOUT (ERGONOMIC VERTICAL / DPAD) */
+    .buttons-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2rem;
+      width: 100%;
+      padding: 0 0.5rem;
+    }
+
+    .dpad-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .action-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .console-btn {
+      width: 72px;
+      height: 72px;
+      background: var(--btn-grad);
+      border: 3px solid #301354;
+      border-radius: 50%;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.5), inset 0 2px 4px rgba(255,255,255,0.3);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      position: relative;
+      transition: transform 0.08s ease, background 0.08s ease;
+    }
+    .console-btn:active, .console-btn.pressed {
+      transform: translateY(4px) scale(0.95);
+      background: var(--btn-active);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.6);
+    }
+    .btn-icon {
+      font-size: 1.5rem;
+      color: #fff;
+    }
+    .btn-text {
+      font-size: 0.65rem;
+      font-weight: 800;
+      color: var(--btn-label);
+      margin-top: 2px;
+      letter-spacing: 0.5px;
+    }
+
+    /* STATUS PAGER OVERLAY */
+    .pager-alert-toast {
+      position: absolute;
+      top: 25%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 240, 255, 0.95);
+      color: #000;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.75rem;
+      padding: 0.8rem 1.2rem;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0,240,255,0.8);
+      z-index: 50;
+      display: none;
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    @keyframes pulseLed {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="handheld-chassis">
+    
+    <!-- TOP ACCENTS -->
+    <div class="chassis-top">
+      <div style="display:flex; align-items:center; gap:6px;">
+        <div class="power-led"></div>
+        <span style="font-size:0.65rem; color:#84cc16; font-weight:800;">PWR</span>
+      </div>
+      <div class="retro-brand">SOCIES</div>
+      <div class="speaker-grille">
+        <div class="grille-line"></div>
+        <div class="grille-line"></div>
+        <div class="grille-line"></div>
+        <div class="grille-line"></div>
+      </div>
+    </div>
+
+    <!-- OLED SCREEN BEZEL -->
+    <div class="screen-bezel">
+      <div class="bezel-label">0.96" I2C OLED (128x64 DUAL MONOCHROME)</div>
+      <canvas id="oledCanvas" class="oled-screen" width="128" height="64"></canvas>
+    </div>
+
+    <!-- PAGER ALERT TOAST -->
+    <div id="pagerAlert" class="pager-alert-toast"></div>
+
+    <!-- CONTROLS ZONE -->
+    <div class="controls-zone">
+      <div class="buttons-grid">
+        
+        <!-- NAVIGATION DPAD -->
+        <div class="dpad-col">
+          <button class="console-btn" id="btnUp" onpointerdown="handleBtnPress('UP')" onpointerup="handleBtnRelease('UP')">
+            <span class="btn-icon">▲</span>
+            <span class="btn-text">YUKARI</span>
+          </button>
+          <button class="console-btn" id="btnDown" onpointerdown="handleBtnPress('DOWN')" onpointerup="handleBtnRelease('DOWN')">
+            <span class="btn-icon">▼</span>
+            <span class="btn-text">AŞAĞI</span>
+          </button>
+        </div>
+
+        <!-- ACTION BUTTONS -->
+        <div class="action-col">
+          <button class="console-btn" id="btnSelect" style="border-color:#059669;" onpointerdown="handleBtnPress('SELECT')" onpointerup="handleBtnRelease('SELECT')">
+            <span class="btn-icon" style="color:#34d399;">●</span>
+            <span class="btn-text">SEÇ (OK)</span>
+          </button>
+          <button class="console-btn" id="btnBack" style="border-color:#dc2626;" onpointerdown="handleBtnPress('BACK')" onpointerup="handleBtnRelease('BACK')">
+            <span class="btn-icon" style="color:#f87171;">✕</span>
+            <span class="btn-text">GERİ</span>
+          </button>
+        </div>
+
+      </div>
+
+      <div style="font-size:0.75rem; color:#a78bfa; font-weight:700; margin-top:0.6rem;">
+        <span>📡 KÖPRÜ: </span><span id="bridgeStatus" style="color:#4ade80;">DİNLİYOR (Hazır)</span>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // --- WEB AUDIO 8-BIT SOUND SYNTHESIZER ---
+    let audioCtx = null;
+    function playBeep(freq = 440, type = 'square', duration = 0.08) {
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch(e) {}
+    }
+
+    // --- CONSOLE STATE ---
+    const consoleState = {
+      batteryPct: 88,
+      batteryMv: 3980,
+      steps: 2450,
+      hunger: 85,
+      happy: 90,
+      mode: 'IDLE', // IDLE, MENU, EATING, PLAYING, SLEEPING, PAGER
+      menuIdx: 0,
+      menuItems: ['BESLE', 'OYNA', 'TEMIZLE', 'UYUT', 'STAT'],
+      petX: 48,
+      petY: 24,
+      petDir: 1,
+      animFrame: 0,
+      customSprite: null,
+      lastEventMsg: ''
+    };
+
+    // --- OLED CANVAS RENDERER ---
+    const canvas = document.getElementById('oledCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // 16x16 default retro cat sprite (1-bit)
+    const retroCatSprite = [
+      "0100000000000010",
+      "1110000000000111",
+      "1111000000001111",
+      "1111111111111111",
+      "1110111111110111",
+      "1111111111111111",
+      "0111111111111110",
+      "0011101111011100",
+      "0001111111111000",
+      "0011111111111100",
+      "0111111111111110",
+      "0111111111111110",
+      "0111111111111110",
+      "0011111111111100",
+      "0011001111001100",
+      "0110001111000110"
+    ];
+
+    function drawOledScreen() {
+      // Clear Screen
+      ctx.fillStyle = '#000814';
+      ctx.fillRect(0, 0, 128, 64);
+
+      // --- 1. TOP 16 PIXELS: YELLOW STATUS BAR ---
+      ctx.fillStyle = '#ffb703';
+      
+      // Battery Icon
+      ctx.strokeRect(102, 3, 20, 9);
+      ctx.fillRect(122, 5, 2, 5);
+      const battFill = Math.round((consoleState.batteryPct / 100) * 16);
+      ctx.fillRect(104, 5, battFill, 5);
+      
+      // Battery Text
+      ctx.font = '7px "JetBrains Mono"';
+      ctx.fillText(consoleState.batteryPct + '%', 82, 10);
+
+      // Hearts (Lives/Happiness)
+      const heartsCount = Math.ceil((consoleState.happy / 100) * 4);
+      for(let i=0; i<heartsCount; i++) {
+        ctx.fillRect(4 + i * 11, 4, 8, 7);
+      }
+
+      // Step count in status
+      ctx.fillText('STP:' + consoleState.steps, 48, 10);
+
+      // Divider line between Yellow & Blue
+      ctx.fillStyle = '#1e293b';
+      ctx.fillRect(0, 15, 128, 1);
+
+      // --- 2. BOTTOM 48 PIXELS: CYAN BLUE GAMEPLAY ---
+      ctx.fillStyle = '#00f0ff';
+
+      if (consoleState.mode === 'MENU') {
+        renderMenu();
+      } else if (consoleState.mode === 'EATING') {
+        renderEating();
+      } else if (consoleState.mode === 'PLAYING') {
+        renderPlaying();
+      } else if (consoleState.mode === 'SLEEPING') {
+        renderSleeping();
+      } else {
+        renderIdlePet();
+      }
+
+      consoleState.animFrame++;
+      requestAnimationFrame(drawOledScreen);
+    }
+
+    function renderIdlePet() {
+      ctx.fillStyle = '#00f0ff';
+      
+      // Walking back and forth
+      if (consoleState.animFrame % 60 === 0) {
+        consoleState.petX += consoleState.petDir * 6;
+        if (consoleState.petX > 90) consoleState.petDir = -1;
+        if (consoleState.petX < 20) consoleState.petDir = 1;
+      }
+
+      const bob = (consoleState.animFrame % 16 < 8) ? 0 : 1;
+      drawSprite(consoleState.petX, 32 + bob);
+
+      // Message ticker
+      if (consoleState.lastEventMsg) {
+        ctx.font = '7px "JetBrains Mono"';
+        ctx.fillText(consoleState.lastEventMsg, 10, 60);
+      } else {
+        ctx.font = '6px "JetBrains Mono"';
+        ctx.fillText('SOCIES BLE: ON', 6, 60);
+      }
+    }
+
+    function renderMenu() {
+      ctx.fillStyle = '#00f0ff';
+      ctx.font = '9px "JetBrains Mono"';
+      ctx.fillText('=== MENÜ ===', 28, 26);
+      
+      consoleState.menuItems.forEach((item, idx) => {
+        const y = 38 + idx * 10;
+        if (idx === consoleState.menuIdx) {
+          ctx.fillText('> ' + item, 20, y);
+        } else {
+          ctx.fillText('  ' + item, 20, y);
+        }
+      });
+    }
+
+    function renderEating() {
+      ctx.fillStyle = '#00f0ff';
+      drawSprite(40, 32);
+      // Draw Cookie flying
+      ctx.fillRect(80, 36, 8, 8);
+      ctx.font = '8px "JetBrains Mono"';
+      ctx.fillText('YUM YUM! 🍪', 34, 25);
+    }
+
+    function renderPlaying() {
+      ctx.fillStyle = '#00f0ff';
+      const bounce = Math.abs(Math.sin(consoleState.animFrame * 0.2)) * 10;
+      drawSprite(30, 36 - bounce);
+      // Ball
+      ctx.fillRect(75, 42 - bounce * 0.5, 6, 6);
+      ctx.font = '8px "JetBrains Mono"';
+      ctx.fillText('OYUN! 🎾', 44, 25);
+    }
+
+    function renderSleeping() {
+      ctx.fillStyle = '#00f0ff';
+      drawSprite(48, 38);
+      ctx.font = '9px "JetBrains Mono"';
+      const zOffset = (consoleState.animFrame % 30);
+      ctx.fillText('z', 72, 34 - zOffset * 0.3);
+      ctx.fillText('Z', 78, 28 - zOffset * 0.4);
+    }
+
+    function drawSprite(x, y) {
+      if (consoleState.customSprite) {
+        // Draw 24x24 custom sprite
+        for(let r=0; r<24; r++) {
+          for(let c=0; c<24; c++) {
+            if (consoleState.customSprite[r] && consoleState.customSprite[r][c]) {
+              ctx.fillRect(x + c, y + r - 8, 1, 1);
+            }
+          }
+        }
+      } else {
+        // Draw 16x16 default cat
+        for(let r=0; r<16; r++) {
+          for(let c=0; c<16; c++) {
+            if (retroCatSprite[r][c] === '1') {
+              ctx.fillRect(x + c, y + r, 1, 1);
+            }
+          }
+        }
+      }
+    }
+
+    // --- BUTTON CONTROLS ---
+    function handleBtnPress(btn) {
+      if (window.navigator.vibrate) window.navigator.vibrate(40);
+      document.getElementById('btn' + btn.charAt(0) + btn.slice(1).toLowerCase())?.classList.add('pressed');
+      
+      playBeep(btn === 'SELECT' ? 880 : (btn === 'BACK' ? 330 : 587), 'square', 0.07);
+
+      if (btn === 'UP') {
+        if (consoleState.mode === 'MENU') {
+          consoleState.menuIdx = (consoleState.menuIdx - 1 + consoleState.menuItems.length) % consoleState.menuItems.length;
+        } else {
+          consoleState.mode = 'MENU';
+        }
+      } else if (btn === 'DOWN') {
+        if (consoleState.mode === 'MENU') {
+          consoleState.menuIdx = (consoleState.menuIdx + 1) % consoleState.menuItems.length;
+        } else {
+          consoleState.mode = 'MENU';
+        }
+      } else if (btn === 'SELECT') {
+        if (consoleState.mode === 'MENU') {
+          const selected = consoleState.menuItems[consoleState.menuIdx];
+          triggerMenuAction(selected);
+        } else {
+          consoleState.mode = 'MENU';
+        }
+      } else if (btn === 'BACK') {
+        consoleState.mode = 'IDLE';
+      }
+    }
+
+    function handleBtnRelease(btn) {
+      document.getElementById('btn' + btn.charAt(0) + btn.slice(1).toLowerCase())?.classList.remove('pressed');
+    }
+
+    function triggerMenuAction(act) {
+      if (act === 'BESLE') {
+        consoleState.mode = 'EATING';
+        consoleState.hunger = Math.min(100, consoleState.hunger + 15);
+        setTimeout(() => consoleState.mode = 'IDLE', 3000);
+      } else if (act === 'OYNA') {
+        consoleState.mode = 'PLAYING';
+        consoleState.happy = Math.min(100, consoleState.happy + 20);
+        setTimeout(() => consoleState.mode = 'IDLE', 3000);
+      } else if (act === 'UYUT') {
+        consoleState.mode = 'SLEEPING';
+        setTimeout(() => consoleState.mode = 'IDLE', 4000);
+      } else {
+        consoleState.mode = 'IDLE';
+      }
+    }
+
+    // --- REALTIME BRIDGE RECEIVER ---
+    // 1. BroadcastChannel (Same browser/device)
+    try {
+      const bc = new BroadcastChannel('socies_device_bridge');
+      bc.onmessage = (e) => {
+        handleIncomingEvent(e.data);
+      };
+    } catch(e) {}
+
+    // 2. Poll server bridge events (Different phones/networks)
+    let lastEventId = 0;
+    setInterval(() => {
+      fetch('/api/v1/bridge/events?since=' + lastEventId)
+        .then(r => r.json())
+        .then(data => {
+          if (data && data.events && data.events.length > 0) {
+            data.events.forEach(ev => {
+              lastEventId = Math.max(lastEventId, ev.id);
+              if (ev.sender === 'companion') {
+                handleIncomingEvent(ev);
+              }
+            });
+          }
+        }).catch(() => {});
+    }, 1000);
+
+    function handleIncomingEvent(event) {
+      const type = event.type;
+      const payload = event.payload || {};
+
+      playBeep(987, 'sine', 0.15);
+      if (window.navigator.vibrate) window.navigator.vibrate([100, 50, 100]);
+
+      if (type === 'ACTION') {
+        if (payload.action === 'FEED') {
+          consoleState.mode = 'EATING';
+          consoleState.hunger = Math.min(100, consoleState.hunger + 15);
+          consoleState.lastEventMsg = 'MAMA GELDI! +15';
+          setTimeout(() => { consoleState.mode = 'IDLE'; consoleState.lastEventMsg = ''; }, 3000);
+        } else if (payload.action === 'PLAY') {
+          consoleState.mode = 'PLAYING';
+          consoleState.happy = Math.min(100, consoleState.happy + 15);
+          consoleState.lastEventMsg = 'OYUN ZAMANI!';
+          setTimeout(() => { consoleState.mode = 'IDLE'; consoleState.lastEventMsg = ''; }, 3000);
+        } else if (payload.action === 'SLEEP') {
+          consoleState.mode = 'SLEEPING';
+          consoleState.lastEventMsg = 'UYKU MODU...';
+          setTimeout(() => { consoleState.mode = 'IDLE'; consoleState.lastEventMsg = ''; }, 4000);
+        }
+      } else if (type === 'STEPS') {
+        consoleState.steps = payload.steps || (consoleState.steps + 500);
+        consoleState.lastEventMsg = 'ADIM SENKRON!';
+        setTimeout(() => consoleState.lastEventMsg = '', 3000);
+      } else if (type === 'PAGER') {
+        showPagerAlert(payload.label || 'ÇAGRI', payload.code || '07734');
+      } else if (type === 'CUSTOM_SPRITE') {
+        consoleState.customSprite = payload.grid;
+        consoleState.lastEventMsg = 'YENI KARAKTER YUKLENDI!';
+        setTimeout(() => consoleState.lastEventMsg = '', 4000);
+      } else if (type === 'PET_LOVE') {
+        consoleState.happy = payload.happy || 100;
+        consoleState.lastEventMsg = 'SEVGI DOLDU <3';
+        setTimeout(() => consoleState.lastEventMsg = '', 3000);
+      }
+    }
+
+    function showPagerAlert(msg, code) {
+      const el = document.getElementById('pagerAlert');
+      el.innerHTML = `<div>📟 ÇAĞRI KODU</div><div style="font-size:1.1rem; margin:6px 0; color:#dc2626;">${code}</div><div>"${msg}"</div>`;
+      el.style.display = 'block';
+      setTimeout(() => el.style.display = 'none', 4000);
+    }
+
+    // Start rendering loop
+    drawOledScreen();
+  </script>
+</body>
+</html>

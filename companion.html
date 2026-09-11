@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Socies - Sevimli Sanal Bebek</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #FFFDF9;
+      --card-bg: #FFFFFF;
+      --card-border: #F1EAD9;
+      --text: #2D3142;
+      --text-muted: #8D99AE;
+      
+      --coral-red: #FF5A5F;
+      --strawberry-pink: #FF758F;
+      --sunny-yellow: #FFB703;
+      --mint-green: #06D6A0;
+      --sky-blue: #118AB2;
+      --lavender: #8338EC;
+      
+      --btn-shadow: 0 6px 16px rgba(0,0,0,0.06);
+      --card-shadow: 0 12px 32px rgba(230, 215, 195, 0.25);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Fredoka', 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 0 5rem 0;
+      overflow-x: hidden;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 440px;
+      padding: 1rem 1.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+
+    /* TOP HEADER */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 0;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .brand-icon {
+      font-size: 1.8rem;
+      filter: drop-shadow(0 4px 8px rgba(255,183,3,0.3));
+      animation: wiggle 2.5s infinite ease-in-out;
+    }
+    .brand-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--coral-red);
+      letter-spacing: -0.5px;
+    }
+    .console-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: #E8F5E9;
+      color: #2E7D32;
+      padding: 0.4rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      border: 1px solid #C8E6C9;
+    }
+    .console-badge.disconnected {
+      background: #FFEBEE;
+      color: #C62828;
+      border-color: #FFCDD2;
+    }
+
+    /* PET HERO BUBBLE */
+    .hero-pet-card {
+      background: linear-gradient(180deg, #FFFFFF 0%, #FFF8EE 100%);
+      border-radius: 36px;
+      padding: 1.5rem 1.2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      box-shadow: var(--card-shadow);
+      border: 2px solid var(--card-border);
+      overflow: hidden;
+    }
+    .pet-bubble {
+      width: 160px;
+      height: 160px;
+      background: radial-gradient(circle, #E0F7FA 0%, #FFF9C4 50%, #FFE0B2 100%);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 10px 25px rgba(255, 183, 3, 0.25), inset 0 0 20px rgba(255,255,255,0.8);
+      position: relative;
+      cursor: pointer;
+      transition: transform 0.15s ease;
+      animation: floatBubble 3s infinite ease-in-out;
+    }
+    .pet-bubble:active {
+      transform: scale(0.94);
+    }
+    .pet-avatar-canvas {
+      image-rendering: pixelated;
+      width: 110px;
+      height: 110px;
+    }
+    .pet-tag {
+      margin-top: 0.8rem;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .pet-subtag {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    /* FLOATING HEARTS ANIMATION */
+    .floating-heart {
+      position: absolute;
+      pointer-events: none;
+      animation: floatUp 1.2s forwards ease-out;
+      font-size: 1.8rem;
+    }
+
+    /* STATUS BARS (CHUNKY PASTEL) */
+    .status-container {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+      margin-top: 1rem;
+    }
+    .status-item {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .status-icon {
+      font-size: 1.4rem;
+      width: 32px;
+      text-align: center;
+    }
+    .status-bar-bg {
+      flex: 1;
+      height: 20px;
+      background: #F1ECE1;
+      border-radius: 20px;
+      overflow: hidden;
+      padding: 3px;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+    }
+    .status-bar-fill {
+      height: 100%;
+      border-radius: 20px;
+      transition: width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .fill-hunger { background: linear-gradient(90deg, #FF6B6B, #FF8E72); }
+    .fill-happiness { background: linear-gradient(90deg, #FF758F, #FFA8B6); }
+    .fill-energy { background: linear-gradient(90deg, #FFB703, #FFD166); }
+    .status-val {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      width: 44px;
+      text-align: right;
+    }
+
+    /* ACTION BUTTONS (CHUBBY & SQUISHY) */
+    .actions-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.6rem;
+      width: 100%;
+    }
+    .action-btn {
+      background: var(--card-bg);
+      border: 2px solid var(--card-border);
+      border-radius: 24px;
+      padding: 0.8rem 0.2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.3rem;
+      cursor: pointer;
+      box-shadow: var(--btn-shadow);
+      transition: transform 0.12s ease, background 0.2s ease;
+    }
+    .action-btn:active {
+      transform: scale(0.90) translateY(3px);
+    }
+    .action-btn.btn-feed { border-color: #FFCCD5; background: #FFF5F7; }
+    .action-btn.btn-play { border-color: #FFE5B4; background: #FFF9EF; }
+    .action-btn.btn-bath { border-color: #C8F7DC; background: #F0FDF4; }
+    .action-btn.btn-sleep { border-color: #D7E3FC; background: #F4F7FE; }
+
+    .action-icon {
+      font-size: 2rem;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.08));
+    }
+    .action-label {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    /* STEPS & REWARD CARD */
+    .steps-card {
+      background: linear-gradient(135deg, #FFF6E5 0%, #FFFDF9 100%);
+      border: 2px solid #FFE6B0;
+      border-radius: 28px;
+      padding: 1.1rem 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: var(--btn-shadow);
+    }
+    .steps-info {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .steps-icon {
+      font-size: 2.2rem;
+      background: #FFEAA7;
+      padding: 0.6rem;
+      border-radius: 20px;
+    }
+    .steps-title {
+      font-size: 0.85rem;
+      color: #9E7D3B;
+      font-weight: 700;
+    }
+    .steps-count {
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: #D97706;
+      line-height: 1.1;
+    }
+    .steps-stars {
+      display: flex;
+      gap: 2px;
+      margin-top: 3px;
+      font-size: 0.95rem;
+    }
+    .btn-sync-steps {
+      background: #FFB703;
+      color: #fff;
+      border: none;
+      padding: 0.6rem 0.9rem;
+      border-radius: 18px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(255, 183, 3, 0.4);
+      transition: transform 0.15s ease;
+    }
+    .btn-sync-steps:active {
+      transform: scale(0.92);
+    }
+
+    /* TAB CONTENTS */
+    .tab-view {
+      display: none;
+      width: 100%;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .tab-view.active {
+      display: flex;
+    }
+
+    /* RADAR VIEW */
+    .radar-card {
+      background: #FFFFFF;
+      border: 2px solid var(--card-border);
+      border-radius: 28px;
+      padding: 1.4rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      box-shadow: var(--card-shadow);
+    }
+    .radar-circle {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #E0F2FE 0%, #F0F9FF 70%, transparent 100%);
+      border: 2px dashed #38BDF8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      animation: rotateRadar 10s infinite linear;
+    }
+    .radar-dot {
+      position: absolute;
+      font-size: 1.6rem;
+      animation: pulseDot 2s infinite ease-in-out;
+      cursor: pointer;
+    }
+    .quick-codes-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.6rem;
+      width: 100%;
+    }
+    .quick-code-btn {
+      background: #F8FAFC;
+      border: 1.5px solid #E2E8F0;
+      border-radius: 18px;
+      padding: 0.8rem 0.4rem;
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.1s;
+    }
+    .quick-code-btn:active {
+      transform: scale(0.92);
+    }
+    .quick-code-icon { font-size: 1.6rem; }
+    .quick-code-txt { font-size: 0.85rem; font-weight: 700; margin-top: 2px; }
+
+    /* STUDIO VIEW (KID-FRIENDLY DRAWING & SELFIE) */
+    .studio-card {
+      background: #FFFFFF;
+      border: 2px solid var(--card-border);
+      border-radius: 28px;
+      padding: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      box-shadow: var(--card-shadow);
+    }
+    .studio-canvas {
+      background: #111;
+      border: 4px solid var(--sunny-yellow);
+      border-radius: 16px;
+      image-rendering: pixelated;
+      width: 192px;
+      height: 192px;
+      touch-action: none;
+      cursor: crosshair;
+    }
+    .studio-palette {
+      display: flex;
+      gap: 0.6rem;
+    }
+    .tool-btn {
+      background: #F1ECE1;
+      border: none;
+      padding: 0.5rem 0.8rem;
+      border-radius: 14px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+    .tool-btn.active {
+      background: var(--coral-red);
+      color: #fff;
+    }
+    .btn-send-to-device {
+      background: linear-gradient(90deg, #06D6A0, #05B386);
+      color: #fff;
+      border: none;
+      border-radius: 24px;
+      padding: 0.9rem 1.8rem;
+      font-size: 1.1rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(6, 214, 160, 0.4);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      width: 100%;
+      justify-content: center;
+      transition: transform 0.15s ease;
+    }
+    .btn-send-to-device:active {
+      transform: scale(0.95);
+    }
+
+    /* BOTTOM NAV BAR */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 4.4rem;
+      background: #FFFFFF;
+      border-top: 2px solid var(--card-border);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 0 1rem;
+      box-shadow: 0 -4px 16px rgba(0,0,0,0.04);
+      z-index: 100;
+    }
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: transform 0.15s ease, color 0.15s ease;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+    .nav-item.active {
+      color: var(--coral-red);
+      transform: translateY(-2px);
+    }
+    .nav-icon {
+      font-size: 1.5rem;
+    }
+
+    /* KEYFRAMES */
+    @keyframes wiggle {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(-8deg); }
+      75% { transform: rotate(8deg); }
+    }
+    @keyframes floatBubble {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    @keyframes floatUp {
+      0% { opacity: 1; transform: translateY(0) scale(0.8); }
+      100% { opacity: 0; transform: translateY(-70px) scale(1.4); }
+    }
+    @keyframes rotateRadar {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    @keyframes pulseDot {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.25); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- TOP BAR -->
+    <div class="top-bar">
+      <div class="brand">
+        <span class="brand-icon">🐾</span>
+        <span class="brand-title">Socies</span>
+      </div>
+      <div class="console-badge" id="consoleBadge" onclick="switchTab('tab-connect')">
+        <span id="badgeDot">🟢</span>
+        <span id="badgeText">Konsol Bağlı</span>
+      </div>
+    </div>
+
+    <!-- TAB 1: HOME (BENİM BEBEĞİM) -->
+    <div id="tab-home" class="tab-view active">
+      
+      <!-- PET HERO -->
+      <div class="hero-pet-card">
+        <div class="pet-bubble" id="petBubble" onclick="petTapReaction()">
+          <canvas id="petHeroCanvas" class="pet-avatar-canvas" width="48" height="48"></canvas>
+        </div>
+        <div class="pet-tag">
+          <span id="petNameLabel">Pufi</span>
+          <span>🐱</span>
+        </div>
+        <div class="pet-subtag">2. Seviye • 5 Günlük Mutlu Bebek</div>
+
+        <!-- PASTEL STATUS BARS -->
+        <div class="status-container">
+          <div class="status-item">
+            <span class="status-icon">🍎</span>
+            <div class="status-bar-bg">
+              <div class="status-bar-fill fill-hunger" id="barHunger" style="width: 85%;"></div>
+            </div>
+            <span class="status-val" id="valHunger">85%</span>
+          </div>
+          <div class="status-item">
+            <span class="status-icon">💖</span>
+            <div class="status-bar-bg">
+              <div class="status-bar-fill fill-happiness" id="barHappy" style="width: 90%;"></div>
+            </div>
+            <span class="status-val" id="valHappy">90%</span>
+          </div>
+          <div class="status-item">
+            <span class="status-icon">⚡</span>
+            <div class="status-bar-bg">
+              <div class="status-bar-fill fill-energy" id="barEnergy" style="width: 75%;"></div>
+            </div>
+            <span class="status-val" id="valEnergy">75%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SQUISHY ACTION BUTTONS -->
+      <div class="actions-grid">
+        <button class="action-btn btn-feed" onclick="sendActionToConsole('FEED')">
+          <span class="action-icon">🍪</span>
+          <span class="action-label">Besle</span>
+        </button>
+        <button class="action-btn btn-play" onclick="sendActionToConsole('PLAY')">
+          <span class="action-icon">🎾</span>
+          <span class="action-label">Oyna</span>
+        </button>
+        <button class="action-btn btn-bath" onclick="sendActionToConsole('CLEAN')">
+          <span class="action-icon">🧼</span>
+          <span class="action-label">Banyo</span>
+        </button>
+        <button class="action-btn btn-sleep" onclick="sendActionToConsole('SLEEP')">
+          <span class="action-icon">💤</span>
+          <span class="action-label">Uyut</span>
+        </button>
+      </div>
+
+      <!-- STEPS & REWARDS -->
+      <div class="steps-card">
+        <div class="steps-info">
+          <span class="steps-icon">👟</span>
+          <div>
+            <div class="steps-title">Bugün Atılan Adım</div>
+            <div class="steps-count" id="stepsCountText">2,450</div>
+            <div class="steps-stars">⭐⭐⭐⭐⭐ <small style="color:#B45309; font-weight:700;">+24 Yıldız</small></div>
+          </div>
+        </div>
+        <button class="btn-sync-steps" onclick="addBonusSteps()">+500 Adım</button>
+      </div>
+
+    </div>
+
+    <!-- TAB 2: RADAR & ARKADAŞLAR -->
+    <div id="tab-radar" class="tab-view">
+      <div class="radar-card">
+        <h3 style="color:var(--text); font-weight:800;">📡 Çevremdeki Dostlar</h3>
+        <p style="color:var(--text-muted); font-size:0.9rem; text-align:center;">Yakındaki Socies el konsolları taranıyor...</p>
+        
+        <div class="radar-circle">
+          <div class="radar-dot" style="top:25px; left:40px;" title="Zeynep'in Kedisi" onclick="selectFriend('Zeynep')">🐱</div>
+          <div class="radar-dot" style="bottom:30px; right:35px;" title="Emre'nin Köpeği" onclick="selectFriend('Emre')">🐶</div>
+          <div style="font-size:2.5rem;">🐾</div>
+        </div>
+
+        <h4 style="color:var(--text); font-weight:800; align-self:flex-start; margin-top:0.5rem;">💬 Hızlı Çağrı Yolla:</h4>
+        <div class="quick-codes-grid">
+          <div class="quick-code-btn" onclick="sendQuickCode('07734', 'Selam!')">
+            <div class="quick-code-icon">👋</div>
+            <div class="quick-code-txt">Selam (07734)</div>
+          </div>
+          <div class="quick-code-btn" onclick="sendQuickCode('143', 'Seni Seviyorum')">
+            <div class="quick-code-icon">💖</div>
+            <div class="quick-code-txt">Sevgi (143)</div>
+          </div>
+          <div class="quick-code-btn" onclick="sendQuickCode('911', 'Düello!')">
+            <div class="quick-code-icon">⚔️</div>
+            <div class="quick-code-txt">Düello (911)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: SİHİRLİ ATÖLYE & SELFIE -->
+    <div id="tab-studio" class="tab-view">
+      <div class="studio-card">
+        <h3 style="color:var(--text); font-weight:800;">🎨 Kendi Karakterini Çiz</h3>
+        <p style="color:var(--text-muted); font-size:0.85rem; text-align:center;">Parmağınla çiz, konsola gönder!</p>
+        
+        <canvas id="kidCanvas" class="studio-canvas" width="24" height="24"></canvas>
+
+        <div class="studio-palette">
+          <button class="tool-btn active" id="btnToolDraw" onclick="setKidTool('draw')">✏️ Kalem</button>
+          <button class="tool-btn" id="btnToolErase" onclick="setKidTool('erase')">🧹 Silgi</button>
+          <button class="tool-btn" onclick="clearKidCanvas()">🗑️ Temizle</button>
+        </div>
+
+        <button class="btn-send-to-device" onclick="sendCustomPetToConsole()">
+          <span>🎮</span> Konsoluma Gönder
+        </button>
+      </div>
+    </div>
+
+    <!-- TAB 4: KONSOL BAĞLANTISI -->
+    <div id="tab-connect" class="tab-view">
+      <div class="radar-card" style="text-align:center;">
+        <span style="font-size:3.5rem;">📟</span>
+        <h3 style="color:var(--text); font-weight:800;">El Konsolu Bağlantısı</h3>
+        <p style="color:var(--text-muted); font-size:0.9rem;">İkinci telefonundaki <b>Socies Pocket</b> konsolunu veya fiziksel ESP32 cihazını bağla.</p>
+        
+        <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:18px; padding:1rem; width:100%; text-align:left; font-size:0.9rem;">
+          <div><b>Durum:</b> <span id="connStatusText" style="color:#2E7D32; font-weight:700;">🟢 Bağlı (Yerel Köprü)</span></div>
+          <div style="margin-top:4px;"><b>Hedef Cihaz:</b> <code>SOCIES-POCKET-01</code></div>
+          <div style="margin-top:4px;"><b>Konsol Pili:</b> <span id="connBatteryText">🔋 %88 (3980 mV)</span></div>
+        </div>
+
+        <button class="btn-send-to-device" style="background:#4361EE;" onclick="reconnectBridge()">
+          <span>🔄</span> Konsolu Yeniden Ara
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- BOTTOM NAVIGATION -->
+  <nav class="bottom-nav">
+    <div class="nav-item active" id="nav-home" onclick="switchTab('tab-home')">
+      <span class="nav-icon">🏠</span>
+      <span>Evim</span>
+    </div>
+    <div class="nav-item" id="nav-radar" onclick="switchTab('tab-radar')">
+      <span class="nav-icon">📡</span>
+      <span>Radar</span>
+    </div>
+    <div class="nav-item" id="nav-studio" onclick="switchTab('tab-studio')">
+      <span class="nav-icon">🎨</span>
+      <span>Atölye</span>
+    </div>
+    <div class="nav-item" id="nav-connect" onclick="switchTab('tab-connect')">
+      <span class="nav-icon">📟</span>
+      <span>Konsolum</span>
+    </div>
+  </nav>
+
+  <script>
+    // --- STATE MANAGEMENT ---
+    const appState = {
+      pet: { name: 'Pufi', hunger: 85, happy: 90, energy: 75, steps: 2450 },
+      connected: true,
+      tool: 'draw',
+      gridSize: 24,
+      pixelGrid: Array(24).fill(null).map(() => Array(24).fill(0))
+    };
+
+    // --- SPRITE DEFAULT DATA (CUTE CAT) ---
+    const defaultCatSprite = [
+      "000001100000000110000000",
+      "000011110000001111000000",
+      "000111111000011111100000",
+      "001111111111111111110000",
+      "011111111111111111111000",
+      "011111111111111111111000",
+      "011011111111111111011000",
+      "011111111111111111111000",
+      "001111111111111111110000",
+      "000111011111110111100000",
+      "000011111111111111000000",
+      "000001111100111110000000",
+      "000011111111111111000000",
+      "000111111111111111100000",
+      "001111111111111111110000",
+      "001111111111111111110000",
+      "001111111111111111110000",
+      "000111111111111111100000",
+      "000011111111111111000000",
+      "000110011000011001100000",
+      "000110011000011001100000",
+      "000000000000000000000000",
+      "000000000000000000000000",
+      "000000000000000000000000"
+    ];
+
+    // Load default cat sprite into pixel grid
+    for(let r=0; r<24; r++) {
+      for(let c=0; c<24; c++) {
+        if(defaultCatSprite[r] && defaultCatSprite[r][c] === '1') {
+          appState.pixelGrid[r][c] = 1;
+        }
+      }
+    }
+
+    // --- RENDER HERO PET IN BUBBLE ---
+    const heroCanvas = document.getElementById('petHeroCanvas');
+    const heroCtx = heroCanvas.getContext('2d');
+    let heroFrame = 0;
+
+    function renderHeroPet() {
+      heroCtx.clearRect(0, 0, 48, 48);
+      const bob = Math.sin(heroFrame * 0.15) * 1.5;
+      
+      // Draw 24x24 pixel grid scaled up 2x
+      for(let r=0; r<24; r++) {
+        for(let c=0; c<24; c++) {
+          if(appState.pixelGrid[r][c]) {
+            heroCtx.fillStyle = '#2D3142';
+            heroCtx.fillRect(c * 2, r * 2 + bob, 2, 2);
+          }
+        }
+      }
+      heroFrame++;
+      requestAnimationFrame(renderHeroPet);
+    }
+    renderHeroPet();
+
+    // --- REACTION ON PET TAP ---
+    function petTapReaction() {
+      if (window.navigator.vibrate) window.navigator.vibrate(35);
+      appState.pet.happy = Math.min(100, appState.pet.happy + 5);
+      updateStatusBars();
+      
+      // Spawn floating heart
+      const bubble = document.getElementById('petBubble');
+      const heart = document.createElement('div');
+      heart.className = 'floating-heart';
+      heart.innerText = ['💖', '✨', '🐾', '🥰'][Math.floor(Math.random()*4)];
+      heart.style.left = (bubble.offsetWidth / 2 - 15 + (Math.random()*30 - 15)) + 'px';
+      heart.style.top = '30px';
+      bubble.appendChild(heart);
+      setTimeout(() => heart.remove(), 1200);
+
+      // Send PET tap event to console bridge
+      postBridgeEvent('PET_LOVE', { happy: appState.pet.happy });
+    }
+
+    // --- UPDATE BARS ---
+    function updateStatusBars() {
+      document.getElementById('barHunger').style.width = appState.pet.hunger + '%';
+      document.getElementById('valHunger').innerText = appState.pet.hunger + '%';
+      
+      document.getElementById('barHappy').style.width = appState.pet.happy + '%';
+      document.getElementById('valHappy').innerText = appState.pet.happy + '%';
+
+      document.getElementById('barEnergy').style.width = appState.pet.energy + '%';
+      document.getElementById('valEnergy').innerText = appState.pet.energy + '%';
+    }
+
+    // --- ACTIONS TO CONSOLE ---
+    function sendActionToConsole(act) {
+      if (window.navigator.vibrate) window.navigator.vibrate(50);
+      
+      if (act === 'FEED') {
+        appState.pet.hunger = Math.min(100, appState.pet.hunger + 15);
+        showToast('🍪 Kurabiye konsola gönderildi!');
+      } else if (act === 'PLAY') {
+        appState.pet.happy = Math.min(100, appState.pet.happy + 15);
+        appState.pet.energy = Math.max(10, appState.pet.energy - 10);
+        showToast('🎾 Oyun oynandı!');
+      } else if (act === 'CLEAN') {
+        appState.pet.happy = Math.min(100, appState.pet.happy + 10);
+        showToast('🧼 Bebek yıkandı, tertemiz!');
+      } else if (act === 'SLEEP') {
+        appState.pet.energy = 100;
+        showToast('💤 Işıklar kapatıldı, bebek uyuyor.');
+      }
+      updateStatusBars();
+      postBridgeEvent('ACTION', { action: act });
+    }
+
+    // --- BONUS STEPS ---
+    function addBonusSteps() {
+      if (window.navigator.vibrate) window.navigator.vibrate(40);
+      appState.pet.steps += 500;
+      document.getElementById('stepsCountText').innerText = appState.pet.steps.toLocaleString();
+      showToast('👟 +500 Adım eklendi! Konsol ödülü kazandın.');
+      postBridgeEvent('STEPS', { steps: appState.pet.steps });
+    }
+
+    // --- QUICK PAGER CODES ---
+    function sendQuickCode(code, label) {
+      if (window.navigator.vibrate) window.navigator.vibrate(60);
+      showToast(`📟 "${label}" (${code}) konsola yollandı!`);
+      postBridgeEvent('PAGER', { code, label });
+    }
+
+    function selectFriend(name) {
+      showToast(`🐾 ${name} ile düello çağrısı başlatıldı!`);
+      postBridgeEvent('DUEL', { target: name });
+    }
+
+    // --- SIMPLE TOAST ---
+    function showToast(msg) {
+      const existing = document.getElementById('sociesToast');
+      if (existing) existing.remove();
+      const toast = document.createElement('div');
+      toast.id = 'sociesToast';
+      toast.innerText = msg;
+      toast.style.position = 'fixed';
+      toast.style.top = '1.2rem';
+      toast.style.left = '50%';
+      toast.style.transform = 'translateX(-50%)';
+      toast.style.background = 'rgba(45,49,66,0.92)';
+      toast.style.color = '#fff';
+      toast.style.padding = '0.7rem 1.4rem';
+      toast.style.borderRadius = '24px';
+      toast.style.fontSize = '0.9rem';
+      toast.style.fontWeight = '700';
+      toast.style.boxShadow = '0 8px 20px rgba(0,0,0,0.18)';
+      toast.style.zIndex = '999';
+      toast.style.transition = 'all 0.3s ease';
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 2200);
+    }
+
+    // --- NAVIGATION TABS ---
+    function switchTab(tabId) {
+      if (window.navigator.vibrate) window.navigator.vibrate(20);
+      document.querySelectorAll('.tab-view').forEach(el => el.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+
+      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+      const navBtn = document.getElementById('nav-' + tabId.replace('tab-', ''));
+      if (navBtn) navBtn.classList.add('active');
+    }
+
+    // --- KID CANVAS STUDIO ---
+    const kidCanvas = document.getElementById('kidCanvas');
+    const kidCtx = kidCanvas.getContext('2d');
+    let isDrawing = false;
+
+    function renderKidCanvas() {
+      kidCtx.fillStyle = '#000';
+      kidCtx.fillRect(0, 0, 24, 24);
+      for(let r=0; r<24; r++) {
+        for(let c=0; c<24; c++) {
+          if (appState.pixelGrid[r][c]) {
+            kidCtx.fillStyle = '#FFB703';
+            kidCtx.fillRect(c, r, 1, 1);
+          }
+        }
+      }
+    }
+    renderKidCanvas();
+
+    function setKidTool(t) {
+      appState.tool = t;
+      document.getElementById('btnToolDraw').classList.toggle('active', t === 'draw');
+      document.getElementById('btnToolErase').classList.toggle('active', t === 'erase');
+    }
+
+    function clearKidCanvas() {
+      appState.pixelGrid = Array(24).fill(null).map(() => Array(24).fill(0));
+      renderKidCanvas();
+    }
+
+    function handleDrawAt(e) {
+      const rect = kidCanvas.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      const x = Math.floor((clientX - rect.left) / (rect.width / 24));
+      const y = Math.floor((clientY - rect.top) / (rect.height / 24));
+      if (x >= 0 && x < 24 && y >= 0 && y < 24) {
+        appState.pixelGrid[y][x] = (appState.tool === 'draw') ? 1 : 0;
+        renderKidCanvas();
+      }
+    }
+
+    kidCanvas.addEventListener('pointerdown', (e) => { isDrawing = true; handleDrawAt(e); });
+    window.addEventListener('pointermove', (e) => { if (isDrawing) handleDrawAt(e); });
+    window.addEventListener('pointerup', () => { isDrawing = false; });
+
+    function sendCustomPetToConsole() {
+      if (window.navigator.vibrate) window.navigator.vibrate(80);
+      showToast('🚀 Özel çizimin el konsoluna aktarıldı!');
+      postBridgeEvent('CUSTOM_SPRITE', { grid: appState.pixelGrid });
+    }
+
+    // --- REALTIME BRIDGE COMMUNICATOR ---
+    function postBridgeEvent(type, payload) {
+      // Broadcast via BroadcastChannel (if same device/browser tab)
+      try {
+        const bc = new BroadcastChannel('socies_device_bridge');
+        bc.postMessage({ type, payload, timestamp: Date.now() });
+      } catch(e) {}
+
+      // Broadcast via HTTP server
+      fetch('/api/v1/bridge/companion-event', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type, payload, sender: 'companion' })
+      }).catch(() => {});
+    }
+
+    function reconnectBridge() {
+      showToast('🔄 Konsol aranıyor...');
+      setTimeout(() => {
+        showToast('🟢 Konsol bulundu ve eşleşti!');
+      }, 600);
+    }
+  </script>
+</body>
+</html>

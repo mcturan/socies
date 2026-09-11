@@ -610,8 +610,11 @@
 
     <div class="header-actions">
       <div class="badge-status" id="headerBleStatus">Bulut Senkron</div>
-      <a href="./downloads/socies-app.apk" download="socies-v1.0.5.apk" class="header-dl-btn" id="headerDlBtn" title="Doğrudan Android APK İndir">
-        <span>⬇️</span> APK İndir <span class="ver-badge-chip" id="headerVerText">v1.0.5</span>
+      <a href="./downloads/socies-companion.apk" download="socies-companion.apk" class="header-dl-btn" id="headerDlBtn" title="Socies Çocuk Uygulaması APK İndir">
+        <span>📱</span> Çocuk APK <span class="ver-badge-chip" id="headerVerText">v1.0.5</span>
+      </a>
+      <a href="./downloads/socies-pocket.apk" download="socies-pocket.apk" class="header-dl-btn" style="background:rgba(168,85,247,0.2); border-color:#a855f7;" title="Socies Pocket Konsol APK İndir">
+        <span>🕹️</span> Konsol APK
       </a>
       <button class="micro-btn" id="btnSoundToggle" onclick="toggleAudio()">🔊 Ses</button>
       <button class="micro-btn" id="btnHapticToggle" onclick="toggleHaptic()">📳 Titreşim</button>
@@ -638,20 +641,27 @@
             </p>
           </div>
         </div>
-        <div class="hero-actions">
-          <a href="./downloads/socies-app.apk" download="socies-v1.0.5.apk" class="btn-hero-download" id="heroDownloadLink">
-            <div class="btn-hero-icon">📥</div>
+        <div class="hero-actions" style="display:flex; flex-wrap:wrap; gap:0.6rem;">
+          <a href="./downloads/socies-companion.apk" download="socies-companion.apk" class="btn-hero-download" id="heroDownloadCompanion" style="border-color:#2EC4B6;">
+            <div class="btn-hero-icon">📱</div>
             <div class="btn-hero-label">
-              <div class="label-primary">Android APK İndir</div>
-              <div class="label-sub" id="heroDownloadSub">Sürüm: v1.0.5 (Doğrudan İndir)</div>
+              <div class="label-primary">Socies (Çocuk Uygulaması)</div>
+              <div class="label-sub">Light Tema • Durum & Radar • APK</div>
             </div>
           </a>
-          <a href="https://github.com/mcturan/socies/releases/tag/v1.0.5" target="_blank" class="btn-hero-secondary">
-            <span>📦</span> GitHub Sürümü
+          <a href="./downloads/socies-pocket.apk" download="socies-pocket.apk" class="btn-hero-download" id="heroDownloadPocket" style="border-color:#A855F7; background:rgba(168,85,247,0.15);">
+            <div class="btn-hero-icon">🕹️</div>
+            <div class="btn-hero-label">
+              <div class="label-primary">Socies Pocket (El Konsolu)</div>
+              <div class="label-sub">Tam Ekran Retro OLED • APK</div>
+            </div>
           </a>
-          <button class="btn-hero-secondary" onclick="checkAppVersionUpdate(true)">
-            <span>🔄</span> Sürüm Kontrolü
-          </button>
+          <a href="/companion" target="_blank" class="btn-hero-secondary" title="Tarayıcıda Çocuk Uygulamasını Dene">
+            <span>🌐</span> Çocuk Arayüzü (Light)
+          </a>
+          <a href="/pocket" target="_blank" class="btn-hero-secondary" title="Tarayıcıda Retro Konsolu Dene">
+            <span>📟</span> Retro Konsol
+          </a>
         </div>
       </div>
 

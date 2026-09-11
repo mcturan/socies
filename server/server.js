@@ -24,6 +24,8 @@ const database = {
   offlineMessages: new Map(),// targetDeviceId -> [ { id, from, text, timestamp } ]
   activeSockets: new Map(),  // deviceId -> socket/client connection
   customSprites: new Map(),  // userEmail -> [ { id, name, type, xbm, createdAt } ]
+  bridgeEvents: [],          // Real-time bridge between Companion and Pocket Emulator
+  bridgeNextId: 1,
   systemStats: {
     totalMessagesSent: 0,
     totalPokesSent: 0,
@@ -171,12 +173,76 @@ const server = http.createServer((req, res) => {
     return serveSociesNetworkPage(res);
   }
 
-  // 1.1 CANLI İSTATİSTİK & YÖNETİM PANELİ (DASHBOARD)
+  // 1.1 ÇOCUK DOSTU LIGHT TEMA KULLANICI UYGULAMASI (COMPANION)
+  if (path === '/companion' || path === '/companion.html' || path === '/app') {
+    const companionPath = pathModule.join(__dirname, '../companion.html');
+    if (fs.existsSync(companionPath)) {
+      res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+      return fs.createReadStream(companionPath).pipe(res);
+    }
+  }
+
+  // 1.2 TAM EKRAN RETRO EL KONSOLU EMÜLATÖRÜ (POCKET)
+  if (path === '/pocket' || path === '/pocket.html' || path === '/console') {
+    const pocketPath = pathModule.join(__dirname, '../pocket.html');
+    if (fs.existsSync(pocketPath)) {
+      res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+      return fs.createReadStream(pocketPath).pipe(res);
+    }
+  }
+
+  // 1.3 GERÇEK ZAMANLI TELEFON-KONSOL KÖPRÜSÜ (BRIDGE EVENTS)
+  if (path === '/api/v1/bridge/companion-event' && method === 'POST') {
+    return parseBody(req, (body) => {
+      const event = {
+        id: database.bridgeNextId++,
+        type: body.type || 'ACTION',
+        payload: body.payload || {},
+        sender: body.sender || 'companion',
+        timestamp: Date.now()
+      };
+      database.bridgeEvents.push(event);
+      if (database.bridgeEvents.length > 100) database.bridgeEvents.shift();
+      return sendJSON(res, 200, { success: true, eventId: event.id });
+    });
+  }
+
+  if (path.startsWith('/api/v1/bridge/events') && method === 'GET') {
+    const since = parseInt(parsedUrl.query.since || '0', 10);
+    const newEvents = database.bridgeEvents.filter(ev => ev.id > since);
+    return sendJSON(res, 200, { events: newEvents });
+  }
+
+  // 1.4 CANLI İSTATİSTİK & YÖNETİM PANELİ (DASHBOARD)
   if (path === '/dashboard' || path === '/admin' || path === '/server') {
     return serveDashboard(res);
   }
 
-  // 1.2 DOĞRUDAN APK İNDİRME UÇ NOKTASI (ATTACHMENT DOWNLOAD)
+  // 1.5 DOĞRUDAN APK İNDİRME UÇ NOKTALARI (DİĞER APK'LAR DAHİL)
+  if (path === '/download/socies-companion.apk') {
+    const apkFile = pathModule.join(__dirname, '../downloads/socies-companion.apk');
+    if (fs.existsSync(apkFile)) {
+      res.writeHead(200, {
+        'Content-Type': 'application/vnd.android.package-archive',
+        'Content-Disposition': 'attachment; filename="socies-companion.apk"',
+        'Access-Control-Allow-Origin': '*'
+      });
+      return fs.createReadStream(apkFile).pipe(res);
+    }
+  }
+
+  if (path === '/download/socies-pocket.apk') {
+    const apkFile = pathModule.join(__dirname, '../downloads/socies-pocket.apk');
+    if (fs.existsSync(apkFile)) {
+      res.writeHead(200, {
+        'Content-Type': 'application/vnd.android.package-archive',
+        'Content-Disposition': 'attachment; filename="socies-pocket.apk"',
+        'Access-Control-Allow-Origin': '*'
+      });
+      return fs.createReadStream(apkFile).pipe(res);
+    }
+  }
+
   if (path === '/download/socies-app.apk' || path === '/downloads/socies-app.apk' || path === '/socies-app.apk' || path === '/download/socies-v1.0.5.apk' || path === '/download/socies-v1.0.4.apk') {
     const apkFile = pathModule.join(__dirname, '../downloads/socies-app.apk');
     if (fs.existsSync(apkFile)) {
