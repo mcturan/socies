@@ -1122,33 +1122,187 @@
       const len = partLabels[cat].length;
       appData.parts[cat] = (appData.parts[cat] + dir + len) % len;
       document.getElementById('lblPart' + cat.charAt(0).toUpperCase() + cat.slice(1)).innerText = partLabels[cat][appData.parts[cat]];
+      localStorage.setItem('socies_custom_parts', JSON.stringify(appData.parts));
       renderCombinator();
     }
 
+    function restoreSavedState() {
+      try {
+        const p = localStorage.getItem('socies_custom_parts');
+        if (p) {
+          appData.parts = Object.assign(appData.parts, JSON.parse(p));
+          ['body', 'eyes', 'mouth', 'ears', 'acc'].forEach(cat => {
+            const el = document.getElementById('lblPart' + cat.charAt(0).toUpperCase() + cat.slice(1));
+            if (el && partLabels[cat][appData.parts[cat]]) el.innerText = partLabels[cat][appData.parts[cat]];
+          });
+        }
+      } catch(e) {}
+    }
+    restoreSavedState();
+
     function generateAvatarMatrix() {
       const g = Array(24).fill(null).map(() => Array(24).fill(0));
-      // Base oval
-      for(let r=6; r<20; r++) {
-        for(let c=5; c<19; c++) {
-          if ((c-12)*(c-12) + (r-13)*(r-13) <= 36) g[r][c] = 1;
-        }
+      const b = appData.parts.body;
+      const er = appData.parts.ears;
+      const ey = appData.parts.eyes;
+      const m = appData.parts.mouth;
+      const ac = appData.parts.acc;
+
+      // 1. GÖVDE (10 FARKLI TİP)
+      if (b === 0) { // Tombiş Kedi (Yuvarlak tombul)
+        for(let r=6; r<20; r++) for(let c=5; c<19; c++) if ((c-12)*(c-12) + (r-13)*(r-13) <= 40) g[r][c] = 1;
+        g[20][8]=1; g[20][9]=1; g[20][14]=1; g[20][15]=1; // Patiler
+      } else if (b === 1) { // Sadık Köpek (Uzunca gövde)
+        for(let r=7; r<20; r++) for(let c=6; c<18; c++) if (((c-12)/5.5)**2 + ((r-13.5)/6.5)**2 <= 1) g[r][c] = 1;
+        g[20][7]=1; g[20][8]=1; g[20][15]=1; g[20][16]=1;
+      } else if (b === 2) { // Robot Kasa (Kare köşe perçinli)
+        for(let r=7; r<19; r++) for(let c=6; c<18; c++) g[r][c] = 1;
+        g[6][11]=1; g[6][12]=1; // Boyun eklemi
+        g[19][8]=1; g[19][9]=1; g[19][14]=1; g[19][15]=1; // Robot bacak
+      } else if (b === 3) { // Zıpzıp Top (Kusursuz küre)
+        for(let r=6; r<20; r++) for(let c=5; c<19; c++) if ((c-12)*(c-12) + (r-13)*(r-13) <= 42) g[r][c] = 1;
+        g[21][9]=1; g[21][10]=1; g[21][13]=1; g[21][14]=1; // Sekme gölgesi
+      } else if (b === 4) { // Sevimli Sosis (Yatay kapsül)
+        for(let r=9; r<18; r++) for(let c=4; c<20; c++) if (((c-12)/7.5)**2 + ((r-13.5)/4)**2 <= 1) g[r][c] = 1;
+        g[18][7]=1; g[18][16]=1; g[19][7]=1; g[19][16]=1; // Minik sosis bacak
+      } else if (b === 5) { // Uzaylı Dost (Ters damla / UFO kafa)
+        for(let r=6; r<13; r++) for(let c=4; c<20; c++) if (((c-12)/7)**2 + ((r-10)/4)**2 <= 1) g[r][c] = 1;
+        for(let r=13; r<19; r++) for(let c=8; c<16; c++) g[r][c] = 1; // İnce gövde
+        g[19][9]=1; g[19][14]=1;
+      } else if (b === 6) { // Ejder Yavru (Armut gövde & sırt dikenleri)
+        for(let r=7; r<14; r++) for(let c=7; c<17; c++) g[r][c] = 1;
+        for(let r=13; r<20; r++) for(let c=5; c<19; c++) if ((c-12)*(c-12) + (r-16)*(r-16) <= 28) g[r][c] = 1;
+        g[8][6]=1; g[11][5]=1; g[14][4]=1; // Sırt dikenleri
+        g[20][7]=1; g[20][8]=1; g[20][15]=1; g[20][16]=1;
+      } else if (b === 7) { // Bonsai Bitki (Saksı + yaprak başlık)
+        for(let r=16; r<21; r++) for(let c=7; c<17; c++) g[r][c] = 1; // Saksı
+        for(let r=6; r<16; r++) for(let c=5; c<19; c++) if ((c-12)*(c-12) + (r-11)*(r-11) <= 30) g[r][c] = 1; // Çalı
+      } else if (b === 8) { // Minik Kuş (Yumurta gövde + minik kanat)
+        for(let r=8; r<19; r++) for(let c=6; c<18; c++) if ((c-12)*(c-12) + (r-13.5)*(r-13.5) <= 32) g[r][c] = 1;
+        g[13][5]=1; g[14][4]=1; g[15][4]=1; g[16][5]=1; // Yan kanatçık
+        g[19][9]=1; g[19][10]=1; g[19][14]=1; g[19][15]=1;
+      } else { // 9: Canavar Kafa (Geniş çeneli dev kafa)
+        for(let r=7; r<19; r++) for(let c=4; c<20; c++) if ((c-12)*(c-12) + (r-13)*(r-13) <= 48) g[r][c] = 1;
+        g[19][6]=1; g[19][7]=1; g[19][16]=1; g[19][17]=1; // İri ayaklar
       }
-      // Ears
-      if (appData.parts.ears % 2 === 0) {
-        g[4][6]=1; g[5][6]=1; g[5][7]=1; g[4][17]=1; g[5][17]=1; g[5][16]=1;
-      } else {
-        g[5][5]=1; g[6][4]=1; g[7][4]=1; g[5][18]=1; g[6][19]=1; g[7][19]=1;
+
+      // 2. KULAKLAR / BAŞLIK (10 FARKLI TİP)
+      if (er === 0) { // Sivri Kedi Kulakları
+        g[3][6]=1; g[4][6]=1; g[4][7]=1; g[5][6]=1; g[5][7]=1; g[5][8]=1;
+        g[3][17]=1; g[4][17]=1; g[4][16]=1; g[5][17]=1; g[5][16]=1; g[5][15]=1;
+      } else if (er === 1) { // Sarkık Köpek Kulakları
+        for(let r=7; r<=12; r++) { g[r][4]=1; g[r][5]=1; g[r][18]=1; g[r][19]=1; }
+      } else if (er === 2) { // Uzaylı Anteni (Tepede yuvarlak top)
+        g[2][11]=1; g[2][12]=1; g[3][11]=1; g[3][12]=1; // Topuz
+        g[4][12]=1; g[5][12]=1; // Çubuk
+      } else if (er === 3) { // Şeytan / Ejder Boynuzları
+        g[4][7]=1; g[3][6]=1; g[2][5]=1; g[4][16]=1; g[3][17]=1; g[2][18]=1;
+      } else if (er === 4) { // Gamer Kulaklığı
+        for(let c=7; c<=16; c++) g[4][c]=1; // Taç bandı
+        for(let r=8; r<=12; r++) { g[r][4]=1; g[r][5]=1; g[r][18]=1; g[r][19]=1; } // Kulak yastıkları
+      } else if (er === 5) { // Sihirli Koni Şapka
+        g[1][12]=1; g[2][11]=1; g[2][12]=1; g[3][10]=1; g[3][11]=1; g[3][12]=1; g[3][13]=1;
+        for(let c=5; c<=18; c++) g[5][c]=1; // Siperlik
+      } else if (er === 6) { // Melek Halesi (Havada asılı elips)
+        for(let c=8; c<=15; c++) { g[2][c]=1; g[3][c]=1; }
+        g[2][9]=0; g[2][10]=0; g[2][11]=0; g[2][12]=0; g[2][13]=0; g[2][14]=0; // İçi boş halka
+      } else if (er === 7) { // Çiçek Tokası
+        g[4][16]=1; g[4][17]=1; g[5][15]=1; g[5][16]=1; g[5][17]=1; g[5][18]=1; g[6][16]=1; g[6][17]=1;
+      } else if (er === 8) { // Uzun Tavşan Kulakları
+        for(let r=1; r<=6; r++) { g[r][8]=1; g[r][9]=1; g[r][14]=1; g[r][15]=1; }
+      } else { // 9: Robot Tepe Cıvataları
+        g[8][4]=1; g[8][5]=1; g[9][4]=1; g[9][5]=1; g[8][18]=1; g[8][19]=1; g[9][18]=1; g[9][19]=1;
       }
-      // Eyes
-      if (appData.parts.eyes === 0) {
+
+      // 3. GÖZLER (10 FARKLI TİP - Arka planı delerek kontrast sağlar)
+      if (ey === 0) { // Anime Işıltılı (Büyük göz bebeği & ışıltı)
         g[10][8]=0; g[10][9]=0; g[11][9]=0; g[10][14]=0; g[10][15]=0; g[11][14]=0;
-      } else {
-        g[11][8]=0; g[11][9]=0; g[11][14]=0; g[11][15]=0;
+      } else if (ey === 1) { // Retro Çizgi (__ __)
+        g[11][7]=0; g[11][8]=0; g[11][9]=0; g[11][14]=0; g[11][15]=0; g[11][16]=0;
+      } else if (ey === 2) { // Gözlüklü Çerçeve
+        for(let c=7; c<=16; c++) g[10][c]=0;
+        g[11][7]=0; g[11][10]=0; g[11][13]=0; g[11][16]=0;
+        g[12][8]=0; g[12][9]=0; g[12][14]=0; g[12][15]=0;
+      } else if (ey === 3) { // Şaşkın Pörtlek (Yuvarlak kocaman)
+        g[9][8]=0; g[9][9]=0; g[10][7]=0; g[10][10]=0; g[11][8]=0; g[11][9]=0;
+        g[9][14]=0; g[9][15]=0; g[10][13]=0; g[10][16]=0; g[11][14]=0; g[11][15]=0;
+      } else if (ey === 4) { // Siber Vizör (Yatay tek blok parıltı)
+        for(let c=6; c<=17; c++) { g[10][c]=0; g[11][c]=0; }
+      } else if (ey === 5) { // Göz Kırpan (- ^)
+        g[11][7]=0; g[11][8]=0; g[11][9]=0; // Sol düz çizgi
+        g[10][14]=0; g[9][15]=0; g[10][16]=0; // Sağ neşeli yay
+      } else if (ey === 6) { // Uykulu Göz (Aşağı kıvrık yaylar)
+        g[10][7]=0; g[11][8]=0; g[11][9]=0; g[10][10]=0;
+        g[10][13]=0; g[11][14]=0; g[11][15]=0; g[10][16]=0;
+      } else if (ey === 7) { // Alevli Kızgın (Çatık kaşlar \ /)
+        g[9][7]=0; g[10][8]=0; g[11][9]=0;
+        g[9][16]=0; g[10][15]=0; g[11][14]=0;
+      } else if (ey === 8) { // Yıldızlı Gözler (+)
+        g[10][8]=0; g[11][7]=0; g[11][8]=0; g[11][9]=0; g[12][8]=0;
+        g[10][15]=0; g[11][14]=0; g[11][15]=0; g[11][16]=0; g[12][15]=0;
+      } else { // 9: Şirin Çift (^^)
+        g[11][7]=0; g[10][8]=0; g[11][9]=0;
+        g[11][14]=0; g[10][15]=0; g[11][16]=0;
       }
-      // Mouth
-      g[14][11]=0; g[14][12]=0;
-      // Feet
-      g[20][8]=1; g[20][9]=1; g[20][14]=1; g[20][15]=1;
+
+      // 4. AĞIZ & MİMİK (10 FARKLI TİP)
+      if (m === 0) { // Kedi Bıyığı & minik burun
+        g[13][11]=0; g[13][12]=0; // Burun
+        g[13][5]=1; g[13][6]=1; g[14][5]=1; g[14][6]=1; // Sol bıyık
+        g[13][17]=1; g[13][18]=1; g[14][17]=1; g[14][18]=1; // Sağ bıyık
+      } else if (m === 1) { // Dil Çıkaran (:P)
+        g[14][10]=0; g[14][11]=0; g[14][12]=0; g[14][13]=0;
+        g[15][12]=1; g[16][12]=1; // Dışarı sarkan dil
+      } else if (m === 2) { // Gülümseme (\_/)
+        g[14][9]=0; g[15][10]=0; g[15][11]=0; g[15][12]=0; g[15][13]=0; g[14][14]=0;
+      } else if (m === 3) { // Dişli Sivri Sırıtış
+        for(let c=9; c<=14; c++) g[14][c]=0;
+        g[15][10]=1; g[15][13]=1; // Vampir sivri dişleri
+      } else if (m === 4) { // Minik "o" Şaşkınlık
+        g[14][11]=0; g[14][12]=0; g[15][11]=0; g[15][12]=0;
+      } else if (m === 5) { // Dondurma / Kurabiye Yiyen Ağız
+        g[14][10]=0; g[14][11]=0; g[14][12]=0;
+        g[15][13]=1; g[16][13]=1; g[17][13]=1; // Çubuk / kırıntı
+      } else if (m === 6) { // Retro Burma Bıyık
+        g[14][8]=1; g[13][7]=1; g[14][9]=1; g[14][10]=1; g[14][11]=1; g[14][12]=1; g[14][13]=1; g[14][14]=1; g[13][16]=1; g[14][15]=1;
+      } else if (m === 7) { // Ciddi Düz Çizgi (---)
+        g[14][10]=0; g[14][11]=0; g[14][12]=0; g[14][13]=0;
+      } else if (m === 8) { // Büyük Şaşkın Açık Ağız (:O)
+        for(let r=13; r<=16; r++) { g[r][11]=0; g[r][12]=0; }
+      } else { // 9: Ninja / Maske
+        for(let r=13; r<=16; r++) for(let c=8; c<=15; c++) g[r][c] = (r === 13 || r === 16 || c === 8 || c === 15) ? 0 : 1;
+      }
+
+      // 5. AKSESUAR & UZUV (10 FARKLI TİP)
+      if (ac === 0) { // Uçan Kanatlar (İki yanda)
+        g[11][2]=1; g[12][1]=1; g[12][2]=1; g[13][2]=1; g[13][3]=1; g[14][3]=1;
+        g[11][21]=1; g[12][21]=1; g[12][22]=1; g[13][21]=1; g[13][20]=1; g[14][20]=1;
+      } else if (ac === 1) { // Kaykay (Ayakların altında tahta ve tekerlekler)
+        for(let c=4; c<=19; c++) g[21][c]=1;
+        g[22][6]=1; g[22][7]=1; g[22][16]=1; g[22][17]=1;
+      } else if (ac === 2) { // Kahraman Pelerini (Sırtta dalgalanan)
+        for(let r=11; r<=21; r++) { g[r][2]=1; g[r][3]=1; }
+      } else if (ac === 3) { // Minik Kılıç (Sağ elde kılıç)
+        for(let r=7; r<=15; r++) g[r][21]=1; // Bıçak
+        g[16][19]=1; g[16][20]=1; g[16][21]=1; g[16][22]=1; // Kabza
+        g[17][21]=1; g[18][21]=1; // Sap
+      } else if (ac === 4) { // Kıvrık Tilki / Kedi Kuyruğu
+        g[14][2]=1; g[13][1]=1; g[12][1]=1; g[15][2]=1; g[16][3]=1; g[17][4]=1;
+      } else if (ac === 5) { // Tek Tekerlek (Robot unicycle)
+        for(let r=20; r<=23; r++) for(let c=10; c<=13; c++) g[r][c]=1;
+        g[21][11]=0; g[21][12]=0; g[22][11]=0; g[22][12]=0; // Jant
+      } else if (ac === 6) { // Büyücü Asası (Yıldızlı asa)
+        g[6][21]=1; g[7][20]=1; g[7][21]=1; g[7][22]=1; g[8][21]=1; // Yıldız başı
+        for(let r=9; r<=20; r++) g[r][21]=1; // Asa gövdesi
+      } else if (ac === 7) { // Sırt Çantası (Yanda askı & cep)
+        for(let r=11; r<=17; r++) { g[r][3]=1; g[r][4]=1; }
+      } else if (ac === 8) { // İri Boks Eldivenleri
+        for(let r=13; r<=16; r++) { g[r][2]=1; g[r][3]=1; g[r][20]=1; g[r][21]=1; }
+      } else { // 9: Altın Şövalye Kalkanı
+        for(let r=11; r<=17; r++) { g[r][2]=1; g[r][3]=1; g[r][4]=1; }
+        g[18][3]=1; // Kalkan sivri ucu
+      }
+
       return g;
     }
 
@@ -1187,7 +1341,10 @@
 
     function sendAvatarToConsole() {
       beep(880, 0.15);
-      showGlobalToast('🚀 100.000 kombinasyonlu avatar konsola aktarıldı!');
+      localStorage.setItem('socies_custom_parts', JSON.stringify(appData.parts));
+      oled.mode = 'IDLE';
+      showGlobalToast('🚀 Özel karakter konsola yüklendi!');
+      setTimeout(() => switchTab('tab-console'), 400);
     }
 
     // =========================================================================
