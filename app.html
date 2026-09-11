@@ -550,9 +550,120 @@
       transform: translateY(-2px);
     }
     .nav-icon { font-size: 1.35rem; }
+
+    /* AUTO-UPDATE OTA MODAL */
+    .update-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(15, 23, 42, 0.78);
+      backdrop-filter: blur(8px);
+      z-index: 10000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 1.5rem;
+      animation: fadeIn 0.2s ease;
+    }
+    .update-dialog {
+      background: #FFFFFF;
+      border-radius: 24px;
+      padding: 1.8rem 1.6rem;
+      max-width: 380px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      border: 2px solid #E2E8F0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.9rem;
+    }
+    .update-icon-badge {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, #10B981, #06B6D4);
+      border-radius: 18px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 2rem;
+      box-shadow: 0 8px 20px rgba(16, 185, 129, 0.35);
+      color: #fff;
+    }
+    .update-title {
+      font-size: 1.25rem;
+      font-weight: 900;
+      color: var(--text);
+    }
+    .update-pill {
+      background: #EEF2FF;
+      color: var(--indigo);
+      font-size: 0.8rem;
+      font-weight: 800;
+      padding: 0.3rem 0.8rem;
+      border-radius: 999px;
+    }
+    .update-notes-box {
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 14px;
+      padding: 0.8rem 1rem;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      text-align: left;
+      max-height: 130px;
+      overflow-y: auto;
+      width: 100%;
+    }
+    .btn-update-action {
+      background: linear-gradient(135deg, #10B981, #059669);
+      color: #FFFFFF;
+      border: none;
+      padding: 0.9rem 1.6rem;
+      border-radius: 14px;
+      font-size: 0.95rem;
+      font-weight: 900;
+      cursor: pointer;
+      width: 100%;
+      box-shadow: 0 8px 18px rgba(16, 185, 129, 0.3);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.15s;
+    }
+    .btn-update-action:active {
+      transform: scale(0.98);
+    }
+    .btn-update-dismiss {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 0.4rem;
+    }
   </style>
 </head>
 <body>
+
+  <!-- OTA AUTO-UPDATER DIALOG -->
+  <div id="updateModal" class="update-overlay" style="display:none;">
+    <div class="update-dialog">
+      <div class="update-icon-badge">🚀</div>
+      <div class="update-title">Yeni Güncelleme Mevcut!</div>
+      <div class="update-pill" id="updVersionTag">v1.0.6 Hazır</div>
+      <div class="update-notes-box" id="updReleaseNotes">
+        Yeni özellikler ve iyileştirmeler yayınlandı.
+      </div>
+      <button class="btn-update-action" id="btnRunUpdate" onclick="proceedAppUpdate()">
+        <span>⚡</span> Hemen Güncelle & Yükle
+      </button>
+      <button class="btn-update-dismiss" onclick="dismissUpdateModal()">Daha Sonra Hatırlat</button>
+    </div>
+  </div>
 
   <div class="app-container">
     
@@ -566,6 +677,10 @@
         </div>
       </div>
       <div class="top-header-badges">
+        <div class="badge-chip" id="badgeAppVersion" onclick="manualCheckUpdate()" title="Sürüm: Dokunarak Kontrol Et" style="cursor:pointer;">
+          <span>🚀</span>
+          <span id="txtCurrentVersion">v1.0.5</span>
+        </div>
         <div class="badge-chip" title="Eşleşen Konsol">
           <span>📟</span>
           <span id="badgeDeviceId">84920A</span>
@@ -1510,6 +1625,101 @@
       };
       if (idMap[tabId]) document.getElementById(idMap[tabId])?.classList.add('active');
     }
+
+    // =========================================================================
+    // OTA AUTO-UPDATER & VERSION CHECK ENGINE
+    // =========================================================================
+    const CURRENT_APP_VERSION = 'v1.0.5';
+    let pendingUpdateData = null;
+
+    function isVersionNewer(remoteVer, localVer) {
+      if (!remoteVer || !localVer) return false;
+      const parse = v => v.replace(/^v/, '').split('.').map(n => parseInt(n, 10) || 0);
+      const [rMaj, rMin, rPat] = parse(remoteVer);
+      const [lMaj, lMin, lPat] = parse(localVer);
+      if (rMaj > lMaj) return true;
+      if (rMaj === lMaj && rMin > lMin) return true;
+      if (rMaj === lMaj && rMin === lMin && rPat > lPat) return true;
+      return false;
+    }
+
+    async function checkAppVersionOnBoot(isManual = false) {
+      console.log('[OTA] Sürüm kontrolü başlatılıyor... Mevcut:', CURRENT_APP_VERSION);
+      let latest = null;
+
+      // 1. Önce yerel merkezi sunucuyu dene
+      try {
+        const res = await fetch('/api/v1/version/check', { signal: AbortSignal.timeout(3000) });
+        if (res.ok) {
+          latest = await res.json();
+          console.log('[OTA] Sunucu versiyonu alındı:', latest.latestVersion);
+        }
+      } catch (e) {
+        console.log('[OTA] Yerel sunucu yanıt vermedi, GitHub deneniyor...');
+      }
+
+      // 2. Eğer yerel sunucu yanıt vermediyse GitHub Releases API'ye sor
+      if (!latest) {
+        try {
+          const ghRes = await fetch('https://api.github.com/repos/mcturan/socies/releases/latest', { signal: AbortSignal.timeout(4000) });
+          if (ghRes.ok) {
+            const ghData = await ghRes.json();
+            const tag = ghData.tag_name;
+            const apkAsset = (ghData.assets || []).find(a => a.name && a.name.endsWith('.apk'));
+            latest = {
+              latestVersion: tag,
+              releaseNotes: ghData.body || 'GitHub Releases üzerinden yeni kararlı sürüm yayınlandı.',
+              apkDownloadUrl: apkAsset ? apkAsset.browser_download_url : 'https://github.com/mcturan/socies/releases/latest'
+            };
+          }
+        } catch (e) {
+          console.log('[OTA] GitHub API kontrolü de başarısız oldu.');
+        }
+      }
+
+      if (latest && latest.latestVersion) {
+        if (isVersionNewer(latest.latestVersion, CURRENT_APP_VERSION)) {
+          pendingUpdateData = latest;
+          document.getElementById('updVersionTag').innerText = `${latest.latestVersion} Yayında!`;
+          document.getElementById('updReleaseNotes').innerText = latest.releaseNotes || 'Yeni özellikler, hata düzeltmeleri ve performans iyileştirmeleri.';
+          document.getElementById('updateModal').style.display = 'flex';
+          beep(880, 0.2);
+        } else {
+          if (isManual) {
+            showGlobalToast(`✅ Uygulamanız en güncel sürümde (${CURRENT_APP_VERSION})`);
+          }
+        }
+      } else if (isManual) {
+        showGlobalToast(`⚠️ Sunucuya erişilemedi, daha sonra tekrar deneyin.`);
+      }
+    }
+
+    function manualCheckUpdate() {
+      beep(600, 0.08);
+      showGlobalToast('🔍 Sürüm kontrol ediliyor...');
+      checkAppVersionOnBoot(true);
+    }
+
+    function dismissUpdateModal() {
+      document.getElementById('updateModal').style.display = 'none';
+      showGlobalToast('ℹ️ Güncelleme ertelendi. Profildeki sürüm ikonuna dokunarak güncelleyebilirsiniz.');
+    }
+
+    function proceedAppUpdate() {
+      if (!pendingUpdateData) return;
+      beep(980, 0.2);
+      const url = pendingUpdateData.apkDownloadUrl || '/download/socies-app.apk';
+      showGlobalToast('📥 APK indiriliyor... İndirme tamamlandığında bildirim panelinden dokunup yükleyin.');
+      
+      setTimeout(() => {
+        window.location.href = url;
+      }, 500);
+    }
+
+    // Uygulama açılışında otomatik kontrol
+    window.addEventListener('load', () => {
+      setTimeout(() => checkAppVersionOnBoot(false), 1200);
+    });
   </script>
 </body>
 </html>
