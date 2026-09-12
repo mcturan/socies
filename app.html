@@ -721,6 +721,26 @@
     </div>
   </div>
 
+  <!-- PET EVOLUTION CELEBRATION MODAL -->
+  <div id="evolutionModal" class="update-overlay" style="display:none;">
+    <div class="update-dialog" style="max-width:360px; background:linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%);">
+      <div class="update-icon-badge" style="background:linear-gradient(135deg, #F59E0B, #EC4899); font-size:2.4rem;">✨</div>
+      <div class="update-title" style="font-size:1.35rem; color:#0F172A;">EVRİM GEÇİRDİ!</div>
+      <div class="update-pill" id="evoStageTitle" style="background:#FEF3C7; color:#B45309; border:1px solid #FDE68A; font-size:0.95rem; font-weight:900;">🎒 Çocuk Evresi</div>
+      <p id="evoStageDesc" style="font-size:0.85rem; color:var(--text-muted); text-align:center; margin:0.4rem 0;">
+        Pufi gösterdiğin özenle büyüdü ve yeni gelişim aşamasına ulaştı!
+      </p>
+      <div style="background:#F1F5F9; border-radius:14px; padding:10px 16px; font-size:0.8rem; color:var(--text); text-align:left; width:100%;">
+        <div style="margin-bottom:4px;">🌟 Yeni rozetler ve yetenekler açıldı</div>
+        <div style="margin-bottom:4px;">🔋 Enerji ve metabolizma dengesi güçlendi</div>
+        <div>🎮 OLED konsolda özel retro animasyonlar aktif</div>
+      </div>
+      <button class="btn-update-action" onclick="closeEvolutionModal()" style="margin-top:0.6rem; background:linear-gradient(135deg, #F59E0B, #D97706);">
+        🎉 Harika! Devam Et
+      </button>
+    </div>
+  </div>
+
   <div class="app-container">
     
     <!-- TOP BAR -->
@@ -743,7 +763,7 @@
         </div>
         <div class="badge-chip" id="badgeAppVersion" onclick="manualCheckUpdate()" title="Sürüm: Dokunarak Kontrol Et" style="cursor:pointer;">
           <span>🚀</span>
-          <span id="txtCurrentVersion">v1.0.5</span>
+          <span id="txtCurrentVersion">v1.0.6</span>
         </div>
         <div class="badge-chip" title="Cihaz Kimliği (Hardware ID)">
           <span>📟</span>
@@ -818,22 +838,35 @@
     <!-- TAB 2: 🐾 BEBEĞİM & 7 SİMS HUD -->
     <!-- ===================================================================== -->
     <div id="tab-pet" class="tab-view">
+      <!-- PET HERO CARD -->
       <div class="pet-hero-card">
-        <div class="pet-avatar-bubble" onclick="petLoveTouch()">
+        <div class="pet-avatar-bubble" onclick="petLoveTouch()" title="Dokun & Sev (Okşa)">
           <canvas id="petTouchCanvas" class="pet-canvas-preview" width="24" height="24"></canvas>
+          <span id="petFloatingHeart" style="position:absolute; font-size:1.5rem; opacity:0; pointer-events:none; transition:all 0.5s;">💖</span>
         </div>
         <div class="pet-title-row">
-          <span>Pufi 🐱</span>
-          <span style="font-size:0.8rem; background:#ECFDF5; color:var(--emerald); padding:0.2rem 0.6rem; border-radius:12px;">%88 Sağlık</span>
+          <span id="txtPetHeaderName">Pufi 🐱</span>
+          <span id="txtPetMoodTag" style="font-size:0.78rem; background:#ECFDF5; color:#059669; border:1px solid #A7F3D0; padding:0.2rem 0.6rem; border-radius:12px; font-weight:800;">🥰 Çok Mutlu</span>
+          <span id="txtPetHealthTag" style="font-size:0.78rem; background:#EFF6FF; color:#1D4ED8; border:1px solid #BFDBFE; padding:0.2rem 0.6rem; border-radius:12px; font-weight:800;">%88 Sağlık</span>
         </div>
-        <div style="font-size:0.85rem; color:var(--text-muted); font-weight:700; margin-top:2px;">
-          Sanal Kedi • 5 Günlük Mutlu Bebek
+        <div id="txtPetAgeStage" style="font-size:0.85rem; color:var(--text-muted); font-weight:700; margin-top:4px;">
+          Sanal Kedi • Evre 2 (Çocuk 🎒) • 5 Günlük
+        </div>
+
+        <!-- ACİL DURUM & KRİZ BİLDİRİM KUTUSU (KAKA / HASTALIK) -->
+        <div id="boxPetCrisisAlert" style="display:none; width:100%; margin-top:8px; padding:8px 12px; border-radius:12px; font-size:0.82rem; font-weight:800; align-items:center; justify-content:space-between;">
+          <span id="txtCrisisMsg">⚠️ Bebek hasta oldu!</span>
+          <button id="btnCrisisAction" class="btn-micro" style="padding:4px 8px; font-size:0.75rem; background:#fff; font-weight:900;" onclick="handleCrisisAction()">Müdahale Et</button>
         </div>
       </div>
 
-      <!-- 7 SIMS NEEDS HUD -->
-      <div class="needs-grid">
-        <div class="need-pill" onclick="performNeedAction('FEED', '🍗 Beslendi! Konsola mama uçtu.')">
+      <!-- 7 SIMS NEEDS HUD (AÇLIK, TUVALET, HİJYEN, UYKU, EĞLENCE, SEVGİ, SOSYAL) -->
+      <div style="font-weight:900; font-size:0.95rem; margin:0.8rem 0 0.4rem 0; display:flex; justify-content:space-between; align-items:center;">
+        <span>🐾 7 Yaşam İhtiyacı</span>
+        <span style="font-size:0.75rem; color:var(--text-muted);">Durum Değerleri</span>
+      </div>
+      <div class="needs-grid" style="grid-template-columns: repeat(auto-fit, minmax(95px, 1fr));">
+        <div class="need-pill" onclick="performNeedAction('FEED', '🍗 Mama verildi!')">
           <span class="need-icon">🍗</span>
           <span class="need-name">Açlık (<span id="txtValHunger">85%</span>)</span>
           <div class="need-bar"><div class="need-fill" id="fillHunger" style="width:85%; background:#EF4444;"></div></div>
@@ -848,7 +881,7 @@
           <span class="need-name">Hijyen (<span id="txtValBath">90%</span>)</span>
           <div class="need-bar"><div class="need-fill" id="fillBath" style="width:90%; background:#10B981;"></div></div>
         </div>
-        <div class="need-pill" onclick="performNeedAction('SLEEP', '💤 Işıklar kapandı, bebek uyuyor.')">
+        <div class="need-pill" onclick="performNeedAction('SLEEP', '💤 Bebek uykuya daldı.')">
           <span class="need-icon">💤</span>
           <span class="need-name">Uyku (<span id="txtValSleep">70%</span>)</span>
           <div class="need-bar"><div class="need-fill" id="fillSleep" style="width:70%; background:#6366F1;"></div></div>
@@ -863,6 +896,25 @@
           <span class="need-name">Sevgi (<span id="txtValLove">90%</span>)</span>
           <div class="need-bar"><div class="need-fill" id="fillLove" style="width:90%; background:#EC4899;"></div></div>
         </div>
+        <div class="need-pill" onclick="switchTab('tab-friends')">
+          <span class="need-icon">👥</span>
+          <span class="need-name">Sosyal (<span id="txtValSocial">85%</span>)</span>
+          <div class="need-bar"><div class="need-fill" id="fillSocial" style="width:85%; background:#8B5CF6;"></div></div>
+        </div>
+      </div>
+
+      <!-- BAKIM & SEVGİ HIZLI EYLEM BUTONLARI -->
+      <div style="font-weight:900; font-size:0.95rem; margin:0.8rem 0 0.4rem 0; display:flex; justify-content:space-between; align-items:center;">
+        <span>🎯 Bakım Müdahaleleri</span>
+        <span style="font-size:0.75rem; color:var(--text-muted);">Dokun ve İlgilen</span>
+      </div>
+      <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:6px;">
+        <button class="btn-micro" style="padding:10px 6px; font-size:0.8rem; background:#FEF2F2; color:#DC2626; border-color:#FECACA; font-weight:800;" onclick="performNeedAction('FEED', '🍗 Beslendi!')">🍗 Mama Ver</button>
+        <button class="btn-micro" style="padding:10px 6px; font-size:0.8rem; background:#FFFBEB; color:#D97706; border-color:#FDE68A; font-weight:800;" onclick="performNeedAction('CLEAN_TOILET', '🚽 Sifon çekildi!')">🚽 Sifon Çek</button>
+        <button class="btn-micro" style="padding:10px 6px; font-size:0.8rem; background:#ECFDF5; color:#059669; border-color:#A7F3D0; font-weight:800;" onclick="performNeedAction('BATH', '🧼 Köpüklü banyo!')">🧼 Banyo Yap</button>
+        <button class="btn-micro" style="padding:10px 6px; font-size:0.8rem; background:#EEF2FF; color:#4F46E5; border-color:#C7D2FE; font-weight:800;" onclick="performNeedAction('SLEEP', '💤 Bebek uyuyor.')">💤 Uyut</button>
+        <button class="btn-micro" style="padding:10px 6px; font-size:0.8rem; background:#FDF2F8; color:#DB2777; border-color:#FBCFE8; font-weight:800;" onclick="petLoveTouch()">💖 Okşa & Sev</button>
+        <button class="btn-micro" id="btnCareMedicine" style="padding:10px 6px; font-size:0.8rem; background:#F1F5F9; color:#475569; border-color:#CBD5E1; font-weight:800;" onclick="performNeedAction('MEDICINE', '💊 İlaç verildi!')">💊 İlaç Ver</button>
       </div>
     </div>
 
@@ -1066,9 +1118,21 @@
         sleep: 70,
         fun: 95,
         love: 90,
+        social: 85,
         xp: 1420,
         level: 5,
         lastTick: Date.now()
+      },
+
+      // Evrim & Sağlık / Karakter Durumu (Tamagotchi / Pou / Sims)
+      petState: {
+        name: localStorage.getItem('socies_pet_name') || 'Pufi',
+        birthTime: parseInt(localStorage.getItem('socies_pet_birth') || (Date.now() - 5 * 86400000)),
+        ageDays: 5,
+        stage: 2, // 1: Bebek 🍼, 2: Çocuk 🎒, 3: Genç 🎧, 4: Yetişkin 👑
+        isSick: false,
+        poopCount: 0,
+        careScore: 100
       },
 
       // Gerçek SQLite Sunucudan çekilen Arkadaşlar & Radar
@@ -1157,6 +1221,130 @@
       } catch(e) {}
     }
 
+    // Karakter Davranış & Duygu Ses Efektleri (Tamagotchi / Pou)
+    function playEatCrunchSound() {
+      triggerHaptic(30);
+      try {
+        if (!aCtx) aCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (aCtx.state === 'suspended') aCtx.resume();
+        const t = aCtx.currentTime;
+        for (let i = 0; i < 3; i++) {
+          const o = aCtx.createOscillator();
+          const g = aCtx.createGain();
+          o.type = 'triangle';
+          const st = t + i * 0.08;
+          o.frequency.setValueAtTime(340 + Math.random() * 160, st);
+          o.frequency.exponentialRampToValueAtTime(110, st + 0.06);
+          g.gain.setValueAtTime(0.18, st);
+          g.gain.exponentialRampToValueAtTime(0.001, st + 0.06);
+          o.connect(g); g.connect(aCtx.destination);
+          o.start(st); o.stop(st + 0.06);
+        }
+      } catch(e) {}
+    }
+
+    function playGiggleSound() {
+      triggerHaptic(20);
+      try {
+        if (!aCtx) aCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (aCtx.state === 'suspended') aCtx.resume();
+        const t = aCtx.currentTime;
+        const freqs = [660, 880, 1100, 1320];
+        freqs.forEach((f, idx) => {
+          const o = aCtx.createOscillator();
+          const g = aCtx.createGain();
+          o.type = 'sine';
+          const st = t + idx * 0.055;
+          o.frequency.setValueAtTime(f, st);
+          o.frequency.exponentialRampToValueAtTime(f + 140, st + 0.05);
+          g.gain.setValueAtTime(0.16, st);
+          g.gain.exponentialRampToValueAtTime(0.001, st + 0.05);
+          o.connect(g); g.connect(aCtx.destination);
+          o.start(st); o.stop(st + 0.05);
+        });
+      } catch(e) {}
+    }
+
+    function playCureSound() {
+      triggerHaptic(40);
+      try {
+        if (!aCtx) aCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (aCtx.state === 'suspended') aCtx.resume();
+        const t = aCtx.currentTime;
+        const notes = [440, 554, 659, 880, 1108];
+        notes.forEach((f, idx) => {
+          const o = aCtx.createOscillator();
+          const g = aCtx.createGain();
+          o.type = 'triangle';
+          const st = t + idx * 0.07;
+          o.frequency.setValueAtTime(f, st);
+          g.gain.setValueAtTime(0.2, st);
+          g.gain.exponentialRampToValueAtTime(0.001, st + 0.12);
+          o.connect(g); g.connect(aCtx.destination);
+          o.start(st); o.stop(st + 0.12);
+        });
+      } catch(e) {}
+    }
+
+    function playPoopSound() {
+      triggerHaptic(45);
+      try {
+        if (!aCtx) aCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (aCtx.state === 'suspended') aCtx.resume();
+        const t = aCtx.currentTime;
+        const o = aCtx.createOscillator();
+        const g = aCtx.createGain();
+        o.type = 'sawtooth';
+        o.frequency.setValueAtTime(200, t);
+        o.frequency.exponentialRampToValueAtTime(65, t + 0.22);
+        g.gain.setValueAtTime(0.22, t);
+        g.gain.exponentialRampToValueAtTime(0.001, t + 0.22);
+        o.connect(g); g.connect(aCtx.destination);
+        o.start(t); o.stop(t + 0.22);
+      } catch(e) {}
+    }
+
+    function playWhineSound() {
+      triggerHaptic(30);
+      try {
+        if (!aCtx) aCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (aCtx.state === 'suspended') aCtx.resume();
+        const t = aCtx.currentTime;
+        const o = aCtx.createOscillator();
+        const g = aCtx.createGain();
+        o.type = 'sawtooth';
+        o.frequency.setValueAtTime(440, t);
+        o.frequency.linearRampToValueAtTime(310, t + 0.15);
+        o.frequency.linearRampToValueAtTime(240, t + 0.3);
+        g.gain.setValueAtTime(0.18, t);
+        g.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
+        o.connect(g); g.connect(aCtx.destination);
+        o.start(t); o.stop(t + 0.3);
+      } catch(e) {}
+    }
+
+    function playLevelUpFanfare() {
+      triggerHaptic(60);
+      try {
+        if (!aCtx) aCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (aCtx.state === 'suspended') aCtx.resume();
+        const t = aCtx.currentTime;
+        const arpeggio = [523.25, 659.25, 783.99, 1046.50, 1318.51, 1567.98];
+        arpeggio.forEach((f, idx) => {
+          const o = aCtx.createOscillator();
+          const g = aCtx.createGain();
+          o.type = (idx === arpeggio.length - 1) ? 'square' : 'triangle';
+          const st = t + idx * 0.08;
+          const dur = (idx === arpeggio.length - 1) ? 0.4 : 0.12;
+          o.frequency.setValueAtTime(f, st);
+          g.gain.setValueAtTime(0.24, st);
+          g.gain.exponentialRampToValueAtTime(0.001, st + dur);
+          o.connect(g); g.connect(aCtx.destination);
+          o.start(st); o.stop(st + dur);
+        });
+      } catch(e) {}
+    }
+
     // --- BUTTON AUTO-REPEAT (RAPID-FIRE ON HOLD) ---
     let btnHoldTimer = null;
     let btnRepeatTimer = null;
@@ -1197,7 +1385,7 @@
       mode: 'IDLE', // IDLE, MENU, PONG, DODGER, COWBOY, EATING, TOILET, BATH, SLEEPING
       menuLevel: 'ROOT', // ROOT, FOOD, GAMES, STATS
       menuIdx: 0,
-      menuItems: ['BESLE', 'TUVALET', 'BANYO', 'OYUNLAR', 'UYUT', 'DURUM'],
+      menuItems: ['BESLE', 'TUVALET', 'BANYO', 'İLAÇ', 'OYUNLAR', 'UYUT', 'DURUM'],
       foodItems: ['ELMA 🍏', 'MAMA 🍗', 'PASTA 🍰', 'SU 💧'],
       gameItems: ['1. PONG 🏓', '2. DODGER 🏃', '3. KOVBOY 🤠'],
       foodIdx: 0,
@@ -1248,9 +1436,9 @@
       // 1. TOP DİNAMİK SARI DURUM ÇUBUĞU (16px)
       oled.ctx.fillStyle = '#ffb703';
       
-      // Can Kalpleri (7 İhtiyacın Gerçek Ortalamasından)
-      const avgNeed = (appData.needs.hunger + appData.needs.toilet + appData.needs.clean + appData.needs.sleep + appData.needs.fun + appData.needs.love) / 6;
-      const filledHearts = Math.min(4, Math.max(0, Math.ceil((avgNeed / 100) * 4)));
+      // Can Kalpleri (7 İhtiyacın Gerçek Sağlık Skorundan)
+      const moodDetails = (typeof getPetMoodDetails === 'function') ? getPetMoodDetails() : { healthScore: 88 };
+      const filledHearts = Math.min(4, Math.max(0, Math.ceil((moodDetails.healthScore / 100) * 4)));
       for(let i=0; i<4; i++) {
         drawOledHeart(oled.ctx, 3 + i*8, 4, i < filledHearts);
       }
@@ -1310,13 +1498,16 @@
 
       oled.ctx.font = '7px "JetBrains Mono"';
       let petStatusTxt = 'SOCIES BLE HAZIR';
-      if (appData.needs.hunger < 35) petStatusTxt = 'AÇIKTI! 🍖 BESLE';
+      if (appData.petState && appData.petState.isSick) petStatusTxt = 'HASTA! 💊 İLAÇ VER';
+      else if (appData.petState && appData.petState.poopCount > 0) petStatusTxt = 'KİRLİ! 💩 SİFON ÇEK';
+      else if (appData.needs.hunger < 35) petStatusTxt = 'AÇIKTI! 🍖 BESLE';
       else if (appData.needs.sleep < 35) petStatusTxt = 'UYKULU! 🌙 UYUT';
       else if (appData.needs.clean < 35) petStatusTxt = 'KİRLENDİ! 🧼 BANYO';
       else if (appData.needs.fun < 35) petStatusTxt = 'SIKILDI! 🎮 OYNA';
-      else petStatusTxt = 'MUTLU 🐾 ' + appData.nickname.slice(0, 8);
+      else if (appData.needs.love < 35) petStatusTxt = 'SEV BENİ! 💖 OKŞA';
+      else petStatusTxt = 'MUTLU 🐾 ' + (appData.petState ? appData.petState.name : appData.nickname.slice(0, 8));
 
-      oled.ctx.fillText(petStatusTxt, 16, 60);
+      oled.ctx.fillText(petStatusTxt, 12, 60);
     }
 
     function renderOledMenu() {
@@ -1621,6 +1812,9 @@
               oled.mode = 'BATH';
               oled.actionTimer = 0;
               performNeedAction('BATH', '🧼 Tertemiz köpük banyosu!');
+            } else if (act === 'İLAÇ') {
+              oled.mode = 'IDLE';
+              performNeedAction('MEDICINE');
             } else if (act === 'OYUNLAR') {
               oled.menuLevel = 'GAMES';
               oled.gameIdx = 0;
@@ -2016,12 +2210,66 @@
     }
     renderCombinator();
 
+    function drawOledPoop(px, py) {
+      const poopM = [
+        [0,0,1,0,0],
+        [0,1,1,1,0],
+        [1,1,1,1,1],
+        [1,1,1,1,1]
+      ];
+      for (let r=0; r<4; r++) {
+        for (let c=0; c<5; c++) {
+          if (poopM[r][c]) oled.ctx.fillRect(px + c, py + r, 1, 1);
+        }
+      }
+      // Vızıldayan sinek (🪰 fly)
+      const flyX = px + 2 + Math.sin(oled.animFrame * 0.45) * 3;
+      const flyY = py - 3 + Math.cos(oled.animFrame * 0.55) * 2;
+      oled.ctx.fillRect(Math.round(flyX), Math.round(flyY), 1, 1);
+    }
+
     function drawModularSpriteToOled(x, y) {
+      const isSick = !!(appData.petState && appData.petState.isSick);
+      const shiver = isSick ? Math.round(Math.sin(oled.animFrame * 0.65) * 1.5) : 0;
+      const px = x + shiver;
+      const py = y;
+
       const m = generateAvatarMatrix();
       for(let r=0; r<24; r++) {
         for(let c=0; c<24; c++) {
-          if (m[r][c]) oled.ctx.fillRect(x + c - 4, y + r - 10, 1, 1);
+          if (m[r][c]) oled.ctx.fillRect(px + c - 4, py + r - 10, 1, 1);
         }
+      }
+
+      // 1. Kaka & Sinek Çizimi (Kriz Mekaniği)
+      if (appData.petState && appData.petState.poopCount >= 1) drawOledPoop(98, 46);
+      if (appData.petState && appData.petState.poopCount >= 2) drawOledPoop(110, 46);
+
+      // 2. Hastalık Ateş / Termometre Göstergesi (Blinking)
+      if (isSick && Math.floor(oled.animFrame / 10) % 2 === 0) {
+        oled.ctx.fillRect(px + 17, py - 9, 3, 1);
+        oled.ctx.fillRect(px + 18, py - 10, 1, 3);
+      }
+
+      // 3. Ağlama Gözyaşı (Açlık < 25 veya Sevgi < 20)
+      if (appData.needs.hunger < 25 || appData.needs.love < 20) {
+        const tearDrop = (oled.animFrame % 14);
+        oled.ctx.fillRect(px + 4, py + 2 + tearDrop, 1, 2);
+        oled.ctx.fillRect(px + 12, py + 2 + tearDrop, 1, 2);
+      }
+
+      // 4. Yetişkin Evre Tacı (Stage 4 - 👑 Kraliyet Tacı)
+      if (appData.petState && appData.petState.stage >= 4) {
+        oled.ctx.fillRect(px + 3, py - 13, 10, 1);
+        oled.ctx.fillRect(px + 3, py - 15, 2, 2);
+        oled.ctx.fillRect(px + 7, py - 16, 2, 3);
+        oled.ctx.fillRect(px + 11, py - 15, 2, 2);
+      }
+
+      // 5. Mutluluk Pırıltıları (Sağlık > 80 ve Sevgi > 75)
+      if (!isSick && appData.needs.love > 75 && (oled.animFrame % 24 < 12)) {
+        oled.ctx.fillRect(px - 3, py - 5, 2, 2);
+        oled.ctx.fillRect(px + 17, py - 4, 2, 2);
       }
     }
 
@@ -2197,45 +2445,220 @@
     }
 
     // =========================================================================
-    // 7 SIMS NEEDS & DELTA-TIME PERSISTENCE (FAZ 1)
+    // MODÜL 2: 7 SİMS YAŞAM İHTİYACI, KARAKTER DAVRANIŞLARI & KRİZ MOTORU
     // =========================================================================
     function initNeedsEngine() {
-      const saved = localStorage.getItem('socies_pet_needs');
-      if (saved) {
+      // 1. İhtiyaçları ve Evcil Hayvan Durumunu Yükle
+      const savedNeeds = localStorage.getItem('socies_pet_needs');
+      if (savedNeeds) {
         try {
-          const p = JSON.parse(saved);
+          const p = JSON.parse(savedNeeds);
           appData.needs = Object.assign(appData.needs, p);
-          if (p.lastTick) {
-            const elapsedMins = Math.min(720, Math.floor((Date.now() - p.lastTick) / 60000));
-            if (elapsedMins > 5) {
-              const hungerDrop = Math.min(50, Math.floor(elapsedMins / 15) * 3);
-              const funDrop = Math.min(50, Math.floor(elapsedMins / 20) * 2);
-              const sleepDrop = Math.min(40, Math.floor(elapsedMins / 30) * 2);
-              appData.needs.hunger = Math.max(10, appData.needs.hunger - hungerDrop);
-              appData.needs.fun = Math.max(10, appData.needs.fun - funDrop);
-              appData.needs.sleep = Math.max(10, appData.needs.sleep - sleepDrop);
-              showGlobalToast(`🐾 Bebek seni ${elapsedMins} dakika bekledi!`);
-            }
-          }
         } catch(e) {}
       }
+
+      const savedState = localStorage.getItem('socies_pet_state');
+      if (savedState) {
+        try {
+          const s = JSON.parse(savedState);
+          appData.petState = Object.assign(appData.petState, s);
+        } catch(e) {}
+      }
+
+      // 2. DELTA-TIME ZAMAN KAYBI HESAPLAMASI (Kullanıcı Yokken Geçen Süre)
+      if (appData.needs.lastTick) {
+        const elapsedMins = Math.min(720, Math.floor((Date.now() - appData.needs.lastTick) / 60000));
+        if (elapsedMins > 3) {
+          const hungerDrop = Math.min(60, Math.floor(elapsedMins / 10) * 2);
+          const toiletDrop = Math.min(70, Math.floor(elapsedMins / 12) * 3);
+          const cleanDrop = Math.min(50, Math.floor(elapsedMins / 20) * 2);
+          const sleepDrop = Math.min(50, Math.floor(elapsedMins / 25) * 2);
+          const funDrop = Math.min(50, Math.floor(elapsedMins / 15) * 2);
+          const loveDrop = Math.min(45, Math.floor(elapsedMins / 20) * 2);
+          const socialDrop = Math.min(45, Math.floor(elapsedMins / 25) * 2);
+
+          appData.needs.hunger = Math.max(8, appData.needs.hunger - hungerDrop);
+          appData.needs.toilet = Math.max(5, appData.needs.toilet - toiletDrop);
+          appData.needs.clean = Math.max(10, appData.needs.clean - cleanDrop);
+          appData.needs.sleep = Math.max(10, appData.needs.sleep - sleepDrop);
+          appData.needs.fun = Math.max(10, appData.needs.fun - funDrop);
+          appData.needs.love = Math.max(10, appData.needs.love - loveDrop);
+          appData.needs.social = Math.max(10, (appData.needs.social || 85) - socialDrop);
+
+          // Uzun süre gelinmediyse kaka kazası
+          if (elapsedMins > 60 && appData.needs.toilet < 25 && appData.petState.poopCount < 2) {
+            appData.petState.poopCount = Math.min(2, appData.petState.poopCount + 1);
+          }
+
+          // Çok uzun süre pis bırakıldıysa hastalık
+          if (elapsedMins > 180 && appData.petState.poopCount > 0) {
+            appData.petState.isSick = true;
+          }
+
+          showGlobalToast(`🐾 Bebek seni ${elapsedMins} dakikadır bekliyordu!`);
+        }
+      }
+
       appData.needs.lastTick = Date.now();
       saveNeeds();
+      savePetState();
       updateNeedsUI();
 
-      // Periyodik doğal acıkma (Her 45 saniyede bir ufak düşüş)
+      // 3. DOĞAL BİYOLOJİK DÖNGÜ & PERİYODİK MOTOR (Her 35 saniyede bir)
       setInterval(() => {
         appData.needs.hunger = Math.max(5, appData.needs.hunger - 1);
+        appData.needs.toilet = Math.max(0, appData.needs.toilet - 1.5);
         appData.needs.fun = Math.max(5, appData.needs.fun - 1);
+        appData.needs.sleep = Math.max(5, appData.needs.sleep - 0.7);
+        appData.needs.clean = Math.max(5, appData.needs.clean - 0.5);
+        appData.needs.love = Math.max(5, appData.needs.love - 0.7);
+        appData.needs.social = Math.max(5, (appData.needs.social || 85) - 0.5);
+
+        // Kaka Kazası Kontrolü: Tuvalet iyice sıkışınca yere kaka yapar!
+        if (appData.needs.toilet <= 15 && appData.petState.poopCount < 3) {
+          appData.petState.poopCount++;
+          appData.needs.toilet = 75; // Rahatladı ama etraf kirlendi
+          appData.needs.clean = Math.max(5, appData.needs.clean - 25);
+          playPoopSound();
+          showGlobalToast('💩 Eyvah! Bebek tuvaletini tutamadı ve kaka yaptı!');
+        }
+
+        // Hastalık Kontrolü: Kaka uzun süre temizlenmez veya hijyen < 20 olursa
+        if ((appData.petState.poopCount >= 2 || appData.needs.clean < 20) && !appData.petState.isSick) {
+          if (Math.random() < 0.35) {
+            appData.petState.isSick = true;
+            playWhineSound();
+            showGlobalToast('🤒 Bebek mikroplardan dolayı hastalandı! 💊 İlaç ver.');
+          }
+        }
+
         appData.needs.lastTick = Date.now();
         saveNeeds();
+        savePetState();
         updateNeedsUI();
         syncTelemetry();
-      }, 45000);
+      }, 35000);
     }
 
     function saveNeeds() {
       localStorage.setItem('socies_pet_needs', JSON.stringify(appData.needs));
+    }
+
+    function savePetState() {
+      localStorage.setItem('socies_pet_state', JSON.stringify(appData.petState));
+      localStorage.setItem('socies_pet_name', appData.petState.name);
+      localStorage.setItem('socies_pet_birth', appData.petState.birthTime);
+    }
+
+    async function syncTelemetry() {
+      if (!appData.serverUrl) return;
+      try {
+        await fetch(appData.serverUrl + '/api/v1/telemetry', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            deviceId: appData.deviceId,
+            needs: appData.needs,
+            pet: appData.petState,
+            stats: { score: appData.needs.xp, level: appData.needs.level || 5 }
+          })
+        });
+      } catch(e) {}
+    }
+
+    // Gerçek Sağlık ve Duygu Durumu Hesaplayıcı (Sims & Pou Formülü)
+    function getPetMoodDetails() {
+      const { hunger, toilet, clean, sleep, fun, love, social } = appData.needs;
+      let healthScore = Math.round(
+        (clean * 0.22) + 
+        (toilet * 0.18) + 
+        (hunger * 0.22) + 
+        (sleep * 0.14) + 
+        (love * 0.14) + 
+        ((social || 85) * 0.10)
+      );
+
+      if (appData.petState.isSick) healthScore = Math.max(12, healthScore - 35);
+      if (appData.petState.poopCount > 0) healthScore = Math.max(10, healthScore - (appData.petState.poopCount * 14));
+
+      let moodTag = '🥰 Çok Mutlu';
+      let moodColor = '#059669';
+      let moodBg = '#ECFDF5';
+
+      if (appData.petState.isSick) {
+        moodTag = '🤒 Hasta Oldu!';
+        moodColor = '#DC2626';
+        moodBg = '#FEF2F2';
+      } else if (appData.petState.poopCount > 0) {
+        moodTag = '💩 Kirlendi!';
+        moodColor = '#D97706';
+        moodBg = '#FFFBEB';
+      } else if (hunger < 25) {
+        moodTag = '😭 Çok Aç!';
+        moodColor = '#DC2626';
+        moodBg = '#FEF2F2';
+      } else if (sleep < 25) {
+        moodTag = '🥱 Çok Uykulu';
+        moodColor = '#4F46E5';
+        moodBg = '#EEF2FF';
+      } else if (love < 25) {
+        moodTag = '🥺 İlgi Bekliyor';
+        moodColor = '#DB2777';
+        moodBg = '#FDF2F8';
+      } else if (clean < 30) {
+        moodTag = '🧼 Banyo İstiyor';
+        moodColor = '#059669';
+        moodBg = '#ECFDF5';
+      } else if (healthScore > 80) {
+        moodTag = '🥰 Çok Mutlu';
+        moodColor = '#059669';
+        moodBg = '#ECFDF5';
+      } else if (healthScore > 50) {
+        moodTag = '😊 Neşeli';
+        moodColor = '#0284C7';
+        moodBg = '#F0F9FF';
+      } else {
+        moodTag = '😕 Huysuz';
+        moodColor = '#D97706';
+        moodBg = '#FFFBEB';
+      }
+
+      return { healthScore, moodTag, moodColor, moodBg };
+    }
+
+    function checkPetCrisisState() {
+      const box = document.getElementById('boxPetCrisisAlert');
+      const msg = document.getElementById('txtCrisisMsg');
+      const btn = document.getElementById('btnCrisisAction');
+      if (!box || !msg || !btn) return;
+
+      if (appData.petState.isSick) {
+        box.style.display = 'flex';
+        box.style.background = '#FEF2F2';
+        box.style.border = '1px solid #FECACA';
+        box.style.color = '#DC2626';
+        msg.innerText = '⚠️ Bebek hasta oldu! Ateşi var.';
+        btn.innerText = '💊 İlaç Ver';
+        btn.onclick = () => performNeedAction('MEDICINE');
+      } else if (appData.petState.poopCount > 0) {
+        box.style.display = 'flex';
+        box.style.background = '#FFFBEB';
+        box.style.border = '1px solid #FDE68A';
+        box.style.color = '#B45309';
+        msg.innerText = `💩 Ortada ${appData.petState.poopCount} kaka var! Sinekler üşüşüyor.`;
+        btn.innerText = '🚽 Sifon Çek';
+        btn.onclick = () => performNeedAction('CLEAN_TOILET');
+      } else if (appData.needs.hunger < 20) {
+        box.style.display = 'flex';
+        box.style.background = '#FEF2F2';
+        box.style.border = '1px solid #FECACA';
+        box.style.color = '#DC2626';
+        msg.innerText = '😭 Bebek açlıktan ağlıyor!';
+        btn.innerText = '🍗 Mama Ver';
+        btn.onclick = () => performNeedAction('FEED');
+      } else {
+        box.style.display = 'none';
+      }
     }
 
     function updateNeedsUI() {
@@ -2251,53 +2674,167 @@
       setBar('fillSleep', 'txtValSleep', appData.needs.sleep);
       setBar('fillFun', 'txtValFun', appData.needs.fun);
       setBar('fillLove', 'txtValLove', appData.needs.love);
+      setBar('fillSocial', 'txtValSocial', appData.needs.social || 85);
+
+      const moodInfo = getPetMoodDetails();
+      const tagM = document.getElementById('txtPetMoodTag');
+      if (tagM) {
+        tagM.innerText = moodInfo.moodTag;
+        tagM.style.color = moodInfo.moodColor;
+        tagM.style.background = moodInfo.moodBg;
+      }
+      const tagH = document.getElementById('txtPetHealthTag');
+      if (tagH) {
+        tagH.innerText = `%${moodInfo.healthScore} Sağlık`;
+      }
+
+      // Yaş ve Evre Hesaplaması
+      const stageLabels = { 1: 'Bebek 🍼', 2: 'Çocuk 🎒', 3: 'Genç 🎧', 4: 'Yetişkin 👑' };
+      const ageDays = Math.max(1, Math.floor((Date.now() - (appData.petState.birthTime || (Date.now() - 5*86400000))) / 86400000));
+      appData.petState.ageDays = ageDays;
+      const tagAge = document.getElementById('txtPetAgeStage');
+      if (tagAge) {
+        tagAge.innerText = `Sanal Dost • Evre ${appData.petState.stage} (${stageLabels[appData.petState.stage] || 'Bebek'}) • ${ageDays} Günlük`;
+      }
+
+      checkPetCrisisState();
       updateProfileUI();
     }
 
-    async function syncTelemetry() {
-      if (!appData.serverUrl) return;
-      try {
-        await fetch(appData.serverUrl + '/api/v1/telemetry', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            deviceId: appData.deviceId,
-            needs: appData.needs,
-            score: appData.needs.xp
-          })
-        });
-      } catch(e) {}
-    }
-
     function performNeedAction(act, msg) {
-      beep(650, 0.08);
-      showGlobalToast(msg);
       if (act === 'FEED') {
+        // 1. TAMAGOTCHI & POU KURALI: TOKKEN YEMEYİ REDDETME
+        if (appData.needs.hunger >= 98) {
+          playWhineSound();
+          showGlobalToast('🙅‍♂️ TOKUUM! Pufi tok olduğu için mamayı reddetti.');
+          oled.petDir *= -1; // Kafa sallama hareketi
+          return;
+        }
+        playEatCrunchSound();
         appData.needs.hunger = Math.min(100, appData.needs.hunger + 25);
+        // Sindirim: Mama yiyince tuvalet ihtiyacı biraz artar
+        appData.needs.toilet = Math.max(0, appData.needs.toilet - 8);
         oled.mode = 'EATING';
-        setTimeout(() => oled.mode = 'IDLE', 2500);
+        setTimeout(() => { if (oled.mode === 'EATING') oled.mode = 'IDLE'; }, 2400);
+        showGlobalToast(msg || '🍗 Afiyetle yendi! (+25 Açlık)');
+        addPetXP(15);
+
       } else if (act === 'CLEAN_TOILET') {
+        playTactileClick('select');
+        beep(780, 0.12);
         appData.needs.toilet = 100;
-        appData.needs.clean = Math.min(100, appData.needs.clean + 15);
+        appData.needs.clean = Math.min(100, appData.needs.clean + 20);
+        appData.petState.poopCount = 0;
+        oled.mode = 'TOILET';
+        setTimeout(() => { if (oled.mode === 'TOILET') oled.mode = 'IDLE'; }, 2200);
+        showGlobalToast(msg || '🚽 Sifon çekildi! Tuvalet pırıl pırıl.');
+        addPetXP(15);
+
       } else if (act === 'BATH') {
+        playTactileClick('select');
+        beep(880, 0.12);
         appData.needs.clean = 100;
+        oled.mode = 'BATH';
+        setTimeout(() => { if (oled.mode === 'BATH') oled.mode = 'IDLE'; }, 2200);
+        showGlobalToast(msg || '🧼 Mis gibi köpüklü banyo yapıldı!');
+        addPetXP(15);
+
       } else if (act === 'SLEEP') {
+        playTactileClick('click');
         appData.needs.sleep = 100;
+        oled.mode = 'SLEEPING';
+        showGlobalToast(msg || '💤 Işıklar kapandı, bebek uykuya daldı.');
+        addPetXP(10);
+
+      } else if (act === 'MEDICINE') {
+        if (appData.petState.isSick) {
+          playCureSound();
+          appData.petState.isSick = false;
+          appData.needs.clean = Math.min(100, appData.needs.clean + 25);
+          showGlobalToast('💊 İlaç şifa oldu! Bebek tamamen iyileşti.');
+          addPetXP(30);
+        } else {
+          beep(520, 0.08);
+          showGlobalToast('💖 Bebek şu an hasta değil, enerjisi harika!');
+        }
       }
-      appData.needs.xp += 15;
+
       saveNeeds();
+      savePetState();
       updateNeedsUI();
       syncTelemetry();
     }
 
     function petLoveTouch() {
-      beep(880, 0.1);
-      appData.needs.love = Math.min(100, appData.needs.love + 10);
-      appData.needs.xp += 10;
+      playGiggleSound();
+      appData.needs.love = Math.min(100, appData.needs.love + 14);
+      appData.needs.fun = Math.min(100, appData.needs.fun + 5);
+
+      // Uçuşan Kalp Efekti
+      const h = document.getElementById('petFloatingHeart');
+      if (h) {
+        h.style.transform = 'translateY(-24px) scale(1.3)';
+        h.style.opacity = '1';
+        setTimeout(() => {
+          h.style.transform = 'translateY(-50px) scale(0.8)';
+          h.style.opacity = '0';
+        }, 500);
+      }
+
+      addPetXP(12);
       saveNeeds();
+      savePetState();
       updateNeedsUI();
       syncTelemetry();
-      showGlobalToast('💖 Pufi sana sevgiyle sarıldı! (+10 XP)');
+      showGlobalToast('💖 Pufi kıkırdadı ve sana sarıldı! (+12 XP)');
+    }
+
+    // Level-up & Evrim Mekaniği (Fanfare + Kutlama Diyaloğu)
+    function addPetXP(amount) {
+      appData.needs.xp = (appData.needs.xp || 0) + amount;
+      const currentLevel = appData.needs.level || 1;
+      const xpNeeded = currentLevel * 300;
+
+      if (appData.needs.xp >= xpNeeded) {
+        appData.needs.level = currentLevel + 1;
+        playLevelUpFanfare();
+        showGlobalToast(`🎉 SEVİYE ATLADI! Tebrikler, Lv.${appData.needs.level} oldun!`);
+
+        // Evre Hesaplaması:
+        // Evre 1: Bebek (Lv 1-2)
+        // Evre 2: Çocuk (Lv 3-5)
+        // Evre 3: Genç (Lv 6-9)
+        // Evre 4: Yetişkin (Lv 10+)
+        let newStage = 1;
+        if (appData.needs.level >= 10) newStage = 4;
+        else if (appData.needs.level >= 6) newStage = 3;
+        else if (appData.needs.level >= 3) newStage = 2;
+
+        if (newStage > appData.petState.stage) {
+          appData.petState.stage = newStage;
+          triggerEvolutionModal(newStage);
+        }
+      }
+    }
+
+    function triggerEvolutionModal(stage) {
+      const stageNames = {
+        1: '🍼 Bebek Evresi',
+        2: '🎒 Çocuk Evresi',
+        3: '🎧 Genç Evresi',
+        4: '👑 Efsane Yetişkin Evresi'
+      };
+      const m = document.getElementById('evolutionModal');
+      const t = document.getElementById('evoStageTitle');
+      const d = document.getElementById('evoStageDesc');
+      if (t) t.innerText = stageNames[stage] || `Evre ${stage}`;
+      if (d) d.innerText = `Pufi gösterdiğin sevgiyle büyüdü ve ${stageNames[stage]} formuna evrildi!`;
+      if (m) m.style.display = 'flex';
+    }
+
+    function closeEvolutionModal() {
+      const m = document.getElementById('evolutionModal');
+      if (m) m.style.display = 'none';
     }
 
     // =========================================================================
@@ -2609,7 +3146,7 @@
     // =========================================================================
     // OTA AUTO-UPDATER & VERSION CHECK ENGINE
     // =========================================================================
-    const CURRENT_APP_VERSION = 'v1.0.5';
+    const CURRENT_APP_VERSION = 'v1.0.6';
     let pendingUpdateData = null;
 
     function isVersionNewer(remoteVer, localVer) {

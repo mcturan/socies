@@ -900,22 +900,22 @@ const server = http.createServer((req, res) => {
     });
   }
 
-  // 8. GITHUB SÜRÜM / OTA KONTROLÜ (SemVer 2.0.0 v1.0.5)
+  // 8. GITHUB SÜRÜM / OTA KONTROLÜ (SemVer 2.0.0 v1.0.6)
   if (path === '/api/v1/version/check' && method === 'GET') {
     return sendJSON(res, 200, {
-      latestVersion: 'v1.0.5',
+      latestVersion: 'v1.0.6',
       semver: {
         major: 1,
         minor: 0,
-        patch: 5,
-        build: 6
+        patch: 6,
+        build: 7
       },
-      versionCode: 6,
-      latestCommitHash: 'f8cd1f2',
+      versionCode: 7,
+      latestCommitHash: 'ba202c7',
       mandatoryUpdate: false,
-      releaseNotes: 'Karakter Atölyesi eklendi: Adım adım kılavuzlu çizim, ara kare interpolasyonu ve selfie fotoğrafından 1-bit OLED piksel avatar dönüştürücü.',
+      releaseNotes: 'Modül 2 Tamamlandı: 7 Sims yaşam ihtiyacı (Açlık, Tuvalet, Hijyen, Uyku, Eğlence, Sevgi, Sosyal), Tamagotchi kriz mekanikleri (kaka kazaları, sinekler, hastalık ve ilaç tedavisi), dokunarak okşama/sevme ve 4 evreli karakter evrim motoru.',
       apkDownloadUrl: '/download/socies-app.apk',
-      githubApkUrl: 'https://github.com/mcturan/socies/releases/download/v1.0.5/socies-app.apk'
+      githubApkUrl: 'https://github.com/mcturan/socies/releases/download/v1.0.6/socies-app.apk'
     });
   }
 
