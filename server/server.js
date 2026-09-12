@@ -65,6 +65,17 @@ db.exec(`
     score INTEGER,
     created_at INTEGER
   );
+  CREATE TABLE IF NOT EXISTS users (
+    email TEXT PRIMARY KEY,
+    nickname TEXT,
+    avatar TEXT,
+    device_id TEXT,
+    google_id TEXT,
+    profile_json TEXT,
+    cloud_save_json TEXT,
+    created_at INTEGER,
+    last_login INTEGER
+  );
 `);
 
 // IN-MEMORY CACHE & WEBSOCKET KÖPRÜSÜ
@@ -651,6 +662,167 @@ const server = http.createServer((req, res) => {
       return sendJSON(res, 404, { error: 'Kullanıcıya ait bulut yedeği bulunamadı' });
     }
     return sendJSON(res, 200, { success: true, backup: userData });
+  }
+
+  // 7.0 GOOGLE AUTH & KULLANICI PROFİL YÖNETİMİ
+  if (path === '/api/v1/auth/google/signin' && method === 'POST') {
+    return parseBody(req, (body) => {
+      const { email, nickname, avatar, googleId, deviceId, pet, needs, stats } = body;
+      if (!email) return sendJSON(res, 400, { error: 'email parametresi zorunludur' });
+
+      const normEmail = email.trim().toLowerCase();
+      const now = Date.now();
+      const devId = deviceId || `SOCIES-${Math.random().toString(16).slice(2, 8).toUpperCase()}`;
+
+      try {
+        let user = db.prepare('SELECT * FROM users WHERE email = ?').get(normEmail);
+
+        if (user) {
+          // Mevcut kullanıcı: Son giriş ve cihaz ID güncelle
+          db.prepare(`
+            UPDATE users SET
+              nickname = COALESCE(?, nickname),
+              avatar = COALESCE(?, avatar),
+              device_id = ?,
+              google_id = COALESCE(?, google_id),
+              last_login = ?
+            WHERE email = ?
+          `).run(nickname || null, avatar || null, devId, googleId || null, now, normEmail);
+
+          user = db.prepare('SELECT * FROM users WHERE email = ?').get(normEmail);
+        } else {
+          // Yeni kullanıcı kaydı oluştur
+          const initialSave = {
+            pet: pet || { breed: 'top', stage: 1, ageDays: 1, score: 100 },
+            needs: needs || { hunger: 90, fun: 90, love: 90, sleep: 90, toilet: 90, clean: 90, xp: 100, level: 1 },
+            stats: stats || { batteryPct: 100, steps: 0 },
+            createdAt: now
+          };
+
+          db.prepare(`
+            INSERT INTO users (email, nickname, avatar, device_id, google_id, profile_json, cloud_save_json, created_at, last_login)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+          `).run(
+            normEmail,
+            nickname || normEmail.split('@')[0],
+            avatar || '🐾',
+            devId,
+            googleId || null,
+            JSON.stringify({ email: normEmail, isVerified: true }),
+            JSON.stringify(initialSave),
+            now,
+            now
+          );
+
+          user = db.prepare('SELECT * FROM users WHERE email = ?').get(normEmail);
+        }
+
+        // Cihazlar tablosuna bağla ve online yap
+        db.prepare(`
+          INSERT INTO devices (device_id, nickname, avatar, user_email, pet_json, needs_json, stats_json, last_seen, is_online)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)
+          ON CONFLICT(device_id) DO UPDATE SET
+            nickname = excluded.nickname,
+            avatar = excluded.avatar,
+            user_email = excluded.user_email,
+            last_seen = excluded.last_seen,
+            is_online = 1
+        `).run(
+          devId,
+          user.nickname,
+          user.avatar,
+          normEmail,
+          JSON.stringify(pet || {}),
+          JSON.stringify(needs || {}),
+          JSON.stringify(stats || {}),
+          now
+        );
+
+        database.devices.set(devId, {
+          deviceId: devId,
+          mac: 'A4:CF:12:89:34:B1',
+          user: { nickname: user.nickname, email: normEmail, avatar: user.avatar, isVip: user.nickname.includes('Kurucu') },
+          pet: pet || { breed: 'top', stage: 1, ageDays: 1, score: 0 },
+          needs: needs || { hunger: 90, fun: 90, love: 90, sleep: 90, toilet: 90, clean: 90 },
+          stats: stats || { batteryPct: 100, steps: 0 },
+          lastSeen: now,
+          isOnline: true
+        });
+
+        const cloudSave = JSON.parse(user.cloud_save_json || '{}');
+
+        return sendJSON(res, 200, {
+          success: true,
+          message: 'Google ile giriş başarılı',
+          user: {
+            email: user.email,
+            nickname: user.nickname,
+            avatar: user.avatar,
+            deviceId: devId,
+            createdAt: user.created_at,
+            lastLogin: user.last_login
+          },
+          cloudSave
+        });
+      } catch(e) {
+        console.error('[AUTH ERROR]', e);
+        return sendJSON(res, 500, { error: 'Giriş işlemi başarısız: ' + e.message });
+      }
+    });
+  }
+
+  // 7.0.1 BULUT İHTİYAÇ VE İLERLEME SENKRONİZASYONU (CLOUD SYNC)
+  if (path === '/api/v1/auth/sync' && method === 'POST') {
+    return parseBody(req, (body) => {
+      const { email, deviceId, cloudSave, pet, needs, stats } = body;
+      if (!email) return sendJSON(res, 400, { error: 'email parametresi zorunludur' });
+
+      const normEmail = email.trim().toLowerCase();
+      const now = Date.now();
+
+      try {
+        const payloadStr = JSON.stringify(cloudSave || { pet, needs, stats, updatedAt: now });
+
+        db.prepare(`
+          UPDATE users SET
+            cloud_save_json = ?,
+            last_login = ?
+          WHERE email = ?
+        `).run(payloadStr, now, normEmail);
+
+        if (deviceId) {
+          db.prepare(`
+            UPDATE devices SET
+              pet_json = COALESCE(?, pet_json),
+              needs_json = COALESCE(?, needs_json),
+              stats_json = COALESCE(?, stats_json),
+              last_seen = ?,
+              is_online = 1
+            WHERE device_id = ?
+          `).run(
+            pet ? JSON.stringify(pet) : null,
+            needs ? JSON.stringify(needs) : null,
+            stats ? JSON.stringify(stats) : null,
+            now,
+            deviceId
+          );
+        }
+
+        return sendJSON(res, 200, { success: true, message: 'Bulut eşitleme başarılı', syncedAt: now });
+      } catch(e) {
+        return sendJSON(res, 500, { error: e.message });
+      }
+    });
+  }
+
+  // 7.0.2 TÜM HESAPLARI LİSTELEME
+  if (path === '/api/v1/auth/users' && method === 'GET') {
+    try {
+      const users = db.prepare('SELECT email, nickname, avatar, device_id, created_at, last_login FROM users ORDER BY last_login DESC').all();
+      return sendJSON(res, 200, { success: true, count: users.length, users });
+    } catch(e) {
+      return sendJSON(res, 500, { error: e.message });
+    }
   }
 
   // 7.1 ÖZEL KARAKTER & ÇİZİM BULUT KAYDI (CUSTOM SPRITE SAVE)
