@@ -741,6 +741,42 @@
     </div>
   </div>
 
+  <!-- PAGER MESSAGE MODAL (ÇAĞRI CİHAZI) -->
+  <div id="pagerModal" class="update-overlay" style="display:none;">
+    <div class="update-dialog" style="max-width:360px;">
+      <div class="update-icon-badge" style="background:linear-gradient(135deg, #10B981, #0284C7);">📟</div>
+      <div class="update-title" id="pagerTargetTitle">Çağrı Cihazı (Pager)</div>
+      <p style="font-size:0.8rem; color:var(--text-muted); text-align:center; margin:0.2rem 0;">
+        Arkadaşınızın el konsoluna anında kayan yazı ve çağrı sesi gönderin.
+      </p>
+      <!-- HIZLI ÇAĞRI KODLARI -->
+      <div style="display:flex; flex-wrap:wrap; gap:4px; width:100%; margin:0.3rem 0;">
+        <button type="button" class="btn-micro" style="flex:1; min-width:60px; font-size:0.72rem;" onclick="setPagerCode('07734 (HELLO)')">07734</button>
+        <button type="button" class="btn-micro" style="flex:1; min-width:60px; font-size:0.72rem;" onclick="setPagerCode('143 (I LOVE U)')">143</button>
+        <button type="button" class="btn-micro" style="flex:1; min-width:60px; font-size:0.72rem;" onclick="setPagerCode('911 (DUELLO!)')">911</button>
+        <button type="button" class="btn-micro" style="flex:1; min-width:60px; font-size:0.72rem;" onclick="setPagerCode('240 (MAMA VAKTI)')">240</button>
+      </div>
+      <input type="text" id="inputPagerMsg" maxlength="32" class="search-friend-input" style="width:100%; font-size:0.88rem; padding:0.6rem;" placeholder="Mesajınızı yazın (Maks 32 karakter)...">
+      <button class="btn-update-action" onclick="sendPagerMessageSubmit()">⚡ Çağrıyı Gönder</button>
+      <button class="btn-update-dismiss" onclick="closePagerModal()">Kapat</button>
+    </div>
+  </div>
+
+  <!-- REBIRTH CONFIRMATION MODAL -->
+  <div id="rebirthModal" class="update-overlay" style="display:none;">
+    <div class="update-dialog" style="max-width:360px;">
+      <div class="update-icon-badge" style="background:linear-gradient(135deg, #EC4899, #8B5CF6);">🥚</div>
+      <div class="update-title">Yeniden Doğuş (Rebirth)</div>
+      <p style="font-size:0.82rem; color:var(--text-muted); text-align:center;">
+        Mevcut canlıyı onur müzesine kaldırıp taze bir yumurtadan sıfırdan başlamak istiyor musunuz? Seviyeniz ve yıldızlarınız korunur!
+      </p>
+      <button class="btn-update-action" onclick="confirmRebirthAction()" style="background:linear-gradient(135deg, #EF4444, #DC2626);">
+        🥚 Yumurtayı Çatlat & Sıfırla
+      </button>
+      <button class="btn-update-dismiss" onclick="closeRebirthModal()">Vazgeç</button>
+    </div>
+  </div>
+
   <div class="app-container">
     
     <!-- TOP BAR -->
@@ -763,7 +799,7 @@
         </div>
         <div class="badge-chip" id="badgeAppVersion" onclick="manualCheckUpdate()" title="Sürüm: Dokunarak Kontrol Et" style="cursor:pointer;">
           <span>🚀</span>
-          <span id="txtCurrentVersion">v1.0.6</span>
+          <span id="txtCurrentVersion">v1.0.7</span>
         </div>
         <div class="badge-chip" title="Cihaz Kimliği (Hardware ID)">
           <span>📟</span>
@@ -916,6 +952,43 @@
         <button class="btn-micro" style="padding:10px 6px; font-size:0.8rem; background:#FDF2F8; color:#DB2777; border-color:#FBCFE8; font-weight:800;" onclick="petLoveTouch()">💖 Okşa & Sev</button>
         <button class="btn-micro" id="btnCareMedicine" style="padding:10px 6px; font-size:0.8rem; background:#F1F5F9; color:#475569; border-color:#CBD5E1; font-weight:800;" onclick="performNeedAction('MEDICINE', '💊 İlaç verildi!')">💊 İlaç Ver</button>
       </div>
+
+      <!-- GÜNLÜK BAĞLILIK, 3000 ADIM SANDIĞI & REBIRTH KARTI -->
+      <div style="margin-top:1rem; display:flex; flex-direction:column; gap:8px;">
+        <!-- GÜNLÜK SERİ KARTI -->
+        <div style="background:#FFFBEB; border:1px solid #FDE68A; border-radius:14px; padding:10px 14px; display:flex; justify-content:space-between; align-items:center;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="font-size:1.6rem;">🔥</span>
+            <div>
+              <div style="font-weight:900; font-size:0.88rem; color:#92400E;" id="txtDailyStreakTitle">5 Gün Sadakat Serisi</div>
+              <div style="font-size:0.75rem; color:#B45309;">Her gün bebeğinle ilgilen, taç kazan!</div>
+            </div>
+          </div>
+          <button id="btnClaimDailyReward" class="btn-micro" style="background:#F59E0B; color:#fff; font-weight:900; padding:6px 10px;" onclick="claimDailyStreakReward()">🎁 Ödülü Al</button>
+        </div>
+
+        <!-- 3000 ADIM HAZİNE SANDIĞI KARTI -->
+        <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:14px; padding:10px 14px; display:flex; justify-content:space-between; align-items:center;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="font-size:1.6rem;" id="icoChestIcon">📦</span>
+            <div>
+              <div style="font-weight:900; font-size:0.88rem; color:#166534;"><span id="txtStepCount">1,420</span> / 3,000 Adım</div>
+              <div style="font-size:0.75rem; color:#15803D;" id="txtChestStatus">3.000 adımda hazine düşer!</div>
+            </div>
+          </div>
+          <div style="display:flex; gap:4px;">
+            <button class="btn-micro" style="padding:5px 8px; font-size:0.72rem; background:#E2E8F0;" onclick="simulateSteps(500)" title="Yürüme/sallama simülatörü">👟 +500 Adım</button>
+            <button id="btnOpenStepChest" class="btn-micro" style="background:#10B981; color:#fff; font-weight:900; padding:5px 8px; font-size:0.72rem;" onclick="openStepChestAction()" disabled>🎁 Sandık</button>
+          </div>
+        </div>
+
+        <!-- REBIRTH (YENİDEN DOĞUŞ / SIFIRLAMA) -->
+        <div style="display:flex; justify-content:flex-end;">
+          <button class="btn-micro" style="background:transparent; border:none; color:var(--text-muted); font-size:0.75rem; font-weight:700;" onclick="openRebirthModal()">
+            🥚 Bebeği Müzeye Kaldır & Sıfırdan Başla
+          </button>
+        </div>
+      </div>
     </div>
 
     <!-- ===================================================================== -->
@@ -941,20 +1014,20 @@
           <span class="game-badge-type type-console">Yüksek Skor</span>
         </div>
 
-        <!-- 3. SKY DROPPER (GÖKYÜZÜ SEPETİ) -->
-        <div class="game-card" onclick="launchGameOnConsole('CATCHER')">
-          <span style="font-size:2rem;">🍎</span>
-          <div style="font-weight:800; font-size:0.95rem;">Gökyüzü Sepeti</div>
-          <div style="font-size:0.75rem; color:var(--text-muted);">Elmaları topla, bombadan kaç</div>
-          <span class="game-badge-type type-console">Konsol Oyunu</span>
-        </div>
-
-        <!-- 4. KOVBOY DÜELLOSU -->
+        <!-- 3. KOVBOY DÜELLOSU -->
         <div class="game-card" onclick="launchGameOnConsole('COWBOY')">
           <span style="font-size:2rem;">🤠</span>
           <div style="font-weight:800; font-size:0.95rem;">Kovboy Düellosu</div>
           <div style="font-size:0.75rem; color:var(--text-muted);">Refleks hız testi (BANG!)</div>
           <span class="game-badge-type type-duel">P2P Düello</span>
+        </div>
+
+        <!-- 4. TAŞ - KAĞIT - MAKAS -->
+        <div class="game-card" onclick="launchGameOnConsole('RPS')">
+          <span style="font-size:2rem;">✊</span>
+          <div style="font-weight:800; font-size:0.95rem;">Taş-Kağıt-Makas</div>
+          <div style="font-size:0.75rem; color:var(--text-muted);">3-2-1 Eşzamanlı Düello</div>
+          <span class="game-badge-type type-duel">P2P & Konsol</span>
         </div>
       </div>
     </div>
@@ -963,7 +1036,15 @@
     <!-- TAB 4: 🎨 MODÜLER ATÖLYE (AVATAR COMBINATOR) -->
     <!-- ===================================================================== -->
     <div id="tab-studio" class="tab-view">
-      <div class="studio-card">
+      <!-- SUB-TABS: MODÜLER / ÇİZİM / SELFİE -->
+      <div class="rank-tabs-row" style="margin-bottom:0.8rem;">
+        <button class="rank-tab-btn active" id="btnStudioModular" onclick="switchStudioMode('modular')">🧩 Modüler Parçalar</button>
+        <button class="rank-tab-btn" id="btnStudioDraw" onclick="switchStudioMode('draw')">✏️ Serbest Çizim</button>
+        <button class="rank-tab-btn" id="btnStudioSelfie" onclick="switchStudioMode('selfie')">📸 Selfie'den Üret</button>
+      </div>
+
+      <!-- PANEL 1: MODÜLER KOMBİNATÖR -->
+      <div id="studioPanelModular" class="studio-card">
         <div style="width:100%; display:flex; justify-content:space-between; align-items:center;">
           <span style="font-weight:900; font-size:1.05rem;">Modüler Karakter Atölyesi</span>
           <span style="font-size:0.75rem; background:#FEF3C7; color:#B45309; padding:0.2rem 0.5rem; border-radius:10px; font-weight:800;">100.000 Kombinasyon</span>
@@ -1022,7 +1103,51 @@
         </div>
 
         <button class="btn-action-primary" onclick="sendAvatarToConsole()">
-          <span>🎮</span> Konsola Yükle (ID: 84920A)
+          <span>🎮</span> Konsola Yükle & Kaydet
+        </button>
+      </div>
+
+      <!-- PANEL 2: SERBEST PİKSEL ÇİZİM TUVALİ (24x24) -->
+      <div id="studioPanelDraw" class="studio-card" style="display:none;">
+        <div style="width:100%; display:flex; justify-content:space-between; align-items:center;">
+          <span style="font-weight:900; font-size:1.05rem;">Piksel Çizim Tuvali</span>
+          <span style="font-size:0.75rem; background:#ECFDF5; color:#059669; padding:0.2rem 0.5rem; border-radius:10px; font-weight:800;">24x24 Kılavuzlu</span>
+        </div>
+        <p style="font-size:0.8rem; color:var(--text-muted); margin:0.3rem 0; text-align:center;">
+          Parmağınla karelere dokunarak kendi özgün 8-bit canavarını tasarla!
+        </p>
+        <div style="display:flex; justify-content:center; align-items:center; margin:0.6rem 0;">
+          <canvas id="pixelDrawCanvas" width="192" height="192" style="border:3px solid var(--indigo); border-radius:12px; background:#000814; cursor:crosshair; touch-action:none;"></canvas>
+        </div>
+        <!-- TOOLS: Kalem, Silgi, Temizle -->
+        <div style="display:flex; gap:8px; width:100%; margin-bottom:0.8rem;">
+          <button class="btn-micro" id="btnToolPen" style="flex:1; padding:8px; font-weight:800; background:#EEF2FF; color:#4F46E5; border:1px solid #C7D2FE;" onclick="setDrawTool('pen')">✏️ Kalem</button>
+          <button class="btn-micro" id="btnToolEraser" style="flex:1; padding:8px; font-weight:800; background:#F1F5F9; color:#475569; border:1px solid #CBD5E1;" onclick="setDrawTool('eraser')">🧹 Silgi</button>
+          <button class="btn-micro" style="flex:1; padding:8px; font-weight:800; background:#FEF2F2; color:#DC2626; border:1px solid #FECACA;" onclick="clearDrawCanvas()">🗑️ Temizle</button>
+        </div>
+        <button class="btn-action-primary" onclick="saveCustomDrawingToConsole()">
+          <span>🚀</span> Çizimi Konsola Aktar
+        </button>
+      </div>
+
+      <!-- PANEL 3: SELFIE'DEN 1-BİT PİKSEL AVATAR DÖNÜŞTÜRÜCÜ -->
+      <div id="studioPanelSelfie" class="studio-card" style="display:none;">
+        <div style="width:100%; display:flex; justify-content:space-between; align-items:center;">
+          <span style="font-weight:900; font-size:1.05rem;">Selfie ➔ 1-Bit Piksel</span>
+          <span style="font-size:0.75rem; background:#EFF6FF; color:#1D4ED8; padding:0.2rem 0.5rem; border-radius:10px; font-weight:800;">Vision Dither</span>
+        </div>
+        <p style="font-size:0.82rem; color:var(--text-muted); margin:0.4rem 0; text-align:center;">
+          Kendi yüzünün veya evcil hayvanının fotoğrafını yükle; 1-bit retro piksel bebeğe dönüştür!
+        </p>
+        <div style="display:flex; justify-content:center; align-items:center; margin:0.6rem 0;">
+          <canvas id="selfiePreviewCanvas" width="120" height="120" style="border:3px solid #10B981; border-radius:14px; background:#000814; image-rendering:pixelated;"></canvas>
+        </div>
+        <input type="file" id="selfieFileInput" accept="image/*" style="display:none;" onchange="handleSelfieUpload(event)">
+        <div style="display:flex; gap:8px; width:100%; margin-bottom:0.8rem;">
+          <button class="btn-micro" style="flex:1; padding:10px; font-weight:800; background:#F8FAFC; border:1px solid #CBD5E1;" onclick="document.getElementById('selfieFileInput').click()">📷 Fotoğraf Çek / Galeriden Seç</button>
+        </div>
+        <button class="btn-action-primary" id="btnApplySelfieAvatar" onclick="applySelfieAvatarToConsole()" style="background:linear-gradient(135deg, #10B981, #059669);">
+          <span>✨</span> Piksel Karakteri Konsola Yükle
         </button>
       </div>
     </div>
@@ -1142,7 +1267,13 @@
       globalLeaderboard: [],
 
       // Combinator Selected Parts
-      parts: { body: 0, eyes: 0, mouth: 0, ears: 0, acc: 0 }
+      parts: { body: 0, eyes: 0, mouth: 0, ears: 0, acc: 0 },
+
+      // Retention & Daily Pedometer
+      streakDays: parseInt(localStorage.getItem('socies_streak_days') || '5', 10),
+      lastStreakClaim: localStorage.getItem('socies_last_streak_claim') || '',
+      steps: parseInt(localStorage.getItem('socies_steps') || '1420', 10),
+      chestClaimed: localStorage.getItem('socies_chest_claimed') === '1'
     };
 
     // Pil Seviyesi Tespiti (Varsa donanımdan oku)
@@ -1345,6 +1476,27 @@
       } catch(e) {}
     }
 
+    function playPagerChimeSound() {
+      triggerHaptic([80, 40, 120]);
+      try {
+        if (!aCtx) aCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (aCtx.state === 'suspended') aCtx.resume();
+        const t = aCtx.currentTime;
+        const notes = [1318.51, 1567.98, 2093.00]; // E6, G6, C7
+        notes.forEach((f, idx) => {
+          const o = aCtx.createOscillator();
+          const g = aCtx.createGain();
+          o.type = 'square';
+          const st = t + idx * 0.09;
+          o.frequency.setValueAtTime(f, st);
+          g.gain.setValueAtTime(0.18, st);
+          g.gain.exponentialRampToValueAtTime(0.001, st + 0.12);
+          o.connect(g); g.connect(aCtx.destination);
+          o.start(st); o.stop(st + 0.12);
+        });
+      } catch(e) {}
+    }
+
     // --- BUTTON AUTO-REPEAT (RAPID-FIRE ON HOLD) ---
     let btnHoldTimer = null;
     let btnRepeatTimer = null;
@@ -1387,7 +1539,7 @@
       menuIdx: 0,
       menuItems: ['BESLE', 'TUVALET', 'BANYO', 'İLAÇ', 'OYUNLAR', 'UYUT', 'DURUM'],
       foodItems: ['ELMA 🍏', 'MAMA 🍗', 'PASTA 🍰', 'SU 💧'],
-      gameItems: ['1. PONG 🏓', '2. DODGER 🏃', '3. KOVBOY 🤠'],
+      gameItems: ['1. PONG 🏓', '2. DODGER 🏃', '3. KOVBOY 🤠', '4. RPS ✂️'],
       foodIdx: 0,
       gameIdx: 0,
       actionTimer: 0,
@@ -1398,7 +1550,12 @@
       // Dodger Game State
       dodger: { petY: 42, isJumping: false, isDucking: false, rockX: 120, score: 0 },
       // Cowboy Game State
-      cowboy: { canShoot: false, timer: 0 }
+      cowboy: { canShoot: false, timer: 0 },
+      // RPS Duel State
+      rps: { playerChoice: null, cpuChoice: null, resultText: '', resolved: false },
+      // Pager Marquee Banner
+      marqueeMsg: null,
+      marqueeX: 128
     };
 
     // Piksel Kalp Çizici (OLED Sarı Durum Çubuğu İçin)
@@ -1470,6 +1627,8 @@
         renderOledDodger();
       } else if (oled.mode === 'COWBOY') {
         renderOledCowboy();
+      } else if (oled.mode === 'RPS') {
+        renderOledRPS();
       } else if (oled.mode === 'EATING') {
         renderOledEating();
       } else if (oled.mode === 'TOILET') {
@@ -1480,6 +1639,23 @@
         renderOledSleeping();
       } else {
         renderOledIdle();
+      }
+
+      // 3. RETRO PAGER ÇAĞRI MARQUEE BANNER'I
+      if (oled.marqueeMsg) {
+        oled.ctx.fillStyle = '#020617';
+        oled.ctx.fillRect(0, 48, 128, 16);
+        oled.ctx.strokeStyle = '#00f0ff';
+        oled.ctx.strokeRect(0, 48, 128, 16);
+        oled.ctx.fillStyle = '#ffb703';
+        oled.ctx.font = '8px "JetBrains Mono"';
+        oled.ctx.fillText(oled.marqueeMsg, oled.marqueeX, 60);
+        oled.marqueeX -= 1.5;
+        const txtWidth = oled.ctx.measureText(oled.marqueeMsg).width;
+        if (oled.marqueeX < -txtWidth) {
+          oled.marqueeMsg = null;
+          oled.marqueeX = 128;
+        }
       }
 
       oled.animFrame++;
@@ -1741,6 +1917,56 @@
       oled.cowboy.timer++;
     }
 
+    // RETRO GAME 4: TAŞ - KAĞIT - MAKAS (RPS)
+    function renderOledRPS() {
+      oled.ctx.fillStyle = '#00f0ff';
+      oled.ctx.font = '8px "JetBrains Mono"';
+      oled.ctx.fillText('TAS - KAGIT - MAKAS', 10, 26);
+
+      if (!oled.rps.resolved) {
+        oled.ctx.font = '7px "JetBrains Mono"';
+        oled.ctx.fillText('HAMLENI SEC:', 32, 38);
+        oled.ctx.fillStyle = '#ffb703';
+        oled.ctx.fillText('SOL:TAS  SEC:KGT  SAG:MKS', 2, 52);
+      } else {
+        oled.ctx.font = '7px "JetBrains Mono"';
+        oled.ctx.fillText(`SEN:${oled.rps.playerChoice} vs CPU:${oled.rps.cpuChoice}`, 8, 38);
+        oled.ctx.fillStyle = '#ffb703';
+        oled.ctx.font = '8px "JetBrains Mono"';
+        oled.ctx.fillText(oled.rps.resultText, 14, 50);
+        oled.ctx.font = '6px "JetBrains Mono"';
+        oled.ctx.fillStyle = '#94A3B8';
+        oled.ctx.fillText('GERI: Cikis | DIGER TUS: Yeniden', 4, 60);
+      }
+    }
+
+    function playRpsRound(playerChoice) {
+      const choices = ['TAS', 'KAGIT', 'MAKAS'];
+      const cpuChoice = choices[Math.floor(Math.random() * choices.length)];
+      oled.rps.playerChoice = playerChoice;
+      oled.rps.cpuChoice = cpuChoice;
+      oled.rps.resolved = true;
+
+      if (playerChoice === cpuChoice) {
+        oled.rps.resultText = '== BERABERE! ==';
+        beep(600, 0.15);
+        showGlobalToast(`🤝 Berabere! Sen: ${playerChoice}, Rakip: ${cpuChoice}`);
+      } else if (
+        (playerChoice === 'TAS' && cpuChoice === 'MAKAS') ||
+        (playerChoice === 'KAGIT' && cpuChoice === 'TAS') ||
+        (playerChoice === 'MAKAS' && cpuChoice === 'KAGIT')
+      ) {
+        oled.rps.resultText = '🎉 KAZANDIN! (+40 XP)';
+        playLevelUpFanfare();
+        showGlobalToast(`🏆 Kazandın! Sen: ${playerChoice}, Rakip: ${cpuChoice} (+40 XP)`);
+        reportGameScore('RPS', 40);
+      } else {
+        oled.rps.resultText = '💥 KAYBETTIN!';
+        playWhineSound();
+        showGlobalToast(`💀 Kaybettin! Sen: ${playerChoice}, Rakip: ${cpuChoice}`);
+      }
+    }
+
     // 4 HORIZONTAL BUTTON HANDLER (WITH REPEAT & FULL MENU)
     function handleConsoleBtn(btn, isRepeat = false) {
       // Ses ve Haptic
@@ -1783,6 +2009,23 @@
         } else if (btn === 'BACK') {
           oled.mode = 'IDLE';
         }
+        return;
+      }
+
+      if (oled.mode === 'RPS') {
+        if (btn === 'BACK') {
+          oled.mode = 'IDLE';
+          return;
+        }
+        if (oled.rps.resolved) {
+          oled.rps.resolved = false;
+          oled.rps.playerChoice = null;
+          oled.rps.cpuChoice = null;
+          return;
+        }
+        if (btn === 'LEFT') playRpsRound('TAS');
+        else if (btn === 'SELECT') playRpsRound('KAGIT');
+        else if (btn === 'RIGHT') playRpsRound('MAKAS');
         return;
       }
 
@@ -1858,6 +2101,11 @@
               oled.mode = 'COWBOY';
               oled.cowboy.canShoot = false;
               oled.cowboy.timer = 0;
+            } else if (oled.gameIdx === 3) {
+              oled.mode = 'RPS';
+              oled.rps.resolved = false;
+              oled.rps.playerChoice = null;
+              oled.rps.cpuChoice = null;
             }
           } else if (btn === 'BACK') {
             oled.menuLevel = 'ROOT';
@@ -1996,14 +2244,29 @@
     }
 
     // =========================================================================
-    // MODULAR AVATAR SYNTHESIS (10x10x10x10x10)
+    // MODÜL 3: KARAKTER ATÖLYESİ (KOMBİNATÖR, PİKSEL ÇİZİM & SELFİE DÖNÜŞTÜRÜCÜ)
     // =========================================================================
+    function switchStudioMode(mode) {
+      document.getElementById('btnStudioModular').classList.toggle('active', mode === 'modular');
+      document.getElementById('btnStudioDraw').classList.toggle('active', mode === 'draw');
+      document.getElementById('btnStudioSelfie').classList.toggle('active', mode === 'selfie');
+
+      document.getElementById('studioPanelModular').style.display = mode === 'modular' ? 'flex' : 'none';
+      document.getElementById('studioPanelDraw').style.display = mode === 'draw' ? 'flex' : 'none';
+      document.getElementById('studioPanelSelfie').style.display = mode === 'selfie' ? 'flex' : 'none';
+
+      if (mode === 'draw') initPixelDrawCanvas();
+    }
+
     function stepModularPart(cat, dir) {
       const len = partLabels[cat].length;
       appData.parts[cat] = (appData.parts[cat] + dir + len) % len;
+      appData.useCustomMatrix = false;
+      localStorage.setItem('socies_use_custom_matrix', '0');
       document.getElementById('lblPart' + cat.charAt(0).toUpperCase() + cat.slice(1)).innerText = partLabels[cat][appData.parts[cat]];
       localStorage.setItem('socies_custom_parts', JSON.stringify(appData.parts));
       renderCombinator();
+      playTactileClick('click');
     }
 
     function restoreSavedState() {
@@ -2016,11 +2279,19 @@
             if (el && partLabels[cat][appData.parts[cat]]) el.innerText = partLabels[cat][appData.parts[cat]];
           });
         }
+        const custom = localStorage.getItem('socies_custom_matrix');
+        if (custom) {
+          appData.customMatrix = JSON.parse(custom);
+          appData.useCustomMatrix = (localStorage.getItem('socies_use_custom_matrix') === '1');
+        }
       } catch(e) {}
     }
     restoreSavedState();
 
     function generateAvatarMatrix() {
+      if (appData.useCustomMatrix && appData.customMatrix) {
+        return appData.customMatrix;
+      }
       const g = Array(24).fill(null).map(() => Array(24).fill(0));
       const b = appData.parts.body;
       const er = appData.parts.ears;
@@ -2028,159 +2299,169 @@
       const m = appData.parts.mouth;
       const ac = appData.parts.acc;
 
-      // 1. GÖVDE (10 FARKLI TİP)
-      if (b === 0) { // Tombiş Kedi (Yuvarlak tombul)
-        for(let r=6; r<20; r++) for(let c=5; c<19; c++) if ((c-12)*(c-12) + (r-13)*(r-13) <= 40) g[r][c] = 1;
-        g[20][8]=1; g[20][9]=1; g[20][14]=1; g[20][15]=1; // Patiler
-      } else if (b === 1) { // Sadık Köpek (Uzunca gövde)
-        for(let r=7; r<20; r++) for(let c=6; c<18; c++) if (((c-12)/5.5)**2 + ((r-13.5)/6.5)**2 <= 1) g[r][c] = 1;
-        g[20][7]=1; g[20][8]=1; g[20][15]=1; g[20][16]=1;
-      } else if (b === 2) { // Robot Kasa (Kare köşe perçinli)
-        for(let r=7; r<19; r++) for(let c=6; c<18; c++) g[r][c] = 1;
-        g[6][11]=1; g[6][12]=1; // Boyun eklemi
-        g[19][8]=1; g[19][9]=1; g[19][14]=1; g[19][15]=1; // Robot bacak
-      } else if (b === 3) { // Zıpzıp Top (Kusursuz küre)
+      // 1. GÖVDE VE KAFA SİLÜETİ (10 BELİRGİN TİP)
+      if (b === 0) { // 0: Tombiş Kedi
         for(let r=6; r<20; r++) for(let c=5; c<19; c++) if ((c-12)*(c-12) + (r-13)*(r-13) <= 42) g[r][c] = 1;
-        g[21][9]=1; g[21][10]=1; g[21][13]=1; g[21][14]=1; // Sekme gölgesi
-      } else if (b === 4) { // Sevimli Sosis (Yatay kapsül)
-        for(let r=9; r<18; r++) for(let c=4; c<20; c++) if (((c-12)/7.5)**2 + ((r-13.5)/4)**2 <= 1) g[r][c] = 1;
-        g[18][7]=1; g[18][16]=1; g[19][7]=1; g[19][16]=1; // Minik sosis bacak
-      } else if (b === 5) { // Uzaylı Dost (Ters damla / UFO kafa)
-        for(let r=6; r<13; r++) for(let c=4; c<20; c++) if (((c-12)/7)**2 + ((r-10)/4)**2 <= 1) g[r][c] = 1;
-        for(let r=13; r<19; r++) for(let c=8; c<16; c++) g[r][c] = 1; // İnce gövde
-        g[19][9]=1; g[19][14]=1;
-      } else if (b === 6) { // Ejder Yavru (Armut gövde & sırt dikenleri)
-        for(let r=7; r<14; r++) for(let c=7; c<17; c++) g[r][c] = 1;
-        for(let r=13; r<20; r++) for(let c=5; c<19; c++) if ((c-12)*(c-12) + (r-16)*(r-16) <= 28) g[r][c] = 1;
-        g[8][6]=1; g[11][5]=1; g[14][4]=1; // Sırt dikenleri
+        g[20][8]=1; g[20][9]=1; g[20][14]=1; g[20][15]=1; // Patiler
+      } else if (b === 1) { // 1: Sadık Köpek
+        for(let r=7; r<19; r++) for(let c=6; c<18; c++) if (((c-12)/5.5)**2 + ((r-13)/6)**2 <= 1) g[r][c] = 1;
+        g[19][7]=1; g[19][8]=1; g[19][15]=1; g[19][16]=1;
         g[20][7]=1; g[20][8]=1; g[20][15]=1; g[20][16]=1;
-      } else if (b === 7) { // Bonsai Bitki (Saksı + yaprak başlık)
-        for(let r=16; r<21; r++) for(let c=7; c<17; c++) g[r][c] = 1; // Saksı
-        for(let r=6; r<16; r++) for(let c=5; c<19; c++) if ((c-12)*(c-12) + (r-11)*(r-11) <= 30) g[r][c] = 1; // Çalı
-      } else if (b === 8) { // Minik Kuş (Yumurta gövde + minik kanat)
-        for(let r=8; r<19; r++) for(let c=6; c<18; c++) if ((c-12)*(c-12) + (r-13.5)*(r-13.5) <= 32) g[r][c] = 1;
-        g[13][5]=1; g[14][4]=1; g[15][4]=1; g[16][5]=1; // Yan kanatçık
+      } else if (b === 2) { // 2: Robot Kasa (Kare & Perçinli)
+        for(let r=7; r<19; r++) for(let c=6; c<18; c++) g[r][c] = 1;
+        g[6][11]=1; g[6][12]=1;
+        g[19][8]=1; g[19][9]=1; g[19][14]=1; g[19][15]=1;
+        g[20][8]=1; g[20][9]=1; g[20][14]=1; g[20][15]=1;
+      } else if (b === 3) { // 3: Zıpzıp Top (Küre)
+        for(let r=6; r<20; r++) for(let c=5; c<19; c++) if ((c-12)*(c-12) + (r-13)*(r-13) <= 44) g[r][c] = 1;
+        g[21][9]=1; g[21][10]=1; g[21][13]=1; g[21][14]=1;
+      } else if (b === 4) { // 4: Sevimli Sosis (Yatay Kapsül)
+        for(let r=8; r<18; r++) for(let c=4; c<20; c++) if (((c-12)/7.5)**2 + ((r-13)/4.5)**2 <= 1) g[r][c] = 1;
+        g[18][7]=1; g[18][16]=1; g[19][7]=1; g[19][16]=1;
+      } else if (b === 5) { // 5: Uzaylı Dost (UFO Kafa)
+        for(let r=6; r<14; r++) for(let c=4; c<20; c++) if (((c-12)/7.2)**2 + ((r-10)/4)**2 <= 1) g[r][c] = 1;
+        for(let r=14; r<19; r++) for(let c=8; c<16; c++) g[r][c] = 1;
+        g[19][9]=1; g[19][14]=1;
+      } else if (b === 6) { // 6: Ejder Yavru
+        for(let r=7; r<15; r++) for(let c=7; c<17; c++) g[r][c] = 1;
+        for(let r=14; r<20; r++) for(let c=5; c<19; c++) if ((c-12)*(c-12) + (r-16)*(r-16) <= 28) g[r][c] = 1;
+        g[8][5]=1; g[11][4]=1; g[14][3]=1;
+        g[20][7]=1; g[20][8]=1; g[20][15]=1; g[20][16]=1;
+      } else if (b === 7) { // 7: Bonsai Bitki (Saksı & Çalı)
+        for(let r=16; r<21; r++) for(let c=7; c<17; c++) g[r][c] = 1;
+        for(let r=7; r<16; r++) for(let c=5; c<19; c++) if ((c-12)*(c-12) + (r-11)*(r-11) <= 32) g[r][c] = 1;
+      } else if (b === 8) { // 8: Minik Kuş
+        for(let r=7; r<19; r++) for(let c=6; c<18; c++) if ((c-12)*(c-12) + (r-13)*(r-13) <= 34) g[r][c] = 1;
+        g[13][4]=1; g[14][3]=1; g[15][4]=1;
         g[19][9]=1; g[19][10]=1; g[19][14]=1; g[19][15]=1;
-      } else { // 9: Canavar Kafa (Geniş çeneli dev kafa)
-        for(let r=7; r<19; r++) for(let c=4; c<20; c++) if ((c-12)*(c-12) + (r-13)*(r-13) <= 48) g[r][c] = 1;
-        g[19][6]=1; g[19][7]=1; g[19][16]=1; g[19][17]=1; // İri ayaklar
+      } else { // 9: Canavar Kafa
+        for(let r=7; r<19; r++) for(let c=4; c<20; c++) if ((c-12)*(c-12) + (r-13)*(r-13) <= 50) g[r][c] = 1;
+        g[19][6]=1; g[19][7]=1; g[19][16]=1; g[19][17]=1;
       }
 
-      // 2. KULAKLAR / BAŞLIK (10 FARKLI TİP)
-      if (er === 0) { // Sivri Kedi Kulakları
+      // Kafa yüz bölgesinin dolu olduğundan emin ol
+      for(let r=9; r<=15; r++) for(let c=7; c<=16; c++) g[r][c] = 1;
+
+      // 2. KULAKLAR VE BAŞLIKLAR (10 TİP)
+      if (er === 0) { // 0: Sivri Kedi Kulakları
         g[3][6]=1; g[4][6]=1; g[4][7]=1; g[5][6]=1; g[5][7]=1; g[5][8]=1;
         g[3][17]=1; g[4][17]=1; g[4][16]=1; g[5][17]=1; g[5][16]=1; g[5][15]=1;
-      } else if (er === 1) { // Sarkık Köpek Kulakları
-        for(let r=7; r<=12; r++) { g[r][4]=1; g[r][5]=1; g[r][18]=1; g[r][19]=1; }
-      } else if (er === 2) { // Uzaylı Anteni (Tepede yuvarlak top)
-        g[2][11]=1; g[2][12]=1; g[3][11]=1; g[3][12]=1; // Topuz
-        g[4][12]=1; g[5][12]=1; // Çubuk
-      } else if (er === 3) { // Şeytan / Ejder Boynuzları
+      } else if (er === 1) { // 1: Sarkık Kulak
+        for(let r=7; r<=13; r++) { g[r][4]=1; g[r][5]=1; g[r][18]=1; g[r][19]=1; }
+      } else if (er === 2) { // 2: Uzaylı Anteni
+        g[2][11]=1; g[2][12]=1; g[3][11]=1; g[3][12]=1;
+        g[4][11]=1; g[5][11]=1;
+      } else if (er === 3) { // 3: Şeytan Boynuz
         g[4][7]=1; g[3][6]=1; g[2][5]=1; g[4][16]=1; g[3][17]=1; g[2][18]=1;
-      } else if (er === 4) { // Gamer Kulaklığı
-        for(let c=7; c<=16; c++) g[4][c]=1; // Taç bandı
-        for(let r=8; r<=12; r++) { g[r][4]=1; g[r][5]=1; g[r][18]=1; g[r][19]=1; } // Kulak yastıkları
-      } else if (er === 5) { // Sihirli Koni Şapka
-        g[1][12]=1; g[2][11]=1; g[2][12]=1; g[3][10]=1; g[3][11]=1; g[3][12]=1; g[3][13]=1;
-        for(let c=5; c<=18; c++) g[5][c]=1; // Siperlik
-      } else if (er === 6) { // Melek Halesi (Havada asılı elips)
+      } else if (er === 4) { // 4: Gamer Kulaklık
+        for(let c=7; c<=16; c++) g[4][c]=1;
+        for(let r=7; r<=12; r++) { g[r][4]=1; g[r][5]=1; g[r][18]=1; g[r][19]=1; }
+      } else if (er === 5) { // 5: Sihirli Koni Şapka
+        g[1][11]=1; g[1][12]=1; g[2][10]=1; g[2][11]=1; g[2][12]=1; g[2][13]=1;
+        g[3][9]=1; g[3][10]=1; g[3][11]=1; g[3][12]=1; g[3][13]=1; g[3][14]=1;
+        for(let c=5; c<=18; c++) g[5][c]=1;
+      } else if (er === 6) { // 6: Melek Halesi
         for(let c=8; c<=15; c++) { g[2][c]=1; g[3][c]=1; }
-        g[2][9]=0; g[2][10]=0; g[2][11]=0; g[2][12]=0; g[2][13]=0; g[2][14]=0; // İçi boş halka
-      } else if (er === 7) { // Çiçek Tokası
+        g[2][10]=0; g[2][11]=0; g[2][12]=0; g[2][13]=0;
+      } else if (er === 7) { // 7: Çiçek Toka
         g[4][16]=1; g[4][17]=1; g[5][15]=1; g[5][16]=1; g[5][17]=1; g[5][18]=1; g[6][16]=1; g[6][17]=1;
-      } else if (er === 8) { // Uzun Tavşan Kulakları
+      } else if (er === 8) { // 8: Tavşan Kulak
         for(let r=1; r<=6; r++) { g[r][8]=1; g[r][9]=1; g[r][14]=1; g[r][15]=1; }
-      } else { // 9: Robot Tepe Cıvataları
-        g[8][4]=1; g[8][5]=1; g[9][4]=1; g[9][5]=1; g[8][18]=1; g[8][19]=1; g[9][18]=1; g[9][19]=1;
+      } else { // 9: Robot Tepe
+        g[5][11]=1; g[5][12]=1; g[4][11]=1; g[4][12]=1;
+        g[8][4]=1; g[8][5]=1; g[8][18]=1; g[8][19]=1;
       }
 
-      // 3. GÖZLER (10 FARKLI TİP - Arka planı delerek kontrast sağlar)
-      if (ey === 0) { // Anime Işıltılı (Büyük göz bebeği & ışıltı)
-        g[10][8]=0; g[10][9]=0; g[11][9]=0; g[10][14]=0; g[10][15]=0; g[11][14]=0;
-      } else if (ey === 1) { // Retro Çizgi (__ __)
+      // 3. GÖZLER (10 TİP - Kontrastlı ve Belirgin)
+      if (ey === 0) { // 0: Anime Işıltılı
+        g[10][8]=0; g[10][9]=0; g[11][8]=0; g[11][9]=0; g[10][8]=1;
+        g[10][14]=0; g[10][15]=0; g[11][14]=0; g[11][15]=0; g[10][14]=1;
+      } else if (ey === 1) { // 1: Retro Çizgi
+        g[10][7]=0; g[10][8]=0; g[10][9]=0;
+        g[10][14]=0; g[10][15]=0; g[10][16]=0;
+      } else if (ey === 2) { // 2: Gözlüklü
+        for(let c=6; c<=17; c++) g[9][c]=0;
+        g[10][6]=0; g[10][10]=0; g[10][13]=0; g[10][17]=0;
         g[11][7]=0; g[11][8]=0; g[11][9]=0; g[11][14]=0; g[11][15]=0; g[11][16]=0;
-      } else if (ey === 2) { // Gözlüklü Çerçeve
-        for(let c=7; c<=16; c++) g[10][c]=0;
-        g[11][7]=0; g[11][10]=0; g[11][13]=0; g[11][16]=0;
-        g[12][8]=0; g[12][9]=0; g[12][14]=0; g[12][15]=0;
-      } else if (ey === 3) { // Şaşkın Pörtlek (Yuvarlak kocaman)
+      } else if (ey === 3) { // 3: Şaşkın Pörtlek
         g[9][8]=0; g[9][9]=0; g[10][7]=0; g[10][10]=0; g[11][8]=0; g[11][9]=0;
         g[9][14]=0; g[9][15]=0; g[10][13]=0; g[10][16]=0; g[11][14]=0; g[11][15]=0;
-      } else if (ey === 4) { // Siber Vizör (Yatay tek blok parıltı)
+      } else if (ey === 4) { // 4: Siber Vizör
         for(let c=6; c<=17; c++) { g[10][c]=0; g[11][c]=0; }
-      } else if (ey === 5) { // Göz Kırpan (- ^)
-        g[11][7]=0; g[11][8]=0; g[11][9]=0; // Sol düz çizgi
-        g[10][14]=0; g[9][15]=0; g[10][16]=0; // Sağ neşeli yay
-      } else if (ey === 6) { // Uykulu Göz (Aşağı kıvrık yaylar)
+        g[10][11]=1; g[10][12]=1;
+      } else if (ey === 5) { // 5: Göz Kırpan (- ^)
+        g[10][7]=0; g[10][8]=0; g[10][9]=0;
+        g[9][15]=0; g[10][14]=0; g[10][16]=0;
+      } else if (ey === 6) { // 6: Uykulu Göz
         g[10][7]=0; g[11][8]=0; g[11][9]=0; g[10][10]=0;
         g[10][13]=0; g[11][14]=0; g[11][15]=0; g[10][16]=0;
-      } else if (ey === 7) { // Alevli Kızgın (Çatık kaşlar \ /)
+      } else if (ey === 7) { // 7: Alevli Kızgın
         g[9][7]=0; g[10][8]=0; g[11][9]=0;
         g[9][16]=0; g[10][15]=0; g[11][14]=0;
-      } else if (ey === 8) { // Yıldızlı Gözler (+)
-        g[10][8]=0; g[11][7]=0; g[11][8]=0; g[11][9]=0; g[12][8]=0;
-        g[10][15]=0; g[11][14]=0; g[11][15]=0; g[11][16]=0; g[12][15]=0;
+      } else if (ey === 8) { // 8: Yıldızlı Göz
+        g[9][8]=0; g[10][7]=0; g[10][8]=0; g[10][9]=0; g[11][8]=0;
+        g[9][15]=0; g[10][14]=0; g[10][15]=0; g[10][16]=0; g[11][15]=0;
       } else { // 9: Şirin Çift (^^)
-        g[11][7]=0; g[10][8]=0; g[11][9]=0;
-        g[11][14]=0; g[10][15]=0; g[11][16]=0;
+        g[10][7]=0; g[9][8]=0; g[10][9]=0;
+        g[10][14]=0; g[9][15]=0; g[10][16]=0;
       }
 
-      // 4. AĞIZ & MİMİK (10 FARKLI TİP)
-      if (m === 0) { // Kedi Bıyığı & minik burun
+      // 4. AĞIZ & MİMİK (10 TİP)
+      if (m === 0) { // 0: Kedi Bıyığı
         g[13][11]=0; g[13][12]=0; // Burun
-        g[13][5]=1; g[13][6]=1; g[14][5]=1; g[14][6]=1; // Sol bıyık
-        g[13][17]=1; g[13][18]=1; g[14][17]=1; g[14][18]=1; // Sağ bıyık
-      } else if (m === 1) { // Dil Çıkaran (:P)
-        g[14][10]=0; g[14][11]=0; g[14][12]=0; g[14][13]=0;
-        g[15][12]=1; g[16][12]=1; // Dışarı sarkan dil
-      } else if (m === 2) { // Gülümseme (\_/)
-        g[14][9]=0; g[15][10]=0; g[15][11]=0; g[15][12]=0; g[15][13]=0; g[14][14]=0;
-      } else if (m === 3) { // Dişli Sivri Sırıtış
-        for(let c=9; c<=14; c++) g[14][c]=0;
-        g[15][10]=1; g[15][13]=1; // Vampir sivri dişleri
-      } else if (m === 4) { // Minik "o" Şaşkınlık
-        g[14][11]=0; g[14][12]=0; g[15][11]=0; g[15][12]=0;
-      } else if (m === 5) { // Dondurma / Kurabiye Yiyen Ağız
-        g[14][10]=0; g[14][11]=0; g[14][12]=0;
-        g[15][13]=1; g[16][13]=1; g[17][13]=1; // Çubuk / kırıntı
-      } else if (m === 6) { // Retro Burma Bıyık
+        g[13][4]=1; g[13][5]=1; g[14][4]=1; g[13][18]=1; g[13][19]=1; g[14][19]=1;
+      } else if (m === 1) { // 1: Dil Çıkaran (:P)
+        g[13][10]=0; g[13][11]=0; g[13][12]=0;
+        g[14][11]=1; g[15][11]=1; // Dil
+      } else if (m === 2) { // 2: Gülümseme
+        g[13][9]=0; g[14][10]=0; g[14][11]=0; g[14][12]=0; g[14][13]=0; g[13][14]=0;
+      } else if (m === 3) { // 3: Dişli Sivri Sırıtış
+        for(let c=9; c<=14; c++) g[13][c]=0;
+        g[14][10]=1; g[14][13]=1; // Vampir dişleri
+      } else if (m === 4) { // 4: Minik "o"
+        g[13][11]=0; g[13][12]=0; g[14][11]=0; g[14][12]=0;
+      } else if (m === 5) { // 5: Dondurma Yiyen
+        g[13][10]=0; g[13][11]=0;
+        g[14][12]=1; g[15][12]=1; g[16][12]=1;
+      } else if (m === 6) { // 6: Retro Burma Bıyık
         g[14][8]=1; g[13][7]=1; g[14][9]=1; g[14][10]=1; g[14][11]=1; g[14][12]=1; g[14][13]=1; g[14][14]=1; g[13][16]=1; g[14][15]=1;
-      } else if (m === 7) { // Ciddi Düz Çizgi (---)
-        g[14][10]=0; g[14][11]=0; g[14][12]=0; g[14][13]=0;
-      } else if (m === 8) { // Büyük Şaşkın Açık Ağız (:O)
-        for(let r=13; r<=16; r++) { g[r][11]=0; g[r][12]=0; }
-      } else { // 9: Ninja / Maske
-        for(let r=13; r<=16; r++) for(let c=8; c<=15; c++) g[r][c] = (r === 13 || r === 16 || c === 8 || c === 15) ? 0 : 1;
+      } else if (m === 7) { // 7: Ciddi Düz Çizgi
+        g[13][10]=0; g[13][11]=0; g[13][12]=0; g[13][13]=0;
+      } else if (m === 8) { // 8: Büyük Şaşkın Açık (:O)
+        for(let r=13; r<=15; r++) { g[r][11]=0; g[r][12]=0; }
+      } else { // 9: Ninja Maske
+        for(let c=7; c<=16; c++) g[13][c]=0;
+        for(let c=8; c<=15; c++) g[14][c]=0;
       }
 
-      // 5. AKSESUAR & UZUV (10 FARKLI TİP)
-      if (ac === 0) { // Uçan Kanatlar (İki yanda)
+      // 5. AKSESUAR VE UZUV (10 TİP)
+      if (ac === 0) { // 0: Uçan Kanat
         g[11][2]=1; g[12][1]=1; g[12][2]=1; g[13][2]=1; g[13][3]=1; g[14][3]=1;
         g[11][21]=1; g[12][21]=1; g[12][22]=1; g[13][21]=1; g[13][20]=1; g[14][20]=1;
-      } else if (ac === 1) { // Kaykay (Ayakların altında tahta ve tekerlekler)
+      } else if (ac === 1) { // 1: Kaykay
         for(let c=4; c<=19; c++) g[21][c]=1;
         g[22][6]=1; g[22][7]=1; g[22][16]=1; g[22][17]=1;
-      } else if (ac === 2) { // Kahraman Pelerini (Sırtta dalgalanan)
-        for(let r=11; r<=21; r++) { g[r][2]=1; g[r][3]=1; }
-      } else if (ac === 3) { // Minik Kılıç (Sağ elde kılıç)
-        for(let r=7; r<=15; r++) g[r][21]=1; // Bıçak
-        g[16][19]=1; g[16][20]=1; g[16][21]=1; g[16][22]=1; // Kabza
-        g[17][21]=1; g[18][21]=1; // Sap
-      } else if (ac === 4) { // Kıvrık Tilki / Kedi Kuyruğu
+      } else if (ac === 2) { // 2: Kahraman Pelerini
+        for(let r=10; r<=21; r++) { g[r][2]=1; g[r][3]=1; }
+      } else if (ac === 3) { // 3: Minik Kılıç
+        for(let r=7; r<=15; r++) g[r][21]=1;
+        g[16][19]=1; g[16][20]=1; g[16][21]=1; g[16][22]=1;
+        g[17][21]=1; g[18][21]=1;
+      } else if (ac === 4) { // 4: Kıvrık Kuyruk
         g[14][2]=1; g[13][1]=1; g[12][1]=1; g[15][2]=1; g[16][3]=1; g[17][4]=1;
-      } else if (ac === 5) { // Tek Tekerlek (Robot unicycle)
+      } else if (ac === 5) { // 5: Robot Tekerlek
         for(let r=20; r<=23; r++) for(let c=10; c<=13; c++) g[r][c]=1;
-        g[21][11]=0; g[21][12]=0; g[22][11]=0; g[22][12]=0; // Jant
-      } else if (ac === 6) { // Büyücü Asası (Yıldızlı asa)
-        g[6][21]=1; g[7][20]=1; g[7][21]=1; g[7][22]=1; g[8][21]=1; // Yıldız başı
-        for(let r=9; r<=20; r++) g[r][21]=1; // Asa gövdesi
-      } else if (ac === 7) { // Sırt Çantası (Yanda askı & cep)
+        g[21][11]=0; g[21][12]=0;
+      } else if (ac === 6) { // 6: Büyücü Asası
+        g[6][21]=1; g[7][20]=1; g[7][21]=1; g[7][22]=1; g[8][21]=1;
+        for(let r=9; r<=20; r++) g[r][21]=1;
+      } else if (ac === 7) { // 7: Sırt Çantası
         for(let r=11; r<=17; r++) { g[r][3]=1; g[r][4]=1; }
-      } else if (ac === 8) { // İri Boks Eldivenleri
+      } else if (ac === 8) { // 8: Boks Eldiveni
         for(let r=13; r<=16; r++) { g[r][2]=1; g[r][3]=1; g[r][20]=1; g[r][21]=1; }
-      } else { // 9: Altın Şövalye Kalkanı
+      } else { // 9: Altın Kalkan
         for(let r=11; r<=17; r++) { g[r][2]=1; g[r][3]=1; g[r][4]=1; }
-        g[18][3]=1; // Kalkan sivri ucu
+        g[18][3]=1;
       }
 
       return g;
@@ -2275,9 +2556,157 @@
 
     function sendAvatarToConsole() {
       beep(880, 0.15);
+      appData.useCustomMatrix = false;
+      localStorage.setItem('socies_use_custom_matrix', '0');
       localStorage.setItem('socies_custom_parts', JSON.stringify(appData.parts));
+      renderCombinator();
       oled.mode = 'IDLE';
-      showGlobalToast('🚀 Özel karakter konsola yüklendi!');
+      showGlobalToast('🚀 Özel modüler karakter konsola yüklendi!');
+      setTimeout(() => switchTab('tab-console'), 400);
+    }
+
+    // --- PİKSEL ÇİZİM TUVALİ MOTORU (24x24) ---
+    let customDrawGrid = Array(24).fill(null).map(() => Array(24).fill(0));
+    let drawTool = 'pen';
+    let isDrawingPixel = false;
+
+    function initPixelDrawCanvas() {
+      const cvs = document.getElementById('pixelDrawCanvas');
+      if (!cvs) return;
+      const ctx = cvs.getContext('2d');
+
+      const renderGrid = () => {
+        ctx.fillStyle = '#000814';
+        ctx.fillRect(0, 0, 192, 192);
+
+        // Kılavuz ızgarası
+        ctx.strokeStyle = '#1E293B';
+        ctx.lineWidth = 0.5;
+        for (let i = 0; i <= 24; i++) {
+          ctx.beginPath(); ctx.moveTo(i * 8, 0); ctx.lineTo(i * 8, 192); ctx.stroke();
+          ctx.beginPath(); ctx.moveTo(0, i * 8); ctx.lineTo(192, i * 8); ctx.stroke();
+        }
+
+        // Pikseller
+        ctx.fillStyle = '#00f0ff';
+        for (let r = 0; r < 24; r++) {
+          for (let c = 0; c < 24; c++) {
+            if (customDrawGrid[r][c]) {
+              ctx.fillRect(c * 8 + 1, r * 8 + 1, 6, 6);
+            }
+          }
+        }
+      };
+
+      const setPixelAtCoords = (clientX, clientY) => {
+        const rect = cvs.getBoundingClientRect();
+        const x = Math.floor(((clientX - rect.left) / rect.width) * 24);
+        const y = Math.floor(((clientY - rect.top) / rect.height) * 24);
+        if (x >= 0 && x < 24 && y >= 0 && y < 24) {
+          customDrawGrid[y][x] = (drawTool === 'pen') ? 1 : 0;
+          renderGrid();
+        }
+      };
+
+      cvs.onpointerdown = (e) => {
+        isDrawingPixel = true;
+        setPixelAtCoords(e.clientX, e.clientY);
+      };
+      window.onpointermove = (e) => {
+        if (isDrawingPixel) setPixelAtCoords(e.clientX, e.clientY);
+      };
+      window.onpointerup = () => isDrawingPixel = false;
+      window.onpointercancel = () => isDrawingPixel = false;
+
+      renderGrid();
+    }
+
+    function setDrawTool(tool) {
+      drawTool = tool;
+      document.getElementById('btnToolPen').style.background = tool === 'pen' ? '#EEF2FF' : '#F1F5F9';
+      document.getElementById('btnToolPen').style.color = tool === 'pen' ? '#4F46E5' : '#475569';
+      document.getElementById('btnToolEraser').style.background = tool === 'eraser' ? '#EEF2FF' : '#F1F5F9';
+      document.getElementById('btnToolEraser').style.color = tool === 'eraser' ? '#4F46E5' : '#475569';
+    }
+
+    function clearDrawCanvas() {
+      customDrawGrid = Array(24).fill(null).map(() => Array(24).fill(0));
+      initPixelDrawCanvas();
+      showGlobalToast('🗑️ Çizim tuvali temizlendi.');
+    }
+
+    function saveCustomDrawingToConsole() {
+      beep(920, 0.15);
+      appData.customMatrix = customDrawGrid.map(row => [...row]);
+      appData.useCustomMatrix = true;
+      localStorage.setItem('socies_custom_matrix', JSON.stringify(appData.customMatrix));
+      localStorage.setItem('socies_use_custom_matrix', '1');
+      renderCombinator();
+      oled.mode = 'IDLE';
+      showGlobalToast('🎨 Serbest çiziminiz konsola ve bebeğinize aktarıldı!');
+      setTimeout(() => switchTab('tab-console'), 400);
+    }
+
+    // --- SELFİE'DEN 1-BİT PİKSEL DÖNÜŞTÜRÜCÜ (VISION DITHER) ---
+    let selfieMatrix = null;
+    function handleSelfieUpload(ev) {
+      const file = ev.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const sc = document.createElement('canvas');
+          sc.width = 24; sc.height = 24;
+          const sctx = sc.getContext('2d');
+          sctx.drawImage(img, 0, 0, 24, 24);
+          const imgData = sctx.getImageData(0, 0, 24, 24);
+          const d = imgData.data;
+
+          selfieMatrix = Array(24).fill(null).map(() => Array(24).fill(0));
+
+          for (let y = 0; y < 24; y++) {
+            for (let x = 0; x < 24; x++) {
+              const idx = (y * 24 + x) * 4;
+              const brightness = 0.299 * d[idx] + 0.587 * d[idx+1] + 0.114 * d[idx+2];
+              selfieMatrix[y][x] = brightness > 115 ? 1 : 0;
+            }
+          }
+
+          const prevCanv = document.getElementById('selfiePreviewCanvas');
+          if (prevCanv) {
+            const pctx = prevCanv.getContext('2d');
+            pctx.fillStyle = '#000814';
+            pctx.fillRect(0, 0, 120, 120);
+            for (let r = 0; r < 24; r++) {
+              for (let c = 0; c < 24; c++) {
+                if (selfieMatrix[r][c]) {
+                  pctx.fillStyle = '#00f0ff';
+                  pctx.fillRect(c * 5, r * 5, 5, 5);
+                }
+              }
+            }
+          }
+          showGlobalToast('📸 Fotoğraf 1-bit OLED piksel karaktere dönüştürüldü!');
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function applySelfieAvatarToConsole() {
+      if (!selfieMatrix) {
+        showGlobalToast('⚠️ Önce bir fotoğraf yükleyin veya çekin!');
+        return;
+      }
+      beep(980, 0.2);
+      appData.customMatrix = selfieMatrix.map(row => [...row]);
+      appData.useCustomMatrix = true;
+      localStorage.setItem('socies_custom_matrix', JSON.stringify(appData.customMatrix));
+      localStorage.setItem('socies_use_custom_matrix', '1');
+      renderCombinator();
+      oled.mode = 'IDLE';
+      showGlobalToast('✨ Selfie karakteriniz konsola aktarıldı!');
       setTimeout(() => switchTab('tab-console'), 400);
     }
 
@@ -2699,6 +3128,142 @@
 
       checkPetCrisisState();
       updateProfileUI();
+      updateRetentionUI();
+    }
+
+    // =========================================================================
+    // MODÜL 5: GÜNLÜK SADAKAT, 3.000 ADIM SANDIĞI & REBIRTH MOTORU
+    // =========================================================================
+    function updateRetentionUI() {
+      // 1. Günlük Sadakat Serisi
+      const streakTitle = document.getElementById('txtDailyStreakTitle');
+      const btnClaim = document.getElementById('btnClaimDailyReward');
+      if (streakTitle) streakTitle.innerText = `${appData.streakDays || 1} Gün Sadakat Serisi`;
+      const todayStr = new Date().toISOString().slice(0, 10);
+      if (btnClaim) {
+        if (appData.lastStreakClaim === todayStr) {
+          btnClaim.innerText = '✅ Alındı';
+          btnClaim.disabled = true;
+          btnClaim.style.background = '#CBD5E1';
+          btnClaim.style.color = '#64748B';
+        } else {
+          btnClaim.innerText = '🎁 Ödülü Al';
+          btnClaim.disabled = false;
+          btnClaim.style.background = '#F59E0B';
+          btnClaim.style.color = '#FFFFFF';
+        }
+      }
+
+      // 2. 3.000 Adım Sandığı
+      const txtSteps = document.getElementById('txtStepCount');
+      const txtChest = document.getElementById('txtChestStatus');
+      const btnChest = document.getElementById('btnOpenStepChest');
+      const icoChest = document.getElementById('icoChestIcon');
+      if (txtSteps) txtSteps.innerText = (appData.steps || 0).toLocaleString();
+      if (btnChest && txtChest) {
+        if ((appData.steps || 0) >= 3000) {
+          if (appData.chestClaimed) {
+            txtChest.innerText = '🎉 Bugünkü hazine sandığı açıldı!';
+            btnChest.disabled = true;
+            btnChest.innerText = 'Açıldı';
+            btnChest.style.background = '#CBD5E1';
+            if (icoChest) icoChest.innerText = '✨';
+          } else {
+            txtChest.innerText = '🎁 Hazine hazır! Sandığı hemen açabilirsin!';
+            btnChest.disabled = false;
+            btnChest.innerText = '🎁 Aç!';
+            btnChest.style.background = '#10B981';
+            if (icoChest) icoChest.innerText = '📦';
+          }
+        } else {
+          const remaining = 3000 - (appData.steps || 0);
+          txtChest.innerText = `Hazineye ${remaining} adım kaldı!`;
+          btnChest.disabled = true;
+          btnChest.innerText = 'Kilitli';
+          btnChest.style.background = '#94A3B8';
+          if (icoChest) icoChest.innerText = '🔒';
+        }
+      }
+    }
+
+    function claimDailyStreakReward() {
+      const todayStr = new Date().toISOString().slice(0, 10);
+      if (appData.lastStreakClaim === todayStr) {
+        showGlobalToast('ℹ️ Bugünkü sadakat ödülünü zaten aldınız. Yarın tekrar gelin!');
+        return;
+      }
+      appData.streakDays = (appData.streakDays || 0) + 1;
+      appData.lastStreakClaim = todayStr;
+      localStorage.setItem('socies_streak_days', appData.streakDays);
+      localStorage.setItem('socies_last_streak_claim', todayStr);
+      appData.needs.xp += 50;
+      saveNeeds();
+      playLevelUpFanfare();
+      showGlobalToast(`🔥 ${appData.streakDays}. Gün Serisi! +50 XP kazandınız!`);
+      updateNeedsUI();
+    }
+
+    function simulateSteps(n = 500) {
+      appData.steps = (appData.steps || 0) + n;
+      localStorage.setItem('socies_steps', appData.steps);
+      beep(720, 0.08);
+      updateRetentionUI();
+      if (appData.steps >= 3000 && !appData.chestClaimed) {
+        playLevelUpFanfare();
+        showGlobalToast('🎉 Tebrikler! 3.000 adım hedefine ulaştın! Sandığı açabilirsin.');
+      } else {
+        showGlobalToast(`👟 +${n} Adım! Toplam: ${appData.steps.toLocaleString()}`);
+      }
+    }
+
+    function openStepChestAction() {
+      if ((appData.steps || 0) < 3000) {
+        showGlobalToast('⚠️ Sandık için 3.000 adım tamamlanmalı.');
+        return;
+      }
+      if (appData.chestClaimed) {
+        showGlobalToast('ℹ️ Bugünkü sandık ödülünü zaten aldınız.');
+        return;
+      }
+      appData.chestClaimed = true;
+      localStorage.setItem('socies_chest_claimed', '1');
+      appData.needs.xp += 150;
+      saveNeeds();
+      playLevelUpFanfare();
+      showGlobalToast('📦 Hazine Sandığı Açıldı! +150 XP & 100 ⭐ Altın kazandınız!');
+      updateNeedsUI();
+    }
+
+    function openRebirthModal() {
+      beep(680, 0.1);
+      document.getElementById('rebirthModal').style.display = 'flex';
+    }
+
+    function closeRebirthModal() {
+      document.getElementById('rebirthModal').style.display = 'none';
+    }
+
+    function confirmRebirthAction() {
+      beep(880, 0.15);
+      appData.petState.stage = 1;
+      appData.petState.birthTime = Date.now();
+      appData.petState.ageDays = 0;
+      appData.petState.isSick = false;
+      appData.petState.poopCount = 0;
+      appData.petState.careScore = 100;
+      appData.needs.hunger = 80;
+      appData.needs.toilet = 90;
+      appData.needs.clean = 100;
+      appData.needs.sleep = 90;
+      appData.needs.fun = 85;
+      appData.needs.love = 95;
+      savePetState();
+      saveNeeds();
+      closeRebirthModal();
+      playLevelUpFanfare();
+      showGlobalToast('🥚 Bebeğiniz yeniden doğdu! Taze yumurtadan yavru bir Socies çıktı!');
+      updateNeedsUI();
+      oled.mode = 'IDLE';
     }
 
     function performNeedAction(act, msg) {
@@ -2970,6 +3535,7 @@
           </div>
           <div class="friend-actions">
             ${isMe ? '<span style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">Bu Senin Cihazın</span>' : `
+              <button class="btn-micro" style="color:var(--emerald);" onclick="openPagerModal('${f.deviceId}', '${f.nickname}')">📟 Pager</button>
               <button class="btn-micro" style="color:var(--rose);" onclick="pokeFriend('${f.deviceId}', '${f.nickname}')">👉 Dürt</button>
               <button class="btn-micro" style="color:var(--indigo);" onclick="duelFriend('${f.deviceId}', '${f.nickname}')">⚔️ Düello</button>
               <button class="btn-micro" style="color:var(--amber);" onclick="sendGiftFriend('${f.deviceId}', '${f.nickname}')">🎁 Hediye</button>
@@ -2978,6 +3544,65 @@
         `;
         c.appendChild(card);
       });
+    }
+
+    // =========================================================================
+    // MODÜL 4: NOSTALJİK ÇAĞRI CİHAZI (PAGER) MOTORU
+    // =========================================================================
+    let currentPagerTarget = { deviceId: '', nickname: '' };
+
+    function openPagerModal(targetDev, name) {
+      currentPagerTarget = { deviceId: targetDev, nickname: name };
+      const elTitle = document.getElementById('pagerTargetTitle');
+      if (elTitle) elTitle.innerText = `📟 Çağrı: ${name}`;
+      const inp = document.getElementById('inputPagerMsg');
+      if (inp) inp.value = '';
+      document.getElementById('pagerModal').style.display = 'flex';
+      beep(700, 0.1);
+    }
+
+    function closePagerModal() {
+      document.getElementById('pagerModal').style.display = 'none';
+    }
+
+    function setPagerCode(code) {
+      const inp = document.getElementById('inputPagerMsg');
+      if (inp) inp.value = code;
+      beep(880, 0.08);
+    }
+
+    async function sendPagerMessageSubmit() {
+      const inp = document.getElementById('inputPagerMsg');
+      const msg = inp ? inp.value.trim() : '';
+      if (!msg) {
+        showGlobalToast('⚠️ Lütfen bir çağrı kodu veya mesaj girin.');
+        return;
+      }
+      if (!appData.serverUrl) {
+        showGlobalToast('⚠️ Sunucu bağlantısı yok.');
+        return;
+      }
+      try {
+        const res = await fetch(`${appData.serverUrl}/api/v1/messages/send`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            fromDev: appData.deviceId,
+            fromNick: appData.nickname,
+            targetDev: currentPagerTarget.deviceId,
+            message: msg
+          })
+        });
+        if (res.ok) {
+          playPagerChimeSound();
+          showGlobalToast(`📟 "${msg}" çağrısı [${currentPagerTarget.nickname}] cihazına iletildi!`);
+          closePagerModal();
+        } else {
+          showGlobalToast('⚠️ Çağrı iletilemedi.');
+        }
+      } catch(e) {
+        showGlobalToast('⚠️ Sunucu hatası: ' + e.message);
+      }
     }
 
     async function pokeFriend(targetDev, name) {
@@ -3056,10 +3681,11 @@
     }
 
     // =========================================================================
-    // INCOMING POKE & EVENT POLLING (FAZ 3)
+    // INCOMING POKE, PAGER & EVENT POLLING (FAZ 3 & FAZ 4)
     // =========================================================================
     async function pollIncomingEvents() {
       if (!appData.serverUrl) return;
+      // 1. Pokes / Düello / Hediyeler
       try {
         const res = await fetch(`${appData.serverUrl}/api/v1/pokes/pending?targetDev=${appData.deviceId}`);
         if (res.ok) {
@@ -3084,6 +3710,23 @@
           }
         }
       } catch(e) {}
+
+      // 2. Nostaljik Pager / Çağrı Cihazı Mesajları
+      try {
+        const mRes = await fetch(`${appData.serverUrl}/api/v1/messages/inbox/${appData.deviceId}`);
+        if (mRes.ok) {
+          const mData = await mRes.json();
+          if (mData.messages && mData.messages.length > 0) {
+            mData.messages.forEach(m => {
+              playPagerChimeSound();
+              if (navigator.vibrate) navigator.vibrate([200, 100, 200, 100, 300]);
+              showGlobalToast(`📟 [${m.from_nick}]: ${m.message}`);
+              oled.marqueeMsg = `📟 [${m.from_nick}]: ${m.message}   `;
+              oled.marqueeX = 128;
+            });
+          }
+        }
+      } catch(e) {}
     }
     setInterval(pollIncomingEvents, 4000);
 
@@ -3102,6 +3745,11 @@
       beep(750, 0.1);
       showGlobalToast(`🎮 ${game} oyunu konsolda başlatıldı!`);
       oled.mode = game;
+      if (game === 'RPS') {
+        oled.rps.resolved = false;
+        oled.rps.playerChoice = null;
+        oled.rps.cpuChoice = null;
+      }
       switchTab('tab-console');
     }
 
@@ -3146,7 +3794,7 @@
     // =========================================================================
     // OTA AUTO-UPDATER & VERSION CHECK ENGINE
     // =========================================================================
-    const CURRENT_APP_VERSION = 'v1.0.6';
+    const CURRENT_APP_VERSION = 'v1.0.7';
     let pendingUpdateData = null;
 
     function isVersionNewer(remoteVer, localVer) {

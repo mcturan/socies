@@ -592,7 +592,11 @@ const server = http.createServer((req, res) => {
   // 5. ÇAĞRI CİHAZI (PAGER) MESAJ GÖNDERME
   if (path === '/api/v1/messages/send' && method === 'POST') {
     return parseBody(req, (body) => {
-      const { targetDeviceId, fromUser, messageText } = body;
+      const targetDeviceId = body.targetDeviceId || body.targetDev;
+      const messageText = body.messageText || body.message;
+      const fromUser = body.fromUser || body.fromNick || body.fromDev || 'Bilinmeyen Dost';
+      const fromDev = body.fromDev || fromUser;
+
       if (!targetDeviceId || !messageText) {
         return sendJSON(res, 400, { error: 'targetDeviceId ve messageText zorunludur' });
       }
@@ -601,11 +605,24 @@ const server = http.createServer((req, res) => {
 
       const targetDev = database.devices.get(targetDeviceId);
       const isTargetOnline = targetDev && (Date.now() - targetDev.lastSeen < 90000);
+      const now = Date.now();
+
+      // SQLite Kaydı
+      try {
+        db.prepare('INSERT INTO messages (from_dev, from_nick, target_dev, message_text, is_delivered, created_at) VALUES (?, ?, ?, ?, ?, ?)').run(
+          fromDev, fromUser, targetDeviceId, messageText.slice(0, 32), isTargetOnline ? 1 : 0, now
+        );
+      } catch (e) {
+        console.error('Mesaj SQLite kayit hatasi:', e.message);
+      }
 
       const msgObj = {
         id: crypto.randomUUID(),
-        from: fromUser || 'Bilinmeyen Dost',
+        from: fromUser,
+        from_nick: fromUser,
+        from_dev: fromDev,
         text: messageText.slice(0, 32),
+        message: messageText.slice(0, 32),
         timestamp: new Date().toISOString(),
         deliveredImmediately: isTargetOnline
       };
@@ -630,10 +647,35 @@ const server = http.createServer((req, res) => {
     const msgs = database.offlineMessages.get(devId) || [];
     database.offlineMessages.set(devId, []); // Çekilince kuyruğu boşalt
 
+    // SQLite bekleyen mesajları da topla
+    let sqlMsgs = [];
+    try {
+      sqlMsgs = db.prepare('SELECT id, from_dev, from_nick, message_text, created_at FROM messages WHERE target_dev = ? AND is_delivered = 0').all(devId);
+      if (sqlMsgs.length > 0) {
+        db.prepare('UPDATE messages SET is_delivered = 1 WHERE target_dev = ? AND is_delivered = 0').run(devId);
+      }
+    } catch(e) {}
+
+    // Birleştir ve uyuştur
+    const combined = [...msgs];
+    sqlMsgs.forEach(sm => {
+      if (!combined.some(m => m.text === sm.message_text && m.from_dev === sm.from_dev)) {
+        combined.push({
+          id: sm.id,
+          from: sm.from_nick,
+          from_nick: sm.from_nick,
+          from_dev: sm.from_dev,
+          text: sm.message_text,
+          message: sm.message_text,
+          timestamp: new Date(sm.created_at).toISOString()
+        });
+      }
+    });
+
     return sendJSON(res, 200, {
       deviceId: devId,
-      messages: msgs,
-      count: msgs.length
+      messages: combined,
+      count: combined.length
     });
   }
 
@@ -900,22 +942,22 @@ const server = http.createServer((req, res) => {
     });
   }
 
-  // 8. GITHUB SÜRÜM / OTA KONTROLÜ (SemVer 2.0.0 v1.0.6)
+  // 8. GITHUB SÜRÜM / OTA KONTROLÜ (SemVer 2.0.0 v1.0.7)
   if (path === '/api/v1/version/check' && method === 'GET') {
     return sendJSON(res, 200, {
-      latestVersion: 'v1.0.6',
+      latestVersion: 'v1.0.7',
       semver: {
         major: 1,
         minor: 0,
-        patch: 6,
-        build: 7
+        patch: 7,
+        build: 8
       },
-      versionCode: 7,
-      latestCommitHash: 'ba202c7',
+      versionCode: 8,
+      latestCommitHash: 'socies-v1.0.7',
       mandatoryUpdate: false,
-      releaseNotes: 'Modül 2 Tamamlandı: 7 Sims yaşam ihtiyacı (Açlık, Tuvalet, Hijyen, Uyku, Eğlence, Sevgi, Sosyal), Tamagotchi kriz mekanikleri (kaka kazaları, sinekler, hastalık ve ilaç tedavisi), dokunarak okşama/sevme ve 4 evreli karakter evrim motoru.',
+      releaseNotes: 'Modül 3, 4 ve 5 Tamamlandı: Karakter Atölyesi (10x10 Kombinatör, 24x24 Serbest Piksel Tuvali, Selfie 1-Bit Vision Dönüştürücü), Sosyal Çok Oyunculu Düellolar (Taş-Kağıt-Makas OLED Düellosu, Nostaljik Çağrı Cihazı Pager ve Kayan Yazı), Sadakat & Retansiyon (Günlük Seri, 3.000 Adım Sandığı ve Rebirth Yumurta Çatlatma).',
       apkDownloadUrl: '/download/socies-app.apk',
-      githubApkUrl: 'https://github.com/mcturan/socies/releases/download/v1.0.6/socies-app.apk'
+      githubApkUrl: 'https://github.com/mcturan/socies/releases/download/v1.0.7/socies-app.apk'
     });
   }
 
