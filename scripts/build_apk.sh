@@ -26,8 +26,8 @@ cat << 'EOM' > $BUILD_DIR/AndroidManifest.xml
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="io.socies.app"
-    android:versionCode="9"
-    android:versionName="1.0.8">
+    android:versionCode="10"
+    android:versionName="1.0.9">
 
     <uses-sdk android:minSdkVersion="21" android:targetSdkVersion="28" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -88,7 +88,7 @@ zipalign -f -p 4 $BUILD_DIR/unaligned.apk $BUILD_DIR/aligned.apk
 
 echo "=== 5. APK Sign with apksigner ==="
 apksigner sign --ks $KEYSTORE --ks-pass pass:android --key-pass pass:android --out $SRC_DIR/downloads/socies-app.apk $BUILD_DIR/aligned.apk
-cp $SRC_DIR/downloads/socies-app.apk $SRC_DIR/downloads/socies-v1.0.8.apk
+cp $SRC_DIR/downloads/socies-app.apk $SRC_DIR/downloads/socies-v1.0.9.apk
 
 echo "=== 6. Verify APK Signature & Package Info ==="
 apksigner verify -v $SRC_DIR/downloads/socies-app.apk

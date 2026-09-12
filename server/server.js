@@ -309,7 +309,7 @@ const server = http.createServer((req, res) => {
     if (fs.existsSync(apkFile)) {
       res.writeHead(200, {
         'Content-Type': 'application/vnd.android.package-archive',
-        'Content-Disposition': 'attachment; filename="socies-v1.0.8.apk"',
+        'Content-Disposition': 'attachment; filename="socies-v1.0.9.apk"',
         'Access-Control-Allow-Origin': '*'
       });
       return fs.createReadStream(apkFile).pipe(res);
@@ -941,23 +941,23 @@ const server = http.createServer((req, res) => {
     });
   }
 
-  // 8. GITHUB SÜRÜM / OTA KONTROLÜ (SemVer 2.0.0 v1.0.8)
+  // 8. GITHUB SÜRÜM / OTA KONTROLÜ (SemVer 2.0.0 v1.0.9)
   if (path === '/api/v1/version/check' && method === 'GET') {
     const host = req.headers.host || '192.168.1.118:3000';
     return sendJSON(res, 200, {
-      latestVersion: 'v1.0.8',
+      latestVersion: 'v1.0.9',
       semver: {
         major: 1,
         minor: 0,
-        patch: 8,
-        build: 9
+        patch: 9,
+        build: 10
       },
-      versionCode: 9,
-      latestCommitHash: 'socies-v1.0.8',
+      versionCode: 10,
+      latestCommitHash: 'socies-v1.0.9',
       mandatoryUpdate: false,
-      releaseNotes: 'v1.0.8: Tam Otomatik Kendini Güncelleme Motoru (Android Native Download & Install), İlk Açılış Sihirbazı & Yumurta Kuluçka, Pro Modu, Atölye & Çok Oyunculu Seviye Kilitleri.',
+      releaseNotes: 'v1.0.9: Ekran alanı optimizasyonu (sıfır boşluk), 6 Retro Arcade Oyunu (Chrome Dino Runner, Dengeli Pong Squash, Piksel Yılan, Elma Yakalama, Kovboy, RPS), dokunmatik ekran desteği.',
       apkDownloadUrl: `http://${host}/download/socies-app.apk`,
-      githubApkUrl: 'https://github.com/mcturan/socies/releases/download/v1.0.8/socies-app.apk'
+      githubApkUrl: 'https://github.com/mcturan/socies/releases/download/v1.0.9/socies-app.apk'
     });
   }
 
@@ -1158,7 +1158,7 @@ function serveSociesNetworkPage(res) {
       <div class="nav-links">
         <a href="/dashboard" class="nav-btn">📊 Sunucu Paneli</a>
         <a href="/" class="nav-btn">🎮 Web Emülatörü</a>
-        <a href="/download/socies-app.apk" class="dl-btn">📥 APK İndir (v1.0.8)</a>
+        <a href="/download/socies-app.apk" class="dl-btn">📥 APK İndir (v1.0.9)</a>
       </div>
     </div>
 
