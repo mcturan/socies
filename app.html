@@ -636,14 +636,48 @@
     .btn-update-action:active {
       transform: scale(0.98);
     }
-    .btn-update-dismiss {
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
-      font-size: 0.82rem;
-      font-weight: 700;
+    .avatar-opt {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      border: 2px solid #E2E8F0;
+      background: #F8FAFC;
+      font-size: 1.5rem;
       cursor: pointer;
-      padding: 0.4rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    .avatar-opt.active {
+      border-color: #4F46E5;
+      background: #EEF2FF;
+      transform: scale(1.08);
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+    }
+    .egg-card {
+      transition: all 0.2s ease;
+    }
+    .egg-card:hover {
+      transform: translateY(-2px);
+    }
+    .egg-card.selected {
+      border: 2px solid #4F46E5 !important;
+      background: #EEF2FF !important;
+      box-shadow: 0 4px 14px rgba(79, 70, 229, 0.2);
+    }
+    .locked-feature {
+      opacity: 0.55 !important;
+      filter: grayscale(0.85);
+      position: relative;
+      cursor: not-allowed;
+    }
+    .locked-feature::after {
+      content: '🔒';
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      font-size: 0.8rem;
     }
   </style>
 </head>
@@ -777,6 +811,121 @@
     </div>
   </div>
 
+  <!-- FIRST-RUN ONBOARDING & EGG HATCH WIZARD -->
+  <div id="onboardingModal" class="update-overlay" style="display:none; z-index:10000; background:rgba(15,23,42,0.85); backdrop-filter:blur(8px);">
+    <div class="update-dialog" style="max-width:380px; width:92%;">
+      <!-- STEP 1: GİRİŞ & PROFİL -->
+      <div id="onboardStep1" style="width:100%;">
+        <div class="update-icon-badge" style="background:linear-gradient(135deg, #4F46E5, #9333EA);">👋</div>
+        <div class="update-title" style="margin-top:0.4rem;">Socies Dünyasına Hoş Geldin!</div>
+        <p style="font-size:0.8rem; color:var(--text-muted); text-align:center; margin:0.3rem 0 0.8rem;">
+          Sanal evcil hayvanını büyütmek ve arkadaşlarınla buluşmak için profilini oluştur.
+        </p>
+
+        <div style="text-align:left; margin-bottom:0.65rem;">
+          <label style="font-size:0.75rem; font-weight:800; color:var(--text-muted);">E-POSTA VEYA GOOGLE HESABI</label>
+          <input type="email" id="onboardEmail" class="search-friend-input" style="width:100%; font-size:0.88rem; padding:0.6rem; margin-top:3px;" placeholder="ornek@gmail.com (Pro için onaylı mail)">
+        </div>
+
+        <div style="text-align:left; margin-bottom:0.65rem;">
+          <label style="font-size:0.75rem; font-weight:800; color:var(--text-muted);">OYUNCU ADIN / LAKABIN</label>
+          <input type="text" id="onboardNick" class="search-friend-input" style="width:100%; font-size:0.88rem; padding:0.6rem; margin-top:3px;" placeholder="Örn: Prenses, Aslan, Kaptan...">
+        </div>
+
+        <div style="text-align:left; margin-bottom:0.9rem;">
+          <label style="font-size:0.75rem; font-weight:800; color:var(--text-muted);">PROFİL AVATARIN</label>
+          <div style="display:flex; justify-content:space-between; margin-top:4px;" id="onboardAvatarList">
+            <button type="button" class="avatar-opt active" onclick="selectOnboardAvatar('👑', this)">👑</button>
+            <button type="button" class="avatar-opt" onclick="selectOnboardAvatar('🐱', this)">🐱</button>
+            <button type="button" class="avatar-opt" onclick="selectOnboardAvatar('🐶', this)">🐶</button>
+            <button type="button" class="avatar-opt" onclick="selectOnboardAvatar('🦄', this)">🦄</button>
+            <button type="button" class="avatar-opt" onclick="selectOnboardAvatar('🚀', this)">🚀</button>
+            <button type="button" class="avatar-opt" onclick="selectOnboardAvatar('🐼', this)">🐼</button>
+          </div>
+        </div>
+
+        <button class="btn-update-action" onclick="goToOnboardStep(2)">İleri: Yumurtanı Seç ➔</button>
+      </div>
+
+      <!-- STEP 2: YUMURTA SEÇİMİ -->
+      <div id="onboardStep2" style="display:none; width:100%;">
+        <div class="update-icon-badge" style="background:linear-gradient(135deg, #F59E0B, #EF4444);">🥚</div>
+        <div class="update-title" style="margin-top:0.4rem;">Gizemli Yumurtanı Seç!</div>
+        <p style="font-size:0.8rem; color:var(--text-muted); text-align:center; margin:0.3rem 0 0.8rem;">
+          Her yumurta farklı bir enerji ve dostluk bağı taşır. Hangisi kalbine dokunuyor?
+        </p>
+
+        <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:1rem;">
+          <div class="egg-card selected" id="eggRainbow" onclick="selectEggChoice('rainbow', this)" style="border:2px solid #4F46E5; background:#EEF2FF; border-radius:12px; padding:10px; display:flex; align-items:center; gap:12px; cursor:pointer;">
+            <span style="font-size:2rem;">🥚</span>
+            <div style="text-align:left;">
+              <div style="font-weight:900; font-size:0.88rem; color:#4338CA;">Gökkuşağı Yumurtası</div>
+              <div style="font-size:0.75rem; color:#6366F1;">Sevimli, neşeli ve hızlı bağ kuran dost.</div>
+            </div>
+          </div>
+          <div class="egg-card" id="eggSun" onclick="selectEggChoice('sun', this)" style="border:1px solid #CBD5E1; background:#FFFFFF; border-radius:12px; padding:10px; display:flex; align-items:center; gap:12px; cursor:pointer;">
+            <span style="font-size:2rem;">🌟</span>
+            <div style="text-align:left;">
+              <div style="font-weight:900; font-size:0.88rem; color:#B45309;">Güneş Işıltısı Yumurtası</div>
+              <div style="font-size:0.75rem; color:#D97706;">Enerjik, meraklı ve mini oyunlarda ekstra puan.</div>
+            </div>
+          </div>
+          <div class="egg-card" id="eggCosmic" onclick="selectEggChoice('cosmic', this)" style="border:1px solid #CBD5E1; background:#FFFFFF; border-radius:12px; padding:10px; display:flex; align-items:center; gap:12px; cursor:pointer;">
+            <span style="font-size:2rem;">🌌</span>
+            <div style="text-align:left;">
+              <div style="font-weight:900; font-size:0.88rem; color:#6D28D9;">Kozmik Gece Yumurtası</div>
+              <div style="font-size:0.75rem; color:#7C3AED;">Sakin, bilge ve daha az acıkan sadık yoldaş.</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex; gap:8px;">
+          <button class="btn-update-dismiss" style="flex:1;" onclick="goToOnboardStep(1)">Geri</button>
+          <button class="btn-update-action" style="flex:2;" onclick="goToOnboardStep(3)">İleri: İsim Ver ➔</button>
+        </div>
+      </div>
+
+      <!-- STEP 3: İSİM VERME & ÇATLATMA -->
+      <div id="onboardStep3" style="display:none; width:100%;">
+        <div class="update-icon-badge" id="icoEggHatchBadge" style="background:linear-gradient(135deg, #10B981, #059669); font-size:2.4rem;">🥚</div>
+        <div class="update-title" style="margin-top:0.4rem;">Bebeğine Bir İsim Ver</div>
+        <p style="font-size:0.8rem; color:var(--text-muted); text-align:center; margin:0.3rem 0 0.8rem;">
+          Bu isim onun kimliği olacak. Hazır olduğunda yumurtayı çatlatıp dünyaya getir!
+        </p>
+
+        <div style="text-align:left; margin-bottom:1.1rem;">
+          <label style="font-size:0.75rem; font-weight:800; color:var(--text-muted);">BEBEĞİN ADI</label>
+          <input type="text" id="onboardPetName" maxlength="16" class="search-friend-input" style="width:100%; font-size:1.1rem; font-weight:900; text-align:center; padding:0.7rem; margin-top:4px;" value="Pufi" placeholder="Örn: Pufi, Minnoş, Pamuk...">
+        </div>
+
+        <div style="display:flex; gap:8px;">
+          <button class="btn-update-dismiss" style="flex:1;" onclick="goToOnboardStep(2)">Geri</button>
+          <button class="btn-update-action" style="flex:2; background:linear-gradient(135deg, #10B981, #047857);" onclick="finishOnboardingAndHatch()">
+            🐣 Yumurtayı Çatlat!
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FEATURE LOCK MODAL -->
+  <div id="featureLockModal" class="update-overlay" style="display:none;">
+    <div class="update-dialog" style="max-width:350px;">
+      <div class="update-icon-badge" style="background:linear-gradient(135deg, #64748B, #334155);">🔒</div>
+      <div class="update-title" id="txtLockTitle">Özellik Kilitli</div>
+      <p style="font-size:0.82rem; color:var(--text-muted); text-align:center; margin:0.3rem 0;" id="txtLockDescription">
+        Bu özelliğin kilidini açmak için seviye atlamalısın!
+      </p>
+      <div style="background:#F1F5F9; border-radius:12px; padding:10px 14px; margin:0.5rem 0; width:100%; text-align:center;">
+        <div style="font-size:0.72rem; color:var(--text-muted); font-weight:700;">GEREKLİ KOŞUL</div>
+        <div style="font-size:0.92rem; font-weight:900; color:#0F172A;" id="txtLockRequirement">Seviye 2 veya 300 XP</div>
+        <div style="font-size:0.75rem; color:var(--indigo); margin-top:2px;" id="txtLockCurrentProgress">Şu an: Seviye 1 • 0 XP</div>
+      </div>
+      <button class="btn-update-action" onclick="closeFeatureLockModal()">Anladım, Oynamaya Devam!</button>
+      <button type="button" class="btn-update-dismiss" style="font-size:0.75rem; color:var(--amber); font-weight:800;" onclick="promptProCode()">⭐ PRO Kodun var mı? Dokun</button>
+    </div>
+  </div>
+
   <div class="app-container">
     
     <!-- TOP BAR -->
@@ -784,11 +933,15 @@
       <div class="player-profile" onclick="openGoogleAuthModal()" style="cursor:pointer;" title="Hesap ve Profil">
         <div class="player-avatar" id="txtPlayerAvatar">👑</div>
         <div class="player-info">
-          <span class="player-name"><span id="txtPlayerName">Turan</span> <small style="color:var(--emerald);" id="txtPlayerLevel">Lv.5</small> ✏️</span>
-          <span class="player-sub" id="txtPlayerXp">XP: 1420/2000 • 250 ⭐</span>
+          <span class="player-name"><span id="txtPlayerName">Turan</span> <small style="color:var(--emerald);" id="txtPlayerLevel">Lv.1</small> ✏️</span>
+          <span class="player-sub" id="txtPlayerXp">XP: 0/2000 • 250 ⭐</span>
         </div>
       </div>
       <div class="top-header-badges">
+        <div class="badge-chip" id="badgeProMode" onclick="promptProCode()" title="PRO Üyelik: Tüm Özellikler Açık" style="display:none; cursor:pointer; background:linear-gradient(135deg, #FEF3C7, #FDE68A); border-color:#F59E0B; color:#92400E; font-weight:900;">
+          <span>⭐</span>
+          <span>PRO</span>
+        </div>
         <div class="badge-chip" id="badgeGoogleAuth" onclick="openGoogleAuthModal()" title="Google Hesabı" style="cursor:pointer; background:#F8FAFC; border-color:#CBD5E1; color:#0F172A;">
           <span id="icoGoogleAuth">🌐</span>
           <span id="txtGoogleAuth">Google Giriş</span>
@@ -1223,6 +1376,24 @@
       return id;
     }
 
+    // --- PRO MODE & AUTHORIZED ACCOUNTS ---
+    const PRO_EMAILS = [
+      'turan@gmail.com',
+      'mcturan@gmail.com',
+      'admin@socies.io',
+      'pro@socies.io',
+      'turan@tinc.com'
+    ];
+
+    function checkIsProUser(email) {
+      if (localStorage.getItem('socies_pro_mode') === '1') return true;
+      if (!email) return false;
+      const em = email.toLowerCase().trim();
+      if (PRO_EMAILS.includes(em)) return true;
+      if (em.endsWith('@socies.io')) return true;
+      return false;
+    }
+
     const appData = {
       deviceId: getOrCreateDeviceId(),
       mac: 'A4:CF:12:89:34:B1',
@@ -1230,12 +1401,15 @@
       avatar: localStorage.getItem('socies_avatar') || '👑',
       userEmail: localStorage.getItem('socies_user_email') || '',
       isGoogleAuth: !!localStorage.getItem('socies_user_email'),
+      isPro: checkIsProUser(localStorage.getItem('socies_user_email')),
       serverUrl: localStorage.getItem('socies_server_url') || 'http://192.168.1.118:3000',
       isServerConnected: false,
       rankMode: 'friends',
       batteryPct: 88,
+      eggType: localStorage.getItem('socies_egg_type') || 'rainbow',
+      onboardingCompleted: localStorage.getItem('socies_onboarding_completed') === '1',
       
-      // 7 Sims İhtiyaç Değerleri & XP
+      // 7 Sims İhtiyaç Değerleri & XP (Yeni kurulumda Seviye 1'den başlar)
       needs: {
         hunger: 85,
         toilet: 75,
@@ -1244,17 +1418,17 @@
         fun: 95,
         love: 90,
         social: 85,
-        xp: 1420,
-        level: 5,
+        xp: 0,
+        level: 1,
         lastTick: Date.now()
       },
 
       // Evrim & Sağlık / Karakter Durumu (Tamagotchi / Pou / Sims)
       petState: {
         name: localStorage.getItem('socies_pet_name') || 'Pufi',
-        birthTime: parseInt(localStorage.getItem('socies_pet_birth') || (Date.now() - 5 * 86400000)),
-        ageDays: 5,
-        stage: 2, // 1: Bebek 🍼, 2: Çocuk 🎒, 3: Genç 🎧, 4: Yetişkin 👑
+        birthTime: parseInt(localStorage.getItem('socies_pet_birth') || Date.now(), 10),
+        ageDays: 1,
+        stage: 1, // 1: Bebek 🍼, 2: Çocuk 🎒, 3: Genç 🎧, 4: Yetişkin 👑
         isSick: false,
         poopCount: 0,
         careScore: 100
@@ -1270,9 +1444,9 @@
       parts: { body: 0, eyes: 0, mouth: 0, ears: 0, acc: 0 },
 
       // Retention & Daily Pedometer
-      streakDays: parseInt(localStorage.getItem('socies_streak_days') || '5', 10),
+      streakDays: parseInt(localStorage.getItem('socies_streak_days') || '1', 10),
       lastStreakClaim: localStorage.getItem('socies_last_streak_claim') || '',
-      steps: parseInt(localStorage.getItem('socies_steps') || '1420', 10),
+      steps: parseInt(localStorage.getItem('socies_steps') || '0', 10),
       chestClaimed: localStorage.getItem('socies_chest_claimed') === '1'
     };
 
@@ -2247,6 +2421,10 @@
     // MODÜL 3: KARAKTER ATÖLYESİ (KOMBİNATÖR, PİKSEL ÇİZİM & SELFİE DÖNÜŞTÜRÜCÜ)
     // =========================================================================
     function switchStudioMode(mode) {
+      if ((mode === 'draw' || mode === 'selfie') && typeof isFeatureUnlocked === 'function' && !isFeatureUnlocked('studio_draw')) {
+        showFeatureLockNotice('studio_draw');
+        return;
+      }
       document.getElementById('btnStudioModular').classList.toggle('active', mode === 'modular');
       document.getElementById('btnStudioDraw').classList.toggle('active', mode === 'draw');
       document.getElementById('btnStudioSelfie').classList.toggle('active', mode === 'selfie');
@@ -2834,10 +3012,18 @@
       const cId = document.getElementById('consoleIdTag');
       if (cId) cId.innerText = 'ID: ' + appData.deviceId.slice(-6);
       const lvEl = document.getElementById('txtPlayerLevel');
-      if (lvEl) lvEl.innerText = `Lv.${appData.needs.level || 5}`;
+      if (lvEl) lvEl.innerText = `Lv.${appData.needs.level || 1}`;
       const xpEl = document.getElementById('txtPlayerXp');
       if (xpEl) xpEl.innerText = `XP: ${appData.needs.xp}/2000 • 250 ⭐`;
+
+      if (checkIsProUser(appData.userEmail)) appData.isPro = true;
+      const bPro = document.getElementById('badgeProMode');
+      if (bPro) {
+        bPro.style.display = appData.isPro ? 'flex' : 'none';
+      }
+
       updateAuthStatusUI();
+      if (typeof updateFeatureLocksUI === 'function') updateFeatureLocksUI();
     }
 
     async function syncDeviceRegistration() {
@@ -3235,6 +3421,10 @@
     }
 
     function openRebirthModal() {
+      if (typeof isFeatureUnlocked === 'function' && !isFeatureUnlocked('rebirth')) {
+        showFeatureLockNotice('rebirth');
+        return;
+      }
       beep(680, 0.1);
       document.getElementById('rebirthModal').style.display = 'flex';
     }
@@ -3742,6 +3932,10 @@
     }
 
     function launchGameOnConsole(game) {
+      if ((game === 'RPS' || game === 'COWBOY') && typeof isFeatureUnlocked === 'function' && !isFeatureUnlocked('multiplayer')) {
+        showFeatureLockNotice('multiplayer');
+        return;
+      }
       beep(750, 0.1);
       showGlobalToast(`🎮 ${game} oyunu konsolda başlatıldı!`);
       oled.mode = game;
@@ -3776,6 +3970,10 @@
     }
 
     function switchTab(tabId) {
+      if (tabId === 'tab-studio' && typeof isFeatureUnlocked === 'function' && !isFeatureUnlocked('studio')) {
+        showFeatureLockNotice('studio');
+        return;
+      }
       document.querySelectorAll('.tab-view').forEach(el => el.classList.remove('active'));
       document.getElementById(tabId)?.classList.add('active');
 
@@ -3789,6 +3987,200 @@
         'tab-friends': 'navFriends'
       };
       if (idMap[tabId]) document.getElementById(idMap[tabId])?.classList.add('active');
+    }
+
+    // =========================================================================
+    // MODÜL 7: FIRST-RUN ONBOARDING & EGG HATCHING ENGINE
+    // =========================================================================
+    let selectedEggChoice = 'rainbow';
+    let selectedOnboardAvatar = '👑';
+
+    function openOnboardingWizard() {
+      document.getElementById('onboardEmail').value = appData.userEmail || '';
+      document.getElementById('onboardNick').value = appData.nickname.startsWith('Oyuncu_') ? '' : appData.nickname;
+      goToOnboardStep(1);
+      document.getElementById('onboardingModal').style.display = 'flex';
+    }
+
+    function goToOnboardStep(step) {
+      beep(700, 0.08);
+      if (step === 2) {
+        const nick = document.getElementById('onboardNick').value.trim();
+        const email = document.getElementById('onboardEmail').value.trim();
+        if (!nick) {
+          showGlobalToast('⚠️ Lütfen bir oyuncu adı veya lakap girin.');
+          return;
+        }
+        appData.nickname = nick;
+        localStorage.setItem('socies_nickname', nick);
+        if (email) {
+          appData.userEmail = email;
+          localStorage.setItem('socies_user_email', email);
+          if (checkIsProUser(email)) {
+            appData.isPro = true;
+            localStorage.setItem('socies_pro_mode', '1');
+            showGlobalToast('⭐ Onaylı PRO e-posta tespit edildi! PRO Mod etkin.');
+          }
+        }
+        updateProfileUI();
+      }
+
+      document.getElementById('onboardStep1').style.display = (step === 1) ? 'block' : 'none';
+      document.getElementById('onboardStep2').style.display = (step === 2) ? 'block' : 'none';
+      document.getElementById('onboardStep3').style.display = (step === 3) ? 'block' : 'none';
+    }
+
+    function selectOnboardAvatar(av, btn) {
+      selectedOnboardAvatar = av;
+      appData.avatar = av;
+      localStorage.setItem('socies_avatar', av);
+      document.querySelectorAll('#onboardAvatarList .avatar-opt').forEach(el => el.classList.remove('active'));
+      btn.classList.add('active');
+      playTactileClick('click');
+    }
+
+    function selectEggChoice(egg, card) {
+      selectedEggChoice = egg;
+      document.querySelectorAll('.egg-card').forEach(el => el.classList.remove('selected'));
+      card.classList.add('selected');
+      beep(880, 0.1);
+      const eggBadges = { rainbow: '🥚', sun: '🌟', cosmic: '🌌' };
+      const elBadge = document.getElementById('icoEggHatchBadge');
+      if (elBadge) elBadge.innerText = eggBadges[egg] || '🥚';
+    }
+
+    function finishOnboardingAndHatch() {
+      const petName = document.getElementById('onboardPetName').value.trim() || 'Pufi';
+      appData.petState.name = petName;
+      appData.petState.stage = 1; // Stage 1 (Bebek 🍼)
+      appData.petState.birthTime = Date.now();
+      appData.petState.ageDays = 1;
+      appData.eggType = selectedEggChoice;
+      appData.onboardingCompleted = true;
+      localStorage.setItem('socies_pet_name', petName);
+      localStorage.setItem('socies_egg_type', selectedEggChoice);
+      localStorage.setItem('socies_onboarding_completed', '1');
+
+      playLevelUpFanfare();
+      const elBadge = document.getElementById('icoEggHatchBadge');
+      if (elBadge) elBadge.innerText = '🐣';
+
+      setTimeout(() => {
+        document.getElementById('onboardingModal').style.display = 'none';
+        showGlobalToast(`🎉 Tebrikler! ${petName} yumurtadan çıktı ve dünyaya merhaba dedi!`);
+        savePetState();
+        updateNeedsUI();
+        updateFeatureLocksUI();
+        syncDeviceRegistration();
+      }, 700);
+    }
+
+    // =========================================================================
+    // MODÜL 8: PROGRESSION & FEATURE LOCKING (GAMIFICATION & PRO MODE)
+    // =========================================================================
+    const FEATURE_LOCKS = {
+      studio: {
+        name: 'Karakter Atölyesi',
+        reqLevel: 2,
+        reqXp: 300,
+        desc: 'Kendi piksel karakterini tasarlayabilmek için bebeğinle vakit geçirip Seviye 2\'ye ulaşmalı veya 300 XP toplamalısın!'
+      },
+      studio_draw: {
+        name: 'Serbest Çizim & Selfie',
+        reqLevel: 3,
+        reqXp: 600,
+        desc: '24x24 serbest piksel tuvali ve kameradan selfie dönüştürücü Seviye 3\'te açılır!'
+      },
+      multiplayer: {
+        name: 'Çok Oyunculu Düellolar',
+        reqLevel: 2,
+        reqXp: 200,
+        desc: 'Arkadaşlarınla Taş-Kağıt-Makas ve Kovboy Düelloları yapabilmek için Seviye 2\'ye ulaşmalısın!'
+      },
+      rebirth: {
+        name: 'Yeniden Doğuş (Rebirth)',
+        reqStage: 4,
+        reqLevel: 5,
+        desc: 'Yeniden Doğuş döngüsü sadece yetişkinliğe (4. Evre 👑) ulaşmış tecrübeli canlılar için geçerlidir.'
+      }
+    };
+
+    function isFeatureUnlocked(featureKey) {
+      if (appData.isPro) return true;
+      const rule = FEATURE_LOCKS[featureKey];
+      if (!rule) return true;
+
+      const userLevel = (appData.needs && appData.needs.level) || 1;
+      const userXp = (appData.needs && appData.needs.xp) || 0;
+      const petStage = (appData.petState && appData.petState.stage) || 1;
+
+      if (rule.reqStage && petStage < rule.reqStage) return false;
+      if (rule.reqLevel && userLevel < rule.reqLevel && userXp < (rule.reqXp || 0)) return false;
+      return true;
+    }
+
+    function showFeatureLockNotice(featureKey) {
+      const rule = FEATURE_LOCKS[featureKey];
+      if (!rule) return;
+      beep(440, 0.15);
+      const userLevel = (appData.needs && appData.needs.level) || 1;
+      const userXp = (appData.needs && appData.needs.xp) || 0;
+
+      document.getElementById('txtLockTitle').innerText = `🔒 ${rule.name} Kilitli`;
+      document.getElementById('txtLockDescription').innerText = rule.desc;
+      let reqStr = '';
+      if (rule.reqStage) reqStr += `Evre ${rule.reqStage} (Yetişkin) • `;
+      if (rule.reqLevel) reqStr += `Seviye ${rule.reqLevel} veya ${rule.reqXp} XP`;
+      document.getElementById('txtLockRequirement').innerText = reqStr;
+      document.getElementById('txtLockCurrentProgress').innerText = `Şu an: Seviye ${userLevel} • ${userXp} XP (Evre ${appData.petState.stage})`;
+      document.getElementById('featureLockModal').style.display = 'flex';
+    }
+
+    function closeFeatureLockModal() {
+      document.getElementById('featureLockModal').style.display = 'none';
+    }
+
+    function promptProCode() {
+      const code = prompt('⭐ PRO Mod Aktivasyonu:\nLütfen onaylı PRO e-posta adresinizi veya PRO şifrenizi girin:\n(Örn: turan@gmail.com veya PRO2026)');
+      if (!code) return;
+      const clean = code.trim();
+      if (clean === 'PRO2026' || clean.toLowerCase() === 'pro' || checkIsProUser(clean)) {
+        appData.isPro = true;
+        localStorage.setItem('socies_pro_mode', '1');
+        if (clean.includes('@')) {
+          appData.userEmail = clean;
+          localStorage.setItem('socies_user_email', clean);
+        }
+        closeFeatureLockModal();
+        playLevelUpFanfare();
+        showGlobalToast('🌟 TEBRİKLER! PRO Mod aktif edildi! Tüm kilitler sınırsız açık.');
+        updateProfileUI();
+        updateFeatureLocksUI();
+      } else {
+        alert('Geçersiz PRO kodu veya yetkisiz e-posta.');
+      }
+    }
+
+    function updateFeatureLocksUI() {
+      // 1. Bottom Nav Atölye
+      const navSt = document.getElementById('navStudio');
+      if (navSt) {
+        navSt.classList.toggle('locked-feature', !isFeatureUnlocked('studio'));
+      }
+
+      // 2. Studio Sub-tabs (Çizim ve Selfie)
+      const btnDr = document.getElementById('btnStudioDraw');
+      const btnSf = document.getElementById('btnStudioSelfie');
+      const isDrawUnlocked = isFeatureUnlocked('studio_draw');
+      if (btnDr) btnDr.classList.toggle('locked-feature', !isDrawUnlocked);
+      if (btnSf) btnSf.classList.toggle('locked-feature', !isDrawUnlocked);
+
+      // 3. Çok Oyunculu Kartlar
+      const isMultiUnlocked = isFeatureUnlocked('multiplayer');
+      const cardCowboy = document.querySelector('.game-card[onclick*="COWBOY"]');
+      const cardRps = document.querySelector('.game-card[onclick*="RPS"]');
+      if (cardCowboy) cardCowboy.classList.toggle('locked-feature', !isMultiUnlocked);
+      if (cardRps) cardRps.classList.toggle('locked-feature', !isMultiUnlocked);
     }
 
     // =========================================================================
@@ -3812,15 +4204,27 @@
       console.log('[OTA] Sürüm kontrolü başlatılıyor... Mevcut:', CURRENT_APP_VERSION);
       let latest = null;
 
-      // 1. Önce yerel merkezi sunucuyu dene
-      try {
-        const res = await fetch('/api/v1/version/check', { signal: AbortSignal.timeout(3000) });
-        if (res.ok) {
-          latest = await res.json();
-          console.log('[OTA] Sunucu versiyonu alındı:', latest.latestVersion);
-        }
-      } catch (e) {
-        console.log('[OTA] Yerel sunucu yanıt vermedi, GitHub deneniyor...');
+      // 1. Olası sunucu adreslerini tara (WebView dosya sistemi için mutlak URL zorunlu)
+      const checkUrls = [];
+      if (appData.serverUrl) checkUrls.push(appData.serverUrl);
+      checkUrls.push('http://192.168.1.118:3000');
+      checkUrls.push('http://192.168.1.2:3000');
+      if (window.location.origin && window.location.origin.startsWith('http')) {
+        checkUrls.push(window.location.origin);
+      }
+
+      for (const host of checkUrls) {
+        try {
+          const res = await fetch(`${host}/api/v1/version/check`, { signal: AbortSignal.timeout(2200) });
+          if (res.ok) {
+            latest = await res.json();
+            if (latest && latest.apkDownloadUrl && !latest.apkDownloadUrl.startsWith('http')) {
+              latest.apkDownloadUrl = `${host}${latest.apkDownloadUrl}`;
+            }
+            console.log('[OTA] Sunucu versiyonu alındı:', latest.latestVersion);
+            break;
+          }
+        } catch (e) {}
       }
 
       // 2. Eğer yerel sunucu yanıt vermediyse GitHub Releases API'ye sor
@@ -3873,7 +4277,7 @@
     function proceedAppUpdate() {
       if (!pendingUpdateData) return;
       beep(980, 0.2);
-      const url = pendingUpdateData.apkDownloadUrl || '/download/socies-app.apk';
+      const url = pendingUpdateData.apkDownloadUrl || (appData.serverUrl + '/download/socies-app.apk');
       showGlobalToast('📥 APK indiriliyor... İndirme tamamlandığında bildirim panelinden dokunup yükleyin.');
       
       setTimeout(() => {
@@ -3887,6 +4291,11 @@
       updateProfileUI();
       discoverAndConnectServer();
       setTimeout(() => checkAppVersionOnBoot(false), 1500);
+
+      // İlk açılış onboarding kontrolü
+      if (!localStorage.getItem('socies_onboarding_completed')) {
+        setTimeout(() => openOnboardingWizard(), 600);
+      }
     });
   </script>
 </body>

@@ -304,13 +304,12 @@ const server = http.createServer((req, res) => {
   }
 
   // 1.5 TEK BİRLEŞİK APK İNDİRME UÇ NOKTALARI
-
-  if (path === '/download/socies-app.apk' || path === '/downloads/socies-app.apk' || path === '/socies-app.apk' || path === '/download/socies-v1.0.5.apk' || path === '/download/socies-v1.0.4.apk') {
+  if (path.startsWith('/download/') || path.startsWith('/downloads/') || path === '/socies-app.apk') {
     const apkFile = pathModule.join(__dirname, '../downloads/socies-app.apk');
     if (fs.existsSync(apkFile)) {
       res.writeHead(200, {
         'Content-Type': 'application/vnd.android.package-archive',
-        'Content-Disposition': 'attachment; filename="socies-v1.0.5.apk"',
+        'Content-Disposition': 'attachment; filename="socies-v1.0.7.apk"',
         'Access-Control-Allow-Origin': '*'
       });
       return fs.createReadStream(apkFile).pipe(res);
@@ -1158,7 +1157,7 @@ function serveSociesNetworkPage(res) {
       <div class="nav-links">
         <a href="/dashboard" class="nav-btn">📊 Sunucu Paneli</a>
         <a href="/" class="nav-btn">🎮 Web Emülatörü</a>
-        <a href="/download/socies-app.apk" class="dl-btn">📥 APK İndir</a>
+        <a href="/download/socies-app.apk" class="dl-btn">📥 APK İndir (v1.0.7)</a>
       </div>
     </div>
 
