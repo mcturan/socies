@@ -309,7 +309,7 @@ const server = http.createServer((req, res) => {
     if (fs.existsSync(apkFile)) {
       res.writeHead(200, {
         'Content-Type': 'application/vnd.android.package-archive',
-        'Content-Disposition': 'attachment; filename="socies-v1.0.7.apk"',
+        'Content-Disposition': 'attachment; filename="socies-v1.0.8.apk"',
         'Access-Control-Allow-Origin': '*'
       });
       return fs.createReadStream(apkFile).pipe(res);
@@ -941,22 +941,23 @@ const server = http.createServer((req, res) => {
     });
   }
 
-  // 8. GITHUB SÜRÜM / OTA KONTROLÜ (SemVer 2.0.0 v1.0.7)
+  // 8. GITHUB SÜRÜM / OTA KONTROLÜ (SemVer 2.0.0 v1.0.8)
   if (path === '/api/v1/version/check' && method === 'GET') {
+    const host = req.headers.host || '192.168.1.118:3000';
     return sendJSON(res, 200, {
-      latestVersion: 'v1.0.7',
+      latestVersion: 'v1.0.8',
       semver: {
         major: 1,
         minor: 0,
-        patch: 7,
-        build: 8
+        patch: 8,
+        build: 9
       },
-      versionCode: 8,
-      latestCommitHash: 'socies-v1.0.7',
+      versionCode: 9,
+      latestCommitHash: 'socies-v1.0.8',
       mandatoryUpdate: false,
-      releaseNotes: 'Modül 3, 4 ve 5 Tamamlandı: Karakter Atölyesi (10x10 Kombinatör, 24x24 Serbest Piksel Tuvali, Selfie 1-Bit Vision Dönüştürücü), Sosyal Çok Oyunculu Düellolar (Taş-Kağıt-Makas OLED Düellosu, Nostaljik Çağrı Cihazı Pager ve Kayan Yazı), Sadakat & Retansiyon (Günlük Seri, 3.000 Adım Sandığı ve Rebirth Yumurta Çatlatma).',
-      apkDownloadUrl: '/download/socies-app.apk',
-      githubApkUrl: 'https://github.com/mcturan/socies/releases/download/v1.0.7/socies-app.apk'
+      releaseNotes: 'v1.0.8: Tam Otomatik Kendini Güncelleme Motoru (Android Native Download & Install), İlk Açılış Sihirbazı & Yumurta Kuluçka, Pro Modu, Atölye & Çok Oyunculu Seviye Kilitleri.',
+      apkDownloadUrl: `http://${host}/download/socies-app.apk`,
+      githubApkUrl: 'https://github.com/mcturan/socies/releases/download/v1.0.8/socies-app.apk'
     });
   }
 
@@ -1157,7 +1158,7 @@ function serveSociesNetworkPage(res) {
       <div class="nav-links">
         <a href="/dashboard" class="nav-btn">📊 Sunucu Paneli</a>
         <a href="/" class="nav-btn">🎮 Web Emülatörü</a>
-        <a href="/download/socies-app.apk" class="dl-btn">📥 APK İndir (v1.0.7)</a>
+        <a href="/download/socies-app.apk" class="dl-btn">📥 APK İndir (v1.0.8)</a>
       </div>
     </div>
 

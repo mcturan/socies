@@ -688,12 +688,18 @@
     <div class="update-dialog">
       <div class="update-icon-badge">🚀</div>
       <div class="update-title">Yeni Güncelleme Mevcut!</div>
-      <div class="update-pill" id="updVersionTag">v1.0.6 Hazır</div>
+      <div class="update-pill" id="updVersionTag">v1.0.8 Hazır</div>
       <div class="update-notes-box" id="updReleaseNotes">
         Yeni özellikler ve iyileştirmeler yayınlandı.
       </div>
+      <div id="updAutoCountdown" style="font-size:0.8rem; color:#6366f1; margin-bottom:0.75rem; font-weight:600; text-align:center;">
+        ⚡ Otomatik indirme 3 saniye içinde başlayacak...
+      </div>
       <button class="btn-update-action" id="btnRunUpdate" onclick="proceedAppUpdate()">
         <span>⚡</span> Hemen Güncelle & Yükle
+      </button>
+      <button class="btn-update-dismiss" onclick="dismissUpdateModal()" style="width:100%; margin-top:0.5rem; background:transparent; border:none; color:var(--text-muted); cursor:pointer; font-size:0.82rem; padding:0.4rem;">
+        Daha Sonra Hatırlat
       </button>
     </div>
   </div>
@@ -952,7 +958,7 @@
         </div>
         <div class="badge-chip" id="badgeAppVersion" onclick="manualCheckUpdate()" title="Sürüm: Dokunarak Kontrol Et" style="cursor:pointer;">
           <span>🚀</span>
-          <span id="txtCurrentVersion">v1.0.7</span>
+          <span id="txtCurrentVersion">v1.0.8</span>
         </div>
         <div class="badge-chip" title="Cihaz Kimliği (Hardware ID)">
           <span>📟</span>
@@ -4186,8 +4192,9 @@
     // =========================================================================
     // OTA AUTO-UPDATER & VERSION CHECK ENGINE
     // =========================================================================
-    const CURRENT_APP_VERSION = 'v1.0.7';
+    const CURRENT_APP_VERSION = 'v1.0.8';
     let pendingUpdateData = null;
+    let autoUpdateCountdownTimer = null;
 
     function isVersionNewer(remoteVer, localVer) {
       if (!remoteVer || !localVer) return false;
@@ -4250,9 +4257,29 @@
         if (isVersionNewer(latest.latestVersion, CURRENT_APP_VERSION)) {
           pendingUpdateData = latest;
           document.getElementById('updVersionTag').innerText = `${latest.latestVersion} Yayında!`;
-          document.getElementById('updReleaseNotes').innerText = latest.releaseNotes || 'Yeni özellikler, hata düzeltmeleri ve performans iyileştirmeleri.';
+          document.getElementById('updReleaseNotes').innerText = latest.releaseNotes || 'Yeni özellikler, hata düzeltmeleri ve otomatik kendini güncelleme motoru.';
           document.getElementById('updateModal').style.display = 'flex';
           beep(880, 0.2);
+
+          // Otomatik Geri Sayım: Kullanıcı dokunmasa dahi sistem kendi kendini indirir
+          let countdown = 3;
+          const countdownEl = document.getElementById('updAutoCountdown');
+          if (countdownEl) {
+            countdownEl.innerText = `⚡ Otomatik indirme ${countdown} saniye içinde başlayacak...`;
+          }
+          if (autoUpdateCountdownTimer) clearInterval(autoUpdateCountdownTimer);
+          autoUpdateCountdownTimer = setInterval(() => {
+            countdown--;
+            if (countdownEl) {
+              countdownEl.innerText = `⚡ Otomatik indirme ${countdown} saniye içinde başlayacak...`;
+            }
+            if (countdown <= 0) {
+              clearInterval(autoUpdateCountdownTimer);
+              autoUpdateCountdownTimer = null;
+              proceedAppUpdate();
+            }
+          }, 1000);
+
         } else {
           if (isManual) {
             showGlobalToast(`✅ Uygulamanız en güncel sürümde (${CURRENT_APP_VERSION})`);
@@ -4270,18 +4297,58 @@
     }
 
     function dismissUpdateModal() {
+      if (autoUpdateCountdownTimer) {
+        clearInterval(autoUpdateCountdownTimer);
+        autoUpdateCountdownTimer = null;
+      }
       document.getElementById('updateModal').style.display = 'none';
-      showGlobalToast('ℹ️ Güncelleme ertelendi. Profildeki sürüm ikonuna dokunarak güncelleyebilirsiniz.');
+      showGlobalToast('ℹ️ Güncelleme ertelendi. Profildeki sürüm rozetine dokunarak güncelleyebilirsiniz.');
     }
 
     function proceedAppUpdate() {
       if (!pendingUpdateData) return;
+      if (autoUpdateCountdownTimer) {
+        clearInterval(autoUpdateCountdownTimer);
+        autoUpdateCountdownTimer = null;
+      }
       beep(980, 0.2);
+
+      const btn = document.getElementById('btnRunUpdate');
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<span>⏳</span> İndiriliyor...';
+      }
+      const countdownEl = document.getElementById('updAutoCountdown');
+      if (countdownEl) {
+        countdownEl.innerText = '📥 Paket indiriliyor... Bittiğinde kurulum açılacak.';
+      }
+
       const url = pendingUpdateData.apkDownloadUrl || (appData.serverUrl + '/download/socies-app.apk');
-      showGlobalToast('📥 APK indiriliyor... İndirme tamamlandığında bildirim panelinden dokunup yükleyin.');
-      
+      showGlobalToast('📥 Güncelleme indiriliyor... Tamamlandığında otomatik kurulacak.');
+
+      // 1. Android Native SociesBridge üzerinden doğrudan indirme ve paket kurulumu
+      if (window.SociesNative && typeof window.SociesNative.autoUpdateApp === 'function') {
+        try {
+          window.SociesNative.autoUpdateApp(url);
+          return;
+        } catch (e) {
+          console.warn('[OTA] Native güncelleme başlatılamadı, web fallback deneniyor:', e);
+        }
+      }
+
+      // 2. Tarayıcı / Web / Eski WebView fallback
       setTimeout(() => {
-        window.location.href = url;
+        try {
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'socies-update.apk';
+          a.target = '_blank';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        } catch (e) {
+          window.location.href = url;
+        }
       }, 500);
     }
 
