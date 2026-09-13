@@ -696,7 +696,7 @@
     <div class="update-dialog">
       <div class="update-icon-badge">🚀</div>
       <div class="update-title">Yeni Güncelleme Mevcut!</div>
-      <div class="update-pill" id="updVersionTag">v1.0.9 Hazır</div>
+      <div class="update-pill" id="updVersionTag">v1.0.10 Hazır</div>
       <div class="update-notes-box" id="updReleaseNotes">
         Yeni özellikler ve iyileştirmeler yayınlandı.
       </div>
@@ -966,7 +966,7 @@
         </div>
         <div class="badge-chip" id="badgeAppVersion" onclick="manualCheckUpdate()" title="Sürüm: Dokunarak Kontrol Et" style="cursor:pointer;">
           <span>🚀</span>
-          <span id="txtCurrentVersion">v1.0.9</span>
+          <span id="txtCurrentVersion">v1.0.10</span>
         </div>
       </div>
     </div>
@@ -2667,10 +2667,10 @@
             if (sel === 'BESLE') oled.menuLevel = 'FOOD';
             else if (sel === 'OYUNLAR') oled.menuLevel = 'GAMES';
             else if (sel === 'DURUM') oled.menuLevel = 'STATS';
-            else if (sel === 'TUVALET') { oled.mode = 'TOILET'; flushToiletNeeds(); }
-            else if (sel === 'BANYO') { oled.mode = 'BATH'; bathNeeds(); }
-            else if (sel === 'İLAÇ') { giveMedicine(); oled.mode = 'IDLE'; }
-            else if (sel === 'UYUT') { oled.mode = 'SLEEPING'; sleepNeeds(); }
+            else if (sel === 'TUVALET') { oled.mode = 'TOILET'; performNeedAction('CLEAN_TOILET'); }
+            else if (sel === 'BANYO') { oled.mode = 'BATH'; performNeedAction('BATH'); }
+            else if (sel === 'İLAÇ') { performNeedAction('MEDICINE'); oled.mode = 'IDLE'; }
+            else if (sel === 'UYUT') { oled.mode = 'SLEEPING'; performNeedAction('SLEEP'); }
           }
         } else if (oled.menuLevel === 'GAMES') {
           if (btn === 'LEFT') oled.gameIdx = (oled.gameIdx - 1 + oled.gameItems.length) % oled.gameItems.length;
@@ -2689,7 +2689,7 @@
           if (btn === 'RIGHT') oled.foodIdx = (oled.foodIdx + 1) % oled.foodItems.length;
           if (btn === 'BACK') oled.menuLevel = 'ROOT';
           if (btn === 'SELECT') {
-            feedNeeds();
+            performNeedAction('FEED');
             oled.mode = 'EATING';
           }
         } else if (oled.menuLevel === 'STATS') {
@@ -2703,7 +2703,7 @@
         if (btn === 'SELECT') oled.mode = 'MENU';
         else if (btn === 'LEFT') {
           // Hızlı Besleme
-          feedNeeds();
+          performNeedAction('FEED');
           oled.mode = 'EATING';
         } else if (btn === 'RIGHT') {
           // Hızlı Oyun Menüsü
@@ -3450,14 +3450,15 @@
       if (nameEl) nameEl.innerText = appData.nickname;
       const avEl = document.getElementById('txtPlayerAvatar');
       if (avEl) avEl.innerText = appData.avatar;
-      const bDev = document.getElementById('badgeDeviceId');
-      if (bDev) bDev.innerText = appData.deviceId.slice(-6);
-      const cId = document.getElementById('consoleIdTag');
-      if (cId) cId.innerText = 'ID: ' + appData.deviceId.slice(-6);
+      
       const lvEl = document.getElementById('txtPlayerLevel');
       if (lvEl) lvEl.innerText = `Lv.${appData.needs.level || 1}`;
+      
+      const targetXp = (typeof getNextLevelTargetXp === 'function') 
+        ? getNextLevelTargetXp(appData.needs.level || 1) 
+        : ((appData.needs.level || 1) * 350);
       const xpEl = document.getElementById('txtPlayerXp');
-      if (xpEl) xpEl.innerText = `XP: ${appData.needs.xp}/2000 • 250 ⭐`;
+      if (xpEl) xpEl.innerText = `XP: ${appData.needs.xp}/${targetXp} • ${appData.needs.xp} ⭐`;
 
       if (checkIsProUser(appData.userEmail)) appData.isPro = true;
       const bPro = document.getElementById('badgeProMode');
@@ -3987,14 +3988,33 @@
       showGlobalToast('💖 Pufi kıkırdadı ve sana sarıldı! (+12 XP)');
     }
 
-    // Level-up & Evrim Mekaniği (Fanfare + Kutlama Diyaloğu)
-    function addPetXP(amount) {
-      appData.needs.xp = (appData.needs.xp || 0) + amount;
-      const currentLevel = appData.needs.level || 1;
-      const xpNeeded = currentLevel * 300;
+    // Yardımcı bakım kısayolları
+    function feedNeeds() { performNeedAction('FEED'); }
+    function flushToiletNeeds() { performNeedAction('CLEAN_TOILET'); }
+    function bathNeeds() { performNeedAction('BATH'); }
+    function sleepNeeds() { performNeedAction('SLEEP'); }
+    function giveMedicine() { performNeedAction('MEDICINE'); }
 
-      if (appData.needs.xp >= xpNeeded) {
-        appData.needs.level = currentLevel + 1;
+    function getNextLevelTargetXp(level) {
+      return Math.max(300, (level || 1) * 350);
+    }
+
+    // Level-up & Evrim Mekaniği (Dengeli Kademeli XP & Fanfare)
+    function addPetXP(amount) {
+      if (!amount || amount <= 0) return;
+      appData.needs.xp = (appData.needs.xp || 0) + amount;
+      let currentLevel = appData.needs.level || 1;
+      let targetXp = getNextLevelTargetXp(currentLevel);
+      let leveledUp = false;
+
+      while (appData.needs.xp >= targetXp && currentLevel < 50) {
+        currentLevel++;
+        appData.needs.level = currentLevel;
+        targetXp = getNextLevelTargetXp(currentLevel);
+        leveledUp = true;
+      }
+
+      if (leveledUp) {
         playLevelUpFanfare();
         showGlobalToast(`🎉 SEVİYE ATLADI! Tebrikler, Lv.${appData.needs.level} oldun!`);
 
@@ -4013,6 +4033,10 @@
           triggerEvolutionModal(newStage);
         }
       }
+
+      updateProfileUI();
+      saveNeeds();
+      savePetState();
     }
 
     function triggerEvolutionModal(stage) {
@@ -4634,7 +4658,7 @@
     // =========================================================================
     // OTA AUTO-UPDATER & VERSION CHECK ENGINE
     // =========================================================================
-    const CURRENT_APP_VERSION = 'v1.0.9';
+    const CURRENT_APP_VERSION = 'v1.0.10';
     let pendingUpdateData = null;
     let autoUpdateCountdownTimer = null;
 

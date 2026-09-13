@@ -21,6 +21,7 @@ import android.provider.Settings;
 import android.view.View;
 import android.webkit.DownloadListener;
 import android.webkit.JavascriptInterface;
+import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
@@ -31,23 +32,11 @@ import android.widget.Toast;
 import java.io.File;
 
 public class MainActivity extends Activity {
-    private static final int PERMISSION_REQUEST_CODE = 1001;
     private static final int INSTALL_PERMISSION_REQUEST_CODE = 1002;
     private WebView webView;
     private long downloadId = -1;
     private BroadcastReceiver downloadReceiver;
-
-    private static final String[] REQUIRED_PERMISSIONS = new String[]{
-        android.Manifest.permission.CAMERA,
-        android.Manifest.permission.READ_CONTACTS,
-        android.Manifest.permission.WRITE_CONTACTS,
-        android.Manifest.permission.RECORD_AUDIO,
-        android.Manifest.permission.BODY_SENSORS,
-        android.Manifest.permission.ACCESS_FINE_LOCATION,
-        android.Manifest.permission.ACCESS_COARSE_LOCATION,
-        android.Manifest.permission.READ_EXTERNAL_STORAGE,
-        android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-    };
+    private boolean doubleBackToExitPressedOnce = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,13 +54,7 @@ public class MainActivity extends Activity {
         setContentView(webView);
 
         configureWebView();
-
-        if (hasAllPermissions()) {
-            checkBatteryOptimization();
-            loadGame();
-        } else {
-            requestAllPermissions();
-        }
+        loadGame();
     }
 
     private void configureWebView() {
@@ -256,88 +239,48 @@ public class MainActivity extends Activity {
         }
     }
 
-    private boolean hasAllPermissions() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return true;
-        for (String perm : REQUIRED_PERMISSIONS) {
-            if (checkSelfPermission(perm) != PackageManager.PERMISSION_GRANTED) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private void requestAllPermissions() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            requestPermissions(REQUIRED_PERMISSIONS, PERMISSION_REQUEST_CODE);
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == PERMISSION_REQUEST_CODE) {
-            boolean allGranted = true;
-            for (int res : grantResults) {
-                if (res != PackageManager.PERMISSION_GRANTED) {
-                    allGranted = false;
-                    break;
-                }
-            }
-
-            if (allGranted) {
-                Toast.makeText(this, "Tüm izinler onaylandı! Socies başlıyor...", Toast.LENGTH_SHORT).show();
-                checkBatteryOptimization();
-                loadGame();
-            } else {
-                showPermissionRequiredDialog();
-            }
-        }
-    }
-
-    private void checkBatteryOptimization() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
-            if (pm != null && !pm.isIgnoringBatteryOptimizations(getPackageName())) {
-                try {
-                    Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
-                    intent.setData(Uri.parse("package:" + getPackageName()));
-                    startActivity(intent);
-                } catch (Exception ignored) {}
-            }
-        }
-    }
-
-    private void showPermissionRequiredDialog() {
-        new AlertDialog.Builder(this)
-            .setTitle("🔒 Zorunlu İzinler Eksik")
-            .setMessage("Socies'in çalışabilmesi ve evcil hayvanınızın arka planda yaşayabilmesi için Sensörler, Telefon Defteri, Kamera, Ses ve Konum izinleri zorunludur.\n\nLütfen tüm izinleri verin.")
-            .setCancelable(false)
-            .setPositiveButton("İzinleri Ver", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    requestAllPermissions();
-                }
-            })
-            .setNegativeButton("Ayarları Aç", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                    intent.setData(Uri.fromParts("package", getPackageName(), null));
-                    startActivity(intent);
-                }
-            })
-            .show();
-    }
-
     private void loadGame() {
         webView.loadUrl("file:///android_asset/index.html");
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        if (!hasAllPermissions()) {
-            showPermissionRequiredDialog();
+    public void onBackPressed() {
+        if (webView != null) {
+            // Webview içinde JS çalıştır: Konsolda oyundaysa veya menüdeyse GERİ bas
+            webView.evaluateJavascript(
+                "(function(){ " +
+                "  if (typeof oled !== 'undefined' && oled && oled.mode && oled.mode !== 'IDLE') { " +
+                "    handleConsoleBtn('BACK'); " +
+                "    return true; " +
+                "  } " +
+                "  return false; " +
+                "})()",
+                new ValueCallback<String>() {
+                    @Override
+                    public void onReceiveValue(String value) {
+                        if ("true".equals(value)) {
+                            return;
+                        }
+
+                        if (doubleBackToExitPressedOnce) {
+                            MainActivity.super.onBackPressed();
+                            return;
+                        }
+
+                        doubleBackToExitPressedOnce = true;
+                        Toast.makeText(MainActivity.this, "Çıkmak için tekrar geri tuşuna basın", Toast.LENGTH_SHORT).show();
+
+                        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                doubleBackToExitPressedOnce = false;
+                            }
+                        }, 2000);
+                    }
+                }
+            );
+        } else {
+            super.onBackPressed();
         }
     }
 
