@@ -309,7 +309,7 @@ const server = http.createServer((req, res) => {
     if (fs.existsSync(apkFile)) {
       res.writeHead(200, {
         'Content-Type': 'application/vnd.android.package-archive',
-        'Content-Disposition': 'attachment; filename="socies-v1.0.12.apk"',
+        'Content-Disposition': 'attachment; filename="socies-v1.0.13.apk"',
         'Access-Control-Allow-Origin': '*'
       });
       return fs.createReadStream(apkFile).pipe(res);
@@ -321,7 +321,7 @@ const server = http.createServer((req, res) => {
     return sendJSON(res, 200, {
       status: 'OK',
       serverTime: Date.now(),
-      serverHost: req.headers.host || '192.168.1.118:3000',
+      serverHost: req.headers.host || '46.1.173.159:3000',
       clientIp: req.socket.remoteAddress,
       registeredDevicesCount: db.prepare('SELECT COUNT(*) AS c FROM devices').get().c
     });
@@ -717,6 +717,7 @@ const server = http.createServer((req, res) => {
 
       try {
         let user = db.prepare('SELECT * FROM users WHERE email = ?').get(normEmail);
+        const isNewUser = !user;
 
         if (user) {
           // Mevcut kullanıcı: Son giriş ve cihaz ID güncelle
@@ -732,9 +733,9 @@ const server = http.createServer((req, res) => {
 
           user = db.prepare('SELECT * FROM users WHERE email = ?').get(normEmail);
         } else {
-          // Yeni kullanıcı kaydı oluştur
+          // Yeni kullanıcı kaydı oluştur (henüz yumurtadan çıkmamış/çatlamamış)
           const initialSave = {
-            pet: pet || { breed: 'top', stage: 1, ageDays: 1, score: 100 },
+            pet: pet ? Object.assign({}, pet, { hatched: false }) : null,
             needs: needs || { hunger: 90, fun: 90, love: 90, sleep: 90, toilet: 90, clean: 90, xp: 100, level: 1 },
             stats: stats || { batteryPct: 100, steps: 0 },
             createdAt: now
@@ -794,6 +795,7 @@ const server = http.createServer((req, res) => {
 
         return sendJSON(res, 200, {
           success: true,
+          isNewUser,
           message: 'Google ile giriş başarılı',
           user: {
             email: user.email,
@@ -815,25 +817,43 @@ const server = http.createServer((req, res) => {
   // 7.0.1 BULUT İHTİYAÇ VE İLERLEME SENKRONİZASYONU (CLOUD SYNC)
   if (path === '/api/v1/auth/sync' && method === 'POST') {
     return parseBody(req, (body) => {
-      const { email, deviceId, cloudSave, pet, needs, stats } = body;
+      const { email, deviceId, nickname, cloudSave, pet, needs, stats } = body;
       if (!email) return sendJSON(res, 400, { error: 'email parametresi zorunludur' });
 
       const normEmail = email.trim().toLowerCase();
       const now = Date.now();
 
       try {
-        const payloadStr = JSON.stringify(cloudSave || { pet, needs, stats, updatedAt: now });
+        let existingSave = {};
+        try {
+          const userRow = db.prepare('SELECT cloud_save_json, nickname FROM users WHERE email = ?').get(normEmail);
+          if (userRow && userRow.cloud_save_json) {
+            existingSave = JSON.parse(userRow.cloud_save_json || '{}');
+          }
+        } catch(errParse) {}
+
+        const mergedPet = pet || existingSave.pet || null;
+        const mergedNeeds = needs || existingSave.needs || null;
+        const mergedStats = stats || existingSave.stats || null;
+        const payloadStr = JSON.stringify(cloudSave || Object.assign({}, existingSave, {
+          pet: mergedPet,
+          needs: mergedNeeds,
+          stats: mergedStats,
+          updatedAt: now
+        }));
 
         db.prepare(`
           UPDATE users SET
+            nickname = COALESCE(?, nickname),
             cloud_save_json = ?,
             last_login = ?
           WHERE email = ?
-        `).run(payloadStr, now, normEmail);
+        `).run(nickname || null, payloadStr, now, normEmail);
 
         if (deviceId) {
           db.prepare(`
             UPDATE devices SET
+              nickname = COALESCE(?, nickname),
               pet_json = COALESCE(?, pet_json),
               needs_json = COALESCE(?, needs_json),
               stats_json = COALESCE(?, stats_json),
@@ -841,9 +861,10 @@ const server = http.createServer((req, res) => {
               is_online = 1
             WHERE device_id = ?
           `).run(
-            pet ? JSON.stringify(pet) : null,
-            needs ? JSON.stringify(needs) : null,
-            stats ? JSON.stringify(stats) : null,
+            nickname || null,
+            mergedPet ? JSON.stringify(mergedPet) : null,
+            mergedNeeds ? JSON.stringify(mergedNeeds) : null,
+            mergedStats ? JSON.stringify(mergedStats) : null,
             now,
             deviceId
           );
@@ -941,23 +962,23 @@ const server = http.createServer((req, res) => {
     });
   }
 
-  // 8. GITHUB SÜRÜM / OTA KONTROLÜ (SemVer 2.0.0 v1.0.12)
+  // 8. GITHUB SÜRÜM / OTA KONTROLÜ (SemVer 2.0.0 v1.0.13)
   if (path === '/api/v1/version/check' && method === 'GET') {
-    const host = req.headers.host || '192.168.1.118:3000';
+    const host = req.headers.host || '46.1.173.159:3000';
     return sendJSON(res, 200, {
-      latestVersion: 'v1.0.12',
+      latestVersion: 'v1.0.13',
       semver: {
         major: 1,
         minor: 0,
-        patch: 12,
-        build: 13
+        patch: 13,
+        build: 14
       },
-      versionCode: 13,
-      latestCommitHash: 'socies-v1.0.12',
+      versionCode: 14,
+      latestCommitHash: 'socies-v1.0.13',
       mandatoryUpdate: false,
-      releaseNotes: 'v1.0.12: Konsol navigasyonu düzeltildi (IDLE sağ/sol menü açar), uyku modu metabolizma yavaşlaması (%80 koruma), detaylı beslenme sistemi (meyve, tam mama, tatlı/karın ağrısı), donma/siyah ekran koruması ve konsol yönlendirme.',
+      releaseNotes: 'v1.0.13: Statik IP (46.1.173.159) desteği, Google tek tıkla giriş ve otomatik profil oluşturma, değiştirilebilir oyuncu adı, yumurta çatlatma, retro Socies Pasaport/Kimlik Kartı ve bulut senkronizasyonu.',
       apkDownloadUrl: `http://${host}/download/socies-app.apk`,
-      githubApkUrl: 'https://github.com/mcturan/socies/releases/download/v1.0.12/socies-app.apk'
+      githubApkUrl: 'https://github.com/mcturan/socies/releases/download/v1.0.13/socies-app.apk'
     });
   }
 
@@ -1020,7 +1041,7 @@ function serveDashboard(res) {
       </div>
       <div class="header-right">
         <a href="https://github.com/mcturan/socies/releases/latest/download/socies-app.apk" class="dl-btn">
-          <span>📥</span> Android APK İndir (v1.0.12)
+          <span>📥</span> Android APK İndir (v1.0.13)
         </a>
         <div style="font-family:'JetBrains Mono'; font-size:0.8rem; color:#00ff66;">● SUNUCU AKTİF (Port: ${PORT})</div>
       </div>
@@ -1040,7 +1061,7 @@ function serveDashboard(res) {
         <div class="stat-lbl">İletilen Çağrı Mesajı</div>
       </div>
       <div class="stat-card">
-        <div class="stat-val" style="color:#ffe600;">v1.0.12</div>
+        <div class="stat-val" style="color:#ffe600;">v1.0.13</div>
         <div class="stat-lbl">OTA Hedef Sürüm</div>
       </div>
     </div>
@@ -1158,7 +1179,7 @@ function serveSociesNetworkPage(res) {
       <div class="nav-links">
         <a href="/dashboard" class="nav-btn">📊 Sunucu Paneli</a>
         <a href="/" class="nav-btn">🎮 Web Emülatörü</a>
-        <a href="/download/socies-app.apk" class="dl-btn">📥 APK İndir (v1.0.12)</a>
+        <a href="/download/socies-app.apk" class="dl-btn">📥 APK İndir (v1.0.13)</a>
       </div>
     </div>
 
@@ -1176,7 +1197,7 @@ function serveSociesNetworkPage(res) {
         <div class="kpi-lbl">${countries.join(', ')}</div>
       </div>
       <div class="kpi-card">
-        <div class="kpi-val" style="color:#ffe600;">v1.0.12</div>
+        <div class="kpi-val" style="color:#ffe600;">v1.0.13</div>
         <div class="kpi-lbl">Ağ Sürümü (SemVer 2.0.0)</div>
       </div>
     </div>

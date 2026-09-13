@@ -684,8 +684,28 @@
       content: '🔒';
       position: absolute;
       top: 6px;
-      right: 6px;
       font-size: 0.8rem;
+    }
+    .btn-google-sign {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 0.75rem 1rem;
+      background: #FFFFFF;
+      color: #1F2937;
+      border: 1.5px solid #CBD5E1;
+      border-radius: 14px;
+      font-size: 0.92rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      transition: all 0.15s ease;
+    }
+    .btn-google-sign:active {
+      transform: scale(0.98);
+      background: #F8FAFC;
     }
   </style>
 </head>
@@ -696,7 +716,7 @@
     <div class="update-dialog">
       <div class="update-icon-badge">🚀</div>
       <div class="update-title">Yeni Güncelleme Mevcut!</div>
-      <div class="update-pill" id="updVersionTag">v1.0.12 Hazır</div>
+      <div class="update-pill" id="updVersionTag">v1.0.13 Hazır</div>
       <div class="update-notes-box" id="updReleaseNotes">
         Yeni özellikler ve iyileştirmeler yayınlandı.
       </div>
@@ -719,9 +739,9 @@
       <div class="update-title">Sunucu Bağlantısı</div>
       <div class="update-pill" id="serverStatusTag">Kontrol Ediliyor...</div>
       <p style="font-size:0.82rem; color:var(--text-muted); text-align:center;">
-        Merkezi Socies sunucusunun IP veya alan adını girin (Örn: 192.168.1.118:3000 veya 192.168.1.2:3000):
+        Merkezi Socies sunucusunun IP veya alan adını girin (Örn: 46.1.173.159:3000 veya 192.168.1.118:3000):
       </p>
-      <input type="text" id="inputServerUrl" class="search-friend-input" style="width:100%; font-size:0.88rem; padding:0.6rem;" placeholder="http://192.168.1.118:3000">
+      <input type="text" id="inputServerUrl" class="search-friend-input" style="width:100%; font-size:0.88rem; padding:0.6rem;" placeholder="http://46.1.173.159:3000">
       <button class="btn-update-action" onclick="saveServerUrl()">⚡ Test Et & Bağlan</button>
       <button class="btn-update-dismiss" onclick="closeServerModal()">Kapat</button>
     </div>
@@ -738,31 +758,34 @@
           <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
         </svg>
       </div>
-      <div class="update-title" style="font-size:1.15rem; margin-top:0.6rem;">Google Hesabı ile Giriş</div>
-      <div class="update-pill" id="lblAuthStatus" style="background:#EFF6FF; color:#1D4ED8; border:1px solid #BFDBFE;">Bulut Kaydı & Çoklu Cihaz</div>
+      <div class="update-title" style="font-size:1.15rem; margin-top:0.6rem;">Oyuncu Profili & Bulut Hesabı</div>
+      <div class="update-pill" id="lblAuthStatus" style="background:#EFF6FF; color:#1D4ED8; border:1px solid #BFDBFE;">Bulut Kaydı & Senkronizasyon</div>
       
-      <p style="font-size:0.8rem; color:var(--text-muted); text-align:center; margin:0.4rem 0;">
-        İki ayrı telefondan iki ayrı Google hesabıyla giriş yapın. Karakteriniz, arkadaş listeniz ve canlı düellolarınız anında senkronize olur.
-      </p>
+      <div style="width:100%; text-align:left; margin:0.4rem 0 0.2rem;">
+        <label style="font-size:0.75rem; font-weight:800; color:var(--text-main);">OYUNCU ADINIZ (HER AN DEĞİŞTİRİLEBİLİR)</label>
+        <div style="display:flex; gap:6px; margin-top:3px;">
+          <input type="text" id="inputGoogleNick" class="search-friend-input" style="flex:1; font-size:0.88rem; padding:0.6rem;" placeholder="Turan">
+          <button type="button" class="btn-micro" style="background:#4F46E5; color:#fff; font-weight:800; padding:0 12px; border-radius:10px;" onclick="updatePlayerNicknameFromModal()">💾 Kaydet</button>
+        </div>
+      </div>
 
       <div style="width:100%; text-align:left; margin:0.4rem 0;">
-        <label style="font-size:0.75rem; font-weight:700; color:var(--text-main);">Google E-Posta Adresi</label>
+        <label style="font-size:0.75rem; font-weight:800; color:var(--text-main);">BAĞLI GOOGLE HESABI</label>
         <input type="email" id="inputGoogleEmail" class="search-friend-input" style="width:100%; font-size:0.88rem; padding:0.6rem; margin-top:3px;" placeholder="ornek@gmail.com">
       </div>
 
-      <div style="width:100%; text-align:left; margin:0.4rem 0;">
-        <label style="font-size:0.75rem; font-weight:700; color:var(--text-main);">Görünen İsim (Nickname)</label>
-        <input type="text" id="inputGoogleNick" class="search-friend-input" style="width:100%; font-size:0.88rem; padding:0.6rem; margin-top:3px;" placeholder="Turan">
-      </div>
-
       <!-- Hızlı Test Düğmeleri (İki Telefon İçin) -->
-      <div style="display:flex; gap:6px; width:100%; margin:0.3rem 0;">
+      <div style="display:flex; gap:6px; width:100%; margin:0.2rem 0;">
         <button type="button" class="btn-micro" style="flex:1; padding:6px; font-size:0.72rem; background:#F1F5F9;" onclick="setQuickTestAccount('telefon1@gmail.com', 'Telefon_1')">📱 1. Telefon</button>
         <button type="button" class="btn-micro" style="flex:1; padding:6px; font-size:0.72rem; background:#F1F5F9;" onclick="setQuickTestAccount('telefon2@gmail.com', 'Telefon_2')">📱 2. Telefon</button>
       </div>
 
-      <button class="btn-update-action" id="btnSubmitGoogleAuth" onclick="submitGoogleAuth()" style="margin-top:0.4rem; background:linear-gradient(135deg, #10B981, #059669);">
-        🚀 Hesaba Bağlan & Senkronize Et
+      <button class="btn-update-action" id="btnSubmitGoogleAuth" onclick="submitGoogleAuth()" style="margin-top:0.3rem; background:linear-gradient(135deg, #10B981, #059669);">
+        🚀 Google ile Giriş Yap / Eşitle
+      </button>
+
+      <button type="button" class="btn-micro" style="width:100%; margin-top:6px; padding:8px; font-weight:800; background:#EEF2FF; color:#4F46E5; border:1px solid #C7D2FE;" onclick="openPassportModal()">
+        🪪 Socies Kimlik Kartını Göster
       </button>
 
       <button class="btn-update-dismiss" onclick="closeGoogleAuthModal()">Kapat</button>
@@ -836,17 +859,34 @@
           Sanal evcil hayvanını büyütmek ve arkadaşlarınla buluşmak için profilini oluştur.
         </p>
 
-        <div style="text-align:left; margin-bottom:0.65rem;">
+        <!-- GOOGLE İLE HIZLI GİRİŞ DÜĞMESİ -->
+        <button type="button" class="btn-google-sign" onclick="startGoogleAuthFlow('onboardEmail')" style="margin-bottom:0.6rem;">
+          <svg width="22" height="22" viewBox="0 0 48 48">
+            <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+            <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+            <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+            <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+          </svg>
+          <span style="font-weight:800; font-size:0.92rem;">Google ile Hızlı Giriş Yap</span>
+        </button>
+
+        <div style="display:flex; align-items:center; margin:0.5rem 0; color:var(--text-muted); font-size:0.75rem;">
+          <span style="flex:1; height:1px; background:#E2E8F0;"></span>
+          <span style="padding:0 8px; font-weight:700;">VEYA BİLGİLERİNİ GİR</span>
+          <span style="flex:1; height:1px; background:#E2E8F0;"></span>
+        </div>
+
+        <div style="text-align:left; margin-bottom:0.55rem;">
+          <label style="font-size:0.75rem; font-weight:800; color:var(--text-muted);">OYUNCU ADIN / LAKABIN (İSTEDİĞİNDE DEĞİŞTİRİLİR)</label>
+          <input type="text" id="onboardNick" class="search-friend-input" style="width:100%; font-size:0.88rem; padding:0.6rem; margin-top:3px;" placeholder="Örn: Turan, Prenses, Kaptan...">
+        </div>
+
+        <div style="text-align:left; margin-bottom:0.55rem;">
           <label style="font-size:0.75rem; font-weight:800; color:var(--text-muted);">E-POSTA VEYA GOOGLE HESABI</label>
-          <input type="email" id="onboardEmail" class="search-friend-input" style="width:100%; font-size:0.88rem; padding:0.6rem; margin-top:3px;" placeholder="ornek@gmail.com (Pro için onaylı mail)">
+          <input type="email" id="onboardEmail" class="search-friend-input" style="width:100%; font-size:0.88rem; padding:0.6rem; margin-top:3px;" placeholder="ornek@gmail.com (Opsiyonel / Bulut Kaydı)">
         </div>
 
-        <div style="text-align:left; margin-bottom:0.65rem;">
-          <label style="font-size:0.75rem; font-weight:800; color:var(--text-muted);">OYUNCU ADIN / LAKABIN</label>
-          <input type="text" id="onboardNick" class="search-friend-input" style="width:100%; font-size:0.88rem; padding:0.6rem; margin-top:3px;" placeholder="Örn: Prenses, Aslan, Kaptan...">
-        </div>
-
-        <div style="text-align:left; margin-bottom:0.9rem;">
+        <div style="text-align:left; margin-bottom:0.8rem;">
           <label style="font-size:0.75rem; font-weight:800; color:var(--text-muted);">PROFİL AVATARIN</label>
           <div style="display:flex; justify-content:space-between; margin-top:4px;" id="onboardAvatarList">
             <button type="button" class="avatar-opt active" onclick="selectOnboardAvatar('👑', this)">👑</button>
@@ -858,7 +898,12 @@
           </div>
         </div>
 
-        <button class="btn-update-action" onclick="goToOnboardStep(2)">İleri: Yumurtanı Seç ➔</button>
+        <div style="display:flex; gap:6px;">
+          <button type="button" class="btn-micro" style="flex:1; padding:9px; font-weight:800; background:#F8FAFC; border:1px solid #CBD5E1; color:#334155; border-radius:10px;" onclick="startGuestFlow()">
+            👤 Misafir Başla
+          </button>
+          <button class="btn-update-action" style="flex:2;" onclick="goToOnboardStep(2)">İleri: Yumurtanı Seç ➔</button>
+        </div>
       </div>
 
       <!-- STEP 2: YUMURTA SEÇİMİ -->
@@ -922,6 +967,50 @@
     </div>
   </div>
 
+  <!-- RETRO SOCIES PASSPORT & CITIZENSHIP CARD MODAL -->
+  <div id="sociesPassportModal" class="update-overlay" style="display:none; z-index:11000; background:rgba(15,23,42,0.85); backdrop-filter:blur(8px);">
+    <div class="update-dialog" style="max-width:390px; width:94%; padding:18px; border:2px solid #6366F1; background:linear-gradient(160deg, #1E1B4B 0%, #0F172A 100%); color:#F8FAFC; box-shadow:0 12px 36px rgba(99,102,241,0.35);">
+      <!-- PASSPORT HEADER -->
+      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px dashed #6366F1; padding-bottom:8px; margin-bottom:12px;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="font-size:1.6rem;">🪪</span>
+          <div style="text-align:left;">
+            <div style="font-family:'Courier New', monospace; font-size:0.92rem; font-weight:900; letter-spacing:1px; color:#A5B4FC;">SOCIES VATANDAŞLIK KİMLİĞİ</div>
+            <div style="font-size:0.68rem; color:#94A3B8; text-transform:uppercase;">Resmi Eğitmen & Sanal Bebek Pasaportu</div>
+          </div>
+        </div>
+        <span class="badge-chip" id="passBadgePro" style="background:#FEF3C7; color:#92400E; border-color:#F59E0B; font-weight:900; display:none;">⭐ PRO</span>
+      </div>
+
+      <!-- PASSPORT CARD BODY -->
+      <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); border-radius:12px; padding:12px; display:flex; gap:12px; align-items:center; margin-bottom:12px;">
+        <div style="width:72px; height:72px; background:#0F172A; border:2px solid #818CF8; border-radius:10px; display:flex; flex-direction:column; align-items:center; justify-content:center; box-shadow:inset 0 0 8px rgba(129,140,248,0.4);">
+          <span id="passAvatar" style="font-size:2.2rem; line-height:1;">👑</span>
+          <span style="font-size:0.6rem; color:#818CF8; font-weight:800; margin-top:2px;">EĞİTMEN</span>
+        </div>
+        <div style="flex:1; text-align:left; font-family:'Courier New', monospace;">
+          <div style="font-size:0.7rem; color:#94A3B8;">EĞİTMEN ADI</div>
+          <div id="passPlayerNick" style="font-size:1.15rem; font-weight:900; color:#38BDF8;">Turan</div>
+          <div style="font-size:0.7rem; color:#94A3B8; margin-top:4px;">BAĞLI HESAP</div>
+          <div id="passUserEmail" style="font-size:0.75rem; color:#E2E8F0; word-break:break-all;">turan@gmail.com</div>
+        </div>
+      </div>
+
+      <!-- PET DETAILS SECTION -->
+      <div style="background:rgba(0,0,0,0.35); border-radius:12px; padding:10px 14px; text-align:left; font-size:0.78rem; font-family:'Courier New', monospace; line-height:1.6; margin-bottom:12px; border:1px solid rgba(255,255,255,0.08);">
+        <div style="display:flex; justify-content:space-between;"><span style="color:#94A3B8;">BEBEK ADI:</span> <strong id="passPetName" style="color:#4ADE80; font-size:0.95rem;">Pufi</strong></div>
+        <div style="display:flex; justify-content:space-between;"><span style="color:#94A3B8;">YUMURTA / IRK:</span> <span id="passEggBreed" style="color:#FDE047;">🥚 Gökkuşağı (Işık)</span></div>
+        <div style="display:flex; justify-content:space-between;"><span style="color:#94A3B8;">GELİŞİM EVRESİ:</span> <span id="passPetStage" style="color:#F472B6;">1. Evre (Bebek 🍼)</span></div>
+        <div style="display:flex; justify-content:space-between;"><span style="color:#94A3B8;">DOĞUM TARİHİ:</span> <span id="passBirthDate" style="color:#CBD5E1;">13 Eylül 2026</span></div>
+        <div style="display:flex; justify-content:space-between;"><span style="color:#94A3B8;">ÇİP SERİ NO:</span> <span id="passSerialNo" style="color:#A5B4FC; font-weight:900;">#SOC-A4CF12</span></div>
+      </div>
+
+      <button class="btn-update-action" onclick="closePassportModal()" style="background:linear-gradient(135deg, #4F46E5, #06B6D4); font-size:0.92rem; font-weight:800; padding:0.75rem;">
+        🚀 Maceraya Başla!
+      </button>
+    </div>
+  </div>
+
   <!-- FEATURE LOCK MODAL -->
   <div id="featureLockModal" class="update-overlay" style="display:none;">
     <div class="update-dialog" style="max-width:350px;">
@@ -962,11 +1051,11 @@
         </div>
         <div class="badge-chip" id="badgeServerNet" onclick="openServerModal()" title="Sunucu: Dokunarak Değiştir" style="cursor:pointer; background:#ECFDF5; border-color:#A7F3D0; color:#059669;">
           <span id="icoServerNet">🟢</span>
-          <span id="txtServerNet">192.168.1.118</span>
+          <span id="txtServerNet">46.1.173.159</span>
         </div>
         <div class="badge-chip" id="badgeAppVersion" onclick="manualCheckUpdate()" title="Sürüm: Dokunarak Kontrol Et" style="cursor:pointer;">
           <span>🚀</span>
-          <span id="txtCurrentVersion">v1.0.12</span>
+          <span id="txtCurrentVersion">v1.0.13</span>
         </div>
       </div>
     </div>
@@ -1460,7 +1549,11 @@
       userEmail: localStorage.getItem('socies_user_email') || '',
       isGoogleAuth: !!localStorage.getItem('socies_user_email'),
       isPro: checkIsProUser(localStorage.getItem('socies_user_email')),
-      serverUrl: localStorage.getItem('socies_server_url') || 'http://192.168.1.118:3000',
+      serverUrl: (function() {
+        const saved = localStorage.getItem('socies_server_url');
+        if (saved && saved !== 'http://192.168.1.118:3000') return saved;
+        return 'http://46.1.173.159:3000';
+      })(),
       isServerConnected: false,
       rankMode: 'friends',
       batteryPct: 88,
@@ -1940,7 +2033,7 @@
         // Evcil Hayvan Adı & Seviyesi (Ham Cihaz ID Yerine Anlamlı İsim)
         oled.ctx.font = '7.5px "JetBrains Mono"';
         const petNameStr = ((appData.petState && appData.petState.name) || 'PUFI');
-        const petTitle = petNameStr.slice(0, 8).toUpperCase() + ' Lv.' + ((appData.petState && appData.petState.level) || 1);
+        const petTitle = petNameStr.slice(0, 8).toUpperCase() + ' Lv.' + ((appData.needs && appData.needs.level) || (appData.petState && appData.petState.level) || 1);
         oled.ctx.fillText(petTitle, 38, 11);
 
         // Batarya Göstergesi (Gerçek Yüzde & İkon)
@@ -3673,10 +3766,16 @@
           localStorage.setItem('socies_nickname', appData.nickname);
 
           // Bulut kaydını yükle (Varsa)
-          if (data.cloudSave && data.cloudSave.needs) {
-            appData.needs = Object.assign(appData.needs, data.cloudSave.needs);
-            saveNeeds();
-            updateNeedsUI();
+          if (data.cloudSave) {
+            if (data.cloudSave.pet && data.cloudSave.pet.name) {
+              appData.petState = Object.assign(appData.petState, data.cloudSave.pet);
+              savePetState();
+            }
+            if (data.cloudSave.needs) {
+              appData.needs = Object.assign(appData.needs, data.cloudSave.needs);
+              saveNeeds();
+              updateNeedsUI();
+            }
           }
 
           showGlobalToast(`🎉 Hoş geldin, ${appData.nickname}! Bulut senkronize.`);
@@ -3693,9 +3792,74 @@
       } catch(e) {
         alert('Sunucuya bağlanılamadı: ' + e.message);
       } finally {
-        btn.innerText = '🚀 Hesaba Bağlan & Senkronize Et';
+        btn.innerText = '🚀 Google ile Giriş Yap / Eşitle';
         btn.disabled = false;
       }
+    }
+
+    function updatePlayerNicknameFromModal() {
+      const input = document.getElementById('inputGoogleNick');
+      if (!input) return;
+      const newNick = input.value.trim();
+      if (!newNick) {
+        showGlobalToast('⚠️ Lütfen bir oyuncu adı girin.');
+        return;
+      }
+      appData.nickname = newNick;
+      localStorage.setItem('socies_nickname', newNick);
+      updateProfileUI();
+      syncDeviceRegistration();
+      playTactileClick('select');
+      showGlobalToast(`👑 Oyuncu adı güncellendi: ${newNick}`);
+    }
+
+    function openPassportModal() {
+      const passNick = document.getElementById('passPlayerNick');
+      const passMail = document.getElementById('passUserEmail');
+      const passAv = document.getElementById('passAvatar');
+      const passPet = document.getElementById('passPetName');
+      const passBreed = document.getElementById('passEggBreed');
+      const passStage = document.getElementById('passPetStage');
+      const passBirth = document.getElementById('passBirthDate');
+      const passSerial = document.getElementById('passSerialNo');
+      const passPro = document.getElementById('passBadgePro');
+
+      if (passNick) passNick.innerText = appData.nickname || 'Oyuncu';
+      if (passMail) passMail.innerText = appData.userEmail || 'Misafir Hesabı (Yerel)';
+      if (passAv) passAv.innerText = appData.avatar || '👑';
+      if (passPet) passPet.innerText = (appData.petState && appData.petState.name) || 'Pufi';
+
+      const breedNames = {
+        rainbow: '🥚 Gökkuşağı (Işık & Sevgi)',
+        sun: '🌟 Güneş Işıltısı (Ateş & Enerji)',
+        cosmic: '🌌 Kozmik Gece (Gölge & Bilgelik)'
+      };
+      const eggKey = (appData.petState && appData.petState.eggType) || appData.eggType || 'rainbow';
+      if (passBreed) passBreed.innerText = breedNames[eggKey] || '🥚 Gökkuşağı (Işık & Sevgi)';
+
+      const stageNames = {
+        1: '1. Evre (Bebek 🍼)',
+        2: '2. Evre (Çocuk 🎒)',
+        3: '3. Evre (Genç ⚡)',
+        4: '4. Evre (Yetişkin 👑)'
+      };
+      const curStage = (appData.petState && appData.petState.stage) || 1;
+      if (passStage) passStage.innerText = stageNames[curStage] || '1. Evre (Bebek 🍼)';
+
+      const rawBTime = appData.petState && appData.petState.birthTime;
+      const bTime = (rawBTime && !isNaN(Number(rawBTime))) ? new Date(Number(rawBTime)) : new Date();
+      if (passBirth) passBirth.innerText = bTime.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
+
+      if (passSerial) passSerial.innerText = `#${appData.deviceId}`;
+      if (passPro) passPro.style.display = appData.isPro ? 'inline-block' : 'none';
+
+      beep(980, 0.12);
+      document.getElementById('sociesPassportModal').style.display = 'flex';
+    }
+
+    function closePassportModal() {
+      document.getElementById('sociesPassportModal').style.display = 'none';
+      beep(600, 0.08);
     }
 
     // =========================================================================
@@ -4201,8 +4365,13 @@
       console.log('[NET] Sunucu bağlantısı taranıyor...');
       const candidates = [];
       const saved = localStorage.getItem('socies_server_url');
-      if (saved) candidates.push(saved);
-      if (window.location.origin && window.location.origin.startsWith('http')) {
+      if (saved && saved !== 'http://192.168.1.118:3000') {
+        candidates.push(saved);
+      }
+      if (!candidates.includes('http://46.1.173.159:3000')) {
+        candidates.push('http://46.1.173.159:3000');
+      }
+      if (window.location.origin && window.location.origin.startsWith('http') && !candidates.includes(window.location.origin)) {
         candidates.push(window.location.origin);
       }
       candidates.push('http://192.168.1.118:3000');
@@ -4310,6 +4479,10 @@
 
     async function syncDeviceRegistration() {
       if (!appData.serverUrl) return;
+      const curPet = Object.assign({}, appData.petState, {
+        eggType: (appData.petState && appData.petState.eggType) || appData.eggType || 'rainbow',
+        score: (appData.needs && appData.needs.xp) || 0
+      });
       try {
         await fetch(appData.serverUrl + '/api/v1/devices/register', {
           method: 'POST',
@@ -4319,7 +4492,7 @@
             nickname: appData.nickname,
             avatar: appData.avatar,
             userEmail: appData.userEmail || `${appData.deviceId.toLowerCase()}@socies.io`,
-            pet: { breed: 'top', stage: 2, score: appData.needs.xp },
+            pet: curPet,
             needs: appData.needs,
             stats: { model: 'Socies App', steps: 4820 }
           })
@@ -4332,9 +4505,11 @@
             body: JSON.stringify({
               email: appData.userEmail,
               deviceId: appData.deviceId,
+              nickname: appData.nickname,
+              pet: curPet,
               needs: appData.needs,
               parts: appData.parts,
-              score: appData.needs.xp
+              score: (appData.needs && appData.needs.xp) || 0
             })
           }).catch(() => {});
         }
@@ -5479,6 +5654,105 @@
       document.getElementById('onboardingModal').style.display = 'flex';
     }
 
+    async function startGoogleAuthFlow(targetInputId = 'onboardEmail') {
+      let email = document.getElementById(targetInputId) ? document.getElementById(targetInputId).value.trim() : '';
+      if (!email) {
+        email = prompt('Google E-Posta Adresinizi Girin:\n(Örn: kullanici@gmail.com)');
+        if (!email) return;
+        email = email.trim();
+        if (document.getElementById(targetInputId)) document.getElementById(targetInputId).value = email;
+      }
+
+      if (!email.includes('@')) {
+        alert('Lütfen geçerli bir Google e-posta adresi girin.');
+        return;
+      }
+
+      const derivedNick = email.split('@')[0].replace(/[^a-zA-Z0-9_]/g, '');
+      const currentNickInput = document.getElementById('onboardNick');
+      if (currentNickInput && (!currentNickInput.value || currentNickInput.value.startsWith('Oyuncu_'))) {
+        currentNickInput.value = derivedNick.charAt(0).toUpperCase() + derivedNick.slice(1);
+      }
+
+      showGlobalToast('⏳ Google hesabı kontrol ediliyor...');
+
+      try {
+        const res = await fetch(`${appData.serverUrl}/api/v1/auth/google/signin`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email,
+            nickname: (currentNickInput && currentNickInput.value.trim()) || derivedNick,
+            deviceId: appData.deviceId,
+            avatar: appData.avatar,
+            needs: appData.needs,
+            pet: appData.petState
+          })
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          appData.userEmail = email;
+          appData.nickname = data.user.nickname || derivedNick;
+          appData.isGoogleAuth = true;
+          localStorage.setItem('socies_user_email', email);
+          localStorage.setItem('socies_nickname', appData.nickname);
+
+          if (checkIsProUser(email)) {
+            appData.isPro = true;
+            localStorage.setItem('socies_pro_mode', '1');
+          }
+
+          // Bulut kaydını yükle (Varsa ve eski bir kullanıcıysa)
+          if (!data.isNewUser && data.cloudSave && data.cloudSave.pet && data.cloudSave.pet.name && data.cloudSave.pet.hatched !== false) {
+            const cp = data.cloudSave.pet;
+            const wantRestore = confirm(`☁️ Bulutta Kayıtlı Sanal Bebek Bulundu!\n\n🐾 İsim: ${cp.name}\n📊 Gelişim: Evre ${cp.stage || 1}\n⭐ Puan/XP: ${cp.score || (data.cloudSave.needs && data.cloudSave.needs.xp) || 0}\n\nKaldığınız yerden devam etmek için bu bebeği yüklemek ister misiniz?`);
+            if (wantRestore) {
+              appData.petState = Object.assign(appData.petState, cp);
+              if (cp.eggType) {
+                appData.eggType = cp.eggType;
+                localStorage.setItem('socies_egg_type', cp.eggType);
+              }
+              if (data.cloudSave.needs) appData.needs = Object.assign(appData.needs, data.cloudSave.needs);
+              if (cp.name) localStorage.setItem('socies_pet_name', cp.name);
+              appData.onboardingCompleted = true;
+              localStorage.setItem('socies_onboarding_completed', '1');
+              savePetState();
+              saveNeeds();
+              updateNeedsUI();
+              document.getElementById('onboardingModal').style.display = 'none';
+              playLevelUpFanfare();
+              showGlobalToast(`🎉 Hoş geldin! ${cp.name} buluttan başarıyla yüklendi.`);
+              openPassportModal();
+              return;
+            }
+          }
+
+          showGlobalToast(`✅ Google ile bağlandı: ${email}`);
+          goToOnboardStep(2);
+        } else {
+          alert('Giriş başarısız: ' + (data.error || 'Bilinmeyen hata'));
+        }
+      } catch (err) {
+        appData.userEmail = email;
+        localStorage.setItem('socies_user_email', email);
+        if (checkIsProUser(email)) {
+          appData.isPro = true;
+          localStorage.setItem('socies_pro_mode', '1');
+        }
+        updateProfileUI();
+        showGlobalToast(`✅ Profil oluşturuldu: ${email}`);
+        goToOnboardStep(2);
+      }
+    }
+
+    function startGuestFlow() {
+      const defNick = 'Oyuncu_' + appData.deviceId.slice(-4);
+      const nickInput = document.getElementById('onboardNick');
+      if (nickInput && !nickInput.value) nickInput.value = defNick;
+      goToOnboardStep(2);
+    }
+
     function goToOnboardStep(step) {
       beep(700, 0.08);
       if (step === 2) {
@@ -5532,6 +5806,8 @@
       appData.petState.stage = 1; // Stage 1 (Bebek 🍼)
       appData.petState.birthTime = Date.now();
       appData.petState.ageDays = 1;
+      appData.petState.eggType = selectedEggChoice;
+      appData.petState.hatched = true;
       appData.eggType = selectedEggChoice;
       appData.onboardingCompleted = true;
       localStorage.setItem('socies_pet_name', petName);
@@ -5549,6 +5825,7 @@
         updateNeedsUI();
         updateFeatureLocksUI();
         syncDeviceRegistration();
+        setTimeout(() => openPassportModal(), 400);
       }, 700);
     }
 
@@ -5663,7 +5940,7 @@
     // =========================================================================
     // OTA AUTO-UPDATER & VERSION CHECK ENGINE
     // =========================================================================
-    const CURRENT_APP_VERSION = 'v1.0.12';
+    const CURRENT_APP_VERSION = 'v1.0.13';
     let pendingUpdateData = null;
     let autoUpdateCountdownTimer = null;
 
@@ -5685,6 +5962,7 @@
       // 1. Olası sunucu adreslerini tara (WebView dosya sistemi için mutlak URL zorunlu)
       const checkUrls = [];
       if (appData.serverUrl) checkUrls.push(appData.serverUrl);
+      checkUrls.push('http://46.1.173.159:3000');
       checkUrls.push('http://192.168.1.118:3000');
       checkUrls.push('http://192.168.1.2:3000');
       if (window.location.origin && window.location.origin.startsWith('http')) {
