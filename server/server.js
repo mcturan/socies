@@ -78,6 +78,25 @@ db.exec(`
   );
 `);
 
+// MIGRATIONS: session_token, backups_json ve telemetry_logs tablosu
+try { db.exec("ALTER TABLE users ADD COLUMN session_token TEXT;"); } catch(e) {}
+try { db.exec("ALTER TABLE users ADD COLUMN backups_json TEXT;"); } catch(e) {}
+try {
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS telemetry_logs (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      level TEXT,
+      category TEXT,
+      message TEXT,
+      details_json TEXT,
+      user_email TEXT,
+      device_id TEXT,
+      app_version TEXT,
+      created_at INTEGER
+    );
+  `);
+} catch(e) {}
+
 // IN-MEMORY CACHE & WEBSOCKET KÖPRÜSÜ
 const database = {
   devices: new Map(),        // deviceId -> { deviceId, mac, userEmail, pet, needs, stats, lastSeen, isOnline }
@@ -309,7 +328,7 @@ const server = http.createServer((req, res) => {
     if (fs.existsSync(apkFile)) {
       res.writeHead(200, {
         'Content-Type': 'application/vnd.android.package-archive',
-        'Content-Disposition': 'attachment; filename="socies-v1.0.13.apk"',
+        'Content-Disposition': 'attachment; filename="socies-v1.0.14.apk"',
         'Access-Control-Allow-Origin': '*'
       });
       return fs.createReadStream(apkFile).pipe(res);
@@ -705,7 +724,7 @@ const server = http.createServer((req, res) => {
     return sendJSON(res, 200, { success: true, backup: userData });
   }
 
-  // 7.0 GOOGLE AUTH & KULLANICI PROFİL YÖNETİMİ
+  // 7.0 GOOGLE AUTH & KULLANICI PROFİL YÖNETİMİ (TEK OTURUM CONCURRENCY KİLİDİ İLE)
   if (path === '/api/v1/auth/google/signin' && method === 'POST') {
     return parseBody(req, (body) => {
       const { email, nickname, avatar, googleId, deviceId, pet, needs, stats } = body;
@@ -714,22 +733,24 @@ const server = http.createServer((req, res) => {
       const normEmail = email.trim().toLowerCase();
       const now = Date.now();
       const devId = deviceId || `SOCIES-${Math.random().toString(16).slice(2, 8).toUpperCase()}`;
+      const sessionToken = crypto.randomUUID();
 
       try {
         let user = db.prepare('SELECT * FROM users WHERE email = ?').get(normEmail);
         const isNewUser = !user;
 
         if (user) {
-          // Mevcut kullanıcı: Son giriş ve cihaz ID güncelle
+          // Mevcut kullanıcı: Son giriş, oturum belirteci ve cihaz ID güncelle
           db.prepare(`
             UPDATE users SET
               nickname = COALESCE(?, nickname),
               avatar = COALESCE(?, avatar),
               device_id = ?,
               google_id = COALESCE(?, google_id),
+              session_token = ?,
               last_login = ?
             WHERE email = ?
-          `).run(nickname || null, avatar || null, devId, googleId || null, now, normEmail);
+          `).run(nickname || null, avatar || null, devId, googleId || null, sessionToken, now, normEmail);
 
           user = db.prepare('SELECT * FROM users WHERE email = ?').get(normEmail);
         } else {
@@ -742,8 +763,8 @@ const server = http.createServer((req, res) => {
           };
 
           db.prepare(`
-            INSERT INTO users (email, nickname, avatar, device_id, google_id, profile_json, cloud_save_json, created_at, last_login)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO users (email, nickname, avatar, device_id, google_id, profile_json, cloud_save_json, session_token, created_at, last_login)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
           `).run(
             normEmail,
             nickname || normEmail.split('@')[0],
@@ -752,6 +773,7 @@ const server = http.createServer((req, res) => {
             googleId || null,
             JSON.stringify({ email: normEmail, isVerified: true }),
             JSON.stringify(initialSave),
+            sessionToken,
             now,
             now
           );
@@ -796,6 +818,7 @@ const server = http.createServer((req, res) => {
         return sendJSON(res, 200, {
           success: true,
           isNewUser,
+          sessionToken,
           message: 'Google ile giriş başarılı',
           user: {
             email: user.email,
@@ -814,10 +837,10 @@ const server = http.createServer((req, res) => {
     });
   }
 
-  // 7.0.1 BULUT İHTİYAÇ VE İLERLEME SENKRONİZASYONU (CLOUD SYNC)
+  // 7.0.1 BULUT İHTİYAÇ VE İLERLEME SENKRONİZASYONU (SESSION CONCURRENCY KONTROLLÜ)
   if (path === '/api/v1/auth/sync' && method === 'POST') {
     return parseBody(req, (body) => {
-      const { email, deviceId, nickname, cloudSave, pet, needs, stats } = body;
+      const { email, deviceId, nickname, cloudSave, pet, needs, stats, sessionToken } = body;
       if (!email) return sendJSON(res, 400, { error: 'email parametresi zorunludur' });
 
       const normEmail = email.trim().toLowerCase();
@@ -825,12 +848,22 @@ const server = http.createServer((req, res) => {
 
       try {
         let existingSave = {};
-        try {
-          const userRow = db.prepare('SELECT cloud_save_json, nickname FROM users WHERE email = ?').get(normEmail);
-          if (userRow && userRow.cloud_save_json) {
-            existingSave = JSON.parse(userRow.cloud_save_json || '{}');
+        const userRow = db.prepare('SELECT session_token, cloud_save_json, nickname FROM users WHERE email = ?').get(normEmail);
+        if (userRow) {
+          // Çift cihaz eşzamanlı oturum hilesi engelleme
+          if (userRow.session_token && sessionToken && userRow.session_token !== sessionToken) {
+            return sendJSON(res, 409, {
+              error: 'Oturum sonlandırıldı. Başka bir cihazda (telefon/tablet) oturum açıldı.',
+              code: 'SESSION_REVOKED'
+            });
           }
-        } catch(errParse) {}
+          if (userRow.cloud_save_json) {
+            try { existingSave = JSON.parse(userRow.cloud_save_json || '{}'); } catch(e) {}
+          }
+          if (!userRow.session_token && sessionToken) {
+            db.prepare('UPDATE users SET session_token = ? WHERE email = ?').run(sessionToken, normEmail);
+          }
+        }
 
         const mergedPet = pet || existingSave.pet || null;
         const mergedNeeds = needs || existingSave.needs || null;
@@ -875,6 +908,164 @@ const server = http.createServer((req, res) => {
         return sendJSON(res, 500, { error: e.message });
       }
     });
+  }
+
+  // 7.0.2 BULUT YEDEKLEME OLUŞTURMA (MANUEL VEYA GÜNLÜK YEDEK)
+  if (path === '/api/v1/auth/backup/create' && method === 'POST') {
+    return parseBody(req, (body) => {
+      const { email, sessionToken, backupData, note } = body;
+      if (!email || !backupData) return sendJSON(res, 400, { error: 'email ve backupData zorunludur' });
+
+      const normEmail = email.trim().toLowerCase();
+      const now = Date.now();
+
+      try {
+        const userRow = db.prepare('SELECT session_token, backups_json FROM users WHERE email = ?').get(normEmail);
+        if (!userRow) return sendJSON(res, 404, { error: 'Kullanıcı bulunamadı' });
+
+        if (userRow.session_token && sessionToken && userRow.session_token !== sessionToken) {
+          return sendJSON(res, 409, { error: 'Oturum geçersiz', code: 'SESSION_REVOKED' });
+        }
+
+        let backups = [];
+        try { backups = JSON.parse(userRow.backups_json || '[]'); } catch(e) {}
+        if (!Array.isArray(backups)) backups = [];
+
+        const newBackup = {
+          id: crypto.randomUUID(),
+          timestamp: now,
+          note: note || 'Kullanıcı Bulut Yedeği',
+          petName: backupData?.pet?.name || 'Socies',
+          stage: backupData?.pet?.stage || 1,
+          score: backupData?.pet?.score || 0,
+          data: backupData
+        };
+
+        backups.push(newBackup);
+        // Son 5 yedeği sakla (en son 1-2 gün)
+        if (backups.length > 5) backups = backups.slice(-5);
+
+        db.prepare('UPDATE users SET backups_json = ? WHERE email = ?').run(JSON.stringify(backups), normEmail);
+
+        return sendJSON(res, 200, {
+          success: true,
+          message: 'Bulut yedeği başarıyla oluşturuldu',
+          backup: { id: newBackup.id, timestamp: newBackup.timestamp, note: newBackup.note },
+          count: backups.length
+        });
+      } catch(e) {
+        return sendJSON(res, 500, { error: e.message });
+      }
+    });
+  }
+
+  // 7.0.3 BULUT YEDEKLERİNİ LİSTELEME
+  if (path.startsWith('/api/v1/auth/backup/list/') && method === 'GET') {
+    const email = decodeURIComponent(path.slice('/api/v1/auth/backup/list/'.length) || '').trim().toLowerCase();
+    if (!email) return sendJSON(res, 400, { error: 'Geçersiz email' });
+
+    try {
+      const userRow = db.prepare('SELECT backups_json FROM users WHERE email = ?').get(email);
+      if (!userRow) return sendJSON(res, 404, { error: 'Kullanıcı bulunamadı' });
+
+      let backups = [];
+      try { backups = JSON.parse(userRow.backups_json || '[]'); } catch(e) {}
+      const summary = backups.map(b => ({
+        id: b.id,
+        timestamp: b.timestamp,
+        note: b.note,
+        petName: b.petName || b.data?.pet?.name || 'Socies',
+        stage: b.stage || b.data?.pet?.stage || 1,
+        score: b.score || b.data?.pet?.score || 0
+      })).reverse();
+
+      return sendJSON(res, 200, { success: true, count: summary.length, backups: summary });
+    } catch(e) {
+      return sendJSON(res, 500, { error: e.message });
+    }
+  }
+
+  // 7.0.4 BULUT YEDEĞİNDEN GERİ YÜKLEME
+  if (path === '/api/v1/auth/backup/restore' && method === 'POST') {
+    return parseBody(req, (body) => {
+      const { email, sessionToken, backupId } = body;
+      if (!email || !backupId) return sendJSON(res, 400, { error: 'email ve backupId zorunludur' });
+
+      const normEmail = email.trim().toLowerCase();
+      try {
+        const userRow = db.prepare('SELECT session_token, backups_json FROM users WHERE email = ?').get(normEmail);
+        if (!userRow) return sendJSON(res, 404, { error: 'Kullanıcı bulunamadı' });
+
+        if (userRow.session_token && sessionToken && userRow.session_token !== sessionToken) {
+          return sendJSON(res, 409, { error: 'Oturum geçersiz', code: 'SESSION_REVOKED' });
+        }
+
+        let backups = [];
+        try { backups = JSON.parse(userRow.backups_json || '[]'); } catch(e) {}
+        const targetBackup = backups.find(b => b.id === backupId);
+        if (!targetBackup) return sendJSON(res, 404, { error: 'Belirtilen yedek bulunamadı' });
+
+        const restoredData = targetBackup.data;
+        db.prepare('UPDATE users SET cloud_save_json = ?, last_login = ? WHERE email = ?')
+          .run(JSON.stringify(restoredData), Date.now(), normEmail);
+
+        return sendJSON(res, 200, {
+          success: true,
+          message: 'Yedek başarıyla geri yüklendi',
+          restoredData
+        });
+      } catch(e) {
+        return sendJSON(res, 500, { error: e.message });
+      }
+    });
+  }
+
+  // 7.0.5 CANLI TELEMETRİ LOGLARI KAYDETME (CLIENT ERROR / EVENT LOGS)
+  if (path === '/api/v1/telemetry/logs' && method === 'POST') {
+    return parseBody(req, (body) => {
+      const rawLogs = Array.isArray(body.logs) ? body.logs : (body.level ? [body] : []);
+      if (!rawLogs.length) return sendJSON(res, 200, { success: true, count: 0 });
+
+      const now = Date.now();
+      const stmt = db.prepare(`
+        INSERT INTO telemetry_logs (level, category, message, details_json, user_email, device_id, app_version, created_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      `);
+
+      let inserted = 0;
+      for (const log of rawLogs) {
+        try {
+          stmt.run(
+            log.level || 'info',
+            log.category || 'GENERAL',
+            String(log.message || '').slice(0, 500),
+            log.details ? (typeof log.details === 'string' ? log.details : JSON.stringify(log.details)) : null,
+            log.userEmail || null,
+            log.deviceId || null,
+            log.appVersion || 'v1.0.14',
+            log.timestamp || now
+          );
+          inserted++;
+        } catch(e) {}
+      }
+
+      // Tablo boyutunu optimize et (en son 5000 kaydı koru)
+      try {
+        db.exec('DELETE FROM telemetry_logs WHERE id NOT IN (SELECT id FROM telemetry_logs ORDER BY id DESC LIMIT 5000);');
+      } catch(e) {}
+
+      return sendJSON(res, 200, { success: true, inserted });
+    });
+  }
+
+  // 7.0.6 CANLI TELEMETRİ LOGLARINI OKUMA (SON 100 KAYIT)
+  if (path === '/api/v1/telemetry/logs' && method === 'GET') {
+    try {
+      const logs = db.prepare('SELECT * FROM telemetry_logs ORDER BY id DESC LIMIT 100').all();
+      return sendJSON(res, 200, { success: true, count: logs.length, logs });
+    } catch(e) {
+      return sendJSON(res, 500, { error: e.message });
+    }
   }
 
   // 7.0.2 TÜM HESAPLARI LİSTELEME
@@ -962,23 +1153,23 @@ const server = http.createServer((req, res) => {
     });
   }
 
-  // 8. GITHUB SÜRÜM / OTA KONTROLÜ (SemVer 2.0.0 v1.0.13)
+  // 8. GITHUB SÜRÜM / OTA KONTROLÜ (SemVer 2.0.0 v1.0.14)
   if (path === '/api/v1/version/check' && method === 'GET') {
     const host = req.headers.host || '46.1.173.159:3000';
     return sendJSON(res, 200, {
-      latestVersion: 'v1.0.13',
+      latestVersion: 'v1.0.14',
       semver: {
         major: 1,
         minor: 0,
-        patch: 13,
-        build: 14
+        patch: 14,
+        build: 15
       },
-      versionCode: 14,
-      latestCommitHash: 'socies-v1.0.13',
+      versionCode: 15,
+      latestCommitHash: 'socies-v1.0.14',
       mandatoryUpdate: false,
-      releaseNotes: 'v1.0.13: Statik IP (46.1.173.159) desteği, Google tek tıkla giriş ve otomatik profil oluşturma, değiştirilebilir oyuncu adı, yumurta çatlatma, retro Socies Pasaport/Kimlik Kartı ve bulut senkronizasyonu.',
+      releaseNotes: 'v1.0.14: Statik IP (46.1.173.159) kilidi, arka plan hata teşhis & telemetri logger, Android selfie/kamera izinleri ve dosya seçici, çift cihaz oturum engelleme, bulut yedekleme/geri yükleme, fabrika ayarlarına sıfırlama ve zenginleştirilmiş çocuksu burç/karakter profili.',
       apkDownloadUrl: `http://${host}/download/socies-app.apk`,
-      githubApkUrl: 'https://github.com/mcturan/socies/releases/download/v1.0.13/socies-app.apk'
+      githubApkUrl: 'https://github.com/mcturan/socies/releases/download/v1.0.14/socies-app.apk'
     });
   }
 
@@ -1004,6 +1195,10 @@ function parseBody(req, callback) {
 function serveDashboard(res) {
   const devices = Array.from(database.devices.values());
   const onlineCount = devices.filter(d => (Date.now() - d.lastSeen) < 90000).length;
+  let recentLogs = [];
+  try {
+    recentLogs = db.prepare('SELECT * FROM telemetry_logs ORDER BY id DESC LIMIT 25').all();
+  } catch(e) {}
 
   const html = `<!DOCTYPE html>
 <html lang="tr">
@@ -1024,9 +1219,9 @@ function serveDashboard(res) {
     .stat-card { background: #0f1523; border: 1px solid #1e293b; border-radius: 16px; padding: 1.2rem; }
     .stat-val { font-size: 1.8rem; font-weight: 800; color: #00f0ff; font-family: 'JetBrains Mono', monospace; }
     .stat-lbl { font-size: 0.75rem; color: #94a3b8; margin-top: 4px; }
-    .table-box { background: #0f1523; border: 1px solid #1e293b; border-radius: 16px; overflow: hidden; }
+    .table-box { background: #0f1523; border: 1px solid #1e293b; border-radius: 16px; overflow: hidden; margin-bottom: 2rem; }
     table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-    th, td { padding: 1rem; text-align: left; border-bottom: 1px solid #1e293b; }
+    th, td { padding: 0.9rem 1rem; text-align: left; border-bottom: 1px solid #1e293b; }
     th { background: rgba(255,255,255,0.03); color: #00f0ff; font-weight: 700; }
     .badge-on { background: rgba(0,255,102,0.15); color: #00ff66; padding: 0.2rem 0.6rem; border-radius: 12px; font-weight: 700; font-size: 0.7rem; }
     .badge-off { background: rgba(148,163,184,0.15); color: #94a3b8; padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.7rem; }
@@ -1041,7 +1236,7 @@ function serveDashboard(res) {
       </div>
       <div class="header-right">
         <a href="https://github.com/mcturan/socies/releases/latest/download/socies-app.apk" class="dl-btn">
-          <span>📥</span> Android APK İndir (v1.0.13)
+          <span>📥</span> Android APK İndir (v1.0.14)
         </a>
         <div style="font-family:'JetBrains Mono'; font-size:0.8rem; color:#00ff66;">● SUNUCU AKTİF (Port: ${PORT})</div>
       </div>
@@ -1061,11 +1256,12 @@ function serveDashboard(res) {
         <div class="stat-lbl">İletilen Çağrı Mesajı</div>
       </div>
       <div class="stat-card">
-        <div class="stat-val" style="color:#ffe600;">v1.0.13</div>
+        <div class="stat-val" style="color:#ffe600;">v1.0.14</div>
         <div class="stat-lbl">OTA Hedef Sürüm</div>
       </div>
     </div>
 
+    <div style="margin-bottom:0.6rem; font-weight:800; color:#00f0ff; font-size:1rem;">📱 Aktif Cihazlar & Varlık Tablosu</div>
     <div class="table-box">
       <table>
         <thead>
@@ -1089,6 +1285,41 @@ function serveDashboard(res) {
                 <td>${d.stats?.batteryPct || 100}% (${d.stats?.batteryMv || 4000}mV)</td>
                 <td>${d.stats?.steps || 0}</td>
                 <td><span class="${isOnline ? 'badge-on' : 'badge-off'}">${isOnline ? '● ÇEVRİMİÇİ' : '○ ÇEVRİMDIŞI'}</span></td>
+              </tr>
+            `;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>
+
+    <div style="margin-bottom:0.6rem; font-weight:800; color:#00f0ff; font-size:1rem; display:flex; justify-content:space-between; align-items:center;">
+      <span>📡 Canlı İstemci Hata & Telemetri Logları (Son 25 Kayıt)</span>
+      <span style="font-size:0.75rem; color:#94a3b8; font-weight:normal;">Arka planda otomatik toplanan hata ve sistem teşhis verileri</span>
+    </div>
+    <div class="table-box">
+      <table>
+        <thead>
+          <tr>
+            <th>Zaman</th>
+            <th>Seviye</th>
+            <th>Kategori</th>
+            <th>Kullanıcı / Cihaz</th>
+            <th>Mesaj</th>
+            <th>Detay</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${recentLogs.length === 0 ? '<tr><td colspan="6" style="text-align:center; color:#64748b; padding:1.5rem;">Henüz telemetri veya hata kaydı yok (Sistem stabil).</td></tr>' : recentLogs.map(l => {
+            const timeStr = new Date(l.created_at).toLocaleTimeString('tr-TR');
+            const isErr = l.level === 'error';
+            return `
+              <tr>
+                <td style="font-family:'JetBrains Mono'; font-size:0.75rem; color:#94a3b8;">${timeStr}</td>
+                <td><span style="padding:0.2rem 0.5rem; border-radius:8px; font-weight:800; font-size:0.7rem; background:${isErr ? 'rgba(239,68,68,0.2)' : 'rgba(59,130,246,0.2)'}; color:${isErr ? '#ef4444' : '#60a5fa'};">${(l.level || 'INFO').toUpperCase()}</span></td>
+                <td style="font-weight:700; color:#cbd5e1;">${l.category || '-'}</td>
+                <td style="font-size:0.8rem;"><b>${l.user_email || 'Anonim'}</b><br><span style="font-size:0.7rem; color:#64748b;">${l.device_id || '-'}</span></td>
+                <td style="color:#f8fafc; font-weight:600;">${l.message || ''}</td>
+                <td style="font-family:'JetBrains Mono'; font-size:0.72rem; color:#94a3b8; max-width:280px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${l.details_json || '-'}</td>
               </tr>
             `;
           }).join('')}
@@ -1138,6 +1369,75 @@ function serveSociesNetworkPage(res) {
     .kpi-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #00f0ff, #a855f7); }
     .kpi-val { font-size: 1.8rem; font-weight: 800; color: #00f0ff; font-family: 'JetBrains Mono', monospace; }
     .kpi-lbl { font-size: 0.75rem; color: #94a3b8; margin-top: 4px; }
+
+    .search-row { display: flex; gap: 1rem; margin-bottom: 1.5rem; align-items: center; }
+    .search-input { flex: 1; background: #0f1523; border: 1px solid #1e293b; border-radius: 12px; padding: 0.75rem 1.2rem; color: #fff; font-size: 0.85rem; outline: none; }
+    .search-input:focus { border-color: #00f0ff; }
+
+    .users-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 1.5rem; }
+    .user-card { background: #0f1523; border: 1px solid #1e293b; border-radius: 20px; padding: 1.4rem; transition: transform 0.2s, border-color 0.2s; position: relative; }
+    .user-card:hover { transform: translateY(-3px); border-color: #00f0ff; box-shadow: 0 10px 25px rgba(0, 240, 255, 0.1); }
+    .card-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid #1e293b; padding-bottom: 0.8rem; }
+    .loc-badge { font-size: 0.82rem; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 0.4rem; }
+    .loc-badge span { display: flex; align-items: center; gap: 0.3rem; }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .dot-on { background: #00ff66; box-shadow: 0 0 10px #00ff66; }
+    .dot-off { background: #64748b; }
+
+    .user-body { display: flex; gap: 1rem; align-items: center; margin-bottom: 1rem; }
+    .user-avatar { font-size: 2.2rem; background: rgba(255,255,255,0.05); border-radius: 16px; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; border: 1px solid #1e293b; flex-shrink: 0; }
+    .user-info { flex: 1; min-width: 0; }
+    .user-nick { font-size: 1rem; font-weight: 800; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 0.4rem; }
+    .vip-tag { font-size: 0.65rem; background: rgba(255, 230, 0, 0.15); color: #ffe600; border: 1px solid rgba(255, 230, 0, 0.3); padding: 0.1rem 0.4rem; border-radius: 6px; font-weight: 800; }
+    .user-dev { font-size: 0.72rem; color: #94a3b8; font-family: 'JetBrains Mono', monospace; margin-top: 2px; }
+
+    .pet-strip { background: rgba(0, 240, 255, 0.05); border: 1px solid rgba(0, 240, 255, 0.15); border-radius: 12px; padding: 0.6rem 0.8rem; display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+    .pet-label { font-size: 0.75rem; color: #94a3b8; }
+    .pet-val { font-size: 0.85rem; font-weight: 800; color: #00f0ff; }
+
+    .phone-specs { font-size: 0.72rem; color: #64748b; display: grid; grid-template-columns: 1fr 1fr; gap: 0.3rem 0.8rem; margin-bottom: 1rem; }
+    .spec-item { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    .card-actions { display: flex; gap: 0.5rem; }
+    .act-btn { flex: 1; padding: 0.5rem; border-radius: 10px; font-size: 0.75rem; font-weight: 700; border: none; cursor: pointer; transition: all 0.2s; text-align: center; }
+    .btn-poke { background: #1e293b; color: #fff; }
+    .btn-poke:hover { background: #334155; }
+    .btn-msg { background: rgba(0, 240, 255, 0.1); color: #00f0ff; border: 1px solid rgba(0, 240, 255, 0.3); }
+    .btn-msg:hover { background: rgba(0, 240, 255, 0.2); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div>
+        <div class="title">SOCIES AĞI • CANLI TOPLULUK & ETKİN KULLANICILAR</div>
+        <div class="sub">Türkiye ve Dünya Genelinde Çevrimiçi Sanal Bebekler & Cihazlar</div>
+      </div>
+      <div class="nav-links">
+        <a href="/dashboard" class="nav-btn">📊 Sunucu Paneli</a>
+        <a href="/" class="nav-btn">🎮 Web Emülatörü</a>
+        <a href="/download/socies-app.apk" class="dl-btn">📥 APK İndir (v1.0.14)</a>
+      </div>
+    </div>
+
+    <div class="kpi-row">
+      <div class="kpi-card">
+        <div class="kpi-val">${users.length}</div>
+        <div class="kpi-lbl">Kayıtlı Cihaz / Kullanıcı</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-val" style="color:#00ff66;">${onlineCount}</div>
+        <div class="kpi-lbl">Şu An Çevrimiçi (Online)</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-val" style="color:#a855f7;">${cities.length} Şehir</div>
+        <div class="kpi-lbl">${countries.join(', ')}</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-val" style="color:#ffe600;">v1.0.14</div>
+        <div class="kpi-lbl">Ağ Sürümü (SemVer 2.0.0)</div>
+      </div>
+    </div>
 
     .search-row { display: flex; gap: 1rem; margin-bottom: 1.5rem; align-items: center; }
     .search-input { flex: 1; background: #0f1523; border: 1px solid #1e293b; border-radius: 12px; padding: 0.75rem 1.2rem; color: #fff; font-size: 0.85rem; outline: none; }

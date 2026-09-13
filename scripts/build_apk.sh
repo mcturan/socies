@@ -26,8 +26,8 @@ cat << 'EOM' > $BUILD_DIR/AndroidManifest.xml
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="io.socies.app"
-    android:versionCode="14"
-    android:versionName="1.0.13">
+    android:versionCode="15"
+    android:versionName="1.0.14">
 
     <uses-sdk android:minSdkVersion="21" android:targetSdkVersion="28" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -36,6 +36,11 @@ cat << 'EOM' > $BUILD_DIR/AndroidManifest.xml
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
 
     <application
         android:label="@string/app_name"
@@ -75,7 +80,7 @@ zipalign -f -p 4 $BUILD_DIR/unaligned.apk $BUILD_DIR/aligned.apk
 
 echo "=== 5. APK Sign with apksigner ==="
 apksigner sign --ks $KEYSTORE --ks-pass pass:android --key-pass pass:android --out $SRC_DIR/downloads/socies-app.apk $BUILD_DIR/aligned.apk
-cp $SRC_DIR/downloads/socies-app.apk $SRC_DIR/downloads/socies-v1.0.13.apk
+cp $SRC_DIR/downloads/socies-app.apk $SRC_DIR/downloads/socies-v1.0.14.apk
 
 echo "=== 6. Verify APK Signature & Package Info ==="
 apksigner verify -v $SRC_DIR/downloads/socies-app.apk

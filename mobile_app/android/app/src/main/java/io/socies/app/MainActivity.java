@@ -33,7 +33,9 @@ import java.io.File;
 
 public class MainActivity extends Activity {
     private static final int INSTALL_PERMISSION_REQUEST_CODE = 1002;
+    private static final int FILE_CHOOSER_REQUEST_CODE = 1001;
     private WebView webView;
+    private ValueCallback<Uri[]> fileUploadCallback;
     private long downloadId = -1;
     private BroadcastReceiver downloadReceiver;
     private boolean doubleBackToExitPressedOnce = false;
@@ -100,7 +102,57 @@ public class MainActivity extends Activity {
             }
         });
 
-        webView.setWebChromeClient(new WebChromeClient());
+        webView.setWebChromeClient(new WebChromeClient() {
+            // Android 5.0+ (Lollipop ve üzeri) için dosya / selfie fotoğraf seçici desteği
+            @Override
+            public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
+                if (fileUploadCallback != null) {
+                    fileUploadCallback.onReceiveValue(null);
+                    fileUploadCallback = null;
+                }
+                fileUploadCallback = filePathCallback;
+                try {
+                    Intent intent = fileChooserParams.createIntent();
+                    startActivityForResult(intent, FILE_CHOOSER_REQUEST_CODE);
+                    return true;
+                } catch (Exception e) {
+                    try {
+                        Intent fallbackIntent = new Intent(Intent.ACTION_GET_CONTENT);
+                        fallbackIntent.addCategory(Intent.CATEGORY_OPENABLE);
+                        fallbackIntent.setType("image/*");
+                        startActivityForResult(Intent.createChooser(fallbackIntent, "Fotoğraf Seç"), FILE_CHOOSER_REQUEST_CODE);
+                        return true;
+                    } catch (Exception ex) {
+                        fileUploadCallback = null;
+                        return false;
+                    }
+                }
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == FILE_CHOOSER_REQUEST_CODE) {
+            if (fileUploadCallback != null) {
+                Uri[] results = null;
+                if (resultCode == Activity.RESULT_OK && data != null) {
+                    String dataString = data.getDataString();
+                    if (dataString != null) {
+                        results = new Uri[]{Uri.parse(dataString)};
+                    } else if (data.getClipData() != null) {
+                        final int count = data.getClipData().getItemCount();
+                        results = new Uri[count];
+                        for (int i = 0; i < count; i++) {
+                            results[i] = data.getClipData().getItemAt(i).getUri();
+                        }
+                    }
+                }
+                fileUploadCallback.onReceiveValue(results);
+                fileUploadCallback = null;
+            }
+        }
     }
 
     private boolean handleUrlNavigation(String url) {
@@ -137,7 +189,7 @@ public class MainActivity extends Activity {
             try {
                 return getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
             } catch (Exception e) {
-                return "1.0.13";
+                return "1.0.14";
             }
         }
     }
