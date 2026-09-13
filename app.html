@@ -696,7 +696,7 @@
     <div class="update-dialog">
       <div class="update-icon-badge">🚀</div>
       <div class="update-title">Yeni Güncelleme Mevcut!</div>
-      <div class="update-pill" id="updVersionTag">v1.0.11 Hazır</div>
+      <div class="update-pill" id="updVersionTag">v1.0.12 Hazır</div>
       <div class="update-notes-box" id="updReleaseNotes">
         Yeni özellikler ve iyileştirmeler yayınlandı.
       </div>
@@ -966,7 +966,7 @@
         </div>
         <div class="badge-chip" id="badgeAppVersion" onclick="manualCheckUpdate()" title="Sürüm: Dokunarak Kontrol Et" style="cursor:pointer;">
           <span>🚀</span>
-          <span id="txtCurrentVersion">v1.0.11</span>
+          <span id="txtCurrentVersion">v1.0.12</span>
         </div>
       </div>
     </div>
@@ -1061,31 +1061,31 @@
 
       <!-- 7 SIMS NEEDS HUD (AÇLIK, TUVALET, HİJYEN, UYKU, EĞLENCE, SEVGİ, SOSYAL) -->
       <div style="font-weight:900; font-size:0.95rem; margin:0.8rem 0 0.4rem 0; display:flex; justify-content:space-between; align-items:center;">
-        <span>🐾 7 Yaşam İhtiyacı</span>
-        <span style="font-size:0.75rem; color:var(--text-muted);">Durum Değerleri</span>
+        <span>🐾 7 Yaşam İhtiyacı Telemetrisi</span>
+        <span style="font-size:0.75rem; color:var(--text-muted);">Dokun ve Konsola Git</span>
       </div>
       <div class="needs-grid" style="grid-template-columns: repeat(auto-fit, minmax(95px, 1fr));">
-        <div class="need-pill" onclick="performNeedAction('FEED', '🍗 Mama verildi!')">
+        <div class="need-pill" onclick="guideActionToConsole('FEED')">
           <span class="need-icon">🍗</span>
           <span class="need-name">Açlık (<span id="txtValHunger">85%</span>)</span>
           <div class="need-bar"><div class="need-fill" id="fillHunger" style="width:85%; background:#EF4444;"></div></div>
         </div>
-        <div class="need-pill" onclick="performNeedAction('CLEAN_TOILET', '🚽 Tuvalet temizlendi!')">
+        <div class="need-pill" onclick="guideActionToConsole('TOILET')">
           <span class="need-icon">🚽</span>
           <span class="need-name">Tuvalet (<span id="txtValToilet">75%</span>)</span>
           <div class="need-bar"><div class="need-fill" id="fillToilet" style="width:75%; background:#F59E0B;"></div></div>
         </div>
-        <div class="need-pill" onclick="performNeedAction('BATH', '🧼 Köpük banyosu yapıldı!')">
+        <div class="need-pill" onclick="guideActionToConsole('BATH')">
           <span class="need-icon">🧼</span>
           <span class="need-name">Hijyen (<span id="txtValBath">90%</span>)</span>
           <div class="need-bar"><div class="need-fill" id="fillBath" style="width:90%; background:#10B981;"></div></div>
         </div>
-        <div class="need-pill" onclick="performNeedAction('SLEEP', '💤 Bebek uykuya daldı.')">
+        <div class="need-pill" onclick="guideActionToConsole('SLEEP')">
           <span class="need-icon">💤</span>
           <span class="need-name">Uyku (<span id="txtValSleep">70%</span>)</span>
           <div class="need-bar"><div class="need-fill" id="fillSleep" style="width:70%; background:#6366F1;"></div></div>
         </div>
-        <div class="need-pill" onclick="switchTab('tab-games')">
+        <div class="need-pill" onclick="guideActionToConsole('GAMES')">
           <span class="need-icon">🎮</span>
           <span class="need-name">Eğlence (<span id="txtValFun">95%</span>)</span>
           <div class="need-bar"><div class="need-fill" id="fillFun" style="width:95%; background:#06B6D4;"></div></div>
@@ -1102,18 +1102,18 @@
         </div>
       </div>
 
-      <!-- BAKIM & SEVGİ HIZLI EYLEM BUTONLARI -->
+      <!-- KONSOL BAKIM KILAVUZU & YÖNLENDİRME -->
       <div style="font-weight:900; font-size:0.95rem; margin:0.8rem 0 0.4rem 0; display:flex; justify-content:space-between; align-items:center;">
-        <span>🎯 Bakım Müdahaleleri</span>
-        <span style="font-size:0.75rem; color:var(--text-muted);">Dokun ve İlgilen</span>
+        <span>🎮 Konsol Bakım Kılavuzu</span>
+        <span style="font-size:0.75rem; color:var(--text-muted);">Cihaz Tuşlarıyla Yönet</span>
       </div>
       <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:6px;">
-        <button class="btn-micro" style="padding:10px 6px; font-size:0.8rem; background:#FEF2F2; color:#DC2626; border-color:#FECACA; font-weight:800;" onclick="performNeedAction('FEED', '🍗 Beslendi!')">🍗 Mama Ver</button>
-        <button class="btn-micro" style="padding:10px 6px; font-size:0.8rem; background:#FFFBEB; color:#D97706; border-color:#FDE68A; font-weight:800;" onclick="performNeedAction('CLEAN_TOILET', '🚽 Sifon çekildi!')">🚽 Sifon Çek</button>
-        <button class="btn-micro" style="padding:10px 6px; font-size:0.8rem; background:#ECFDF5; color:#059669; border-color:#A7F3D0; font-weight:800;" onclick="performNeedAction('BATH', '🧼 Köpüklü banyo!')">🧼 Banyo Yap</button>
-        <button class="btn-micro" style="padding:10px 6px; font-size:0.8rem; background:#EEF2FF; color:#4F46E5; border-color:#C7D2FE; font-weight:800;" onclick="performNeedAction('SLEEP', '💤 Bebek uyuyor.')">💤 Uyut</button>
+        <button class="btn-micro" style="padding:10px 6px; font-size:0.8rem; background:#FEF2F2; color:#DC2626; border-color:#FECACA; font-weight:800;" onclick="guideActionToConsole('FEED')">🍏 Mama Menüsü</button>
+        <button class="btn-micro" style="padding:10px 6px; font-size:0.8rem; background:#FFFBEB; color:#D97706; border-color:#FDE68A; font-weight:800;" onclick="guideActionToConsole('TOILET')">🚽 Tuvalet Menüsü</button>
+        <button class="btn-micro" style="padding:10px 6px; font-size:0.8rem; background:#ECFDF5; color:#059669; border-color:#A7F3D0; font-weight:800;" onclick="guideActionToConsole('BATH')">🧼 Banyo Menüsü</button>
+        <button class="btn-micro" style="padding:10px 6px; font-size:0.8rem; background:#EEF2FF; color:#4F46E5; border-color:#C7D2FE; font-weight:800;" onclick="guideActionToConsole('SLEEP')">💤 Uyku Modu</button>
         <button class="btn-micro" style="padding:10px 6px; font-size:0.8rem; background:#FDF2F8; color:#DB2777; border-color:#FBCFE8; font-weight:800;" onclick="petLoveTouch()">💖 Okşa & Sev</button>
-        <button class="btn-micro" id="btnCareMedicine" style="padding:10px 6px; font-size:0.8rem; background:#F1F5F9; color:#475569; border-color:#CBD5E1; font-weight:800;" onclick="performNeedAction('MEDICINE', '💊 İlaç verildi!')">💊 İlaç Ver</button>
+        <button class="btn-micro" id="btnCareMedicine" style="padding:10px 6px; font-size:0.8rem; background:#F1F5F9; color:#475569; border-color:#CBD5E1; font-weight:800;" onclick="guideActionToConsole('MEDICINE')">💊 İlaç Menüsü</button>
       </div>
 
       <!-- GÜNLÜK BAĞLILIK, 3000 ADIM SANDIĞI & REBIRTH KARTI -->
@@ -1923,96 +1923,108 @@
     }
 
     function drawOledLoop() {
-      oled.ctx.fillStyle = '#000814';
-      oled.ctx.fillRect(0, 0, 128, 64);
+      try {
+        oled.ctx.fillStyle = '#000814';
+        oled.ctx.fillRect(0, 0, 128, 64);
 
-      // 1. TOP DİNAMİK SARI DURUM ÇUBUĞU (16px)
-      oled.ctx.fillStyle = '#ffb703';
-      
-      // Can Kalpleri (7 İhtiyacın Gerçek Sağlık Skorundan)
-      const moodDetails = (typeof getPetMoodDetails === 'function') ? getPetMoodDetails() : { healthScore: 88 };
-      const filledHearts = Math.min(4, Math.max(0, Math.ceil((moodDetails.healthScore / 100) * 4)));
-      for(let i=0; i<4; i++) {
-        drawOledHeart(oled.ctx, 3 + i*8, 4, i < filledHearts);
-      }
-
-      // Evcil Hayvan Adı & Seviyesi (Ham Cihaz ID Yerine Anlamlı İsim)
-      oled.ctx.font = '7.5px "JetBrains Mono"';
-      const petTitle = (appData.petState ? appData.petState.name.slice(0, 8) : 'PUFI').toUpperCase() + ' Lv.' + ((appData.petState && appData.petState.level) || 1);
-      oled.ctx.fillText(petTitle, 38, 11);
-
-      // Batarya Göstergesi (Gerçek Yüzde & İkon)
-      const battPct = appData.batteryPct || 88;
-      oled.ctx.font = '7px "JetBrains Mono"';
-      oled.ctx.fillText(battPct + '%', 88, 11);
-      oled.ctx.strokeRect(106, 3, 17, 9);
-      oled.ctx.fillRect(123, 5, 2, 5); // Pil ucu
-      const fillW = Math.round(13 * Math.min(100, Math.max(5, battPct)) / 100);
-      oled.ctx.fillRect(108, 5, fillW, 5);
-
-      // Divider line
-      oled.ctx.fillStyle = '#1e293b';
-      oled.ctx.fillRect(0, 15, 128, 1);
-
-      // 2. BOTTOM MAVİ OYUN & ANİMASYON ALANI (48px)
-      oled.ctx.fillStyle = '#00f0ff';
-
-      if (oled.mode === 'MENU') {
-        renderOledMenu();
-      } else if (oled.mode === 'DINO') {
-        renderOledDino();
-      } else if (oled.mode === 'PONG') {
-        renderOledPong();
-      } else if (oled.mode === 'SNAKE') {
-        renderOledSnake();
-      } else if (oled.mode === 'CATCHER') {
-        renderOledCatcher();
-      } else if (oled.mode === 'SPACE') {
-        renderOledSpace();
-      } else if (oled.mode === 'BRICK') {
-        renderOledBrick();
-      } else if (oled.mode === 'PARACHUTE') {
-        renderOledParachute();
-      } else if (oled.mode === 'FLAPPY') {
-        renderOledFlappy();
-      } else if (oled.mode === 'COWBOY') {
-        renderOledCowboy();
-      } else if (oled.mode === 'RPS') {
-        renderOledRPS();
-      } else if (oled.mode === 'EATING') {
-        renderOledEating();
-      } else if (oled.mode === 'TOILET') {
-        renderOledToilet();
-      } else if (oled.mode === 'BATH') {
-        renderOledBath();
-      } else if (oled.mode === 'SLEEPING') {
-        renderOledSleeping();
-      } else {
-        renderOledIdle();
-      }
-
-      // 3. RETRO PAGER ÇAĞRI MARQUEE BANNER'I
-      if (oled.marqueeMsg) {
-        oled.ctx.fillStyle = '#020617';
-        oled.ctx.fillRect(0, 48, 128, 16);
-        oled.ctx.strokeStyle = '#00f0ff';
-        oled.ctx.strokeRect(0, 48, 128, 16);
+        // 1. TOP DİNAMİK SARI DURUM ÇUBUĞU (16px)
         oled.ctx.fillStyle = '#ffb703';
-        oled.ctx.font = '8px "JetBrains Mono"';
-        oled.ctx.fillText(oled.marqueeMsg, oled.marqueeX, 60);
-        oled.marqueeX -= 1.5;
-        const txtWidth = oled.ctx.measureText(oled.marqueeMsg).width;
-        if (oled.marqueeX < -txtWidth) {
-          oled.marqueeMsg = null;
-          oled.marqueeX = 128;
+        
+        // Can Kalpleri (7 İhtiyacın Gerçek Sağlık Skorundan)
+        const moodDetails = (typeof getPetMoodDetails === 'function') ? getPetMoodDetails() : { healthScore: 88 };
+        const filledHearts = Math.min(4, Math.max(0, Math.ceil((moodDetails.healthScore / 100) * 4)));
+        for(let i=0; i<4; i++) {
+          drawOledHeart(oled.ctx, 3 + i*8, 4, i < filledHearts);
         }
-      }
 
-      oled.animFrame++;
-      requestAnimationFrame(drawOledLoop);
+        // Evcil Hayvan Adı & Seviyesi (Ham Cihaz ID Yerine Anlamlı İsim)
+        oled.ctx.font = '7.5px "JetBrains Mono"';
+        const petTitle = (appData.petState ? appData.petState.name.slice(0, 8) : 'PUFI').toUpperCase() + ' Lv.' + ((appData.petState && appData.petState.level) || 1);
+        oled.ctx.fillText(petTitle, 38, 11);
+
+        // Batarya Göstergesi (Gerçek Yüzde & İkon)
+        const battPct = appData.batteryPct || 88;
+        oled.ctx.font = '7px "JetBrains Mono"';
+        oled.ctx.fillText(battPct + '%', 88, 11);
+        oled.ctx.strokeRect(106, 3, 17, 9);
+        oled.ctx.fillRect(123, 5, 2, 5); // Pil ucu
+        const fillW = Math.round(13 * Math.min(100, Math.max(5, battPct)) / 100);
+        oled.ctx.fillRect(108, 5, fillW, 5);
+
+        // Divider line
+        oled.ctx.fillStyle = '#1e293b';
+        oled.ctx.fillRect(0, 15, 128, 1);
+
+        // 2. BOTTOM MAVİ OYUN & ANİMASYON ALANI (48px)
+        oled.ctx.fillStyle = '#00f0ff';
+
+        if (oled.mode === 'MENU') {
+          renderOledMenu();
+        } else if (oled.mode === 'DINO') {
+          renderOledDino();
+        } else if (oled.mode === 'PONG') {
+          renderOledPong();
+        } else if (oled.mode === 'SNAKE') {
+          renderOledSnake();
+        } else if (oled.mode === 'CATCHER') {
+          renderOledCatcher();
+        } else if (oled.mode === 'SPACE') {
+          renderOledSpace();
+        } else if (oled.mode === 'BRICK') {
+          renderOledBrick();
+        } else if (oled.mode === 'PARACHUTE') {
+          renderOledParachute();
+        } else if (oled.mode === 'FLAPPY') {
+          renderOledFlappy();
+        } else if (oled.mode === 'COWBOY') {
+          renderOledCowboy();
+        } else if (oled.mode === 'RPS') {
+          renderOledRPS();
+        } else if (oled.mode === 'EATING') {
+          renderOledEating();
+        } else if (oled.mode === 'TOILET') {
+          renderOledToilet();
+        } else if (oled.mode === 'BATH') {
+          renderOledBath();
+        } else if (oled.mode === 'SLEEPING') {
+          renderOledSleeping();
+        } else {
+          renderOledIdle();
+        }
+
+        // 3. RETRO PAGER ÇAĞRI MARQUEE BANNER'I
+        if (oled.marqueeMsg) {
+          oled.ctx.fillStyle = '#020617';
+          oled.ctx.fillRect(0, 48, 128, 16);
+          oled.ctx.strokeStyle = '#00f0ff';
+          oled.ctx.strokeRect(0, 48, 128, 16);
+          oled.ctx.fillStyle = '#ffb703';
+          oled.ctx.font = '8px "JetBrains Mono"';
+          oled.ctx.fillText(oled.marqueeMsg, oled.marqueeX, 60);
+          oled.marqueeX -= 1.5;
+          const txtWidth = oled.ctx.measureText(oled.marqueeMsg).width;
+          if (oled.marqueeX < -txtWidth) {
+            oled.marqueeMsg = null;
+            oled.marqueeX = 128;
+          }
+        }
+      } catch (loopErr) {
+        console.warn('[OLED] Render hatası yakalandı, IDLE moduna dönülüyor:', loopErr);
+        oled.mode = 'IDLE';
+      } finally {
+        oled.animFrame++;
+        requestAnimationFrame(drawOledLoop);
+      }
     }
 
     function renderOledIdle() {
+      // Eğer bebek uyuyorsa direkt SLEEPING moduna geç
+      if (appData.petState && appData.petState.isSleeping) {
+        oled.mode = 'SLEEPING';
+        renderOledSleeping();
+        return;
+      }
+
       oled.ctx.fillStyle = '#00f0ff';
       if (oled.animFrame % 45 === 0) {
         oled.petX += oled.petDir * 6;
@@ -2024,7 +2036,9 @@
 
       oled.ctx.font = '7px "JetBrains Mono"';
       let petStatusTxt = 'SOCIES BLE HAZIR';
-      if (appData.petState && appData.petState.isSick) petStatusTxt = 'HASTA! 💊 İLAÇ VER';
+      if (appData.petState && appData.petState.isSick) {
+        petStatusTxt = (appData.petState.sicknessReason === 'STOMACH_ACHE') ? 'KARIN AGRISI! 💊 ILAC' : 'HASTA! 💊 ILAC VER';
+      }
       else if (appData.petState && appData.petState.poopCount > 0) petStatusTxt = 'KİRLİ! 💩 SİFON ÇEK';
       else if (appData.needs.hunger < 35) petStatusTxt = 'AÇIKTI! 🍖 BESLE';
       else if (appData.needs.sleep < 35) petStatusTxt = 'UYKULU! 🌙 UYUT';
@@ -2058,12 +2072,20 @@
         oled.ctx.fillText('=== MAMA SECIMI ===', 16, 25);
         const curr = oled.foodItems[oled.foodIdx];
         oled.ctx.font = '9px "JetBrains Mono"';
-        oled.ctx.fillText('◄ [' + curr + '] ►', 16, 42);
+        oled.ctx.fillText('◄ [' + curr + '] ►', 14, 40);
+        
+        oled.ctx.font = '6.5px "JetBrains Mono"';
+        let desc = 'Meyve / Hafif Saglik';
+        if (oled.foodIdx === 1) desc = 'Ana Ogun / Doyurucu';
+        else if (oled.foodIdx === 2) desc = 'Tatli / Dikkat Karisir!';
+        else if (oled.foodIdx === 3) desc = 'Temiz Su / Hidrasyon';
+        oled.ctx.fillText(desc, 12, 49);
+
         oled.ctx.font = '7px "JetBrains Mono"';
         oled.ctx.fillText('SEC: Yedir | GERI: Don', 12, 59);
 
       } else if (oled.menuLevel === 'GAMES') {
-        oled.ctx.fillText('=== 6 RETRO OYUN ===', 12, 25);
+        oled.ctx.fillText('=== 10 RETRO OYUN ===', 10, 25);
         const curr = oled.gameItems[oled.gameIdx];
         oled.ctx.font = '8px "JetBrains Mono"';
         oled.ctx.fillText('◄ [' + curr + '] ►', 8, 42);
@@ -2085,6 +2107,91 @@
         drawMiniStat('UYKU', appData.needs.sleep, 41);
         drawMiniStat('NESE', appData.needs.fun, 49);
         drawMiniStat('TEMIZ', appData.needs.clean, 57);
+      }
+    }
+
+    // =========================================================================
+    // BAKIM ANİMASYONLARI (YEMEK, TUVALET, BANYO, UYKU MODU)
+    // =========================================================================
+    function renderOledEating() {
+      oled.ctx.fillStyle = '#00f0ff';
+      oled.ctx.font = '8px "JetBrains Mono"';
+      let title = 'HAM HAM HAM! 🍖';
+      if (oled.lastFoodType === 'ELMA') title = 'KITIR KITIR! 🍏';
+      else if (oled.lastFoodType === 'PASTA') title = 'NEFIS PASTA! 🍰';
+      else if (oled.lastFoodType === 'SU') title = 'LUKUR LUKUR! 💧';
+      oled.ctx.fillText(title, 16, 26);
+
+      const chew = (Math.floor(oled.animFrame / 8) % 2 === 0);
+      drawModularSpriteToOled(42, 34 + (chew ? 1 : 0));
+
+      // Yiyecek kırıntıları & tabak
+      oled.ctx.fillStyle = '#ffb703';
+      oled.ctx.fillRect(72, 44, 10, 4); // Yiyecek
+      if (chew) {
+        oled.ctx.fillRect(66, 38, 2, 2); // Uçuşan kırıntı
+        oled.ctx.fillRect(70, 36, 1, 1);
+      }
+    }
+
+    function renderOledToilet() {
+      oled.ctx.fillStyle = '#00f0ff';
+      oled.ctx.font = '8px "JetBrains Mono"';
+      oled.ctx.fillText('SIFON CEKILIYOR 🚽', 14, 26);
+
+      // Klozet ve Su Girdabı Animasyonu
+      const swirl = (oled.animFrame % 12);
+      oled.ctx.strokeStyle = '#00f0ff';
+      oled.ctx.strokeRect(48, 32, 32, 24);
+      oled.ctx.fillStyle = '#38bdf8';
+      oled.ctx.fillRect(52, 36 + (swirl % 6), 24, 2);
+      oled.ctx.fillRect(56, 42, 16, 2);
+
+      drawModularSpriteToOled(22, 36);
+    }
+
+    function renderOledBath() {
+      oled.ctx.fillStyle = '#00f0ff';
+      oled.ctx.font = '8px "JetBrains Mono"';
+      oled.ctx.fillText('MIS GIBI KOPUK 🧼', 16, 26);
+
+      // Köpük Baloncukları
+      drawModularSpriteToOled(48, 35);
+      oled.ctx.fillStyle = '#38bdf8';
+      const b1 = (oled.animFrame * 1.5) % 30;
+      const b2 = (oled.animFrame * 1.2 + 10) % 28;
+      const b3 = (oled.animFrame * 1.8 + 20) % 32;
+      oled.ctx.strokeRect(36, 52 - b1, 4, 4);
+      oled.ctx.strokeRect(76, 50 - b2, 5, 5);
+      oled.ctx.strokeRect(58, 48 - b3, 3, 3);
+    }
+
+    function renderOledSleeping() {
+      // GECE UYKU MODU (Zzz Animasyonu & Ay Işığı)
+      oled.ctx.fillStyle = '#ffb703';
+      oled.ctx.font = '8px "JetBrains Mono"';
+      oled.ctx.fillText('UYKU MODU 🌙', 32, 24);
+
+      // Hilal Ay
+      oled.ctx.fillRect(14, 20, 4, 8);
+      oled.ctx.fillRect(18, 22, 2, 4);
+
+      // Yatakta Uyuyan Pufi
+      drawModularSpriteToOled(44, 38);
+
+      // Kayan Zzz Animasyonu
+      oled.ctx.fillStyle = '#38bdf8';
+      oled.ctx.font = '7px "JetBrains Mono"';
+      const zOffset = (oled.animFrame % 40);
+      oled.ctx.fillText('z', 72 + zOffset * 0.3, 38 - zOffset * 0.3);
+      oled.ctx.font = '9px "JetBrains Mono"';
+      oled.ctx.fillText('Z', 78 + zOffset * 0.4, 32 - zOffset * 0.4);
+
+      // Alt Bilgilendirme
+      if (oled.animFrame % 30 < 20) {
+        oled.ctx.fillStyle = '#64748b';
+        oled.ctx.font = '6.5px "JetBrains Mono"';
+        oled.ctx.fillText('[TUSA BAS]: UYANDIR', 16, 60);
       }
     }
 
@@ -3279,6 +3386,17 @@
         return;
       }
 
+      // UYKU MODUNDAYKEN HERHANGİ BİR TUŞ PUFİ'Yİ UYANDIRIR!
+      if (oled.mode === 'SLEEPING' || (appData.petState && appData.petState.isSleeping)) {
+        if (appData.petState) appData.petState.isSleeping = false;
+        oled.mode = 'IDLE';
+        playTactileClick('click');
+        showGlobalToast('☀️ Pufi gerinerek uyandı! Günaydın.');
+        savePetState();
+        updateNeedsUI();
+        return;
+      }
+
       // ANA MENÜ KONTROLLERİ
       if (oled.mode === 'MENU') {
         if (oled.menuLevel === 'ROOT') {
@@ -3293,7 +3411,7 @@
             else if (sel === 'TUVALET') { oled.mode = 'TOILET'; performNeedAction('CLEAN_TOILET'); }
             else if (sel === 'BANYO') { oled.mode = 'BATH'; performNeedAction('BATH'); }
             else if (sel === 'İLAÇ') { performNeedAction('MEDICINE'); oled.mode = 'IDLE'; }
-            else if (sel === 'UYUT') { oled.mode = 'SLEEPING'; performNeedAction('SLEEP'); }
+            else if (sel === 'UYUT') { performNeedAction('SLEEP'); }
           }
         } else if (oled.menuLevel === 'GAMES') {
           if (btn === 'LEFT') oled.gameIdx = (oled.gameIdx - 1 + oled.gameItems.length) % oled.gameItems.length;
@@ -3316,8 +3434,7 @@
           if (btn === 'RIGHT') oled.foodIdx = (oled.foodIdx + 1) % oled.foodItems.length;
           if (btn === 'BACK') oled.menuLevel = 'ROOT';
           if (btn === 'SELECT') {
-            performNeedAction('FEED');
-            oled.mode = 'EATING';
+            feedPetWithFood(oled.foodIdx);
           }
         } else if (oled.menuLevel === 'STATS') {
           if (btn === 'BACK' || btn === 'SELECT') oled.menuLevel = 'ROOT';
@@ -3325,17 +3442,19 @@
         return;
       }
 
-      // IDLE MODUNDAYKEN BUTONLAR
+      // IDLE MODUNDAYKEN BUTONLAR (SAĞ / SOL MENÜ DOLAŞIMI)
       if (oled.mode === 'IDLE') {
-        if (btn === 'SELECT') oled.mode = 'MENU';
-        else if (btn === 'LEFT') {
-          // Hızlı Besleme
-          performNeedAction('FEED');
-          oled.mode = 'EATING';
-        } else if (btn === 'RIGHT') {
-          // Hızlı Oyun Menüsü
+        if (btn === 'SELECT') {
           oled.mode = 'MENU';
-          oled.menuLevel = 'GAMES';
+          oled.menuLevel = 'ROOT';
+        } else if (btn === 'LEFT') {
+          oled.mode = 'MENU';
+          oled.menuLevel = 'ROOT';
+          oled.menuIdx = (oled.menuIdx - 1 + oled.menuItems.length) % oled.menuItems.length;
+        } else if (btn === 'RIGHT') {
+          oled.mode = 'MENU';
+          oled.menuLevel = 'ROOT';
+          oled.menuIdx = (oled.menuIdx + 1) % oled.menuItems.length;
         }
       }
     }
@@ -3346,6 +3465,17 @@
         const rect = oled.canvas.getBoundingClientRect();
         const clickX = ((e.clientX - rect.left) / rect.width) * 128;
         
+        if (oled.mode === 'SLEEPING' || (appData.petState && appData.petState.isSleeping)) {
+          handleConsoleBtn('SELECT');
+          return;
+        }
+        if (oled.mode === 'MENU') {
+          if (clickX < 38) handleConsoleBtn('LEFT');
+          else if (clickX > 90) handleConsoleBtn('RIGHT');
+          else handleConsoleBtn('SELECT');
+          return;
+        }
+
         if (oled.mode === 'DINO') {
           handleConsoleBtn('SELECT');
         } else if (oled.mode === 'PONG') {
@@ -4167,24 +4297,33 @@
       if (appData.needs.lastTick) {
         const elapsedMins = Math.min(720, Math.floor((Date.now() - appData.needs.lastTick) / 60000));
         if (elapsedMins > 3) {
-          const hungerDrop = Math.min(60, Math.floor(elapsedMins / 10) * 2);
-          const toiletDrop = Math.min(70, Math.floor(elapsedMins / 12) * 3);
-          const cleanDrop = Math.min(50, Math.floor(elapsedMins / 20) * 2);
-          const sleepDrop = Math.min(50, Math.floor(elapsedMins / 25) * 2);
-          const funDrop = Math.min(50, Math.floor(elapsedMins / 15) * 2);
-          const loveDrop = Math.min(45, Math.floor(elapsedMins / 20) * 2);
-          const socialDrop = Math.min(45, Math.floor(elapsedMins / 25) * 2);
+          const isSleep = (appData.petState && appData.petState.isSleeping);
+          const rateMultiplier = isSleep ? 0.2 : 1.0;
+
+          const hungerDrop = Math.min(60, Math.floor((elapsedMins / 10) * 2 * rateMultiplier));
+          const toiletDrop = Math.min(70, Math.floor((elapsedMins / 12) * 3 * rateMultiplier));
+          const cleanDrop = Math.min(50, Math.floor((elapsedMins / 20) * 2 * rateMultiplier));
+          const funDrop = Math.min(50, Math.floor((elapsedMins / 15) * 2 * rateMultiplier));
+          const loveDrop = Math.min(45, Math.floor((elapsedMins / 20) * 2 * rateMultiplier));
+          const socialDrop = Math.min(45, Math.floor((elapsedMins / 25) * 2 * rateMultiplier));
 
           appData.needs.hunger = Math.max(8, appData.needs.hunger - hungerDrop);
           appData.needs.toilet = Math.max(5, appData.needs.toilet - toiletDrop);
           appData.needs.clean = Math.max(10, appData.needs.clean - cleanDrop);
-          appData.needs.sleep = Math.max(10, appData.needs.sleep - sleepDrop);
           appData.needs.fun = Math.max(10, appData.needs.fun - funDrop);
           appData.needs.love = Math.max(10, appData.needs.love - loveDrop);
           appData.needs.social = Math.max(10, (appData.needs.social || 85) - socialDrop);
 
+          if (isSleep) {
+            const sleepGain = Math.min(100, Math.floor(elapsedMins * 1.5));
+            appData.needs.sleep = Math.min(100, appData.needs.sleep + sleepGain);
+          } else {
+            const sleepDrop = Math.min(50, Math.floor(elapsedMins / 25) * 2);
+            appData.needs.sleep = Math.max(10, appData.needs.sleep - sleepDrop);
+          }
+
           // Uzun süre gelinmediyse kaka kazası
-          if (elapsedMins > 60 && appData.needs.toilet < 25 && appData.petState.poopCount < 2) {
+          if (!isSleep && elapsedMins > 60 && appData.needs.toilet < 25 && appData.petState.poopCount < 2) {
             appData.petState.poopCount = Math.min(2, appData.petState.poopCount + 1);
           }
 
@@ -4204,16 +4343,30 @@
 
       // 3. DOĞAL BİYOLOJİK DÖNGÜ & PERİYODİK MOTOR (Her 35 saniyede bir)
       setInterval(() => {
-        appData.needs.hunger = Math.max(5, appData.needs.hunger - 1);
-        appData.needs.toilet = Math.max(0, appData.needs.toilet - 1.5);
-        appData.needs.fun = Math.max(5, appData.needs.fun - 1);
-        appData.needs.sleep = Math.max(5, appData.needs.sleep - 0.7);
-        appData.needs.clean = Math.max(5, appData.needs.clean - 0.5);
-        appData.needs.love = Math.max(5, appData.needs.love - 0.7);
-        appData.needs.social = Math.max(5, (appData.needs.social || 85) - 0.5);
+        const isSleep = (appData.petState && appData.petState.isSleeping);
+
+        if (isSleep) {
+          // UYKU MODUNDA: Uyku şarj olur, diğer ihtiyaçlar %80 daha yavaş azalır
+          appData.needs.sleep = Math.min(100, appData.needs.sleep + 4);
+          appData.needs.hunger = Math.max(5, appData.needs.hunger - 0.2);
+          appData.needs.toilet = Math.max(0, appData.needs.toilet - 0.3);
+          appData.needs.clean = Math.max(5, appData.needs.clean - 0.1);
+          appData.needs.fun = Math.max(5, appData.needs.fun - 0.1);
+          appData.needs.love = Math.max(5, appData.needs.love - 0.1);
+          appData.needs.social = Math.max(5, (appData.needs.social || 85) - 0.1);
+        } else {
+          // NORMAL MOD:
+          appData.needs.hunger = Math.max(5, appData.needs.hunger - 1);
+          appData.needs.toilet = Math.max(0, appData.needs.toilet - 1.5);
+          appData.needs.fun = Math.max(5, appData.needs.fun - 1);
+          appData.needs.sleep = Math.max(5, appData.needs.sleep - 0.7);
+          appData.needs.clean = Math.max(5, appData.needs.clean - 0.5);
+          appData.needs.love = Math.max(5, appData.needs.love - 0.7);
+          appData.needs.social = Math.max(5, (appData.needs.social || 85) - 0.5);
+        }
 
         // Kaka Kazası Kontrolü: Tuvalet iyice sıkışınca yere kaka yapar!
-        if (appData.needs.toilet <= 15 && appData.petState.poopCount < 3) {
+        if (!isSleep && appData.needs.toilet <= 15 && appData.petState.poopCount < 3) {
           appData.petState.poopCount++;
           appData.needs.toilet = 75; // Rahatladı ama etraf kirlendi
           appData.needs.clean = Math.max(5, appData.needs.clean - 25);
@@ -4225,8 +4378,9 @@
         if ((appData.petState.poopCount >= 2 || appData.needs.clean < 20) && !appData.petState.isSick) {
           if (Math.random() < 0.35) {
             appData.petState.isSick = true;
+            appData.petState.sicknessReason = 'DIRTY_ENVIRONMENT';
             playWhineSound();
-            showGlobalToast('🤒 Bebek mikroplardan dolayı hastalandı! 💊 İlaç ver.');
+            showGlobalToast('🤒 Bebek mikroplardan dolayı hastalandı! 💊 Konsoldan İlaç ver.');
           }
         }
 
@@ -4330,30 +4484,30 @@
       const btn = document.getElementById('btnCrisisAction');
       if (!box || !msg || !btn) return;
 
-      if (appData.petState.isSick) {
+      if (appData.petState && appData.petState.isSick) {
         box.style.display = 'flex';
         box.style.background = '#FEF2F2';
         box.style.border = '1px solid #FECACA';
         box.style.color = '#DC2626';
-        msg.innerText = '⚠️ Bebek hasta oldu! Ateşi var.';
-        btn.innerText = '💊 İlaç Ver';
-        btn.onclick = () => performNeedAction('MEDICINE');
-      } else if (appData.petState.poopCount > 0) {
+        msg.innerText = (appData.petState.sicknessReason === 'STOMACH_ACHE') ? '🤢 Çok abur cuburdan karnı ağrıyor!' : '⚠️ Bebek mikrop kaptı ve hastalandı!';
+        btn.innerText = '🎮 Konsoldan İlaç Ver';
+        btn.onclick = () => guideActionToConsole('MEDICINE');
+      } else if (appData.petState && appData.petState.poopCount > 0) {
         box.style.display = 'flex';
         box.style.background = '#FFFBEB';
         box.style.border = '1px solid #FDE68A';
         box.style.color = '#B45309';
         msg.innerText = `💩 Ortada ${appData.petState.poopCount} kaka var! Sinekler üşüşüyor.`;
-        btn.innerText = '🚽 Sifon Çek';
-        btn.onclick = () => performNeedAction('CLEAN_TOILET');
+        btn.innerText = '🎮 Konsoldan Sifon Çek';
+        btn.onclick = () => guideActionToConsole('TOILET');
       } else if (appData.needs.hunger < 20) {
         box.style.display = 'flex';
         box.style.background = '#FEF2F2';
         box.style.border = '1px solid #FECACA';
         box.style.color = '#DC2626';
         msg.innerText = '😭 Bebek açlıktan ağlıyor!';
-        btn.innerText = '🍗 Mama Ver';
-        btn.onclick = () => performNeedAction('FEED');
+        btn.innerText = '🎮 Konsoldan Doyur';
+        btn.onclick = () => guideActionToConsole('FEED');
       } else {
         box.style.display = 'none';
       }
@@ -4539,30 +4693,91 @@
       oled.mode = 'IDLE';
     }
 
+    function feedPetWithFood(idx) {
+      if (appData.petState && appData.petState.isSleeping) {
+        showGlobalToast('😴 Pufi şu an uyuyor. Önce konsol tuşuna basarak uyandır!');
+        return;
+      }
+      if (appData.needs.hunger >= 98) {
+        playWhineSound();
+        showGlobalToast('🙅‍♂️ TOKUUM! Pufi tok olduğu için yemeyi reddetti.');
+        oled.petDir *= -1;
+        return;
+      }
+
+      // Hasta ve karın ağrısı varsa tatlı yiyemez
+      if (idx === 2 && appData.petState && appData.petState.isSick && appData.petState.sicknessReason === 'STOMACH_ACHE') {
+        playWhineSound();
+        showGlobalToast('🤢 Pufi\'nin karnı ağrıyor! Tatlı yiyemez, önce İLAÇ ver.');
+        return;
+      }
+
+      playEatCrunchSound();
+      addPetXP(15);
+      oled.mode = 'EATING';
+      setTimeout(() => { if (oled.mode === 'EATING') oled.mode = 'IDLE'; }, 2400);
+
+      if (idx === 0) {
+        // ELMA 🍏 (Atıştırmalık / Meyve)
+        oled.lastFoodType = 'ELMA';
+        appData.needs.hunger = Math.min(100, appData.needs.hunger + 18);
+        appData.needs.fun = Math.min(100, appData.needs.fun + 5);
+        appData.needs.love = Math.min(100, appData.needs.love + 5);
+        if (appData.petState) {
+          appData.petState.junkFoodCount = Math.max(0, (appData.petState.junkFoodCount || 0) - 1);
+        }
+        showGlobalToast('🍏 Taze elma atıştırıldı! Hafif ve sağlıklı (+18 Açlık, +5 Neşe)');
+      } else if (idx === 1) {
+        // MAMA 🍗 (Tam Öğün / Doyurucu Beslenme)
+        oled.lastFoodType = 'MAMA';
+        appData.needs.hunger = Math.min(100, appData.needs.hunger + 40);
+        appData.needs.sleep = Math.min(100, appData.needs.sleep + 5);
+        appData.needs.toilet = Math.max(0, appData.needs.toilet - 14); // sindirim
+        if (appData.petState) {
+          appData.petState.junkFoodCount = 0;
+        }
+        showGlobalToast('🍗 Doyurucu tam öğün yendi! (+40 Açlık, sindirim başladı)');
+      } else if (idx === 2) {
+        // PASTA 🍰 (Abur Cubur / Tatlı)
+        oled.lastFoodType = 'PASTA';
+        appData.needs.hunger = Math.min(100, appData.needs.hunger + 10);
+        appData.needs.love = Math.min(100, appData.needs.love + 25);
+        appData.needs.fun = Math.min(100, appData.needs.fun + 15);
+        if (appData.petState) {
+          appData.petState.junkFoodCount = (appData.petState.junkFoodCount || 0) + 1;
+          if (appData.petState.junkFoodCount >= 3) {
+            appData.petState.isSick = true;
+            appData.petState.sicknessReason = 'STOMACH_ACHE';
+            playWhineSound();
+            showGlobalToast('🤢 Eyvah! Çok fazla pasta yediği için karnı ağrıdı ve hastalandı! 💊 Konsoldan İlaç ver.');
+          } else {
+            showGlobalToast(`🍰 Nefis pasta yendi! Mutluluk tavan yaptı (+25 Sevgi) (Tatlı: ${appData.petState.junkFoodCount}/3)`);
+          }
+        }
+      } else if (idx === 3) {
+        // SU 💧 (Su / Hidrasyon)
+        oled.lastFoodType = 'SU';
+        appData.needs.hunger = Math.min(100, appData.needs.hunger + 5);
+        appData.needs.clean = Math.min(100, appData.needs.clean + 10);
+        appData.needs.toilet = Math.max(0, appData.needs.toilet - 8);
+        showGlobalToast('💧 Kana kana taze su içti! Midesi ve içi ferahladı.');
+      }
+
+      saveNeeds();
+      savePetState();
+      updateNeedsUI();
+      syncTelemetry();
+    }
+
     function performNeedAction(act, msg) {
       if (act === 'FEED') {
-        // 1. TAMAGOTCHI & POU KURALI: TOKKEN YEMEYİ REDDETME
-        if (appData.needs.hunger >= 98) {
-          playWhineSound();
-          showGlobalToast('🙅‍♂️ TOKUUM! Pufi tok olduğu için mamayı reddetti.');
-          oled.petDir *= -1; // Kafa sallama hareketi
-          return;
-        }
-        playEatCrunchSound();
-        appData.needs.hunger = Math.min(100, appData.needs.hunger + 25);
-        // Sindirim: Mama yiyince tuvalet ihtiyacı biraz artar
-        appData.needs.toilet = Math.max(0, appData.needs.toilet - 8);
-        oled.mode = 'EATING';
-        setTimeout(() => { if (oled.mode === 'EATING') oled.mode = 'IDLE'; }, 2400);
-        showGlobalToast(msg || '🍗 Afiyetle yendi! (+25 Açlık)');
-        addPetXP(15);
-
+        feedPetWithFood(1); // Varsayılan doyurucu beslenme
       } else if (act === 'CLEAN_TOILET') {
         playTactileClick('select');
         beep(780, 0.12);
         appData.needs.toilet = 100;
         appData.needs.clean = Math.min(100, appData.needs.clean + 20);
-        appData.petState.poopCount = 0;
+        if (appData.petState) appData.petState.poopCount = 0;
         oled.mode = 'TOILET';
         setTimeout(() => { if (oled.mode === 'TOILET') oled.mode = 'IDLE'; }, 2200);
         showGlobalToast(msg || '🚽 Sifon çekildi! Tuvalet pırıl pırıl.');
@@ -4579,17 +4794,19 @@
 
       } else if (act === 'SLEEP') {
         playTactileClick('click');
-        appData.needs.sleep = 100;
+        if (appData.petState) appData.petState.isSleeping = true;
         oled.mode = 'SLEEPING';
-        showGlobalToast(msg || '💤 Işıklar kapandı, bebek uykuya daldı.');
+        showGlobalToast(msg || '🌙 Pufi derin uyku moduna geçti. İhtiyaç azalmaları %80 yavaşladı. Uyandırmak için konsol tuşuna bas.');
         addPetXP(10);
 
       } else if (act === 'MEDICINE') {
-        if (appData.petState.isSick) {
+        if (appData.petState && appData.petState.isSick) {
           playCureSound();
           appData.petState.isSick = false;
+          appData.petState.sicknessReason = null;
+          if (appData.petState) appData.petState.junkFoodCount = 0;
           appData.needs.clean = Math.min(100, appData.needs.clean + 25);
-          showGlobalToast('💊 İlaç şifa oldu! Bebek tamamen iyileşti.');
+          showGlobalToast('💊 İlaç şifa oldu! Karın ağrısı ve mikroplar geçti.');
           addPetXP(30);
         } else {
           beep(520, 0.08);
@@ -4601,6 +4818,55 @@
       savePetState();
       updateNeedsUI();
       syncTelemetry();
+    }
+
+    function guideActionToConsole(act) {
+      switchTab('tab-console');
+      if (act === 'FEED') {
+        oled.mode = 'MENU';
+        oled.menuLevel = 'FOOD';
+        oled.foodIdx = 0;
+        showGlobalToast('🍏 Konsol Mama Menüsü açıldı! ◄ ► tuşlarıyla seç ve SEC bas.');
+      } else if (act === 'CLEAN_TOILET' || act === 'TOILET') {
+        oled.mode = 'MENU';
+        oled.menuLevel = 'ROOT';
+        oled.menuIdx = 1; // TUVALET
+        showGlobalToast('🚽 Konsol Tuvalet menüsüne yönlendirildi. SEC basarak sifonu çek.');
+      } else if (act === 'BATH') {
+        oled.mode = 'MENU';
+        oled.menuLevel = 'ROOT';
+        oled.menuIdx = 2; // BANYO
+        showGlobalToast('🧼 Konsol Banyo menüsüne yönlendirildi. SEC basarak köpürt.');
+      } else if (act === 'MEDICINE') {
+        oled.mode = 'MENU';
+        oled.menuLevel = 'ROOT';
+        oled.menuIdx = 3; // İLAÇ
+        showGlobalToast('💊 Konsol İlaç menüsüne yönlendirildi. SEC basarak iyileştir.');
+      } else if (act === 'GAMES') {
+        oled.mode = 'MENU';
+        oled.menuLevel = 'GAMES';
+        oled.gameIdx = 0;
+        showGlobalToast('🎮 Konsol Retro Oyun Menüsü açıldı!');
+      } else if (act === 'SLEEP') {
+        oled.mode = 'MENU';
+        oled.menuLevel = 'ROOT';
+        oled.menuIdx = 5; // UYUT
+        showGlobalToast('🌙 Konsol Uyut menüsüne yönlendirildi. SEC basarak uyut.');
+      }
+    }
+
+    function handleCrisisAction() {
+      if (appData.petState && appData.petState.isSick) {
+        guideActionToConsole('MEDICINE');
+      } else if (appData.petState && appData.petState.poopCount > 0) {
+        guideActionToConsole('TOILET');
+      } else if (appData.needs && appData.needs.hunger < 25) {
+        guideActionToConsole('FEED');
+      } else if (appData.needs && appData.needs.sleep < 25) {
+        guideActionToConsole('SLEEP');
+      } else {
+        guideActionToConsole('FEED');
+      }
     }
 
     function petLoveTouch() {
@@ -5301,7 +5567,7 @@
     // =========================================================================
     // OTA AUTO-UPDATER & VERSION CHECK ENGINE
     // =========================================================================
-    const CURRENT_APP_VERSION = 'v1.0.11';
+    const CURRENT_APP_VERSION = 'v1.0.12';
     let pendingUpdateData = null;
     let autoUpdateCountdownTimer = null;
 

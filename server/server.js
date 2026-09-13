@@ -309,7 +309,7 @@ const server = http.createServer((req, res) => {
     if (fs.existsSync(apkFile)) {
       res.writeHead(200, {
         'Content-Type': 'application/vnd.android.package-archive',
-        'Content-Disposition': 'attachment; filename="socies-v1.0.11.apk"',
+        'Content-Disposition': 'attachment; filename="socies-v1.0.12.apk"',
         'Access-Control-Allow-Origin': '*'
       });
       return fs.createReadStream(apkFile).pipe(res);
@@ -941,23 +941,23 @@ const server = http.createServer((req, res) => {
     });
   }
 
-  // 8. GITHUB SÜRÜM / OTA KONTROLÜ (SemVer 2.0.0 v1.0.11)
+  // 8. GITHUB SÜRÜM / OTA KONTROLÜ (SemVer 2.0.0 v1.0.12)
   if (path === '/api/v1/version/check' && method === 'GET') {
     const host = req.headers.host || '192.168.1.118:3000';
     return sendJSON(res, 200, {
-      latestVersion: 'v1.0.11',
+      latestVersion: 'v1.0.12',
       semver: {
         major: 1,
         minor: 0,
-        patch: 11,
-        build: 12
+        patch: 12,
+        build: 13
       },
-      versionCode: 12,
-      latestCommitHash: 'socies-v1.0.11',
+      versionCode: 13,
+      latestCommitHash: 'socies-v1.0.12',
       mandatoryUpdate: false,
-      releaseNotes: 'v1.0.11: 10 Efsane Retro Arcade Oyunu (Piksel Maraton, Pinpon, Yılan, Elma, Uzay Savunması, Tuğla Kırma, Paraşütçü, Uçan Pufi, Kovboy, RPS), Pufi karakter entegrasyonu, sabah hava durumu & akıllı öneri motoru.',
+      releaseNotes: 'v1.0.12: Konsol navigasyonu düzeltildi (IDLE sağ/sol menü açar), uyku modu metabolizma yavaşlaması (%80 koruma), detaylı beslenme sistemi (meyve, tam mama, tatlı/karın ağrısı), donma/siyah ekran koruması ve konsol yönlendirme.',
       apkDownloadUrl: `http://${host}/download/socies-app.apk`,
-      githubApkUrl: 'https://github.com/mcturan/socies/releases/download/v1.0.11/socies-app.apk'
+      githubApkUrl: 'https://github.com/mcturan/socies/releases/download/v1.0.12/socies-app.apk'
     });
   }
 
@@ -1158,7 +1158,7 @@ function serveSociesNetworkPage(res) {
       <div class="nav-links">
         <a href="/dashboard" class="nav-btn">📊 Sunucu Paneli</a>
         <a href="/" class="nav-btn">🎮 Web Emülatörü</a>
-        <a href="/download/socies-app.apk" class="dl-btn">📥 APK İndir (v1.0.11)</a>
+        <a href="/download/socies-app.apk" class="dl-btn">📥 APK İndir (v1.0.12)</a>
       </div>
     </div>
 
