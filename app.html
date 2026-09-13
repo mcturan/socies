@@ -716,7 +716,7 @@
     <div class="update-dialog">
       <div class="update-icon-badge">🚀</div>
       <div class="update-title">Yeni Güncelleme Mevcut!</div>
-      <div class="update-pill" id="updVersionTag">v1.0.14 Hazır</div>
+      <div class="update-pill" id="updVersionTag">v1.0.15 Hazır</div>
       <div class="update-notes-box" id="updReleaseNotes">
         Yeni özellikler ve iyileştirmeler yayınlandı.
       </div>
@@ -852,7 +852,7 @@
         </div>
 
         <div style="font-size:0.72rem; color:#94A3B8; text-align:center;">
-          Socies v1.0.14 (Build 15) • OTA Güncel
+          Socies v1.0.15 (Build 16) • OTA Güncel
         </div>
       </div>
 
@@ -1138,7 +1138,7 @@
         </div>
         <div class="badge-chip" id="badgeAppVersion" onclick="manualCheckUpdate()" title="Sürüm: Dokunarak Kontrol Et" style="cursor:pointer;">
           <span>🚀</span>
-          <span id="txtCurrentVersion">v1.0.14</span>
+          <span id="txtCurrentVersion">v1.0.15</span>
         </div>
       </div>
     </div>
@@ -1519,7 +1519,7 @@
   </nav>
 
   <script>
-    const CURRENT_APP_VERSION = 'v1.0.14';
+    const CURRENT_APP_VERSION = 'v1.0.15';
 
     // --- 📡 ARKA PLAN TELEMETRİ VE HATA GÖZLEMCİSİ (SOCIES LOGGER) ---
     const SociesLogger = {
@@ -1959,7 +1959,11 @@
       actionTimer: 0,
       petX: 48, petDir: 1, animFrame: 0,
       
-      // 1. Piksel Maraton (Karakter Koşucusu) State
+      // Sohbet, Fıkra ve Anket State
+      idleDialogue: { active: false, timer: 0, type: null, data: null },
+      currentDialogue: null,
+      guessGame: { target: 5, guess: 5, attempts: 3, hint: 'Sayımı tahmin et!', resolved: false },
+      bcMarqueeX: 128,
       dino: {
         petY: 34,
         vy: 0,
@@ -2157,6 +2161,12 @@
           renderOledBath();
         } else if (oled.mode === 'SLEEPING') {
           renderOledSleeping();
+        } else if (oled.mode === 'DIALOGUE') {
+          renderOledDialogue();
+        } else if (oled.mode === 'GUESS_GAME') {
+          renderOledGuessGame();
+        } else if (oled.mode === 'BROADCAST') {
+          renderOledBroadcast();
         } else {
           renderOledIdle();
         }
@@ -2202,6 +2212,47 @@
       }
       const bob = (oled.animFrame % 16 < 8) ? 0 : 1;
       drawModularSpriteToOled(oled.petX, 32 + bob);
+
+      // RASTGELE DİYALOG & OYUN TETİKLEME (HER ~30 SANİYEDE BİR)
+      if (!oled.idleDialogue.active && !appData.pendingBroadcast && oled.animFrame % 650 === 0 && Math.random() < 0.85) {
+        const roll = Math.random();
+        if (roll < 0.45) {
+          const q = IDLE_QUESTIONS_POOL[Math.floor(Math.random() * IDLE_QUESTIONS_POOL.length)];
+          oled.idleDialogue = { active: true, timer: 360, type: 'QUESTION', data: q };
+        } else if (roll < 0.75) {
+          const j = IDLE_JOKES_POOL[Math.floor(Math.random() * IDLE_JOKES_POOL.length)];
+          oled.idleDialogue = { active: true, timer: 360, type: 'JOKE', data: j };
+        } else {
+          oled.idleDialogue = { active: true, timer: 360, type: 'GUESS_GAME', data: null };
+        }
+        beep(700, 0.08);
+        setTimeout(() => beep(900, 0.1), 100);
+      }
+
+      if (oled.idleDialogue.active) {
+        oled.idleDialogue.timer--;
+        if (oled.idleDialogue.timer <= 0) oled.idleDialogue.active = false;
+      }
+
+      // EKRAN İPUÇLARI (ANONS VEYA DİYALOG BALONU)
+      if (appData.pendingBroadcast) {
+        const flash = (oled.animFrame % 24 < 12);
+        oled.ctx.fillStyle = flash ? '#fde047' : '#00f0ff';
+        oled.ctx.font = '7.5px "JetBrains Mono"';
+        oled.ctx.fillText('✉️ YENI ANONS! [A]', 14, 25);
+      } else if (oled.idleDialogue.active) {
+        const bBob = Math.sin(oled.animFrame * 0.25) * 2.5;
+        oled.ctx.fillStyle = '#fde047';
+        oled.ctx.fillRect(oled.petX + 8, 16 + bBob, 8, 10);
+        oled.ctx.fillStyle = '#000814';
+        oled.ctx.font = '8px "JetBrains Mono"';
+        oled.ctx.fillText('!', oled.petX + 11, 24 + bBob);
+
+        oled.ctx.fillStyle = '#fde047';
+        oled.ctx.font = '7px "JetBrains Mono"';
+        const label = oled.idleDialogue.type === 'GUESS_GAME' ? '[A: OYNA 🎲]' : (oled.idleDialogue.type === 'JOKE' ? '[A: FIKRA 🎭]' : '[A: KONUS 💬]');
+        oled.ctx.fillText(label, 36, 25);
+      }
 
       oled.ctx.font = '7px "JetBrains Mono"';
       let petStatusTxt = 'SOCIES BLE HAZIR';
@@ -3433,6 +3484,351 @@
     }
 
     // =========================================================================
+    // DİYALOG, ZERO-PARTY SORU, FIKRA & CANLI ANONS MOTORU
+    // =========================================================================
+    const IDLE_QUESTIONS_POOL = [
+      { q: "Kedi mi daha sevimli yoksa köpek mi?", l1: "Kedi mi kopek mi", l2: "daha sevimli?", cat: "pets", a: "Kedi 🐱", b: "Kopek 🐶" },
+      { q: "Resim çizmeyi mi spor yapmayı mı seversin?", l1: "Resim cizmeyi mi", l2: "sporu mu seversin?", cat: "hobbies", a: "Resim 🎨", b: "Spor ⚽" },
+      { q: "Bugün sabah dişlerini fırçaladın mı?", l1: "Sabah dislerini", l2: "fircaladin mi?", cat: "habits", a: "Evet ✨", b: "Unuttum 🙈" },
+      { q: "Uzaya gidip rokete binmek ister miydin?", l1: "Uzaya gidip rokete", l2: "binmek ister miydin?", cat: "adventure", a: "Evet! 🚀", b: "Hayir 🌍" },
+      { q: "Dondurmayı kışın da yer misin?", l1: "Dondurmayi kisin", l2: "da yer misin?", cat: "food", a: "Yerim 🍦", b: "Asla 🥶" },
+      { q: "Müzik çalınca dans eder misin?", l1: "Muzik calinca", l2: "dans eder misin?", cat: "music", a: "Ederim 💃", b: "Dinlerim 🎧" },
+      { q: "En çok çikolata mı seversin taze meyve mi?", l1: "Cikolata mi", l2: "taze meyve mi?", cat: "food", a: "Cikolata 🍫", b: "Meyve 🍎" },
+      { q: "Odanı bugün kendi başına topladın mı?", l1: "Odani bugun kendin", l2: "topladin mi?", cat: "habits", a: "Topladim ✨", b: "Daginik 🧸" }
+    ];
+
+    const IDLE_JOKES_POOL = [
+      { l1: "Ogrenci: 'Hocam odevimi", l2: "kopegim yedi cunku", l3: "cok begenmis!' XD" },
+      { l1: "Sivrisinekler neden", l2: "vizildar? Sarkinin", l3: "sozlerini unutmuslar! :)" },
+      { l1: "Hoca gole maya calmis:", l2: "'Ya tutarsa!' demis.", l3: "Gole yogurt olmus! :D" },
+      { l1: "En temiz deniz hangisi?", l2: "Deterjan dokulmus", l3: "kopuklu deniz! Hahaha" },
+      { l1: "Karinca file fisildamis:", l2: "'Sana bir sir vereyim:", l3: "Sen cok buyuksun!' :D" }
+    ];
+
+    function startDialogueFromIdle() {
+      if (!oled.idleDialogue || !oled.idleDialogue.active) return;
+      oled.idleDialogue.active = false;
+      const t = oled.idleDialogue.type;
+
+      if (t === 'QUESTION') {
+        oled.mode = 'DIALOGUE';
+        oled.currentDialogue = {
+          step: 'QUESTION',
+          title: '❓ MERAK ETTIM!',
+          ...oled.idleDialogue.data
+        };
+        beep(750, 0.08);
+      } else if (t === 'JOKE') {
+        oled.mode = 'DIALOGUE';
+        oled.currentDialogue = {
+          step: 'JOKE',
+          title: '🎭 GUNUN FIKRASI',
+          ...oled.idleDialogue.data
+        };
+        beep(850, 0.08);
+      } else if (t === 'GUESS_GAME') {
+        oled.mode = 'GUESS_GAME';
+        oled.guessGame = {
+          target: Math.floor(Math.random() * 10) + 1,
+          guess: 5,
+          attempts: 3,
+          hint: 'Sayimi tahmin et! (1-10)',
+          resolved: false
+        };
+        beep(900, 0.1);
+      }
+    }
+
+    function renderOledDialogue() {
+      const d = oled.currentDialogue;
+      if (!d) { oled.mode = 'IDLE'; return; }
+
+      // Üst Başlık (Sarı)
+      oled.ctx.fillStyle = '#fde047';
+      oled.ctx.font = '7.5px "JetBrains Mono"';
+      oled.ctx.fillText(d.title || 'SOCIES SOHBET', 6, 11);
+      oled.ctx.fillRect(0, 15, 128, 1);
+
+      if (d.step === 'QUESTION') {
+        oled.ctx.fillStyle = '#00f0ff';
+        oled.ctx.font = '7.5px "JetBrains Mono"';
+        oled.ctx.fillText(d.l1 || '', 6, 26);
+        oled.ctx.fillText(d.l2 || '', 6, 36);
+
+        oled.ctx.fillStyle = '#fde047';
+        oled.ctx.font = '7px "JetBrains Mono"';
+        oled.ctx.fillText(`[A] ${d.a}`, 6, 52);
+        oled.ctx.fillText(`[B] ${d.b}`, 66, 52);
+      } else if (d.step === 'JOKE') {
+        oled.ctx.fillStyle = '#00f0ff';
+        oled.ctx.font = '7.5px "JetBrains Mono"';
+        oled.ctx.fillText(d.l1 || '', 6, 26);
+        oled.ctx.fillText(d.l2 || '', 6, 36);
+        oled.ctx.fillText(d.l3 || '', 6, 46);
+
+        oled.ctx.fillStyle = '#fde047';
+        oled.ctx.font = '7px "JetBrains Mono"';
+        oled.ctx.fillText('[A / B]: Hahaha! Kapat', 10, 59);
+      } else if (d.step === 'REACTION') {
+        const bob = (oled.animFrame % 10 < 5) ? 0 : 2;
+        drawModularSpriteToOled(54, 30 + bob);
+        oled.ctx.fillStyle = '#fde047';
+        oled.ctx.font = '8px "JetBrains Mono"';
+        oled.ctx.fillText(d.reactionText || 'Harikasin! +5 XP', 14, 57);
+      }
+    }
+
+    function handleDialogueBtn(btn) {
+      const d = oled.currentDialogue;
+      if (!d) { oled.mode = 'IDLE'; return; }
+
+      if (d.step === 'QUESTION') {
+        let chosen = '';
+        if (btn === 'SELECT' || btn === 'RIGHT') {
+          chosen = d.a;
+        } else if (btn === 'BACK' || btn === 'LEFT') {
+          chosen = d.b;
+        } else {
+          return;
+        }
+
+        // Ödül ver
+        if (appData.needs) {
+          appData.needs.xp = (appData.needs.xp || 0) + 5;
+          appData.needs.fun = Math.min(100, (appData.needs.fun || 90) + 10);
+          saveNeeds();
+          updateNeedsUI();
+        }
+
+        // Sunucuya Zero-Party İlgi Verisi Gönder
+        sendUserInterestToServer(d.cat, d.q, chosen);
+
+        d.step = 'REACTION';
+        d.reactionText = 'Harikasin! +5 XP';
+        beep(880, 0.1);
+        setTimeout(() => beep(1100, 0.12), 120);
+
+        setTimeout(() => {
+          oled.mode = 'IDLE';
+          oled.currentDialogue = null;
+        }, 1800);
+
+      } else if (d.step === 'JOKE') {
+        if (btn === 'SELECT' || btn === 'BACK') {
+          if (appData.needs) {
+            appData.needs.fun = Math.min(100, (appData.needs.fun || 90) + 15);
+            saveNeeds();
+            updateNeedsUI();
+          }
+          playGiggleSound();
+          oled.mode = 'IDLE';
+          oled.currentDialogue = null;
+        }
+      } else if (d.step === 'REACTION') {
+        oled.mode = 'IDLE';
+        oled.currentDialogue = null;
+      }
+    }
+
+    async function sendUserInterestToServer(cat, question, answer) {
+      if (!appData.serverUrl) return;
+      try {
+        await fetch(`${appData.serverUrl}/api/v1/user/interest`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userEmail: appData.userEmail || localStorage.getItem('socies_user_email') || null,
+            deviceId: appData.deviceId || localStorage.getItem('socies_device_id') || 'SOCIES-DEV',
+            category: cat || 'general',
+            question: question || '',
+            answer: answer || ''
+          })
+        });
+      } catch(e) {}
+    }
+
+    // --- SAYI TAHMİN OYUNU (AKLIMDAN SAYI TUTTUM) ---
+    function renderOledGuessGame() {
+      oled.ctx.fillStyle = '#fde047';
+      oled.ctx.font = '7.5px "JetBrains Mono"';
+      oled.ctx.fillText('🎲 SAYI TAHMIN (1-10)', 8, 11);
+      oled.ctx.fillRect(0, 15, 128, 1);
+
+      const g = oled.guessGame;
+      if (!g) { oled.mode = 'IDLE'; return; }
+
+      oled.ctx.fillStyle = '#00f0ff';
+      oled.ctx.font = '8px "JetBrains Mono"';
+      oled.ctx.fillText(g.hint || 'Sayimi tahmin et!', 10, 27);
+
+      if (!g.resolved) {
+        oled.ctx.strokeStyle = '#00f0ff';
+        oled.ctx.strokeRect(46, 32, 36, 17);
+        oled.ctx.fillStyle = '#fde047';
+        oled.ctx.font = '11px "JetBrains Mono"';
+        oled.ctx.fillText(`◄ ${g.guess} ►`, 36, 45);
+
+        oled.ctx.font = '7px "JetBrains Mono"';
+        oled.ctx.fillStyle = '#ff3366';
+        let hearts = '';
+        for (let i = 0; i < g.attempts; i++) hearts += '♥';
+        oled.ctx.fillText(`Can: ${hearts}`, 6, 59);
+
+        oled.ctx.fillStyle = '#00f0ff';
+        oled.ctx.fillText('[A: Dene | B: Cik]', 48, 59);
+      } else {
+        const bob = (oled.animFrame % 10 < 5) ? 0 : 2;
+        drawModularSpriteToOled(54, 34 + bob);
+      }
+    }
+
+    function handleGuessGameBtn(btn) {
+      const g = oled.guessGame;
+      if (!g || g.resolved) return;
+
+      if (btn === 'UP' || btn === 'RIGHT') {
+        g.guess = Math.min(10, g.guess + 1);
+        beep(650, 0.04);
+      } else if (btn === 'DOWN' || btn === 'LEFT') {
+        g.guess = Math.max(1, g.guess - 1);
+        beep(450, 0.04);
+      } else if (btn === 'BACK') {
+        oled.mode = 'IDLE';
+      } else if (btn === 'SELECT') {
+        if (g.guess === g.target) {
+          g.resolved = true;
+          g.hint = 'BILDIN! +10 Altin!';
+          appData.gold = (appData.gold || 0) + 10;
+          localStorage.setItem('socies_user_gold', String(appData.gold));
+          if (appData.needs) {
+            appData.needs.xp = (appData.needs.xp || 0) + 20;
+            saveNeeds();
+            updateNeedsUI();
+          }
+          playLevelUpFanfare();
+          showGlobalToast('🏆 Sayıyı doğru tahmin ettin! +10 Altın kazandın!');
+          setTimeout(() => { oled.mode = 'IDLE'; }, 2200);
+        } else {
+          g.attempts--;
+          beep(320, 0.15);
+          if (g.attempts <= 0) {
+            g.resolved = true;
+            g.hint = `Bilemedin! Sayi: ${g.target}`;
+            setTimeout(() => { oled.mode = 'IDLE'; }, 2200);
+          } else {
+            g.hint = g.guess < g.target ? 'Daha BUYUK! ⬆️' : 'Daha KUCUK! ⬇️';
+          }
+        }
+      }
+    }
+
+    // --- CANLI BROADCAST & PUSH ANONS ALICISI ---
+    function openBroadcastMode() {
+      if (!appData.activeBroadcast) return;
+      oled.mode = 'BROADCAST';
+      oled.bcMarqueeX = 128;
+      beep(880, 0.1);
+      setTimeout(() => beep(1100, 0.15), 120);
+    }
+
+    function dismissBroadcast() {
+      if (appData.activeBroadcast) {
+        const bc = appData.activeBroadcast;
+        localStorage.setItem('socies_last_broadcast_id', String(bc.id));
+
+        if (bc.gift_gold > 0) {
+          appData.gold = (appData.gold || 0) + bc.gift_gold;
+          localStorage.setItem('socies_user_gold', String(appData.gold));
+          showGlobalToast(`🎁 ${bc.gift_gold} Altın hediyesi cüzdanınıza eklendi!`);
+        }
+        if (bc.gift_food && appData.needs) {
+          appData.needs.hunger = Math.min(100, (appData.needs.hunger || 90) + 30);
+          saveNeeds();
+          updateNeedsUI();
+          showGlobalToast(`🍎 Leziz ${bc.gift_food} karnını doyurdu!`);
+        }
+      }
+      appData.pendingBroadcast = false;
+      appData.activeBroadcast = null;
+      oled.mode = 'IDLE';
+    }
+
+    function renderOledBroadcast() {
+      const bc = appData.activeBroadcast;
+      if (!bc) { oled.mode = 'IDLE'; return; }
+
+      oled.ctx.fillStyle = '#fde047';
+      oled.ctx.font = '7.5px "JetBrains Mono"';
+      oled.ctx.fillText('📢 ' + (bc.title || 'SOCIES ANONS').slice(0, 18), 4, 11);
+      oled.ctx.fillRect(0, 15, 128, 1);
+
+      oled.ctx.fillStyle = '#00f0ff';
+      const anim = bc.animation || 'FLAG_TR';
+
+      if (anim === 'FLAG_TR') {
+        const wave = Math.sin(oled.animFrame * 0.15) * 2;
+        oled.ctx.fillRect(20, 20 + wave, 28, 18);
+        oled.ctx.fillStyle = '#000814';
+        oled.ctx.beginPath();
+        oled.ctx.arc(30, 29 + wave, 6, 0, Math.PI * 2);
+        oled.ctx.fill();
+        oled.ctx.fillStyle = '#00f0ff';
+        oled.ctx.beginPath();
+        oled.ctx.arc(32, 29 + wave, 5, 0, Math.PI * 2);
+        oled.ctx.fill();
+        oled.ctx.fillStyle = '#000814';
+        oled.ctx.fillRect(37, 28 + wave, 3, 3);
+        oled.ctx.fillStyle = '#00f0ff';
+        oled.ctx.fillRect(18, 18, 2, 28);
+      } else if (anim === 'SCHOOL') {
+        oled.ctx.fillRect(24, 22, 22, 16);
+        oled.ctx.fillStyle = '#000814';
+        oled.ctx.fillRect(28, 26, 14, 4);
+        oled.ctx.fillStyle = '#00f0ff';
+        oled.ctx.fillRect(31, 18, 8, 4);
+      } else if (anim === 'NEW_YEAR') {
+        oled.ctx.beginPath();
+        oled.ctx.moveTo(32, 18); oled.lineTo(20, 38); oled.lineTo(44, 38); oled.fill();
+        oled.ctx.fillRect(30, 38, 4, 6);
+        const snowY = (oled.animFrame * 1.5) % 36;
+        oled.ctx.fillRect(12, 18 + snowY, 2, 2);
+        oled.ctx.fillRect(52, 20 + ((snowY + 14) % 36), 2, 2);
+      } else if (anim === 'GOLD_GIFT') {
+        oled.ctx.beginPath(); oled.ctx.arc(32, 28, 8, 0, Math.PI * 2); oled.ctx.fill();
+        oled.ctx.fillStyle = '#000814'; oled.ctx.fillText('$', 30, 31); oled.ctx.fillStyle = '#00f0ff';
+      } else {
+        drawModularSpriteToOled(50, 32);
+      }
+
+      oled.ctx.fillStyle = '#fde047';
+      oled.ctx.font = '8px "JetBrains Mono"';
+      if (typeof oled.bcMarqueeX === 'undefined') oled.bcMarqueeX = 128;
+      oled.ctx.fillText(bc.message || '', oled.bcMarqueeX, 56);
+      oled.bcMarqueeX -= 1.2;
+      const w = oled.ctx.measureText(bc.message || '').width;
+      if (oled.bcMarqueeX < -w) oled.bcMarqueeX = 128;
+
+      oled.ctx.font = '6.5px "JetBrains Mono"';
+      oled.ctx.fillStyle = '#00f0ff';
+      oled.ctx.fillText('[A / B: Kapat]', 68, 44);
+    }
+
+    async function checkServerBroadcasts() {
+      if (!appData.serverUrl) return;
+      const lastId = parseInt(localStorage.getItem('socies_last_broadcast_id') || '0', 10);
+      try {
+        const res = await fetch(`${appData.serverUrl}/api/v1/broadcast/latest?since=${lastId}`);
+        const data = await res.json();
+        if (data.success && data.hasBroadcast && data.broadcast) {
+          appData.activeBroadcast = data.broadcast;
+          appData.pendingBroadcast = true;
+          beep(880, 0.1);
+          setTimeout(() => beep(1100, 0.15), 120);
+        }
+      } catch(e) {}
+    }
+
+    // =========================================================================
     // 4 HORIZONTAL BUTTON HANDLER (WITH HOLD & REPEAT & TOUCH CANVAS)
     // =========================================================================
     function handleConsoleBtn(btn, isRepeat = false) {
@@ -3442,6 +3838,26 @@
       // UYKU MODUNDAYSA HERHANGİ BİR TUŞA BASIŞ KESİNLİKLE UYANDIRIR!
       if (oled.mode === 'SLEEPING' || (appData.petState && appData.petState.isSleeping)) {
         wakeUpPet();
+        return;
+      }
+
+      // 0.1 BROADCAST ANONS KONTROLLERİ
+      if (oled.mode === 'BROADCAST') {
+        if (btn === 'BACK' || btn === 'SELECT') {
+          dismissBroadcast();
+        }
+        return;
+      }
+
+      // 0.2 SOHBET / DİYALOG KONTROLLERİ
+      if (oled.mode === 'DIALOGUE') {
+        handleDialogueBtn(btn);
+        return;
+      }
+
+      // 0.3 SAYI TAHMİN OYUNU KONTROLLERİ
+      if (oled.mode === 'GUESS_GAME') {
+        handleGuessGameBtn(btn);
         return;
       }
 
@@ -3662,8 +4078,20 @@
         return;
       }
 
-      // IDLE MODUNDAYKEN BUTONLAR (SAĞ / SOL MENÜ DOLAŞIMI)
+      // IDLE MODUNDAYKEN BUTONLAR (SAĞ / SOL MENÜ DOLAŞIMI & İNTERAKSİYON)
       if (oled.mode === 'IDLE') {
+        // 1. Bekleyen sunucu push anonsu varsa ve A basıldıysa anons ekranını aç
+        if (appData.pendingBroadcast && (btn === 'SELECT' || btn === 'RIGHT')) {
+          openBroadcastMode();
+          return;
+        }
+
+        // 2. Bebeğin başı üstünde ünlem (!) varken A basıldıysa diyaloğu/soruyu aç
+        if (oled.idleDialogue && oled.idleDialogue.active && (btn === 'SELECT' || btn === 'RIGHT')) {
+          startDialogueFromIdle();
+          return;
+        }
+
         if (btn === 'SELECT') {
           oled.mode = 'MENU';
           oled.menuLevel = 'ROOT';
@@ -5942,6 +6370,11 @@
             });
           }
         }
+      } catch(e) {}
+
+      // 3. Canlı Push / Anons Kontrolü
+      try {
+        checkServerBroadcasts();
       } catch(e) {}
     }
     setInterval(pollIncomingEvents, 4000);

@@ -97,6 +97,35 @@ try {
   `);
 } catch(e) {}
 
+try {
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS broadcasts (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      title TEXT,
+      message TEXT,
+      animation TEXT,
+      gift_gold INTEGER DEFAULT 0,
+      gift_food TEXT DEFAULT '',
+      created_at INTEGER,
+      expires_at INTEGER
+    );
+  `);
+} catch(e) {}
+
+try {
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS user_interests (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_email TEXT,
+      device_id TEXT,
+      category TEXT,
+      question TEXT,
+      answer TEXT,
+      timestamp INTEGER
+    );
+  `);
+} catch(e) {}
+
 // IN-MEMORY CACHE & WEBSOCKET KÖPRÜSÜ
 const database = {
   devices: new Map(),        // deviceId -> { deviceId, mac, userEmail, pet, needs, stats, lastSeen, isOnline }
@@ -328,7 +357,7 @@ const server = http.createServer((req, res) => {
     if (fs.existsSync(apkFile)) {
       res.writeHead(200, {
         'Content-Type': 'application/vnd.android.package-archive',
-        'Content-Disposition': 'attachment; filename="socies-v1.0.14.apk"',
+        'Content-Disposition': 'attachment; filename="socies-v1.0.15.apk"',
         'Access-Control-Allow-Origin': '*'
       });
       return fs.createReadStream(apkFile).pipe(res);
@@ -1042,7 +1071,7 @@ const server = http.createServer((req, res) => {
             log.details ? (typeof log.details === 'string' ? log.details : JSON.stringify(log.details)) : null,
             log.userEmail || null,
             log.deviceId || null,
-            log.appVersion || 'v1.0.14',
+            log.appVersion || 'v1.0.15',
             log.timestamp || now
           );
           inserted++;
@@ -1073,6 +1102,188 @@ const server = http.createServer((req, res) => {
     try {
       const users = db.prepare('SELECT email, nickname, avatar, device_id, created_at, last_login FROM users ORDER BY last_login DESC').all();
       return sendJSON(res, 200, { success: true, count: users.length, users });
+    } catch(e) {
+      return sendJSON(res, 500, { error: e.message });
+    }
+  }
+
+  // 7.0.7 CANLI PUSH / ANONS OLUŞTURMA (BROADCAST CREATE)
+  if (path === '/api/v1/broadcast/create' && method === 'POST') {
+    return parseBody(req, (body) => {
+      const { title, message, animation, giftGold, giftFood, durationMinutes } = body;
+      if (!message || !message.trim()) {
+        return sendJSON(res, 400, { error: 'Anons mesajı boş olamaz' });
+      }
+
+      const now = Date.now();
+      const expires = now + ((parseInt(durationMinutes, 10) || 1440) * 60 * 1000); // Varsayılan 24 saat
+      try {
+        const stmt = db.prepare(`
+          INSERT INTO broadcasts (title, message, animation, gift_gold, gift_food, created_at, expires_at)
+          VALUES (?, ?, ?, ?, ?, ?, ?)
+        `);
+        const info = stmt.run(
+          (title || 'Socies Bildirimi').trim(),
+          message.trim(),
+          animation || 'FLAG_TR',
+          parseInt(giftGold, 10) || 0,
+          giftFood || '',
+          now,
+          expires
+        );
+
+        // Canlı konsol köprüsüne de fırlat
+        database.bridgeEvents.push({
+          id: database.bridgeNextId++,
+          type: 'BROADCAST',
+          payload: { id: info.lastInsertRowid, title, message, animation, giftGold, giftFood },
+          sender: 'admin_server',
+          timestamp: now
+        });
+        if (database.bridgeEvents.length > 100) database.bridgeEvents.shift();
+
+        return sendJSON(res, 200, {
+          success: true,
+          message: 'Anons tüm konsollara başarıyla yayınlandı!',
+          broadcastId: info.lastInsertRowid
+        });
+      } catch(e) {
+        return sendJSON(res, 500, { error: 'Anons kaydedilemedi: ' + e.message });
+      }
+    });
+  }
+
+  // 7.0.8 EN SON AKTİF ANONS / PUSH MESAJINI ÇEKME (BROADCAST LATEST)
+  if (path.startsWith('/api/v1/broadcast/latest') && method === 'GET') {
+    const since = parseInt(parsedUrl.query.since || '0', 10);
+    const now = Date.now();
+    try {
+      const latest = db.prepare(`
+        SELECT * FROM broadcasts
+        WHERE id > ? AND expires_at > ?
+        ORDER BY id DESC LIMIT 1
+      `).get(since, now);
+
+      return sendJSON(res, 200, {
+        success: true,
+        hasBroadcast: !!latest,
+        broadcast: latest || null
+      });
+    } catch(e) {
+      return sendJSON(res, 500, { error: e.message });
+    }
+  }
+
+  // 7.0.9 YAYINLANMIŞ ANONS GEÇMİŞİ (BROADCAST HISTORY)
+  if (path === '/api/v1/broadcast/history' && method === 'GET') {
+    try {
+      const list = db.prepare('SELECT * FROM broadcasts ORDER BY id DESC LIMIT 20').all();
+      return sendJSON(res, 200, { success: true, count: list.length, broadcasts: list });
+    } catch(e) {
+      return sendJSON(res, 500, { error: e.message });
+    }
+  }
+
+  // 7.0.10 ÇOCUK/KULLANICI İLGİ ALANI VERİSİ KAYDETME (ZERO-PARTY DATA)
+  if (path === '/api/v1/user/interest' && method === 'POST') {
+    return parseBody(req, (body) => {
+      const { userEmail, deviceId, category, question, answer } = body;
+      if (!question || !answer) {
+        return sendJSON(res, 400, { error: 'question ve answer zorunludur' });
+      }
+      try {
+        db.prepare(`
+          INSERT INTO user_interests (user_email, device_id, category, question, answer, timestamp)
+          VALUES (?, ?, ?, ?, ?, ?)
+        `).run(
+          userEmail || null,
+          deviceId || null,
+          category || 'general',
+          question.slice(0, 200),
+          answer.slice(0, 100),
+          Date.now()
+        );
+        return sendJSON(res, 200, { success: true, message: 'İlgi alanı kaydedildi' });
+      } catch(e) {
+        return sendJSON(res, 500, { error: e.message });
+      }
+    });
+  }
+
+  // 7.0.11 İLGİ ALANI ANALİTİK ÖZETİ (ZERO-PARTY SUMMARY)
+  if (path === '/api/v1/admin/interests/summary' && method === 'GET') {
+    try {
+      const totalCount = db.prepare('SELECT COUNT(*) AS c FROM user_interests').get().c;
+      const recentAnswers = db.prepare('SELECT * FROM user_interests ORDER BY id DESC LIMIT 30').all();
+      const byCategory = db.prepare('SELECT category, COUNT(*) as c FROM user_interests GROUP BY category').all();
+      const byAnswer = db.prepare('SELECT question, answer, COUNT(*) as c FROM user_interests GROUP BY question, answer ORDER BY c DESC LIMIT 20').all();
+
+      return sendJSON(res, 200, {
+        success: true,
+        totalCount,
+        byCategory,
+        byAnswer,
+        recentAnswers
+      });
+    } catch(e) {
+      return sendJSON(res, 500, { error: e.message });
+    }
+  }
+
+  // 7.0.12 TELEMETRİ LOGLARINI SIFIRLAMA
+  if (path === '/api/v1/admin/clear-logs' && method === 'POST') {
+    try {
+      db.exec('DELETE FROM telemetry_logs');
+      return sendJSON(res, 200, { success: true, message: 'Tüm telemetri logları temizlendi' });
+    } catch(e) {
+      return sendJSON(res, 500, { error: e.message });
+    }
+  }
+
+  // 7.0.13 MERKEZİ SUNUCU TÜM GENEL METRİKLER (ADMIN OVERVIEW)
+  if (path === '/api/v1/admin/overview' && method === 'GET') {
+    try {
+      const devices = Array.from(database.devices.values());
+      const onlineDevices = devices.filter(d => (Date.now() - d.lastSeen) < 180000);
+      const totalUsers = db.prepare('SELECT COUNT(*) AS c FROM users').get().c;
+      const totalLogs = db.prepare('SELECT COUNT(*) AS c FROM telemetry_logs').get().c;
+      const totalBroadcasts = db.prepare('SELECT COUNT(*) AS c FROM broadcasts').get().c;
+      const totalInterests = db.prepare('SELECT COUNT(*) AS c FROM user_interests').get().c;
+      const recentLogs = db.prepare('SELECT * FROM telemetry_logs ORDER BY id DESC LIMIT 25').all();
+      const recentBroadcasts = db.prepare('SELECT * FROM broadcasts ORDER BY id DESC LIMIT 5').all();
+      const recentInterests = db.prepare('SELECT * FROM user_interests ORDER BY id DESC LIMIT 15').all();
+
+      // Bellek ve Uptime bilgisi
+      const mem = process.memoryUsage();
+      const uptimeSec = Math.floor(process.uptime());
+
+      return sendJSON(res, 200, {
+        success: true,
+        serverTime: Date.now(),
+        uptimeSec,
+        memoryRssMb: Math.round(mem.rss / (1024 * 1024)),
+        memoryHeapUsedMb: Math.round(mem.heapUsed / (1024 * 1024)),
+        stats: {
+          devicesCount: devices.length,
+          onlineCount: onlineDevices.length,
+          totalUsers,
+          totalLogs,
+          totalBroadcasts,
+          totalInterests,
+          totalPokes: database.systemStats.totalPokesSent
+        },
+        devices: devices.map(d => ({
+          deviceId: d.deviceId,
+          user: d.user || { nickname: 'Anonim' },
+          pet: d.pet || {},
+          needs: d.needs || {},
+          lastSeen: d.lastSeen,
+          isOnline: (Date.now() - d.lastSeen) < 180000
+        })),
+        recentLogs,
+        recentBroadcasts,
+        recentInterests
+      });
     } catch(e) {
       return sendJSON(res, 500, { error: e.message });
     }
@@ -1153,23 +1364,23 @@ const server = http.createServer((req, res) => {
     });
   }
 
-  // 8. GITHUB SÜRÜM / OTA KONTROLÜ (SemVer 2.0.0 v1.0.14)
+  // 8. GITHUB SÜRÜM / OTA KONTROLÜ (SemVer 2.0.0 v1.0.15)
   if (path === '/api/v1/version/check' && method === 'GET') {
     const host = req.headers.host || '46.1.173.159:3000';
     return sendJSON(res, 200, {
-      latestVersion: 'v1.0.14',
+      latestVersion: 'v1.0.15',
       semver: {
         major: 1,
         minor: 0,
-        patch: 14,
-        build: 15
+        patch: 15,
+        build: 16
       },
-      versionCode: 15,
-      latestCommitHash: 'socies-v1.0.14',
+      versionCode: 16,
+      latestCommitHash: 'socies-v1.0.15',
       mandatoryUpdate: false,
-      releaseNotes: 'v1.0.14: Statik IP (46.1.173.159) kilidi, arka plan hata teşhis & telemetri logger, Android selfie/kamera izinleri ve dosya seçici, çift cihaz oturum engelleme, bulut yedekleme/geri yükleme, fabrika ayarlarına sıfırlama ve zenginleştirilmiş çocuksu burç/karakter profili.',
+      releaseNotes: 'v1.0.15: Merkezi Komuta Merkezi (Admin HQ), OLED boşta sohbet & sıfır-taraf çocuk analitiği (zero-party data), OLED tahmin oyunları & temiz çocuk fıkraları, sunucudan OLED ekrana canlı push anons & hediye sistemi.',
       apkDownloadUrl: `http://${host}/download/socies-app.apk`,
-      githubApkUrl: 'https://github.com/mcturan/socies/releases/download/v1.0.14/socies-app.apk'
+      githubApkUrl: 'https://github.com/mcturan/socies/releases/download/v1.0.15/socies-app.apk'
     });
   }
 
@@ -1191,147 +1402,15 @@ function parseBody(req, callback) {
   });
 }
 
-// CANLI WEB YÖNETİM & İSTATİSTİK PANELİ
+// CANLI WEB YÖNETİM & İSTATİSTİK PANELİ (INDEX.HTML)
 function serveDashboard(res) {
-  const devices = Array.from(database.devices.values());
-  const onlineCount = devices.filter(d => (Date.now() - d.lastSeen) < 90000).length;
-  let recentLogs = [];
-  try {
-    recentLogs = db.prepare('SELECT * FROM telemetry_logs ORDER BY id DESC LIMIT 25').all();
-  } catch(e) {}
-
-  const html = `<!DOCTYPE html>
-<html lang="tr">
-<head>
-  <meta charset="UTF-8">
-  <title>SOCIES - Merkezi Sunucu & Telemetri Paneli</title>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
-    body { background: #070a12; color: #f8fafc; padding: 2rem; }
-    .container { max-width: 1280px; margin: 0 auto; }
-    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 1px solid #1e293b; padding-bottom: 1rem; flex-wrap: wrap; gap: 1rem; }
-    .title { font-size: 1.5rem; font-weight: 800; background: linear-gradient(90deg, #00f0ff, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .header-right { display: flex; align-items: center; gap: 1rem; }
-    .dl-btn { background: linear-gradient(135deg, #00f0ff, #0099ff); color: #000; padding: 0.5rem 1rem; border-radius: 10px; font-weight: 800; font-size: 0.8rem; text-decoration: none; display: flex; align-items: center; gap: 0.4rem; box-shadow: 0 0 15px rgba(0, 240, 255, 0.4); }
-    .dl-btn:hover { box-shadow: 0 0 25px rgba(0, 240, 255, 0.7); }
-    .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem; }
-    .stat-card { background: #0f1523; border: 1px solid #1e293b; border-radius: 16px; padding: 1.2rem; }
-    .stat-val { font-size: 1.8rem; font-weight: 800; color: #00f0ff; font-family: 'JetBrains Mono', monospace; }
-    .stat-lbl { font-size: 0.75rem; color: #94a3b8; margin-top: 4px; }
-    .table-box { background: #0f1523; border: 1px solid #1e293b; border-radius: 16px; overflow: hidden; margin-bottom: 2rem; }
-    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-    th, td { padding: 0.9rem 1rem; text-align: left; border-bottom: 1px solid #1e293b; }
-    th { background: rgba(255,255,255,0.03); color: #00f0ff; font-weight: 700; }
-    .badge-on { background: rgba(0,255,102,0.15); color: #00ff66; padding: 0.2rem 0.6rem; border-radius: 12px; font-weight: 700; font-size: 0.7rem; }
-    .badge-off { background: rgba(148,163,184,0.15); color: #94a3b8; padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.7rem; }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <div class="header">
-      <div>
-        <div class="title">SOCIES CENTRAL HUB • TELEMETRY SERVER</div>
-        <div style="font-size:0.75rem; color:#94a3b8; margin-top:2px;">Gerçek Zamanlı Cihaz Varlığı, Çağrı Mesajları & Telemetri Gözlemcisi</div>
-      </div>
-      <div class="header-right">
-        <a href="https://github.com/mcturan/socies/releases/latest/download/socies-app.apk" class="dl-btn">
-          <span>📥</span> Android APK İndir (v1.0.14)
-        </a>
-        <div style="font-family:'JetBrains Mono'; font-size:0.8rem; color:#00ff66;">● SUNUCU AKTİF (Port: ${PORT})</div>
-      </div>
-    </div>
-
-    <div class="stats-row">
-      <div class="stat-card">
-        <div class="stat-val">${devices.length}</div>
-        <div class="stat-lbl">Kayıtlı Cihaz</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-val" style="color:#00ff66;">${onlineCount}</div>
-        <div class="stat-lbl">Şu An Çevrimiçi (Online)</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-val" style="color:#a855f7;">${database.systemStats.totalMessagesSent}</div>
-        <div class="stat-lbl">İletilen Çağrı Mesajı</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-val" style="color:#ffe600;">v1.0.14</div>
-        <div class="stat-lbl">OTA Hedef Sürüm</div>
-      </div>
-    </div>
-
-    <div style="margin-bottom:0.6rem; font-weight:800; color:#00f0ff; font-size:1rem;">📱 Aktif Cihazlar & Varlık Tablosu</div>
-    <div class="table-box">
-      <table>
-        <thead>
-          <tr>
-            <th>Cihaz ID / MAC</th>
-            <th>Kullanıcı / E-posta</th>
-            <th>Aktif Canlı & Seviye</th>
-            <th>Batarya</th>
-            <th>Adım</th>
-            <th>Durum</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${devices.map(d => {
-            const isOnline = (Date.now() - d.lastSeen) < 90000;
-            return `
-              <tr>
-                <td><b>${d.deviceId}</b><br><span style="font-size:0.7rem; color:#64748b;">${d.mac}</span></td>
-                <td>${d.userEmail}</td>
-                <td><b>${d.pet?.breed ? d.pet.breed.toUpperCase() : 'TOP'}</b> (Lv. ${d.pet?.stage || 1}) - ${d.pet?.score || 0} P</td>
-                <td>${d.stats?.batteryPct || 100}% (${d.stats?.batteryMv || 4000}mV)</td>
-                <td>${d.stats?.steps || 0}</td>
-                <td><span class="${isOnline ? 'badge-on' : 'badge-off'}">${isOnline ? '● ÇEVRİMİÇİ' : '○ ÇEVRİMDIŞI'}</span></td>
-              </tr>
-            `;
-          }).join('')}
-        </tbody>
-      </table>
-    </div>
-
-    <div style="margin-bottom:0.6rem; font-weight:800; color:#00f0ff; font-size:1rem; display:flex; justify-content:space-between; align-items:center;">
-      <span>📡 Canlı İstemci Hata & Telemetri Logları (Son 25 Kayıt)</span>
-      <span style="font-size:0.75rem; color:#94a3b8; font-weight:normal;">Arka planda otomatik toplanan hata ve sistem teşhis verileri</span>
-    </div>
-    <div class="table-box">
-      <table>
-        <thead>
-          <tr>
-            <th>Zaman</th>
-            <th>Seviye</th>
-            <th>Kategori</th>
-            <th>Kullanıcı / Cihaz</th>
-            <th>Mesaj</th>
-            <th>Detay</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${recentLogs.length === 0 ? '<tr><td colspan="6" style="text-align:center; color:#64748b; padding:1.5rem;">Henüz telemetri veya hata kaydı yok (Sistem stabil).</td></tr>' : recentLogs.map(l => {
-            const timeStr = new Date(l.created_at).toLocaleTimeString('tr-TR');
-            const isErr = l.level === 'error';
-            return `
-              <tr>
-                <td style="font-family:'JetBrains Mono'; font-size:0.75rem; color:#94a3b8;">${timeStr}</td>
-                <td><span style="padding:0.2rem 0.5rem; border-radius:8px; font-weight:800; font-size:0.7rem; background:${isErr ? 'rgba(239,68,68,0.2)' : 'rgba(59,130,246,0.2)'}; color:${isErr ? '#ef4444' : '#60a5fa'};">${(l.level || 'INFO').toUpperCase()}</span></td>
-                <td style="font-weight:700; color:#cbd5e1;">${l.category || '-'}</td>
-                <td style="font-size:0.8rem;"><b>${l.user_email || 'Anonim'}</b><br><span style="font-size:0.7rem; color:#64748b;">${l.device_id || '-'}</span></td>
-                <td style="color:#f8fafc; font-weight:600;">${l.message || ''}</td>
-                <td style="font-family:'JetBrains Mono'; font-size:0.72rem; color:#94a3b8; max-width:280px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${l.details_json || '-'}</td>
-              </tr>
-            `;
-          }).join('')}
-        </tbody>
-      </table>
-    </div>
-  </div>
-</body>
-</html>`;
-
-  res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
-  res.end(html);
+  const indexPath = pathModule.join(__dirname, '../index.html');
+  if (fs.existsSync(indexPath)) {
+    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+    return fs.createReadStream(indexPath).pipe(res);
+  }
+  res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8' });
+  res.end('SOCIES Server Online');
 }
 
 // SOCIES AĞ & ETKİN KULLANICILAR SAYFASI
@@ -1416,7 +1495,7 @@ function serveSociesNetworkPage(res) {
       <div class="nav-links">
         <a href="/dashboard" class="nav-btn">📊 Sunucu Paneli</a>
         <a href="/" class="nav-btn">🎮 Web Emülatörü</a>
-        <a href="/download/socies-app.apk" class="dl-btn">📥 APK İndir (v1.0.14)</a>
+        <a href="/download/socies-app.apk" class="dl-btn">📥 APK İndir (v1.0.15)</a>
       </div>
     </div>
 
@@ -1434,7 +1513,7 @@ function serveSociesNetworkPage(res) {
         <div class="kpi-lbl">${countries.join(', ')}</div>
       </div>
       <div class="kpi-card">
-        <div class="kpi-val" style="color:#ffe600;">v1.0.14</div>
+        <div class="kpi-val" style="color:#ffe600;">v1.0.15</div>
         <div class="kpi-lbl">Ağ Sürümü (SemVer 2.0.0)</div>
       </div>
     </div>
