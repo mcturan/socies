@@ -696,7 +696,7 @@
     <div class="update-dialog">
       <div class="update-icon-badge">🚀</div>
       <div class="update-title">Yeni Güncelleme Mevcut!</div>
-      <div class="update-pill" id="updVersionTag">v1.0.10 Hazır</div>
+      <div class="update-pill" id="updVersionTag">v1.0.11 Hazır</div>
       <div class="update-notes-box" id="updReleaseNotes">
         Yeni özellikler ve iyileştirmeler yayınlandı.
       </div>
@@ -966,7 +966,7 @@
         </div>
         <div class="badge-chip" id="badgeAppVersion" onclick="manualCheckUpdate()" title="Sürüm: Dokunarak Kontrol Et" style="cursor:pointer;">
           <span>🚀</span>
-          <span id="txtCurrentVersion">v1.0.10</span>
+          <span id="txtCurrentVersion">v1.0.11</span>
         </div>
       </div>
     </div>
@@ -991,7 +991,7 @@
         </div>
 
         <div class="mid-status-txt">
-          <span>🎮 6 RETRO OYUN</span>
+          <span>🎮 10 RETRO OYUN</span>
           <span style="color:#00ff66;" id="txtConsoleOnline">🟢 AKTİF</span>
         </div>
 
@@ -1161,12 +1161,12 @@
       <div style="font-weight:900; font-size:1.1rem; margin-bottom:0.2rem;">Retro Mini Oyun Arenası</div>
       
       <div class="games-grid">
-        <!-- 1. CHROME DINO RUNNER -->
+        <!-- 1. PİKSEL MARATON (KARAKTER KOŞUSU) -->
         <div class="game-card" onclick="launchGameOnConsole('DINO')">
-          <span style="font-size:2rem;">🦖</span>
-          <div style="font-weight:800; font-size:0.95rem;">Dino Koşusu</div>
-          <div style="font-size:0.75rem; color:var(--text-muted);">Zıpla, kaktüsleri ve kuşları aş</div>
-          <span class="game-badge-type type-console">Chrome Stili</span>
+          <span style="font-size:2rem;">🏃</span>
+          <div style="font-weight:800; font-size:0.95rem;">Piksel Maraton</div>
+          <div style="font-size:0.75rem; color:var(--text-muted);">Pufi koşuyor, engelleri aş</div>
+          <span class="game-badge-type type-console">Koşu & Zıpla</span>
         </div>
 
         <!-- 2. CEP PONG (PİN-PON SQUASH PRO) -->
@@ -1193,7 +1193,39 @@
           <span class="game-badge-type type-console">Aksiyon</span>
         </div>
 
-        <!-- 5. KOVBOY DÜELLOSU -->
+        <!-- 5. UZAY İSTİLACILARI -->
+        <div class="game-card" onclick="launchGameOnConsole('SPACE')">
+          <span style="font-size:2rem;">🚀</span>
+          <div style="font-weight:800; font-size:0.95rem;">Uzay Savunması</div>
+          <div style="font-size:0.75rem; color:var(--text-muted);">UFO'ları vur, galaksiyi koru</div>
+          <span class="game-badge-type type-console">Retro Galaga</span>
+        </div>
+
+        <!-- 6. TUĞLA KIRMA (ARKANOID) -->
+        <div class="game-card" onclick="launchGameOnConsole('BRICK')">
+          <span style="font-size:2rem;">🧱</span>
+          <div style="font-weight:800; font-size:0.95rem;">Tuğla Kırma</div>
+          <div style="font-size:0.75rem; color:var(--text-muted);">Blokları patlat, bonusları topla</div>
+          <span class="game-badge-type type-console">Arkanoid</span>
+        </div>
+
+        <!-- 7. PARAŞÜTÇÜ KURTARMA (GAME & WATCH 1980) -->
+        <div class="game-card" onclick="launchGameOnConsole('PARACHUTE')">
+          <span style="font-size:2rem;">🪂</span>
+          <div style="font-weight:800; font-size:0.95rem;">Paraşütçü</div>
+          <div style="font-size:0.75rem; color:var(--text-muted);">Düşenleri yakala, suya düşürme</div>
+          <span class="game-badge-type type-console">Game & Watch</span>
+        </div>
+
+        <!-- 8. UÇAN PUFİ (FLAPPY FLIGHT) -->
+        <div class="game-card" onclick="launchGameOnConsole('FLAPPY')">
+          <span style="font-size:2rem;">🛩️</span>
+          <div style="font-weight:800; font-size:0.95rem;">Uçan Pufi</div>
+          <div style="font-size:0.75rem; color:var(--text-muted);">Kanat çırp, mağaradan süzül</div>
+          <span class="game-badge-type type-console">Flappy Kanat</span>
+        </div>
+
+        <!-- 9. KOVBOY DÜELLOSU -->
         <div class="game-card" id="cardCowboy" onclick="launchGameOnConsole('COWBOY')">
           <span style="font-size:2rem;">🤠</span>
           <div style="font-weight:800; font-size:0.95rem;">Kovboy Düellosu</div>
@@ -1201,7 +1233,7 @@
           <span class="game-badge-type type-duel">P2P Düello</span>
         </div>
 
-        <!-- 6. TAŞ - KAĞIT - MAKAS -->
+        <!-- 10. TAŞ - KAĞIT - MAKAS -->
         <div class="game-card" id="cardRps" onclick="launchGameOnConsole('RPS')">
           <span style="font-size:2rem;">✂️</span>
           <div style="font-weight:800; font-size:0.95rem;">Taş-Kağıt-Makas</div>
@@ -1742,13 +1774,24 @@
       menuIdx: 0,
       menuItems: ['BESLE', 'TUVALET', 'BANYO', 'İLAÇ', 'OYUNLAR', 'UYUT', 'DURUM'],
       foodItems: ['ELMA 🍏', 'MAMA 🍗', 'PASTA 🍰', 'SU 💧'],
-      gameItems: ['1. DİNO KOŞUSU 🦖', '2. PİNPON 🏓', '3. YILAN 🐍', '4. ELMA YAKALA 🍎', '5. KOVBOY 🤠', '6. RPS ✂️'],
+      gameItems: [
+        '1. MARATON 🏃',
+        '2. PİNPON 🏓',
+        '3. YILAN 🐍',
+        '4. ELMA YAKALA 🍎',
+        '5. UZAY İSTİLASI 🚀',
+        '6. TUĞLA KIRMA 🧱',
+        '7. PARAŞÜT 🪂',
+        '8. UÇAN PUFİ 🛩️',
+        '9. KOVBOY 🤠',
+        '10. RPS ✂️'
+      ],
       foodIdx: 0,
       gameIdx: 0,
       actionTimer: 0,
       petX: 48, petDir: 1, animFrame: 0,
       
-      // 1. Google Chrome Dino Runner State
+      // 1. Piksel Maraton (Karakter Koşucusu) State
       dino: {
         petY: 34,
         vy: 0,
@@ -1792,13 +1835,61 @@
         spawnTimer: 0
       },
 
-      // 5. Cowboy Duel State
+      // 5. Retro Space Invaders State
+      space: {
+        shipX: 56,
+        bullets: [],
+        aliens: [],
+        alienDir: 1,
+        alienDropTimer: 0,
+        score: 0,
+        lives: 3,
+        isGameOver: false
+      },
+
+      // 6. Retro Brick Breaker (Arkanoid) State
+      brick: {
+        padX: 48,
+        padW: 24,
+        ballX: 64,
+        ballY: 46,
+        vx: 1.1,
+        vy: -1.0,
+        bricks: [],
+        score: 0,
+        lives: 3,
+        isGameOver: false
+      },
+
+      // 7. Game & Watch 1980 Parachute Rescue State
+      parachute: {
+        boatCol: 1, // 0: Sol (24), 1: Orta (56), 2: Sağ (88)
+        boatX: 52,
+        jumpers: [],
+        score: 0,
+        lives: 3,
+        isGameOver: false,
+        spawnTimer: 0
+      },
+
+      // 8. Flappy Pet Flight State
+      flappy: {
+        petY: 30,
+        vy: 0,
+        pipes: [],
+        score: 0,
+        hiScore: 0,
+        isGameOver: false,
+        spawnTimer: 0
+      },
+
+      // 9. Cowboy Duel State
       cowboy: { canShoot: false, timer: 0, reactionMs: 0, isGameOver: false },
 
-      // 6. RPS Duel State
+      // 10. RPS Duel State
       rps: { playerChoice: null, cpuChoice: null, resultText: '', resolved: false },
 
-      // Pager Marquee Banner
+      // Pager & Morning Weather Marquee Banner
       marqueeMsg: null,
       marqueeX: 128
     };
@@ -1876,6 +1967,14 @@
         renderOledSnake();
       } else if (oled.mode === 'CATCHER') {
         renderOledCatcher();
+      } else if (oled.mode === 'SPACE') {
+        renderOledSpace();
+      } else if (oled.mode === 'BRICK') {
+        renderOledBrick();
+      } else if (oled.mode === 'PARACHUTE') {
+        renderOledParachute();
+      } else if (oled.mode === 'FLAPPY') {
+        renderOledFlappy();
       } else if (oled.mode === 'COWBOY') {
         renderOledCowboy();
       } else if (oled.mode === 'RPS') {
@@ -2010,7 +2109,7 @@
       // 1. ÜST SKOR ÇUBUĞU
       oled.ctx.fillStyle = '#ffb703';
       oled.ctx.font = '7px "JetBrains Mono"';
-      oled.ctx.fillText(`DİNO:${Math.floor(d.score)}`, 6, 24);
+      oled.ctx.fillText(`MARATON:${Math.floor(d.score)}`, 6, 24);
       oled.ctx.fillText(`REKOR:${d.hiScore}`, 76, 24);
 
       // 2. ZEMİN ÇİZGİSİ (y = 52) & KAYAN ZEMİN NOKTALARI
@@ -2037,7 +2136,7 @@
           d.isGrounded = true;
         }
 
-        // Engel Oluşturma (Cactus & Flying Pterodactyl)
+        // Engel Oluşturma (Kaktüsler ve Uçan Kuşlar)
         d.spawnTimer++;
         if (d.spawnTimer > (45 + Math.random() * 35)) {
           d.spawnTimer = 0;
@@ -2059,21 +2158,18 @@
         }
       }
 
-      // 4. ENGELLERİ PİKSEL PİKSEL ÇİZ
+      // 4. ENGELLERİ ÇİZ
       for (const obs of d.obstacles) {
         oled.ctx.fillStyle = '#00f0ff';
         if (obs.type === 'cactus_s') {
-          // Tekli Kaktüs
           oled.ctx.fillRect(Math.round(obs.x + 2), obs.y, 2, 12);
-          oled.ctx.fillRect(Math.round(obs.x), obs.y + 4, 2, 5);
-          oled.ctx.fillRect(Math.round(obs.x + 4), obs.y + 2, 2, 6);
+          oled.ctx.fillRect(Math.round(obs.x), obs.y + 3, 2, 4);
+          oled.ctx.fillRect(Math.round(obs.x + 4), obs.y + 4, 2, 3);
         } else if (obs.type === 'cactus_d') {
-          // İkili Kaktüs Kümesi
           oled.ctx.fillRect(Math.round(obs.x + 1), obs.y + 2, 2, 12);
           oled.ctx.fillRect(Math.round(obs.x + 6), obs.y, 2, 14);
           oled.ctx.fillRect(Math.round(obs.x + 8), obs.y + 3, 2, 5);
         } else if (obs.type === 'bird') {
-          // Uçan Kuş (Kanat Çırpan Pterodactyl)
           const wingUp = (oled.animFrame % 10 < 5);
           oled.ctx.fillRect(Math.round(obs.x + 2), obs.y + 2, 6, 2);
           oled.ctx.fillRect(Math.round(obs.x), obs.y + 1, 2, 2);
@@ -2082,44 +2178,45 @@
         }
       }
 
-      // 5. DİNOZOR / PET KOŞUCU KARAKTERİ
+      // 5. PUFİ KOŞUCU KARAKTERİ (SANAL BEBEK MARATONDA!)
       const rx = 18;
       const ry = Math.round(d.petY);
       oled.ctx.fillStyle = '#38bdf8';
 
-      // 14x18 Pixel Dino Koşucu
-      // Kafa & Göz
-      oled.ctx.fillRect(rx + 6, ry, 7, 5);
+      // Sevimli Kulaklar (Tavşan/Kedi Kulakları)
+      oled.ctx.fillRect(rx + 4, ry - 3, 2, 4);
+      oled.ctx.fillRect(rx + 8, ry - 3, 2, 4);
+      // Baş & Gövde Silüeti (Tombiş Pufi)
+      oled.ctx.fillRect(rx + 2, ry, 10, 11);
+      // Gözler
       oled.ctx.fillStyle = '#000814';
-      oled.ctx.fillRect(rx + 8, ry + 1, 2, 2); // Göz
+      oled.ctx.fillRect(rx + 8, ry + 2, 2, 2);
       oled.ctx.fillStyle = '#38bdf8';
-      // Gövde & Kuyruk
-      oled.ctx.fillRect(rx + 2, ry + 5, 9, 8);
-      oled.ctx.fillRect(rx, ry + 7, 3, 4); // Kuyruk
-      oled.ctx.fillRect(rx + 9, ry + 7, 3, 2); // Mini kol
-      // Bacaklar (Koşma animasyonu)
+      // Minik Kuyruk
+      oled.ctx.fillRect(rx, ry + 5, 2, 2);
+
+      // Koşan Patiler
       if (d.isGrounded && !d.isGameOver) {
         const step = (oled.animFrame % 8 < 4);
         if (step) {
-          oled.ctx.fillRect(rx + 3, ry + 13, 2, 5);
-          oled.ctx.fillRect(rx + 7, ry + 13, 2, 3);
+          oled.ctx.fillRect(rx + 3, ry + 11, 2, 4);
+          oled.ctx.fillRect(rx + 8, ry + 11, 2, 2);
         } else {
-          oled.ctx.fillRect(rx + 3, ry + 13, 2, 3);
-          oled.ctx.fillRect(rx + 7, ry + 13, 2, 5);
+          oled.ctx.fillRect(rx + 3, ry + 11, 2, 2);
+          oled.ctx.fillRect(rx + 8, ry + 11, 2, 4);
         }
       } else {
-        // Havada veya çarpmış bacaklar
-        oled.ctx.fillRect(rx + 4, ry + 13, 2, 4);
-        oled.ctx.fillRect(rx + 7, ry + 13, 2, 4);
+        // Zıplarken patiler arkaya doğru
+        oled.ctx.fillRect(rx + 2, ry + 11, 2, 3);
+        oled.ctx.fillRect(rx + 7, ry + 11, 2, 3);
       }
 
-      // 6. KUSURSUZ PİKSEL ÇARPIŞMA TESTİ (COLLISION)
+      // 6. ÇARPIŞMA TESTİ
       if (!d.isGameOver) {
-        const pBox = { x: rx + 2, y: ry + 1, w: 10, h: 16 };
+        const pBox = { x: rx + 2, y: ry, w: 10, h: 14 };
         for (const obs of d.obstacles) {
           if (pBox.x + pBox.w > obs.x + 1 && pBox.x < obs.x + obs.w - 1 &&
               pBox.y + pBox.h > obs.y + 1 && pBox.y < obs.y + obs.h) {
-            // ÇARPTI! GAME OVER!
             d.isGameOver = true;
             beep(160, 0.25);
             playWhineSound();
@@ -2129,10 +2226,9 @@
           }
         }
       } else {
-        // GAME OVER EKRANI
         oled.ctx.fillStyle = '#ef4444';
         oled.ctx.font = '8px "JetBrains Mono"';
-        oled.ctx.fillText('== CARPTIN! ==', 28, 38);
+        oled.ctx.fillText('== YORULDUN! ==', 28, 38);
         if (oled.animFrame % 30 < 18) {
           oled.ctx.fillStyle = '#ffb703';
           oled.ctx.font = '7px "JetBrains Mono"';
@@ -2542,6 +2638,477 @@
     }
 
     // =========================================================================
+    // OYUN 7: 🚀 UZAY SAVUNMASI (SPACE INVADERS / RETRO GALAGA)
+    // =========================================================================
+    function resetSpaceGame() {
+      const s = oled.space;
+      s.shipX = 56;
+      s.bullets = [];
+      s.aliens = [];
+      s.alienDir = 1;
+      s.alienDropTimer = 0;
+      s.score = 0;
+      s.lives = 3;
+      s.isGameOver = false;
+
+      for (let r = 0; r < 2; r++) {
+        for (let c = 0; c < 6; c++) {
+          s.aliens.push({
+            x: 16 + c * 16,
+            y: 20 + r * 10,
+            w: 8,
+            h: 6,
+            alive: true
+          });
+        }
+      }
+    }
+
+    function renderOledSpace() {
+      const s = oled.space;
+
+      oled.ctx.fillStyle = '#ffb703';
+      oled.ctx.font = '7px "JetBrains Mono"';
+      oled.ctx.fillText(`UZAY:${s.score}`, 6, 24);
+      for(let i=0; i<s.lives; i++) {
+        drawOledHeart(oled.ctx, 96 + i*8, 18, true);
+      }
+
+      if (!s.isGameOver) {
+        for (let i = s.bullets.length - 1; i >= 0; i--) {
+          const b = s.bullets[i];
+          b.y -= 2.4;
+          if (b.y < 16) {
+            s.bullets.splice(i, 1);
+            continue;
+          }
+
+          for (const al of s.aliens) {
+            if (al.alive && b.x >= al.x - 1 && b.x <= al.x + al.w + 1 && b.y >= al.y && b.y <= al.y + al.h) {
+              al.alive = false;
+              s.bullets.splice(i, 1);
+              s.score += 20;
+              beep(960, 0.05);
+              break;
+            }
+          }
+        }
+
+        s.alienDropTimer++;
+        if (s.alienDropTimer > 18) {
+          s.alienDropTimer = 0;
+          let hitWall = false;
+          for (const al of s.aliens) {
+            if (al.alive) {
+              if ((s.alienDir === 1 && al.x >= 114) || (s.alienDir === -1 && al.x <= 8)) {
+                hitWall = true;
+                break;
+              }
+            }
+          }
+
+          if (hitWall) {
+            s.alienDir *= -1;
+            for (const al of s.aliens) {
+              al.y += 4;
+              if (al.alive && al.y >= 46) {
+                s.isGameOver = true;
+                playWhineSound();
+                reportGameScore('SPACE', s.score);
+              }
+            }
+          } else {
+            for (const al of s.aliens) {
+              al.x += s.alienDir * 4;
+            }
+          }
+        }
+
+        const aliveCount = s.aliens.filter(a => a.alive).length;
+        if (aliveCount === 0) {
+          s.score += 100;
+          playLevelUpFanfare();
+          showGlobalToast('🚀 Dalga temizlendi! Yeni uzaylılar geliyor (+100 XP)');
+          for (let r = 0; r < 2; r++) {
+            for (let c = 0; c < 6; c++) {
+              s.aliens.push({ x: 16 + c * 16, y: 20 + r * 10, w: 8, h: 6, alive: true });
+            }
+          }
+        }
+      }
+
+      oled.ctx.fillStyle = '#ffb703';
+      for (const b of s.bullets) {
+        oled.ctx.fillRect(Math.round(b.x), Math.round(b.y), 1, 3);
+      }
+
+      oled.ctx.fillStyle = '#00f0ff';
+      const wingFrame = (Math.floor(oled.animFrame / 14) % 2 === 0);
+      for (const al of s.aliens) {
+        if (!al.alive) continue;
+        const ax = Math.round(al.x);
+        const ay = Math.round(al.y);
+        oled.ctx.fillRect(ax + 2, ay, 4, 1);
+        oled.ctx.fillRect(ax + 1, ay + 1, 6, 3);
+        oled.ctx.fillRect(ax + 2, ay + 4, 1, 2);
+        oled.ctx.fillRect(ax + 5, ay + 4, 1, 2);
+        if (wingFrame) {
+          oled.ctx.fillRect(ax, ay + 2, 1, 2);
+          oled.ctx.fillRect(ax + 7, ay + 2, 1, 2);
+        } else {
+          oled.ctx.fillRect(ax, ay + 1, 1, 2);
+          oled.ctx.fillRect(ax + 7, ay + 1, 1, 2);
+        }
+      }
+
+      // Karakterimizin Uzay Gemisi
+      const sx = s.shipX;
+      oled.ctx.fillStyle = '#38bdf8';
+      oled.ctx.fillRect(sx + 5, 50, 4, 3);
+      oled.ctx.fillRect(sx + 2, 53, 10, 4);
+      oled.ctx.fillRect(sx, 57, 14, 2);
+      oled.ctx.fillStyle = '#000814';
+      oled.ctx.fillRect(sx + 6, 52, 2, 2);
+
+      if (s.isGameOver) {
+        oled.ctx.fillStyle = '#ef4444';
+        oled.ctx.font = '8px "JetBrains Mono"';
+        oled.ctx.fillText('== İSTİLA EDİLDİ! ==', 18, 36);
+        if (oled.animFrame % 30 < 18) {
+          oled.ctx.fillStyle = '#ffb703';
+          oled.ctx.font = '7px "JetBrains Mono"';
+          oled.ctx.fillText('[SEC / DOKUN]: YENIDEN', 14, 48);
+        }
+      }
+    }
+
+    // =========================================================================
+    // OYUN 8: 🧱 TUĞLA KIRMA (ARKANOID / BRICK BREAKER)
+    // =========================================================================
+    function resetBrickGame() {
+      const b = oled.brick;
+      b.padX = 48;
+      b.padW = 26;
+      b.ballX = 64;
+      b.ballY = 46;
+      b.vx = (Math.random() > 0.5 ? 1.05 : -1.05);
+      b.vy = -0.95;
+      b.bricks = [];
+      b.score = 0;
+      b.lives = 3;
+      b.isGameOver = false;
+
+      for (let r = 0; r < 3; r++) {
+        for (let c = 0; c < 7; c++) {
+          b.bricks.push({
+            x: 8 + c * 16,
+            y: 19 + r * 6,
+            w: 14,
+            h: 4,
+            alive: true
+          });
+        }
+      }
+    }
+
+    function renderOledBrick() {
+      const b = oled.brick;
+
+      oled.ctx.fillStyle = '#ffb703';
+      oled.ctx.font = '7px "JetBrains Mono"';
+      oled.ctx.fillText(`TUĞLA:${b.score}`, 6, 24);
+      for(let i=0; i<b.lives; i++) {
+        drawOledHeart(oled.ctx, 96 + i*8, 18, true);
+      }
+
+      oled.ctx.fillStyle = '#1e293b';
+      oled.ctx.fillRect(2, 16, 1, 48);
+      oled.ctx.fillRect(125, 16, 1, 48);
+
+      if (!b.isGameOver) {
+        b.ballX += b.vx;
+        b.ballY += b.vy;
+
+        if (b.ballX <= 4) { b.ballX = 4; b.vx = Math.abs(b.vx); playTactileClick('click'); }
+        if (b.ballX >= 122) { b.ballX = 122; b.vx = -Math.abs(b.vx); playTactileClick('click'); }
+        if (b.ballY <= 17) { b.ballY = 17; b.vy = Math.abs(b.vy); playTactileClick('click'); }
+
+        if (b.ballY >= 52 && b.ballY <= 56) {
+          if (b.ballX >= b.padX - 2 && b.ballX <= b.padX + b.padW + 2) {
+            b.vy = -Math.abs(b.vy);
+            const hit = (b.ballX - (b.padX + b.padW / 2)) / (b.padW / 2);
+            b.vx = hit * 1.35;
+            b.vx = Math.max(-1.6, Math.min(1.6, b.vx));
+            beep(750, 0.04);
+          }
+        }
+
+        for (const br of b.bricks) {
+          if (br.alive && b.ballX >= br.x - 1 && b.ballX <= br.x + br.w + 1 && b.ballY >= br.y - 1 && b.ballY <= br.y + br.h + 1) {
+            br.alive = false;
+            b.vy *= -1;
+            b.score += 15;
+            beep(920, 0.05);
+            break;
+          }
+        }
+
+        if (b.ballY > 60) {
+          b.lives--;
+          if (b.lives > 0) {
+            beep(300, 0.15);
+            b.ballX = b.padX + b.padW / 2;
+            b.ballY = 46;
+            b.vy = -0.95;
+            b.vx = (Math.random() > 0.5 ? 1.05 : -1.05);
+          } else {
+            b.isGameOver = true;
+            playWhineSound();
+            reportGameScore('BRICK', b.score);
+          }
+        }
+
+        if (b.bricks.every(br => !br.alive)) {
+          b.score += 150;
+          playLevelUpFanfare();
+          showGlobalToast('🧱 Tüm tuğlalar kırıldı! (+150 XP)');
+          resetBrickGame();
+        }
+      }
+
+      for (const br of b.bricks) {
+        if (!br.alive) continue;
+        oled.ctx.fillStyle = '#00f0ff';
+        oled.ctx.fillRect(br.x, br.y, br.w, br.h);
+        oled.ctx.fillStyle = '#000814';
+        oled.ctx.fillRect(br.x, br.y, 1, 1);
+      }
+
+      oled.ctx.fillStyle = '#ffb703';
+      oled.ctx.fillRect(Math.round(b.ballX), Math.round(b.ballY), 3, 3);
+      oled.ctx.fillStyle = '#38bdf8';
+      oled.ctx.fillRect(Math.round(b.padX), 55, b.padW, 3);
+
+      if (b.isGameOver) {
+        oled.ctx.fillStyle = '#ef4444';
+        oled.ctx.font = '8px "JetBrains Mono"';
+        oled.ctx.fillText('== OYUN BİTTİ ==', 28, 38);
+        if (oled.animFrame % 30 < 18) {
+          oled.ctx.fillStyle = '#ffb703';
+          oled.ctx.font = '7px "JetBrains Mono"';
+          oled.ctx.fillText('[SEC / DOKUN]: YENIDEN', 14, 48);
+        }
+      }
+    }
+
+    // =========================================================================
+    // OYUN 9: 🪂 PARAŞÜT KURTARMA (GAME & WATCH 1980 NOSTALJİSİ)
+    // =========================================================================
+    function resetParachuteGame() {
+      const p = oled.parachute;
+      p.boatCol = 1;
+      p.boatX = 52;
+      p.jumpers = [];
+      p.score = 0;
+      p.lives = 3;
+      p.isGameOver = false;
+      p.spawnTimer = 0;
+    }
+
+    function renderOledParachute() {
+      const p = oled.parachute;
+
+      oled.ctx.fillStyle = '#ffb703';
+      oled.ctx.font = '7px "JetBrains Mono"';
+      oled.ctx.fillText(`KURTAR:${p.score}`, 6, 24);
+      for(let i=0; i<p.lives; i++) {
+        drawOledHeart(oled.ctx, 96 + i*8, 18, true);
+      }
+
+      // Su Dalgaları
+      oled.ctx.fillStyle = '#1e293b';
+      for (let x = 0; x < 128; x += 8) {
+        const wave = (oled.animFrame % 16 < 8) ? 0 : 1;
+        oled.ctx.fillRect(x, 57 + wave, 6, 1);
+      }
+
+      if (!p.isGameOver) {
+        p.spawnTimer++;
+        if (p.spawnTimer > 42) {
+          p.spawnTimer = 0;
+          const col = Math.floor(Math.random() * 3);
+          const colX = col === 0 ? 24 : (col === 1 ? 56 : 88);
+          p.jumpers.push({ col, x: colX, y: 18, vy: 0.58 });
+        }
+
+        for (let i = p.jumpers.length - 1; i >= 0; i--) {
+          const j = p.jumpers[i];
+          j.y += j.vy;
+
+          if (j.y >= 47 && j.y <= 54) {
+            if (p.boatCol === j.col) {
+              p.score += 10;
+              beep(880, 0.07);
+              p.jumpers.splice(i, 1);
+              continue;
+            }
+          }
+
+          if (j.y > 54) {
+            p.lives--;
+            beep(220, 0.2);
+            p.jumpers.splice(i, 1);
+            if (p.lives <= 0) {
+              p.isGameOver = true;
+              playWhineSound();
+              reportGameScore('PARACHUTE', p.score);
+            }
+          }
+        }
+      }
+
+      // Paraşütçüleri Çiz
+      for (const j of p.jumpers) {
+        const jx = Math.round(j.x);
+        const jy = Math.round(j.y);
+        oled.ctx.fillStyle = '#00f0ff';
+        oled.ctx.fillRect(jx - 4, jy, 9, 3);
+        oled.ctx.fillRect(jx - 2, jy - 1, 5, 1);
+        oled.ctx.fillRect(jx - 3, jy + 3, 1, 2);
+        oled.ctx.fillRect(jx + 3, jy + 3, 1, 2);
+        oled.ctx.fillStyle = '#ffb703';
+        oled.ctx.fillRect(jx - 1, jy + 5, 3, 3);
+      }
+
+      // Pufi'nin Kurtarma Botu
+      const targetX = p.boatCol === 0 ? 18 : (p.boatCol === 1 ? 50 : 82);
+      p.boatX += (targetX - p.boatX) * 0.4;
+      const bx = Math.round(p.boatX);
+      oled.ctx.fillStyle = '#38bdf8';
+      oled.ctx.fillRect(bx, 52, 18, 4);
+      oled.ctx.fillRect(bx + 2, 56, 14, 2);
+      oled.ctx.fillStyle = '#ffb703';
+      oled.ctx.fillRect(bx + 7, 48, 4, 4);
+
+      if (p.isGameOver) {
+        oled.ctx.fillStyle = '#ef4444';
+        oled.ctx.font = '8px "JetBrains Mono"';
+        oled.ctx.fillText('== SUYA DÜŞTÜ! ==', 22, 36);
+        if (oled.animFrame % 30 < 18) {
+          oled.ctx.fillStyle = '#ffb703';
+          oled.ctx.font = '7px "JetBrains Mono"';
+          oled.ctx.fillText('[SEC / DOKUN]: YENIDEN', 14, 48);
+        }
+      }
+    }
+
+    // =========================================================================
+    // OYUN 10: 🛩️ UÇAN PUFİ (FLAPPY FLIGHT)
+    // =========================================================================
+    function resetFlappyGame() {
+      const f = oled.flappy;
+      f.petY = 32;
+      f.vy = 0;
+      f.pipes = [];
+      f.score = 0;
+      f.isGameOver = false;
+      f.spawnTimer = 0;
+    }
+
+    function renderOledFlappy() {
+      const f = oled.flappy;
+
+      oled.ctx.fillStyle = '#ffb703';
+      oled.ctx.font = '7px "JetBrains Mono"';
+      oled.ctx.fillText(`UÇUŞ:${f.score}`, 6, 24);
+      oled.ctx.fillText(`REKOR:${f.hiScore}`, 76, 24);
+
+      oled.ctx.fillStyle = '#1e293b';
+      oled.ctx.fillRect(0, 16, 128, 1);
+      oled.ctx.fillRect(0, 62, 128, 1);
+
+      if (!f.isGameOver) {
+        f.vy += 0.22;
+        f.petY += f.vy;
+
+        if (f.petY <= 17 || f.petY >= 54) {
+          f.isGameOver = true;
+          beep(160, 0.25);
+          playWhineSound();
+          f.hiScore = Math.max(f.hiScore, f.score);
+          reportGameScore('FLAPPY', f.score);
+        }
+
+        f.spawnTimer++;
+        if (f.spawnTimer > 45) {
+          f.spawnTimer = 0;
+          const gapY = Math.floor(Math.random() * 20) + 24;
+          const gapSize = 18;
+          f.pipes.push({
+            x: 130,
+            topH: gapY - gapSize / 2 - 16,
+            botY: gapY + gapSize / 2,
+            passed: false
+          });
+        }
+
+        for (let i = f.pipes.length - 1; i >= 0; i--) {
+          const p = f.pipes[i];
+          p.x -= 1.4;
+
+          if (!p.passed && p.x < 22) {
+            p.passed = true;
+            f.score += 5;
+            beep(880, 0.05);
+          }
+
+          if (p.x >= 14 && p.x <= 32) {
+            if (f.petY < (16 + p.topH) || (f.petY + 8) > p.botY) {
+              f.isGameOver = true;
+              beep(160, 0.25);
+              playWhineSound();
+              f.hiScore = Math.max(f.hiScore, f.score);
+              reportGameScore('FLAPPY', f.score);
+              break;
+            }
+          }
+
+          if (p.x < -12) f.pipes.splice(i, 1);
+        }
+      }
+
+      oled.ctx.fillStyle = '#00f0ff';
+      for (const p of f.pipes) {
+        const px = Math.round(p.x);
+        oled.ctx.fillRect(px, 17, 8, p.topH);
+        oled.ctx.fillRect(px - 1, 16 + p.topH - 2, 10, 2);
+        oled.ctx.fillRect(px, p.botY, 8, 62 - p.botY);
+        oled.ctx.fillRect(px - 1, p.botY, 10, 2);
+      }
+
+      const py = Math.round(f.petY);
+      oled.ctx.fillStyle = '#38bdf8';
+      oled.ctx.fillRect(22, py + 1, 9, 6);
+      oled.ctx.fillStyle = '#000814';
+      oled.ctx.fillRect(27, py + 2, 2, 2);
+      oled.ctx.fillStyle = '#ffb703';
+      const wingUp = (f.vy < 0);
+      if (wingUp) oled.ctx.fillRect(19, py - 2, 4, 3);
+      else oled.ctx.fillRect(19, py + 4, 4, 3);
+
+      if (f.isGameOver) {
+        oled.ctx.fillStyle = '#ef4444';
+        oled.ctx.font = '8px "JetBrains Mono"';
+        oled.ctx.fillText('== KANAT YORULDU ==', 16, 36);
+        if (oled.animFrame % 30 < 18) {
+          oled.ctx.fillStyle = '#ffb703';
+          oled.ctx.font = '7px "JetBrains Mono"';
+          oled.ctx.fillText('[SEC / DOKUN]: YENIDEN', 14, 48);
+        }
+      }
+    }
+
+    // =========================================================================
     // 4 HORIZONTAL BUTTON HANDLER (WITH HOLD & REPEAT & TOUCH CANVAS)
     // =========================================================================
     function handleConsoleBtn(btn, isRepeat = false) {
@@ -2619,7 +3186,63 @@
         return;
       }
 
-      // 5. KOVBOY KONTROLLERİ
+      // 5. UZAY İSTİLASI KONTROLLERİ
+      if (oled.mode === 'SPACE') {
+        if (oled.space.isGameOver) {
+          if (btn === 'SELECT') resetSpaceGame();
+        } else {
+          if (btn === 'LEFT') oled.space.shipX = Math.max(4, oled.space.shipX - (isRepeat ? 5 : 8));
+          if (btn === 'RIGHT') oled.space.shipX = Math.min(110, oled.space.shipX + (isRepeat ? 5 : 8));
+          if (btn === 'SELECT') {
+            if (oled.space.bullets.length < 2) {
+              oled.space.bullets.push({ x: oled.space.shipX + 6, y: 49 });
+              beep(1100, 0.03);
+            }
+          }
+        }
+        if (btn === 'BACK') oled.mode = 'IDLE';
+        return;
+      }
+
+      // 6. TUĞLA KIRMA KONTROLLERİ
+      if (oled.mode === 'BRICK') {
+        if (oled.brick.isGameOver) {
+          if (btn === 'SELECT') resetBrickGame();
+        } else {
+          if (btn === 'LEFT') oled.brick.padX = Math.max(4, oled.brick.padX - (isRepeat ? 6 : 9));
+          if (btn === 'RIGHT') oled.brick.padX = Math.min(98, oled.brick.padX + (isRepeat ? 6 : 9));
+        }
+        if (btn === 'BACK') oled.mode = 'IDLE';
+        return;
+      }
+
+      // 7. PARAŞÜT KURTARMA KONTROLLERİ
+      if (oled.mode === 'PARACHUTE') {
+        if (oled.parachute.isGameOver) {
+          if (btn === 'SELECT') resetParachuteGame();
+        } else {
+          if (btn === 'LEFT') oled.parachute.boatCol = Math.max(0, oled.parachute.boatCol - 1);
+          if (btn === 'RIGHT') oled.parachute.boatCol = Math.min(2, oled.parachute.boatCol + 1);
+        }
+        if (btn === 'BACK') oled.mode = 'IDLE';
+        return;
+      }
+
+      // 8. UÇAN PUFİ KONTROLLERİ
+      if (oled.mode === 'FLAPPY') {
+        if (oled.flappy.isGameOver) {
+          if (btn === 'SELECT') resetFlappyGame();
+        } else {
+          if (btn === 'SELECT' || btn === 'LEFT' || btn === 'RIGHT') {
+            oled.flappy.vy = -2.8;
+            beep(820, 0.04);
+          }
+        }
+        if (btn === 'BACK') oled.mode = 'IDLE';
+        return;
+      }
+
+      // 9. KOVBOY KONTROLLERİ
       if (oled.mode === 'COWBOY') {
         if (btn === 'SELECT' && oled.cowboy.canShoot) {
           beep(1200, 0.3);
@@ -2632,7 +3255,7 @@
         return;
       }
 
-      // 6. RPS KONTROLLERİ
+      // 10. RPS KONTROLLERİ
       if (oled.mode === 'RPS') {
         if (btn === 'BACK') {
           oled.mode = 'IDLE';
@@ -2681,8 +3304,12 @@
             else if (oled.gameIdx === 1) { resetPongGame(); oled.mode = 'PONG'; }
             else if (oled.gameIdx === 2) { resetSnakeGame(); oled.mode = 'SNAKE'; }
             else if (oled.gameIdx === 3) { resetCatcherGame(); oled.mode = 'CATCHER'; }
-            else if (oled.gameIdx === 4) { resetCowboyGame(); oled.mode = 'COWBOY'; }
-            else if (oled.gameIdx === 5) { oled.rps.resolved = false; oled.mode = 'RPS'; }
+            else if (oled.gameIdx === 4) { resetSpaceGame(); oled.mode = 'SPACE'; }
+            else if (oled.gameIdx === 5) { resetBrickGame(); oled.mode = 'BRICK'; }
+            else if (oled.gameIdx === 6) { resetParachuteGame(); oled.mode = 'PARACHUTE'; }
+            else if (oled.gameIdx === 7) { resetFlappyGame(); oled.mode = 'FLAPPY'; }
+            else if (oled.gameIdx === 8) { resetCowboyGame(); oled.mode = 'COWBOY'; }
+            else if (oled.gameIdx === 9) { oled.rps.resolved = false; oled.mode = 'RPS'; }
           }
         } else if (oled.menuLevel === 'FOOD') {
           if (btn === 'LEFT') oled.foodIdx = (oled.foodIdx - 1 + oled.foodItems.length) % oled.foodItems.length;
@@ -2730,6 +3357,18 @@
         } else if (oled.mode === 'CATCHER') {
           if (clickX < 64) handleConsoleBtn('LEFT');
           else handleConsoleBtn('RIGHT');
+        } else if (oled.mode === 'SPACE') {
+          if (clickX < 45) handleConsoleBtn('LEFT');
+          else if (clickX > 83) handleConsoleBtn('RIGHT');
+          else handleConsoleBtn('SELECT');
+        } else if (oled.mode === 'BRICK') {
+          if (clickX < 64) handleConsoleBtn('LEFT');
+          else handleConsoleBtn('RIGHT');
+        } else if (oled.mode === 'PARACHUTE') {
+          if (clickX < 64) handleConsoleBtn('LEFT');
+          else handleConsoleBtn('RIGHT');
+        } else if (oled.mode === 'FLAPPY') {
+          handleConsoleBtn('SELECT');
         } else if (oled.mode === 'COWBOY') {
           handleConsoleBtn('SELECT');
         } else if (oled.mode === 'RPS') {
@@ -4409,6 +5048,10 @@
       else if (game === 'PONG') resetPongGame();
       else if (game === 'SNAKE') resetSnakeGame();
       else if (game === 'CATCHER') resetCatcherGame();
+      else if (game === 'SPACE') resetSpaceGame();
+      else if (game === 'BRICK') resetBrickGame();
+      else if (game === 'PARACHUTE') resetParachuteGame();
+      else if (game === 'FLAPPY') resetFlappyGame();
       else if (game === 'COWBOY') resetCowboyGame();
       else if (game === 'RPS') {
         oled.rps.resolved = false;
@@ -4658,7 +5301,7 @@
     // =========================================================================
     // OTA AUTO-UPDATER & VERSION CHECK ENGINE
     // =========================================================================
-    const CURRENT_APP_VERSION = 'v1.0.10';
+    const CURRENT_APP_VERSION = 'v1.0.11';
     let pendingUpdateData = null;
     let autoUpdateCountdownTimer = null;
 
@@ -4818,12 +5461,47 @@
       }, 500);
     }
 
+    // =========================================================================
+    // AKILLI TELEFON - CİHAZ ENTEGRASYONU: GÜNLÜK HAVA DURUMU & DOST SELAMI
+    // =========================================================================
+    function triggerSmartCompanionBriefing() {
+      const now = new Date();
+      const hour = now.getHours();
+      let greeting = '';
+      let weather = '22°C Güneşli ☀️';
+      let suggestion = '';
+
+      if (hour >= 6 && hour < 11) {
+        greeting = 'GÜNAYDIN! ☀️';
+        weather = '21°C Ilık & Güneşli';
+        suggestion = 'Bugün hava harika! Pufi ile 3.000 adım hedefini tamamla! 👟';
+      } else if (hour >= 11 && hour < 17) {
+        greeting = 'İYİ GÜNLER! 🌤️';
+        weather = '25°C Açık';
+        suggestion = 'Pufi biraz acıkmış olabilir, ona sulu bir elma ver! 🍏';
+      } else if (hour >= 17 && hour < 23) {
+        greeting = 'İYİ AKŞAMLAR! 🌙';
+        weather = '19°C Sakin';
+        suggestion = 'Günün yorgunluğunu atmak için Pufi ile Tuğla Kırma oyna! 🧱';
+      } else {
+        greeting = 'İYİ GECELER! 💤';
+        weather = '16°C Serin';
+        suggestion = 'Pufi uyku modunda tatlı rüyalar görüyor. Işıkları kapat! 🕯️';
+      }
+
+      const fullMarquee = `🐾 ${greeting} [Hava: ${weather}] • Öneri: ${suggestion}   `;
+      oled.marqueeMsg = fullMarquee;
+      oled.marqueeX = 128;
+      playPagerChimeSound();
+    }
+
     // Uygulama açılışında otomatik kontrol ve canlı başlatıcılar
     window.addEventListener('load', () => {
       initNeedsEngine();
       updateProfileUI();
       discoverAndConnectServer();
       setTimeout(() => checkAppVersionOnBoot(false), 1500);
+      setTimeout(() => triggerSmartCompanionBriefing(), 2500);
 
       // İlk açılış onboarding kontrolü
       if (!localStorage.getItem('socies_onboarding_completed')) {

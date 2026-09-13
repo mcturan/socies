@@ -309,7 +309,7 @@ const server = http.createServer((req, res) => {
     if (fs.existsSync(apkFile)) {
       res.writeHead(200, {
         'Content-Type': 'application/vnd.android.package-archive',
-        'Content-Disposition': 'attachment; filename="socies-v1.0.10.apk"',
+        'Content-Disposition': 'attachment; filename="socies-v1.0.11.apk"',
         'Access-Control-Allow-Origin': '*'
       });
       return fs.createReadStream(apkFile).pipe(res);
@@ -941,23 +941,23 @@ const server = http.createServer((req, res) => {
     });
   }
 
-  // 8. GITHUB SÜRÜM / OTA KONTROLÜ (SemVer 2.0.0 v1.0.10)
+  // 8. GITHUB SÜRÜM / OTA KONTROLÜ (SemVer 2.0.0 v1.0.11)
   if (path === '/api/v1/version/check' && method === 'GET') {
     const host = req.headers.host || '192.168.1.118:3000';
     return sendJSON(res, 200, {
-      latestVersion: 'v1.0.10',
+      latestVersion: 'v1.0.11',
       semver: {
         major: 1,
         minor: 0,
-        patch: 10,
-        build: 11
+        patch: 11,
+        build: 12
       },
-      versionCode: 11,
-      latestCommitHash: 'socies-v1.0.10',
+      versionCode: 12,
+      latestCommitHash: 'socies-v1.0.11',
       mandatoryUpdate: false,
-      releaseNotes: 'v1.0.10: Kritik hata düzeltmeleri (OLED bakım komutları, Seviye/XP dengesi), agresif izinlerin temizlenmesi (rehber/sensör izinleri kaldırıldı), donanım geri tuşu desteği.',
+      releaseNotes: 'v1.0.11: 10 Efsane Retro Arcade Oyunu (Piksel Maraton, Pinpon, Yılan, Elma, Uzay Savunması, Tuğla Kırma, Paraşütçü, Uçan Pufi, Kovboy, RPS), Pufi karakter entegrasyonu, sabah hava durumu & akıllı öneri motoru.',
       apkDownloadUrl: `http://${host}/download/socies-app.apk`,
-      githubApkUrl: 'https://github.com/mcturan/socies/releases/download/v1.0.10/socies-app.apk'
+      githubApkUrl: 'https://github.com/mcturan/socies/releases/download/v1.0.11/socies-app.apk'
     });
   }
 
@@ -1158,7 +1158,7 @@ function serveSociesNetworkPage(res) {
       <div class="nav-links">
         <a href="/dashboard" class="nav-btn">📊 Sunucu Paneli</a>
         <a href="/" class="nav-btn">🎮 Web Emülatörü</a>
-        <a href="/download/socies-app.apk" class="dl-btn">📥 APK İndir (v1.0.10)</a>
+        <a href="/download/socies-app.apk" class="dl-btn">📥 APK İndir (v1.0.11)</a>
       </div>
     </div>
 
