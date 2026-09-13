@@ -1111,7 +1111,7 @@
         <button class="btn-micro" style="padding:10px 6px; font-size:0.8rem; background:#FEF2F2; color:#DC2626; border-color:#FECACA; font-weight:800;" onclick="guideActionToConsole('FEED')">🍏 Mama Menüsü</button>
         <button class="btn-micro" style="padding:10px 6px; font-size:0.8rem; background:#FFFBEB; color:#D97706; border-color:#FDE68A; font-weight:800;" onclick="guideActionToConsole('TOILET')">🚽 Tuvalet Menüsü</button>
         <button class="btn-micro" style="padding:10px 6px; font-size:0.8rem; background:#ECFDF5; color:#059669; border-color:#A7F3D0; font-weight:800;" onclick="guideActionToConsole('BATH')">🧼 Banyo Menüsü</button>
-        <button class="btn-micro" style="padding:10px 6px; font-size:0.8rem; background:#EEF2FF; color:#4F46E5; border-color:#C7D2FE; font-weight:800;" onclick="guideActionToConsole('SLEEP')">💤 Uyku Modu</button>
+        <button class="btn-micro" id="btnCareSleep" style="padding:10px 6px; font-size:0.8rem; background:#EEF2FF; color:#4F46E5; border-color:#C7D2FE; font-weight:800;" onclick="guideActionToConsole('SLEEP')">💤 Uyku Modu</button>
         <button class="btn-micro" style="padding:10px 6px; font-size:0.8rem; background:#FDF2F8; color:#DB2777; border-color:#FBCFE8; font-weight:800;" onclick="petLoveTouch()">💖 Okşa & Sev</button>
         <button class="btn-micro" id="btnCareMedicine" style="padding:10px 6px; font-size:0.8rem; background:#F1F5F9; color:#475569; border-color:#CBD5E1; font-weight:800;" onclick="guideActionToConsole('MEDICINE')">💊 İlaç Menüsü</button>
       </div>
@@ -1939,7 +1939,8 @@
 
         // Evcil Hayvan Adı & Seviyesi (Ham Cihaz ID Yerine Anlamlı İsim)
         oled.ctx.font = '7.5px "JetBrains Mono"';
-        const petTitle = (appData.petState ? appData.petState.name.slice(0, 8) : 'PUFI').toUpperCase() + ' Lv.' + ((appData.petState && appData.petState.level) || 1);
+        const petNameStr = ((appData.petState && appData.petState.name) || 'PUFI');
+        const petTitle = petNameStr.slice(0, 8).toUpperCase() + ' Lv.' + ((appData.petState && appData.petState.level) || 1);
         oled.ctx.fillText(petTitle, 38, 11);
 
         // Batarya Göstergesi (Gerçek Yüzde & İkon)
@@ -2045,7 +2046,11 @@
       else if (appData.needs.clean < 35) petStatusTxt = 'KİRLENDİ! 🧼 BANYO';
       else if (appData.needs.fun < 35) petStatusTxt = 'SIKILDI! 🎮 OYNA';
       else if (appData.needs.love < 35) petStatusTxt = 'SEV BENİ! 💖 OKŞA';
-      else petStatusTxt = 'MUTLU 🐾 ' + (appData.petState ? appData.petState.name : appData.nickname.slice(0, 8));
+      else {
+        const nickStr = (appData.nickname || 'PUFI');
+        const currentName = ((appData.petState && appData.petState.name) || nickStr);
+        petStatusTxt = 'MUTLU 🐾 ' + currentName.slice(0, 8);
+      }
 
       oled.ctx.fillText(petStatusTxt, 12, 60);
     }
@@ -2674,23 +2679,51 @@
     function resetCowboyGame() {
       oled.cowboy.canShoot = false;
       oled.cowboy.timer = 0;
+      oled.cowboy.shootTimer = 0;
       oled.cowboy.reactionMs = 0;
       oled.cowboy.isGameOver = false;
+      oled.cowboy.winner = null;
     }
 
     function renderOledCowboy() {
       oled.ctx.fillStyle = '#00f0ff';
       oled.ctx.font = '8px "JetBrains Mono"';
       oled.ctx.fillText('KOVBOY DUELLOSU', 16, 26);
+
+      if (oled.cowboy.isGameOver) {
+        if (oled.cowboy.winner === 'PLAYER') {
+          oled.ctx.fillStyle = '#22c55e';
+          oled.ctx.fillText('KAZANDIN! 🤠 +50XP', 10, 40);
+        } else {
+          oled.ctx.fillStyle = '#ef4444';
+          oled.ctx.fillText(oled.cowboy.winner === 'FAUL' ? 'FAUL! ERKEN ATES' : 'VURULDUN! 💀', 14, 40);
+        }
+        if (oled.animFrame % 30 < 18) {
+          oled.ctx.fillStyle = '#ffb703';
+          oled.ctx.font = '7px "JetBrains Mono"';
+          oled.ctx.fillText('[SEC / DOKUN]: YENIDEN', 14, 52);
+        }
+        return;
+      }
+
       if (!oled.cowboy.canShoot) {
         oled.ctx.fillText('HAZIRLAN...', 34, 42);
         if (oled.cowboy.timer > 40 && Math.random() < 0.035) {
           oled.cowboy.canShoot = true;
+          oled.cowboy.shootTimer = 0;
           beep(990, 0.2);
         }
       } else {
+        oled.cowboy.shootTimer++;
         oled.ctx.fillStyle = '#ffb703';
         oled.ctx.fillText('>> ATES ET! <<', 18, 42);
+        // Rakip 28 frame (yaklaşık 450ms) sonra ateş eder!
+        if (oled.cowboy.shootTimer > 28) {
+          oled.cowboy.isGameOver = true;
+          oled.cowboy.winner = 'CPU';
+          beep(220, 0.25);
+          showGlobalToast('💀 Rakip daha hızlı davrandı!');
+        }
       }
       oled.cowboy.timer++;
     }
@@ -3216,17 +3249,31 @@
     }
 
     // =========================================================================
+    // UYKU MODUNDAN UYANDIRMA FONKSİYONU (KESİN VE KALICI)
+    // =========================================================================
+    function wakeUpPet() {
+      if (appData.petState) {
+        appData.petState.isSleeping = false;
+      }
+      oled.mode = 'IDLE';
+      beep(880, 0.15);
+      playGiggleSound();
+      showGlobalToast('☀️ Günaydın! Pufi gerinerek uyandı.');
+      savePetState();
+      updateNeedsUI();
+      syncTelemetry();
+    }
+
+    // =========================================================================
     // 4 HORIZONTAL BUTTON HANDLER (WITH HOLD & REPEAT & TOUCH CANVAS)
     // =========================================================================
     function handleConsoleBtn(btn, isRepeat = false) {
       // Ses ve Haptic
       playTactileClick(isRepeat ? 'repeat' : (btn === 'SELECT' ? 'select' : (btn === 'BACK' ? 'back' : 'click')));
 
-      // Eğer uyuyorsa herhangi bir tuşa basış uyandırır
-      if (oled.mode === 'SLEEPING') {
-        oled.mode = 'IDLE';
-        beep(880, 0.15);
-        showGlobalToast('☀️ Günaydın! Pufi uykusunu aldı.');
+      // UYKU MODUNDAYSA HERHANGİ BİR TUŞA BASIŞ KESİNLİKLE UYANDIRIR!
+      if (oled.mode === 'SLEEPING' || (appData.petState && appData.petState.isSleeping)) {
+        wakeUpPet();
         return;
       }
 
@@ -3248,7 +3295,7 @@
       // 2. PİNPON KONTROLLERİ
       if (oled.mode === 'PONG') {
         if (oled.pong.isGameOver) {
-          if (btn === 'SELECT') resetPongGame();
+          if (btn === 'SELECT' || btn === 'LEFT' || btn === 'RIGHT') resetPongGame();
         } else {
           if (btn === 'LEFT') oled.pong.padX = Math.max(4, oled.pong.padX - (isRepeat ? 6 : 9));
           if (btn === 'RIGHT') oled.pong.padX = Math.min(98, oled.pong.padX + (isRepeat ? 6 : 9));
@@ -3260,7 +3307,7 @@
       // 3. YILAN KONTROLLERİ (Sezgisel 2 Yönlü Dönüş)
       if (oled.mode === 'SNAKE') {
         if (oled.snake.isGameOver) {
-          if (btn === 'SELECT') resetSnakeGame();
+          if (btn === 'SELECT' || btn === 'LEFT' || btn === 'RIGHT') resetSnakeGame();
         } else {
           const d = oled.snake.dir;
           if (btn === 'LEFT') {
@@ -3284,7 +3331,7 @@
       // 4. ELMA YAKALAMA KONTROLLERİ
       if (oled.mode === 'CATCHER') {
         if (oled.catcher.isGameOver) {
-          if (btn === 'SELECT') resetCatcherGame();
+          if (btn === 'SELECT' || btn === 'LEFT' || btn === 'RIGHT') resetCatcherGame();
         } else {
           if (btn === 'LEFT') oled.catcher.petX = Math.max(4, oled.catcher.petX - (isRepeat ? 6 : 9));
           if (btn === 'RIGHT') oled.catcher.petX = Math.min(108, oled.catcher.petX + (isRepeat ? 6 : 9));
@@ -3296,7 +3343,7 @@
       // 5. UZAY İSTİLASI KONTROLLERİ
       if (oled.mode === 'SPACE') {
         if (oled.space.isGameOver) {
-          if (btn === 'SELECT') resetSpaceGame();
+          if (btn === 'SELECT' || btn === 'LEFT' || btn === 'RIGHT') resetSpaceGame();
         } else {
           if (btn === 'LEFT') oled.space.shipX = Math.max(4, oled.space.shipX - (isRepeat ? 5 : 8));
           if (btn === 'RIGHT') oled.space.shipX = Math.min(110, oled.space.shipX + (isRepeat ? 5 : 8));
@@ -3314,7 +3361,7 @@
       // 6. TUĞLA KIRMA KONTROLLERİ
       if (oled.mode === 'BRICK') {
         if (oled.brick.isGameOver) {
-          if (btn === 'SELECT') resetBrickGame();
+          if (btn === 'SELECT' || btn === 'LEFT' || btn === 'RIGHT') resetBrickGame();
         } else {
           if (btn === 'LEFT') oled.brick.padX = Math.max(4, oled.brick.padX - (isRepeat ? 6 : 9));
           if (btn === 'RIGHT') oled.brick.padX = Math.min(98, oled.brick.padX + (isRepeat ? 6 : 9));
@@ -3326,7 +3373,7 @@
       // 7. PARAŞÜT KURTARMA KONTROLLERİ
       if (oled.mode === 'PARACHUTE') {
         if (oled.parachute.isGameOver) {
-          if (btn === 'SELECT') resetParachuteGame();
+          if (btn === 'SELECT' || btn === 'LEFT' || btn === 'RIGHT') resetParachuteGame();
         } else {
           if (btn === 'LEFT') oled.parachute.boatCol = Math.max(0, oled.parachute.boatCol - 1);
           if (btn === 'RIGHT') oled.parachute.boatCol = Math.min(2, oled.parachute.boatCol + 1);
@@ -3338,7 +3385,7 @@
       // 8. UÇAN PUFİ KONTROLLERİ
       if (oled.mode === 'FLAPPY') {
         if (oled.flappy.isGameOver) {
-          if (btn === 'SELECT') resetFlappyGame();
+          if (btn === 'SELECT' || btn === 'LEFT' || btn === 'RIGHT') resetFlappyGame();
         } else {
           if (btn === 'SELECT' || btn === 'LEFT' || btn === 'RIGHT') {
             oled.flappy.vy = -2.8;
@@ -3351,13 +3398,27 @@
 
       // 9. KOVBOY KONTROLLERİ
       if (oled.mode === 'COWBOY') {
-        if (btn === 'SELECT' && oled.cowboy.canShoot) {
-          beep(1200, 0.3);
-          showGlobalToast('🤠 DÜELLOYU KAZANDIN! +50 XP');
-          reportGameScore('COWBOY', 50);
+        if (btn === 'BACK') {
           oled.mode = 'IDLE';
-        } else if (btn === 'BACK') {
-          oled.mode = 'IDLE';
+          return;
+        }
+        if (oled.cowboy.isGameOver) {
+          if (btn === 'SELECT' || btn === 'LEFT' || btn === 'RIGHT') resetCowboyGame();
+          return;
+        }
+        if (btn === 'SELECT') {
+          if (oled.cowboy.canShoot) {
+            beep(1200, 0.3);
+            showGlobalToast('🤠 DÜELLOYU KAZANDIN! +50 XP');
+            reportGameScore('COWBOY', 50);
+            oled.cowboy.isGameOver = true;
+            oled.cowboy.winner = 'PLAYER';
+          } else {
+            beep(180, 0.25);
+            showGlobalToast('🚫 FAUL! Çok erken ateş ettin.');
+            oled.cowboy.isGameOver = true;
+            oled.cowboy.winner = 'FAUL';
+          }
         }
         return;
       }
@@ -3386,19 +3447,10 @@
         return;
       }
 
-      // UYKU MODUNDAYKEN HERHANGİ BİR TUŞ PUFİ'Yİ UYANDIRIR!
-      if (oled.mode === 'SLEEPING' || (appData.petState && appData.petState.isSleeping)) {
-        if (appData.petState) appData.petState.isSleeping = false;
-        oled.mode = 'IDLE';
-        playTactileClick('click');
-        showGlobalToast('☀️ Pufi gerinerek uyandı! Günaydın.');
-        savePetState();
-        updateNeedsUI();
-        return;
-      }
-
       // ANA MENÜ KONTROLLERİ
       if (oled.mode === 'MENU') {
+        // SELECT veya BACK basılı tutulduğunda (repeat) alt menüyü kazaen açmayı engelle
+        if (isRepeat && (btn === 'SELECT' || btn === 'BACK')) return;
         if (oled.menuLevel === 'ROOT') {
           if (btn === 'LEFT') oled.menuIdx = (oled.menuIdx - 1 + oled.menuItems.length) % oled.menuItems.length;
           if (btn === 'RIGHT') oled.menuIdx = (oled.menuIdx + 1) % oled.menuItems.length;
@@ -3466,13 +3518,30 @@
         const clickX = ((e.clientX - rect.left) / rect.width) * 128;
         
         if (oled.mode === 'SLEEPING' || (appData.petState && appData.petState.isSleeping)) {
-          handleConsoleBtn('SELECT');
+          wakeUpPet();
           return;
         }
         if (oled.mode === 'MENU') {
           if (clickX < 38) handleConsoleBtn('LEFT');
           else if (clickX > 90) handleConsoleBtn('RIGHT');
           else handleConsoleBtn('SELECT');
+          return;
+        }
+
+        // Oyun GameOver durumundaysa ekrana dokunmak oyunu anında yeniden başlatır!
+        const isOver = (
+          (oled.mode === 'DINO' && oled.dino.isGameOver) ||
+          (oled.mode === 'PONG' && oled.pong.isGameOver) ||
+          (oled.mode === 'SNAKE' && oled.snake.isGameOver) ||
+          (oled.mode === 'CATCHER' && oled.catcher.isGameOver) ||
+          (oled.mode === 'SPACE' && oled.space.isGameOver) ||
+          (oled.mode === 'BRICK' && oled.brick.isGameOver) ||
+          (oled.mode === 'PARACHUTE' && oled.parachute.isGameOver) ||
+          (oled.mode === 'FLAPPY' && oled.flappy.isGameOver) ||
+          (oled.mode === 'COWBOY' && oled.cowboy.isGameOver)
+        );
+        if (isOver) {
+          handleConsoleBtn('SELECT');
           return;
         }
 
@@ -4549,6 +4618,22 @@
         tagAge.innerText = `Sanal Dost • Evre ${appData.petState.stage} (${stageLabels[appData.petState.stage] || 'Bebek'}) • ${ageDays} Günlük`;
       }
 
+      // Uyku butonu durumunu güncelle
+      const btnSleep = document.getElementById('btnCareSleep');
+      if (btnSleep) {
+        if (appData.petState && appData.petState.isSleeping) {
+          btnSleep.innerText = '☀️ Uyandır';
+          btnSleep.style.background = '#FEF3C7';
+          btnSleep.style.color = '#B45309';
+          btnSleep.style.borderColor = '#FCD34D';
+        } else {
+          btnSleep.innerText = '💤 Uyku Modu';
+          btnSleep.style.background = '#EEF2FF';
+          btnSleep.style.color = '#4F46E5';
+          btnSleep.style.borderColor = '#C7D2FE';
+        }
+      }
+
       checkPetCrisisState();
       updateProfileUI();
       updateRetentionUI();
@@ -4821,6 +4906,19 @@
     }
 
     function guideActionToConsole(act) {
+      if (act === 'SLEEP') {
+        if (appData.petState && appData.petState.isSleeping) {
+          wakeUpPet();
+          return;
+        }
+        switchTab('tab-console');
+        oled.mode = 'MENU';
+        oled.menuLevel = 'ROOT';
+        oled.menuIdx = 5; // UYUT
+        showGlobalToast('🌙 Konsol Uyut menüsüne yönlendirildi. SEC basarak uyut.');
+        return;
+      }
+
       switchTab('tab-console');
       if (act === 'FEED') {
         oled.mode = 'MENU';
@@ -4847,11 +4945,6 @@
         oled.menuLevel = 'GAMES';
         oled.gameIdx = 0;
         showGlobalToast('🎮 Konsol Retro Oyun Menüsü açıldı!');
-      } else if (act === 'SLEEP') {
-        oled.mode = 'MENU';
-        oled.menuLevel = 'ROOT';
-        oled.menuIdx = 5; // UYUT
-        showGlobalToast('🌙 Konsol Uyut menüsüne yönlendirildi. SEC basarak uyut.');
       }
     }
 
@@ -5295,9 +5388,7 @@
     // Mini oyun skor bitişlerinde SQLite'a kaydetme kancası
     function reportGameScore(game, score) {
       if (score > 0) {
-        appData.needs.xp += score;
-        saveNeeds();
-        updateNeedsUI();
+        addPetXP(score); // SEVİYE, EVRİM (STAGE 1-4) VE ÖDÜL MOTORUNU TETİKLER!
         submitGameScore(game, score);
         showGlobalToast(`🏆 ${game} oyununda ${score} Puan kazandın! Liderlik tablosuna işlendi.`);
       }
@@ -5307,6 +5398,11 @@
       if ((game === 'RPS' || game === 'COWBOY') && typeof isFeatureUnlocked === 'function' && !isFeatureUnlocked('multiplayer')) {
         showFeatureLockNotice('multiplayer');
         return;
+      }
+      // Bebek uyuyorsa uyandır ki ilk tuş basışında oyun kapanmasın!
+      if (appData.petState && appData.petState.isSleeping) {
+        appData.petState.isSleeping = false;
+        savePetState();
       }
       beep(750, 0.1);
       showGlobalToast(`🎮 ${game} oyunu konsolda başlatıldı!`);

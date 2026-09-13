@@ -1020,7 +1020,7 @@ function serveDashboard(res) {
       </div>
       <div class="header-right">
         <a href="https://github.com/mcturan/socies/releases/latest/download/socies-app.apk" class="dl-btn">
-          <span>📥</span> Android APK İndir (v1.0.5)
+          <span>📥</span> Android APK İndir (v1.0.12)
         </a>
         <div style="font-family:'JetBrains Mono'; font-size:0.8rem; color:#00ff66;">● SUNUCU AKTİF (Port: ${PORT})</div>
       </div>
@@ -1040,7 +1040,7 @@ function serveDashboard(res) {
         <div class="stat-lbl">İletilen Çağrı Mesajı</div>
       </div>
       <div class="stat-card">
-        <div class="stat-val" style="color:#ffe600;">v1.0.5</div>
+        <div class="stat-val" style="color:#ffe600;">v1.0.12</div>
         <div class="stat-lbl">OTA Hedef Sürüm</div>
       </div>
     </div>
@@ -1176,7 +1176,7 @@ function serveSociesNetworkPage(res) {
         <div class="kpi-lbl">${countries.join(', ')}</div>
       </div>
       <div class="kpi-card">
-        <div class="kpi-val" style="color:#ffe600;">v1.0.5+6</div>
+        <div class="kpi-val" style="color:#ffe600;">v1.0.12</div>
         <div class="kpi-lbl">Ağ Sürümü (SemVer 2.0.0)</div>
       </div>
     </div>
