@@ -143,122 +143,134 @@ const database = {
   }
 };
 
-// MOCK VERİLER (Canlı Topluluk & Etkin Kullanıcılar)
-const initialDevices = [
-  {
-    deviceId: 'SOCIES-ESP32-84920A',
-    mac: 'A4:CF:12:89:34:B1',
-    user: { nickname: 'Turan (Kurucu)', email: 'turan@socies.io', avatar: '👑', isVip: true },
-    location: { country: 'Türkiye', city: 'İstanbul', district: 'Kadıköy', flag: '🇹🇷', ip: '176.240.12.89' },
-    phone: { model: 'Samsung Galaxy S24 Ultra', os: 'Android 14 (One UI 6.1)', batteryPct: 88, batteryMv: 3980, stepsToday: 5420, connection: '5G / Wi-Fi 6E', appVersion: 'v1.0.5+6', latencyMs: 18 },
-    pet: { breed: 'top', stage: 2, ageDays: 5, score: 940, streakDays: 5 },
-    needs: { hunger: 85, fun: 90, love: 95, sleep: 80, toilet: 90, clean: 95, social: 75 },
-    lastSeen: Date.now(),
-    isOnline: true
-  },
-  {
-    deviceId: 'SOCIES-AND-9941A',
-    mac: 'B8:27:EB:AA:51:72',
-    user: { nickname: 'Zeynep_Retro', email: 'zeynep@socies.io', avatar: '🐱', isVip: false },
-    location: { country: 'Türkiye', city: 'Ankara', district: 'Çankaya', flag: '🇹🇷', ip: '88.255.45.102' },
-    phone: { model: 'Xiaomi 13 Pro', os: 'Android 14 (HyperOS)', batteryPct: 94, batteryMv: 4150, stepsToday: 7120, connection: 'Wi-Fi 6 / BLE 5.2', appVersion: 'v1.0.5+6', latencyMs: 24 },
-    pet: { breed: 'kedi', stage: 3, ageDays: 21, score: 3420, streakDays: 14 },
-    needs: { hunger: 70, fun: 95, love: 90, sleep: 85, toilet: 80, clean: 90, social: 85 },
-    lastSeen: Date.now() - 5000,
-    isOnline: true
-  },
-  {
-    deviceId: 'SOCIES-ESP32-33129C',
-    mac: '24:6F:28:44:91:A8',
-    user: { nickname: 'Emre_Ege', email: 'emre@socies.io', avatar: '🐶', isVip: false },
-    location: { country: 'Türkiye', city: 'İzmir', district: 'Alsancak', flag: '🇹🇷', ip: '94.122.80.14' },
-    phone: { model: 'Google Pixel 8', os: 'Android 14 (Vanilla)', batteryPct: 76, batteryMv: 3890, stepsToday: 3890, connection: '4G LTE / BLE 5.0', appVersion: 'v1.0.5+6', latencyMs: 31 },
-    pet: { breed: 'kopek', stage: 2, ageDays: 12, score: 1850, streakDays: 8 },
-    needs: { hunger: 65, fun: 80, love: 85, sleep: 70, toilet: 75, clean: 80, social: 70 },
-    lastSeen: Date.now() - 12000,
-    isOnline: true
-  },
-  {
-    deviceId: 'SOCIES-IOS-44810D',
-    mac: 'F0:18:98:C3:19:22',
-    user: { nickname: 'Selin_Botanist', email: 'selin@socies.io', avatar: '🌱', isVip: false },
-    location: { country: 'Türkiye', city: 'Bursa', district: 'Nilüfer', flag: '🇹🇷', ip: '195.175.39.210' },
-    phone: { model: 'Apple iPhone 15 Pro', os: 'iOS 17.5.1', batteryPct: 92, batteryMv: 4110, stepsToday: 6240, connection: 'Wi-Fi / BLE 5.3', appVersion: 'v1.0.5+6', latencyMs: 22 },
-    pet: { breed: 'bitki', stage: 2, ageDays: 9, score: 1220, streakDays: 9 },
-    needs: { hunger: 90, fun: 85, love: 95, sleep: 90, toilet: 100, clean: 100, social: 60 },
-    lastSeen: Date.now() - 8000,
-    isOnline: true
-  },
-  {
-    deviceId: 'SOCIES-ESP32-11094E',
-    mac: 'C8:2B:96:77:43:55',
-    user: { nickname: 'Kaan_Akdeniz', email: 'kaan@socies.io', avatar: '🐠', isVip: false },
-    location: { country: 'Türkiye', city: 'Antalya', district: 'Muratpaşa', flag: '🇹🇷', ip: '212.156.40.85' },
-    phone: { model: 'OnePlus 12', os: 'Android 14 (OxygenOS)', batteryPct: 65, batteryMv: 3820, stepsToday: 4310, connection: '5G / BLE Gateway', appVersion: 'v1.0.5+6', latencyMs: 29 },
-    pet: { breed: 'balik', stage: 1, ageDays: 3, score: 480, streakDays: 3 },
-    needs: { hunger: 75, fun: 70, love: 80, sleep: 80, toilet: 85, clean: 70, social: 50 },
-    lastSeen: Date.now() - 25000,
-    isOnline: true
-  },
-  {
-    deviceId: 'SOCIES-ESP32-77211F',
-    mac: 'DC:A6:32:11:80:BC',
-    user: { nickname: 'Hans_Berlin', email: 'hans@socies.io', avatar: '🌭', isVip: false },
-    location: { country: 'Almanya', city: 'Berlin', district: 'Mitte', flag: '🇩🇪', ip: '84.119.12.44' },
-    phone: { model: 'Nothing Phone (2)', os: 'Android 14 (Nothing OS 2.5)', batteryPct: 82, batteryMv: 3950, stepsToday: 8450, connection: 'Wi-Fi 6E / BLE 5.3', appVersion: 'v1.0.5+6', latencyMs: 48 },
-    pet: { breed: 'sosis', stage: 3, ageDays: 26, score: 4180, streakDays: 19 },
-    needs: { hunger: 80, fun: 85, love: 90, sleep: 75, toilet: 80, clean: 85, social: 90 },
-    lastSeen: Date.now() - 40000,
-    isOnline: true
-  },
-  {
-    deviceId: 'SOCIES-ESP32-55490G',
-    mac: 'E4:5F:01:29:76:D1',
-    user: { nickname: 'Oliver_London', email: 'oliver@socies.io', avatar: '🐦', isVip: false },
-    location: { country: 'Birleşik Krallık', city: 'Londra', district: 'Soho', flag: '🇬🇧', ip: '82.165.197.1' },
-    phone: { model: 'Apple iPhone 14', os: 'iOS 17.4', batteryPct: 71, batteryMv: 3860, stepsToday: 5110, connection: '4G LTE / BLE 5.0', appVersion: 'v1.0.5+6', latencyMs: 55 },
-    pet: { breed: 'kus', stage: 2, ageDays: 14, score: 2190, streakDays: 11 },
-    needs: { hunger: 60, fun: 90, love: 85, sleep: 80, toilet: 75, clean: 90, social: 80 },
-    lastSeen: Date.now() - 95000,
-    isOnline: false
-  }
+// =========================================================================
+// 50 TÜRKİYE BOT FİLOSU (Ankara ve Batısı: %50 İstanbul, %50 Batı İlleri; %50 Kız, %50 Erkek)
+// =========================================================================
+const TURKISH_BOTS = [
+  // --- 25 KIZ ÇOCUK ---
+  { deviceId: 'BOT-TR-01', nick: 'Defne_Y', fullName: 'Defne Yılmaz', city: 'İstanbul', dist: 'Kadıköy', pet: 'Pufi', breed: 'kedi', avatar: '🐱', stage: 3, xp: 2450 },
+  { deviceId: 'BOT-TR-02', nick: 'Zeynep_K', fullName: 'Zeynep Kaya', city: 'İstanbul', dist: 'Beşiktaş', pet: 'Pamuk', breed: 'kopek', avatar: '🐶', stage: 2, xp: 1890 },
+  { deviceId: 'BOT-TR-03', nick: 'Elif_D', fullName: 'Elif Demir', city: 'İstanbul', dist: 'Üsküdar', pet: 'Minnoş', breed: 'kedi', avatar: '🐱', stage: 3, xp: 3120 },
+  { deviceId: 'BOT-TR-04', nick: 'Asya_S', fullName: 'Asya Şahin', city: 'İstanbul', dist: 'Bakırköy', pet: 'Fıstık', breed: 'kus', avatar: '🐦', stage: 2, xp: 1420 },
+  { deviceId: 'BOT-TR-05', nick: 'Ada_C', fullName: 'Ada Çelik', city: 'İstanbul', dist: 'Şişli', pet: 'Boncuk', breed: 'balik', avatar: '🐠', stage: 1, xp: 820 },
+  { deviceId: 'BOT-TR-06', nick: 'Duru_Y', fullName: 'Duru Yıldız', city: 'İstanbul', dist: 'Maltepe', pet: 'Şeker', breed: 'top', avatar: '👑', stage: 3, xp: 2780 },
+  { deviceId: 'BOT-TR-07', nick: 'Masal_O', fullName: 'Masal Öztürk', city: 'İstanbul', dist: 'Ataşehir', pet: 'Limon', breed: 'kus', avatar: '🐦', stage: 2, xp: 1650 },
+  { deviceId: 'BOT-TR-08', nick: 'Nehir_A', fullName: 'Nehir Aydın', city: 'İstanbul', dist: 'Sarıyer', pet: 'Bulut', breed: 'kopek', avatar: '🐶', stage: 4, xp: 4890 },
+  { deviceId: 'BOT-TR-09', nick: 'Gece_O', fullName: 'Gece Özdemir', city: 'İstanbul', dist: 'Beylikdüzü', pet: 'Gölge', breed: 'kedi', avatar: '🐱', stage: 2, xp: 1980 },
+  { deviceId: 'BOT-TR-10', nick: 'Lina_A', fullName: 'Lina Arslan', city: 'İstanbul', dist: 'Pendik', pet: 'Zeytin', breed: 'kedi', avatar: '🐱', stage: 1, xp: 940 },
+  { deviceId: 'BOT-TR-11', nick: 'Nil_D', fullName: 'Nil Doğan', city: 'İstanbul', dist: 'Kartal', pet: 'Mavi', breed: 'balik', avatar: '🐠', stage: 2, xp: 1250 },
+  { deviceId: 'BOT-TR-12', nick: 'Derin_K', fullName: 'Derin Kılıç', city: 'İstanbul', dist: 'Fatih', pet: 'Dobi', breed: 'kopek', avatar: '🐶', stage: 3, xp: 3340 },
+  { deviceId: 'BOT-TR-13', nick: 'Melis_A', fullName: 'Melis Aslan', city: 'İstanbul', dist: 'Çekmeköy', pet: 'Badi', breed: 'top', avatar: '👑', stage: 2, xp: 1720 },
+  { deviceId: 'BOT-TR-14', nick: 'Alin_K', fullName: 'Alin Koç', city: 'Ankara', dist: 'Çankaya', pet: 'Pırıltı', breed: 'bitki', avatar: '🌱', stage: 3, xp: 2650 },
+  { deviceId: 'BOT-TR-15', nick: 'Ela_K', fullName: 'Ela Kurt', city: 'Ankara', dist: 'Yenimahalle', pet: 'Bal', breed: 'kedi', avatar: '🐱', stage: 2, xp: 1540 },
+  { deviceId: 'BOT-TR-16', nick: 'Doga_O', fullName: 'Doğa Özkan', city: 'İzmir', dist: 'Karşıyaka', pet: 'Çimen', breed: 'bitki', avatar: '🌱', stage: 2, xp: 1820 },
+  { deviceId: 'BOT-TR-17', nick: 'Bade_S', fullName: 'Bade Şimşek', city: 'İzmir', dist: 'Bornova', pet: 'Çilek', breed: 'top', avatar: '👑', stage: 3, xp: 2980 },
+  { deviceId: 'BOT-TR-18', nick: 'Ece_Y', fullName: 'Ece Yavuz', city: 'İzmir', dist: 'Alsancak', pet: 'Kumsal', breed: 'balik', avatar: '🐠', stage: 1, xp: 670 },
+  { deviceId: 'BOT-TR-19', nick: 'Ipek_P', fullName: 'İpek Polat', city: 'Bursa', dist: 'Nilüfer', pet: 'Kestane', breed: 'kopek', avatar: '🐶', stage: 2, xp: 2110 },
+  { deviceId: 'BOT-TR-20', nick: 'Maya_K', fullName: 'Maya Korkmaz', city: 'Bursa', dist: 'Osmangazi', pet: 'Yumak', breed: 'kedi', avatar: '🐱', stage: 3, xp: 3420 },
+  { deviceId: 'BOT-TR-21', nick: 'Sare_O', fullName: 'Sare Özer', city: 'Kocaeli', dist: 'İzmit', pet: 'Martı', breed: 'kus', avatar: '🐦', stage: 2, xp: 1450 },
+  { deviceId: 'BOT-TR-22', nick: 'Beren_Y', fullName: 'Beren Yüksel', city: 'Kocaeli', dist: 'Gebze', pet: 'Gofret', breed: 'kopek', avatar: '🐶', stage: 1, xp: 890 },
+  { deviceId: 'BOT-TR-23', nick: 'Belinay_G', fullName: 'Belinay Güler', city: 'Balıkesir', dist: 'Bandırma', pet: 'Rüzgar', breed: 'kus', avatar: '🐦', stage: 2, xp: 1680 },
+  { deviceId: 'BOT-TR-24', nick: 'Azra_Y', fullName: 'Azra Yalçın', city: 'Tekirdağ', dist: 'Süleymanpaşa', pet: 'Neşe', breed: 'kedi', avatar: '🐱', stage: 3, xp: 2890 },
+  { deviceId: 'BOT-TR-25', nick: 'Yagmur_A', fullName: 'Yağmur Aksoy', city: 'Edirne', dist: 'Keşan', pet: 'Damlacık', breed: 'balik', avatar: '🐠', stage: 2, xp: 1750 },
+
+  // --- 25 ERKEK ÇOCUK ---
+  { deviceId: 'BOT-TR-26', nick: 'Poyraz_B', fullName: 'Poyraz Bulut', city: 'İstanbul', dist: 'Kadıköy', pet: 'Şimşek', breed: 'kopek', avatar: '🐶', stage: 3, xp: 3150 },
+  { deviceId: 'BOT-TR-27', nick: 'Ruzgar_K', fullName: 'Rüzgar Keskin', city: 'İstanbul', dist: 'Beşiktaş', pet: 'Fırtına', breed: 'kus', avatar: '🐦', stage: 2, xp: 1940 },
+  { deviceId: 'BOT-TR-28', nick: 'Aras_K', fullName: 'Aras Karaca', city: 'İstanbul', dist: 'Üsküdar', pet: 'Kaptan', breed: 'kedi', avatar: '🐱', stage: 3, xp: 2840 },
+  { deviceId: 'BOT-TR-29', nick: 'Atlas_A', fullName: 'Atlas Avcı', city: 'İstanbul', dist: 'Bakırköy', pet: 'Pusula', breed: 'top', avatar: '👑', stage: 2, xp: 1620 },
+  { deviceId: 'BOT-TR-30', nick: 'Kuzey_T', fullName: 'Kuzey Tunç', city: 'İstanbul', dist: 'Şişli', pet: 'Kutup', breed: 'kopek', avatar: '🐶', stage: 4, xp: 4560 },
+  { deviceId: 'BOT-TR-31', nick: 'Doruk_G', fullName: 'Doruk Güneş', city: 'İstanbul', dist: 'Maltepe', pet: 'Zirve', breed: 'kus', avatar: '🐦', stage: 2, xp: 2050 },
+  { deviceId: 'BOT-TR-32', nick: 'Efe_C', fullName: 'Efe Coşkun', city: 'İstanbul', dist: 'Ataşehir', pet: 'Cesur', breed: 'kopek', avatar: '🐶', stage: 3, xp: 3290 },
+  { deviceId: 'BOT-TR-33', nick: 'Demir_E', fullName: 'Demir Eren', city: 'İstanbul', dist: 'Sarıyer', pet: 'Robot', breed: 'top', avatar: '👑', stage: 2, xp: 1740 },
+  { deviceId: 'BOT-TR-34', nick: 'Kerem_T', fullName: 'Kerem Taş', city: 'İstanbul', dist: 'Beylikdüzü', pet: 'Bambam', breed: 'kedi', avatar: '🐱', stage: 1, xp: 910 },
+  { deviceId: 'BOT-TR-35', nick: 'Bartu_K', fullName: 'Bartu Kaplan', city: 'İstanbul', dist: 'Pendik', pet: 'Çakıl', breed: 'kopek', avatar: '🐶', stage: 2, xp: 1530 },
+  { deviceId: 'BOT-TR-36', nick: 'Cinar_A', fullName: 'Çınar Aktaş', city: 'İstanbul', dist: 'Kartal', pet: 'Meşe', breed: 'bitki', avatar: '🌱', stage: 3, xp: 2720 },
+  { deviceId: 'BOT-TR-37', nick: 'Baris_T', fullName: 'Barış Tekin', city: 'İstanbul', dist: 'Kadıköy', pet: 'Huzur', breed: 'balik', avatar: '🐠', stage: 2, xp: 1840 },
+  { deviceId: 'BOT-TR-38', nick: 'Alp_Y', fullName: 'Alp Yaman', city: 'Ankara', dist: 'Çankaya', pet: 'Bozkır', breed: 'kopek', avatar: '🐶', stage: 3, xp: 3080 },
+  { deviceId: 'BOT-TR-39', nick: 'Kaan_B', fullName: 'Kaan Bozkurt', city: 'Ankara', dist: 'Batıkent', pet: 'Pars', breed: 'kedi', avatar: '🐱', stage: 2, xp: 1950 },
+  { deviceId: 'BOT-TR-40', nick: 'Mert_U', fullName: 'Mert Ünal', city: 'Ankara', dist: 'Etimesgut', pet: 'Roket', breed: 'top', avatar: '👑', stage: 1, xp: 780 },
+  { deviceId: 'BOT-TR-41', nick: 'Arda_C', fullName: 'Arda Çetin', city: 'İzmir', dist: 'Karşıyaka', pet: 'Ege', breed: 'balik', avatar: '🐠', stage: 3, xp: 2890 },
+  { deviceId: 'BOT-TR-42', nick: 'Deniz_K', fullName: 'Deniz Koçyiğit', city: 'İzmir', dist: 'Urla', pet: 'Yunus', breed: 'balik', avatar: '🐠', stage: 2, xp: 1670 },
+  { deviceId: 'BOT-TR-43', nick: 'Emir_K', fullName: 'Emir Karahan', city: 'Bursa', dist: 'Nilüfer', pet: 'Paşa', breed: 'kopek', avatar: '🐶', stage: 4, xp: 4420 },
+  { deviceId: 'BOT-TR-44', nick: 'Yigit_D', fullName: 'Yiğit Duman', city: 'Bursa', dist: 'Osmangazi', pet: 'Aslan', breed: 'kedi', avatar: '🐱', stage: 2, xp: 2150 },
+  { deviceId: 'BOT-TR-45', nick: 'Can_B', fullName: 'Can Başaran', city: 'Kocaeli', dist: 'İzmit', pet: 'Pati', breed: 'kopek', avatar: '🐶', stage: 2, xp: 1780 },
+  { deviceId: 'BOT-TR-46', nick: 'Batu_S', fullName: 'Batu Sezer', city: 'Balıkesir', dist: 'Karesi', pet: 'Kuvvet', breed: 'kopek', avatar: '🐶', stage: 1, xp: 860 },
+  { deviceId: 'BOT-TR-47', nick: 'Mete_B', fullName: 'Mete Bilgin', city: 'Balıkesir', dist: 'Ayvalık', pet: 'Ada', breed: 'balik', avatar: '🐠', stage: 2, xp: 1590 },
+  { deviceId: 'BOT-TR-48', nick: 'Bora_Y', fullName: 'Bora Yıldırım', city: 'Tekirdağ', dist: 'Çorlu', pet: 'Tayfun', breed: 'kus', avatar: '🐦', stage: 3, xp: 2950 },
+  { deviceId: 'BOT-TR-49', nick: 'Sarp_G', fullName: 'Sarp Gök', city: 'Tekirdağ', dist: 'Süleymanpaşa', pet: 'Kartal', breed: 'kus', avatar: '🐦', stage: 2, xp: 1810 },
+  { deviceId: 'BOT-TR-50', nick: 'Yagiz_C', fullName: 'Yağız Candan', city: 'Edirne', dist: 'Merkez', pet: 'Meriç', breed: 'top', avatar: '👑', stage: 3, xp: 3200 }
 ];
 
-// SQLite to memory synchronization
+// SQLite to memory synchronization & Bot Initialization
 try {
-  const rowCount = db.prepare('SELECT COUNT(*) AS c FROM devices').get();
-  if (rowCount.c === 0) {
-    const insertStmt = db.prepare(`
-      INSERT INTO devices (device_id, nickname, avatar, user_email, pet_json, needs_json, stats_json, score, steps, last_seen, is_online)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `);
-    initialDevices.forEach(d => {
-      insertStmt.run(
-        d.deviceId,
-        d.user.nickname,
-        d.user.avatar,
-        d.user.email,
-        JSON.stringify(d.pet),
-        JSON.stringify(d.needs),
-        JSON.stringify(d.phone || {}),
-        d.pet.score || 0,
-        d.phone?.stepsToday || 0,
-        d.lastSeen,
-        d.isOnline ? 1 : 0
-      );
-    });
-  }
+  // Eski yabancı / geçici mock kayıtlarını temizle
+  try {
+    db.exec("DELETE FROM devices WHERE device_id LIKE 'SOCIES-ESP32-%' OR device_id LIKE 'SOCIES-AND-%' OR device_id LIKE 'SOCIES-IOS-%' OR device_id LIKE 'PHONE-2-TEST' OR device_id LIKE 'SOCIES-PHONE%';");
+  } catch(e) {}
+
+  const insertBotStmt = db.prepare(`
+    INSERT OR REPLACE INTO devices (device_id, nickname, avatar, user_email, pet_json, needs_json, stats_json, score, steps, last_seen, is_online)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `);
+
+  const now = Date.now();
+  TURKISH_BOTS.forEach((b, idx) => {
+    const isOnline = (idx % 2 === 0);
+    const lastSeen = isOnline ? now - Math.floor(Math.random() * 60000) : now - Math.floor(Math.random() * 3600000);
+    const petObj = {
+      name: b.pet,
+      breed: b.breed,
+      stage: b.stage,
+      score: b.xp,
+      ageDays: b.stage * 5 + Math.floor(Math.random() * 4),
+      streakDays: Math.floor(Math.random() * 15) + 3
+    };
+    const needsObj = {
+      hunger: Math.floor(Math.random() * 30) + 65,
+      fun: Math.floor(Math.random() * 30) + 65,
+      love: Math.floor(Math.random() * 20) + 75,
+      sleep: Math.floor(Math.random() * 30) + 65,
+      toilet: Math.floor(Math.random() * 25) + 70,
+      clean: Math.floor(Math.random() * 25) + 70,
+      social: Math.floor(Math.random() * 30) + 60
+    };
+    const statsObj = {
+      location: { country: 'Türkiye', city: b.city, district: b.dist, flag: '🇹🇷' },
+      phone: { model: idx % 2 === 0 ? 'Samsung Galaxy A54' : 'Redmi Note 12', os: 'Android 14', batteryPct: Math.floor(Math.random() * 30) + 68, stepsToday: Math.floor(Math.random() * 6000) + 2000, connection: '4.5G / Wi-Fi', appVersion: 'v1.0.16', latencyMs: Math.floor(Math.random() * 30) + 15 }
+    };
+
+    insertBotStmt.run(
+      b.deviceId,
+      b.nick,
+      b.avatar,
+      `${b.nick.toLowerCase()}@socies.bot`,
+      JSON.stringify(petObj),
+      JSON.stringify(needsObj),
+      JSON.stringify(statsObj),
+      b.xp,
+      statsObj.phone.stepsToday,
+      lastSeen,
+      isOnline ? 1 : 0
+    );
+  });
 
   // Load all devices from SQLite into memory map
   const allRows = db.prepare('SELECT * FROM devices').all();
   allRows.forEach(r => {
+    const parsedStats = JSON.parse(r.stats_json || '{}');
+    const location = parsedStats.location || { country: 'Türkiye', city: 'İstanbul', district: 'Kadıköy', flag: '🇹🇷' };
+    const phone = parsedStats.phone || { model: 'Mobil Telefon', os: 'Android', batteryPct: 85, stepsToday: 3500, connection: 'Wi-Fi', appVersion: 'v1.0.16', latencyMs: 22 };
+
     database.devices.set(r.device_id, {
       deviceId: r.device_id,
       mac: 'A4:CF:12:89:34:B1',
       user: { nickname: r.nickname, email: r.user_email, avatar: r.avatar, isVip: r.nickname.includes('Kurucu') },
+      location,
+      phone,
       pet: JSON.parse(r.pet_json || '{}'),
       needs: JSON.parse(r.needs_json || '{}'),
-      stats: JSON.parse(r.stats_json || '{}'),
+      stats: parsedStats,
       score: r.score,
       steps: r.steps,
       lastSeen: r.last_seen,
@@ -268,6 +280,64 @@ try {
 } catch(e) {
   console.error('[DB SYNC ERROR]', e);
 }
+
+// 🤖 CANLI TÜRKİYE BOT SİMÜLASYONU MOTORU (Gerçekçi İhtiyaç & Çevrimiçi Döngüsü)
+function runTurkishBotsSimulation() {
+  const now = Date.now();
+  for (const bot of TURKISH_BOTS) {
+    const dev = database.devices.get(bot.deviceId);
+    if (!dev) continue;
+
+    // Rastgele hafif aksiyon
+    const roll = Math.random();
+    if (roll < 0.25) {
+      // Beslendi
+      dev.needs.hunger = Math.min(100, (dev.needs.hunger || 70) + Math.floor(Math.random() * 6) + 3);
+      dev.pet.score = (dev.pet.score || 100) + 10;
+    } else if (roll < 0.50) {
+      // Oyun oynandı
+      dev.needs.fun = Math.min(100, (dev.needs.fun || 70) + Math.floor(Math.random() * 8) + 4);
+      dev.needs.hunger = Math.max(25, (dev.needs.hunger || 70) - 2);
+      dev.pet.score = (dev.pet.score || 100) + 15;
+    } else if (roll < 0.70) {
+      // Uyku / Dinlenme
+      dev.needs.sleep = Math.min(100, (dev.needs.sleep || 70) + 5);
+    }
+
+    // Doğal ihtiyaç azalması
+    dev.needs.hunger = Math.max(30, (dev.needs.hunger || 70) - 0.2);
+    dev.needs.fun = Math.max(25, (dev.needs.fun || 70) - 0.2);
+
+    // Çevrimiçi / Çevrimdışı geçiş döngüsü
+    if (Math.random() < 0.12) {
+      dev.isOnline = !dev.isOnline;
+      dev.lastSeen = dev.isOnline ? now : (now - Math.floor(Math.random() * 180000));
+    } else if (dev.isOnline) {
+      dev.lastSeen = now;
+    }
+
+    // SQLite senkronizasyonu
+    try {
+      db.prepare(`
+        UPDATE devices SET
+          needs_json = ?,
+          pet_json = ?,
+          score = ?,
+          last_seen = ?,
+          is_online = ?
+        WHERE device_id = ?
+      `).run(
+        JSON.stringify(dev.needs),
+        JSON.stringify(dev.pet),
+        dev.pet.score || 0,
+        dev.lastSeen,
+        dev.isOnline ? 1 : 0,
+        dev.deviceId
+      );
+    } catch(e) {}
+  }
+}
+setInterval(runTurkishBotsSimulation, 25000);
 
 // YARDIMCI JSON YANIT FONKSİYONU
 function sendJSON(res, statusCode, data) {
@@ -357,7 +427,7 @@ const server = http.createServer((req, res) => {
     if (fs.existsSync(apkFile)) {
       res.writeHead(200, {
         'Content-Type': 'application/vnd.android.package-archive',
-        'Content-Disposition': 'attachment; filename="socies-v1.0.15.apk"',
+        'Content-Disposition': 'attachment; filename="socies-v1.0.16.apk"',
         'Access-Control-Allow-Origin': '*'
       });
       return fs.createReadStream(apkFile).pipe(res);
@@ -1071,7 +1141,7 @@ const server = http.createServer((req, res) => {
             log.details ? (typeof log.details === 'string' ? log.details : JSON.stringify(log.details)) : null,
             log.userEmail || null,
             log.deviceId || null,
-            log.appVersion || 'v1.0.15',
+            log.appVersion || 'v1.0.16',
             log.timestamp || now
           );
           inserted++;
@@ -1260,23 +1330,30 @@ const server = http.createServer((req, res) => {
       return sendJSON(res, 200, {
         success: true,
         serverTime: Date.now(),
-        uptimeSec,
-        memoryRssMb: Math.round(mem.rss / (1024 * 1024)),
-        memoryHeapUsedMb: Math.round(mem.heapUsed / (1024 * 1024)),
+        system: {
+          uptimeSec,
+          ramRssMb: Math.round(mem.rss / (1024 * 1024)),
+          heapUsedMb: Math.round(mem.heapUsed / (1024 * 1024)),
+          nodeVersion: process.version
+        },
         stats: {
+          onlineDevices: onlineDevices.length,
+          registeredDevices: devices.length,
           devicesCount: devices.length,
           onlineCount: onlineDevices.length,
+          activeBroadcasts: totalBroadcasts,
+          interestRecords: totalInterests,
+          logCount: totalLogs,
           totalUsers,
-          totalLogs,
-          totalBroadcasts,
-          totalInterests,
           totalPokes: database.systemStats.totalPokesSent
         },
         devices: devices.map(d => ({
           deviceId: d.deviceId,
           user: d.user || { nickname: 'Anonim' },
+          location: d.location || { country: 'Türkiye', city: 'İstanbul', district: 'Kadıköy', flag: '🇹🇷' },
           pet: d.pet || {},
           needs: d.needs || {},
+          phone: d.phone || {},
           lastSeen: d.lastSeen,
           isOnline: (Date.now() - d.lastSeen) < 180000
         })),
@@ -1364,23 +1441,23 @@ const server = http.createServer((req, res) => {
     });
   }
 
-  // 8. GITHUB SÜRÜM / OTA KONTROLÜ (SemVer 2.0.0 v1.0.15)
+  // 8. GITHUB SÜRÜM / OTA KONTROLÜ (SemVer 2.0.0 v1.0.16)
   if (path === '/api/v1/version/check' && method === 'GET') {
     const host = req.headers.host || '46.1.173.159:3000';
     return sendJSON(res, 200, {
-      latestVersion: 'v1.0.15',
+      latestVersion: 'v1.0.16',
       semver: {
         major: 1,
         minor: 0,
-        patch: 15,
-        build: 16
+        patch: 16,
+        build: 17
       },
-      versionCode: 16,
-      latestCommitHash: 'socies-v1.0.15',
+      versionCode: 17,
+      latestCommitHash: 'socies-v1.0.16',
       mandatoryUpdate: false,
-      releaseNotes: 'v1.0.15: Merkezi Komuta Merkezi (Admin HQ), OLED boşta sohbet & sıfır-taraf çocuk analitiği (zero-party data), OLED tahmin oyunları & temiz çocuk fıkraları, sunucudan OLED ekrana canlı push anons & hediye sistemi.',
+      releaseNotes: 'v1.0.16: Profesyonel Aydınlık Komuta Merkezi (Light Theme Admin HQ), 50 Gerçekçi Türk Sanal Bebek Bot Filosu (İstanbul ve Batı İlleri), Çocuk Dostu Mini Oyun Hız Ayarları (Flappy tavan süzülmesi, Dino maratonu, Pinpon, Tuğla, Yılan, Kovboy düellosu ve Paraşüt), Açılışta Zorunlu Doğrudan Google Girişi.',
       apkDownloadUrl: `http://${host}/download/socies-app.apk`,
-      githubApkUrl: 'https://github.com/mcturan/socies/releases/download/v1.0.15/socies-app.apk'
+      githubApkUrl: 'https://github.com/mcturan/socies/releases/download/v1.0.16/socies-app.apk'
     });
   }
 
@@ -1495,7 +1572,7 @@ function serveSociesNetworkPage(res) {
       <div class="nav-links">
         <a href="/dashboard" class="nav-btn">📊 Sunucu Paneli</a>
         <a href="/" class="nav-btn">🎮 Web Emülatörü</a>
-        <a href="/download/socies-app.apk" class="dl-btn">📥 APK İndir (v1.0.15)</a>
+        <a href="/download/socies-app.apk" class="dl-btn">📥 APK İndir (v1.0.16)</a>
       </div>
     </div>
 
@@ -1513,7 +1590,7 @@ function serveSociesNetworkPage(res) {
         <div class="kpi-lbl">${countries.join(', ')}</div>
       </div>
       <div class="kpi-card">
-        <div class="kpi-val" style="color:#ffe600;">v1.0.15</div>
+        <div class="kpi-val" style="color:#ffe600;">v1.0.16</div>
         <div class="kpi-lbl">Ağ Sürümü (SemVer 2.0.0)</div>
       </div>
     </div>

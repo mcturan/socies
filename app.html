@@ -716,7 +716,7 @@
     <div class="update-dialog">
       <div class="update-icon-badge">🚀</div>
       <div class="update-title">Yeni Güncelleme Mevcut!</div>
-      <div class="update-pill" id="updVersionTag">v1.0.15 Hazır</div>
+      <div class="update-pill" id="updVersionTag">v1.0.16 Hazır</div>
       <div class="update-notes-box" id="updReleaseNotes">
         Yeni özellikler ve iyileştirmeler yayınlandı.
       </div>
@@ -852,7 +852,7 @@
         </div>
 
         <div style="font-size:0.72rem; color:#94A3B8; text-align:center;">
-          Socies v1.0.15 (Build 16) • OTA Güncel
+          Socies v1.0.16 (Build 17) • OTA Güncel
         </div>
       </div>
 
@@ -942,31 +942,30 @@
           Sanal evcil hayvanını büyütmek ve arkadaşlarınla buluşmak için profilini oluştur.
         </p>
 
-        <!-- GOOGLE İLE HIZLI GİRİŞ DÜĞMESİ -->
-        <button type="button" class="btn-google-sign" onclick="startGoogleAuthFlow('onboardEmail')" style="margin-bottom:0.6rem;">
-          <svg width="22" height="22" viewBox="0 0 48 48">
-            <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
-            <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
-            <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
-            <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
-          </svg>
-          <span style="font-weight:800; font-size:0.92rem;">Google ile Hızlı Giriş Yap</span>
-        </button>
+        <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:0.85rem; margin-bottom:0.85rem;">
+          <div style="text-align:left; margin-bottom:0.6rem;">
+            <label style="font-size:0.75rem; font-weight:800; color:var(--text-muted); display:flex; justify-content:space-between;">
+              <span>GOOGLE E-POSTA HESABIN</span>
+              <span style="color:#4F46E5; font-weight:700;">Bulut & Güvenlik</span>
+            </label>
+            <input type="email" id="onboardEmail" class="search-friend-input" style="width:100%; font-size:0.92rem; padding:0.65rem; margin-top:4px; font-weight:700;" placeholder="ornek@gmail.com">
+          </div>
 
-        <div style="display:flex; align-items:center; margin:0.5rem 0; color:var(--text-muted); font-size:0.75rem;">
-          <span style="flex:1; height:1px; background:#E2E8F0;"></span>
-          <span style="padding:0 8px; font-weight:700;">VEYA BİLGİLERİNİ GİR</span>
-          <span style="flex:1; height:1px; background:#E2E8F0;"></span>
+          <!-- GOOGLE İLE HIZLI GİRİŞ DÜĞMESİ -->
+          <button type="button" class="btn-google-sign" onclick="startGoogleAuthFlow('onboardEmail')" style="margin-bottom:0.4rem; width:100%;">
+            <svg width="22" height="22" viewBox="0 0 48 48">
+              <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+              <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+              <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+              <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+            </svg>
+            <span style="font-weight:800; font-size:0.92rem;">Google ile Giriş Yap & Kaydet</span>
+          </button>
         </div>
 
         <div style="text-align:left; margin-bottom:0.55rem;">
-          <label style="font-size:0.75rem; font-weight:800; color:var(--text-muted);">OYUNCU ADIN / LAKABIN (İSTEDİĞİNDE DEĞİŞTİRİLİR)</label>
+          <label style="font-size:0.75rem; font-weight:800; color:var(--text-muted);">OYUNCU LAKABIN (İSTEDİĞİNDE DEĞİŞTİRİLİR)</label>
           <input type="text" id="onboardNick" class="search-friend-input" style="width:100%; font-size:0.88rem; padding:0.6rem; margin-top:3px;" placeholder="Örn: Turan, Prenses, Kaptan...">
-        </div>
-
-        <div style="text-align:left; margin-bottom:0.55rem;">
-          <label style="font-size:0.75rem; font-weight:800; color:var(--text-muted);">E-POSTA VEYA GOOGLE HESABI</label>
-          <input type="email" id="onboardEmail" class="search-friend-input" style="width:100%; font-size:0.88rem; padding:0.6rem; margin-top:3px;" placeholder="ornek@gmail.com (Opsiyonel / Bulut Kaydı)">
         </div>
 
         <div style="text-align:left; margin-bottom:0.8rem;">
@@ -982,10 +981,7 @@
         </div>
 
         <div style="display:flex; gap:6px;">
-          <button type="button" class="btn-micro" style="flex:1; padding:9px; font-weight:800; background:#F8FAFC; border:1px solid #CBD5E1; color:#334155; border-radius:10px;" onclick="startGuestFlow()">
-            👤 Misafir Başla
-          </button>
-          <button class="btn-update-action" style="flex:2;" onclick="goToOnboardStep(2)">İleri: Yumurtanı Seç ➔</button>
+          <button class="btn-update-action" style="flex:1;" onclick="goToOnboardStep(2)">İleri: Yumurtanı Seç ➔</button>
         </div>
       </div>
 
@@ -1138,7 +1134,7 @@
         </div>
         <div class="badge-chip" id="badgeAppVersion" onclick="manualCheckUpdate()" title="Sürüm: Dokunarak Kontrol Et" style="cursor:pointer;">
           <span>🚀</span>
-          <span id="txtCurrentVersion">v1.0.15</span>
+          <span id="txtCurrentVersion">v1.0.16</span>
         </div>
       </div>
     </div>
@@ -1519,7 +1515,7 @@
   </nav>
 
   <script>
-    const CURRENT_APP_VERSION = 'v1.0.15';
+    const CURRENT_APP_VERSION = 'v1.0.16';
 
     // --- 📡 ARKA PLAN TELEMETRİ VE HATA GÖZLEMCİSİ (SOCIES LOGGER) ---
     const SociesLogger = {
@@ -1972,16 +1968,16 @@
         groundOffset: 0,
         score: 0,
         hiScore: 0,
-        speed: 1.8,
+        speed: 0.95,
         isGameOver: false,
         spawnTimer: 0
       },
 
-      // 2. Pong Squash Pro State (Tuned Comfortable Speed)
+      // 2. Pong Squash Pro State (Çocuk Dostu Rahat Hız)
       pong: {
         ballX: 64, ballY: 28,
-        vx: 1.05, vy: 0.95,
-        padX: 48, padW: 26,
+        vx: 0.65, vy: 0.60,
+        padX: 48, padW: 28,
         score: 0, lives: 3,
         isGameOver: false
       },
@@ -2022,11 +2018,11 @@
       // 6. Retro Brick Breaker (Arkanoid) State
       brick: {
         padX: 48,
-        padW: 24,
+        padW: 32,
         ballX: 64,
         ballY: 46,
-        vx: 1.1,
-        vy: -1.0,
+        vx: 0.70,
+        vy: -0.65,
         bricks: [],
         score: 0,
         lives: 3,
@@ -2429,7 +2425,7 @@
       oled.dino.obstacles = [];
       oled.dino.groundOffset = 0;
       oled.dino.score = 0;
-      oled.dino.speed = 1.8;
+      oled.dino.speed = 0.95;
       oled.dino.isGameOver = false;
       oled.dino.spawnTimer = 0;
     }
@@ -2456,10 +2452,10 @@
 
       // 3. FİZİK & GRAVİTİ
       if (!d.isGameOver) {
-        d.score += 0.2;
-        d.speed = 1.8 + Math.min(2.2, d.score * 0.003);
+        d.score += 0.15;
+        d.speed = 0.95 + Math.min(0.8, d.score * 0.0008);
 
-        d.vy += 0.28;
+        d.vy += 0.18;
         d.petY += d.vy;
         if (d.petY >= 34) {
           d.petY = 34;
@@ -2469,7 +2465,7 @@
 
         // Engel Oluşturma (Kaktüsler ve Uçan Kuşlar)
         d.spawnTimer++;
-        if (d.spawnTimer > (45 + Math.random() * 35)) {
+        if (d.spawnTimer > (80 + Math.random() * 50)) {
           d.spawnTimer = 0;
           const isBird = (d.score > 140 && Math.random() < 0.28);
           if (isBird) {
@@ -2574,9 +2570,10 @@
     function resetPongGame() {
       oled.pong.ballX = 64;
       oled.pong.ballY = 28;
-      oled.pong.vx = (Math.random() > 0.5 ? 1.05 : -1.05);
-      oled.pong.vy = 0.95;
+      oled.pong.vx = (Math.random() > 0.5 ? 0.65 : -0.65);
+      oled.pong.vy = 0.60;
       oled.pong.padX = 48;
+      oled.pong.padW = 28;
       oled.pong.score = 0;
       oled.pong.lives = 3;
       oled.pong.isGameOver = false;
@@ -2599,7 +2596,7 @@
       oled.ctx.fillRect(125, 16, 1, 48); // Sağ duvar
 
       if (!p.isGameOver) {
-        // Top Hareketi (Akıcı ve Sabit Hız)
+        // Top Hareketi (Akıcı, Sakin ve Çocuk Dostu Hız)
         p.ballX += p.vx;
         p.ballY += p.vy;
 
@@ -2627,8 +2624,8 @@
             p.vy = -Math.abs(p.vy);
             // Raketin neresine çarptığına göre açı ver
             const hitOffset = (p.ballX - (p.padX + p.padW / 2)) / (p.padW / 2);
-            p.vx = hitOffset * 1.35;
-            p.vx = Math.max(-1.7, Math.min(1.7, p.vx));
+            p.vx = hitOffset * 0.95;
+            p.vx = Math.max(-1.15, Math.min(1.15, p.vx));
             p.score += 10;
             beep(880, 0.05);
           }
@@ -2641,8 +2638,8 @@
             beep(340, 0.15);
             p.ballX = 64;
             p.ballY = 26;
-            p.vy = 0.95;
-            p.vx = (Math.random() > 0.5 ? 1.05 : -1.05);
+            p.vy = 0.60;
+            p.vx = (Math.random() > 0.5 ? 0.65 : -0.65);
           } else {
             p.isGameOver = true;
             beep(180, 0.3);
@@ -2698,7 +2695,7 @@
 
       if (!s.isGameOver) {
         s.moveTimer++;
-        if (s.moveTimer >= 5) {
+        if (s.moveTimer >= 9) {
           s.moveTimer = 0;
           s.dir = s.nextDir;
 
@@ -2806,16 +2803,16 @@
       oled.ctx.fillRect(0, 56, 128, 1);
 
       if (!c.isGameOver) {
-        // Düşen Nesne Oluştur
+        // Düşen Nesne Oluştur (Çocuk Dostu Yavaş Düşüş)
         c.spawnTimer++;
-        if (c.spawnTimer > 35) {
+        if (c.spawnTimer > 55) {
           c.spawnTimer = 0;
           const rx = Math.floor(Math.random() * 112) + 8;
           const rnd = Math.random();
           let type = 'apple';
           if (rnd < 0.25) type = 'bomb';
           else if (rnd < 0.45) type = 'star';
-          c.items.push({ x: rx, y: 18, type, vy: (type === 'star' ? 1.4 : 1.05) });
+          c.items.push({ x: rx, y: 18, type, vy: (type === 'star' ? 0.85 : 0.65) });
         }
 
         // Düşen Nesneleri Güncelle
@@ -2823,8 +2820,8 @@
           const it = c.items[i];
           it.y += it.vy;
 
-          // Yakalama Testi (Pet: petX, y: 44, w: 20, h: 12)
-          if (it.y >= 43 && it.y <= 51 && it.x >= c.petX - 4 && it.x <= c.petX + 20) {
+          // Yakalama Testi (Genişletilmiş Sepet Alanı)
+          if (it.y >= 42 && it.y <= 52 && it.x >= c.petX - 6 && it.x <= c.petX + 22) {
             if (it.type === 'apple') {
               c.score += 10;
               beep(880, 0.06);
@@ -2936,8 +2933,8 @@
         oled.cowboy.shootTimer++;
         oled.ctx.fillStyle = '#ffb703';
         oled.ctx.fillText('>> ATES ET! <<', 18, 42);
-        // Rakip 28 frame (yaklaşık 450ms) sonra ateş eder!
-        if (oled.cowboy.shootTimer > 28) {
+        // Çocuk dostu tepki süresi: Rakip 65 frame (yaklaşık 1.1 saniye) sonra ateş eder!
+        if (oled.cowboy.shootTimer > 65) {
           oled.cowboy.isGameOver = true;
           oled.cowboy.winner = 'CPU';
           beep(220, 0.25);
@@ -3036,7 +3033,7 @@
       if (!s.isGameOver) {
         for (let i = s.bullets.length - 1; i >= 0; i--) {
           const b = s.bullets[i];
-          b.y -= 2.4;
+          b.y -= 2.0;
           if (b.y < 16) {
             s.bullets.splice(i, 1);
             continue;
@@ -3054,7 +3051,7 @@
         }
 
         s.alienDropTimer++;
-        if (s.alienDropTimer > 18) {
+        if (s.alienDropTimer > 36) {
           s.alienDropTimer = 0;
           let hitWall = false;
           for (const al of s.aliens) {
@@ -3147,11 +3144,11 @@
     function resetBrickGame() {
       const b = oled.brick;
       b.padX = 48;
-      b.padW = 26;
+      b.padW = 32;
       b.ballX = 64;
       b.ballY = 46;
-      b.vx = (Math.random() > 0.5 ? 1.05 : -1.05);
-      b.vy = -0.95;
+      b.vx = (Math.random() > 0.5 ? 0.70 : -0.70);
+      b.vy = -0.65;
       b.bricks = [];
       b.score = 0;
       b.lives = 3;
@@ -3196,8 +3193,8 @@
           if (b.ballX >= b.padX - 2 && b.ballX <= b.padX + b.padW + 2) {
             b.vy = -Math.abs(b.vy);
             const hit = (b.ballX - (b.padX + b.padW / 2)) / (b.padW / 2);
-            b.vx = hit * 1.35;
-            b.vx = Math.max(-1.6, Math.min(1.6, b.vx));
+            b.vx = hit * 0.95;
+            b.vx = Math.max(-1.15, Math.min(1.15, b.vx));
             beep(750, 0.04);
           }
         }
@@ -3218,8 +3215,8 @@
             beep(300, 0.15);
             b.ballX = b.padX + b.padW / 2;
             b.ballY = 46;
-            b.vy = -0.95;
-            b.vx = (Math.random() > 0.5 ? 1.05 : -1.05);
+            b.vy = -0.65;
+            b.vx = (Math.random() > 0.5 ? 0.70 : -0.70);
           } else {
             b.isGameOver = true;
             playWhineSound();
@@ -3293,11 +3290,11 @@
 
       if (!p.isGameOver) {
         p.spawnTimer++;
-        if (p.spawnTimer > 42) {
+        if (p.spawnTimer > 70) {
           p.spawnTimer = 0;
           const col = Math.floor(Math.random() * 3);
           const colX = col === 0 ? 24 : (col === 1 ? 56 : 88);
-          p.jumpers.push({ col, x: colX, y: 18, vy: 0.58 });
+          p.jumpers.push({ col, x: colX, y: 18, vy: 0.38 });
         }
 
         for (let i = p.jumpers.length - 1; i >= 0; i--) {
@@ -3387,10 +3384,19 @@
       oled.ctx.fillRect(0, 62, 128, 1);
 
       if (!f.isGameOver) {
-        f.vy += 0.22;
+        f.vy += 0.11;
+        f.vy = Math.min(f.vy, 1.6);
         f.petY += f.vy;
 
-        if (f.petY <= 17 || f.petY >= 54) {
+        // Tavan koruması: Asla tavana çarpınca ölmez! Tavan hizasında tatlı tatlı süzülür
+        if (f.petY < 18) {
+          f.petY = 18;
+          f.vy = 0;
+        }
+
+        // Zemin çarpışması: Sadece yere düşerse oyun biter
+        if (f.petY >= 54) {
+          f.petY = 54;
           f.isGameOver = true;
           beep(160, 0.25);
           playWhineSound();
@@ -3399,21 +3405,21 @@
         }
 
         f.spawnTimer++;
-        if (f.spawnTimer > 45) {
+        if (f.spawnTimer > 85) {
           f.spawnTimer = 0;
-          const gapY = Math.floor(Math.random() * 20) + 24;
-          const gapSize = 18;
+          const gapY = Math.floor(Math.random() * 16) + 26;
+          const gapSize = 26; // Geniş, çocuk dostu geçit
           f.pipes.push({
             x: 130,
-            topH: gapY - gapSize / 2 - 16,
-            botY: gapY + gapSize / 2,
+            topH: Math.max(4, gapY - gapSize / 2 - 16),
+            botY: Math.min(50, gapY + gapSize / 2),
             passed: false
           });
         }
 
         for (let i = f.pipes.length - 1; i >= 0; i--) {
           const p = f.pipes[i];
-          p.x -= 1.4;
+          p.x -= 0.75; // Sakin, çocuk dostu hız
 
           if (!p.passed && p.x < 22) {
             p.passed = true;
@@ -3421,8 +3427,8 @@
             beep(880, 0.05);
           }
 
-          if (p.x >= 14 && p.x <= 32) {
-            if (f.petY < (16 + p.topH) || (f.petY + 8) > p.botY) {
+          if (p.x >= 16 && p.x <= 28) {
+            if ((f.petY + 2) < (16 + p.topH) || (f.petY + 5) > p.botY) {
               f.isGameOver = true;
               beep(160, 0.25);
               playWhineSound();
@@ -3458,7 +3464,7 @@
       if (f.isGameOver) {
         oled.ctx.fillStyle = '#ef4444';
         oled.ctx.font = '8px "JetBrains Mono"';
-        oled.ctx.fillText('== KANAT YORULDU ==', 16, 36);
+        oled.ctx.fillText('== DİNLENİYOR ==', 18, 36);
         if (oled.animFrame % 30 < 18) {
           oled.ctx.fillStyle = '#ffb703';
           oled.ctx.font = '7px "JetBrains Mono"';
@@ -3867,7 +3873,7 @@
           if (btn === 'SELECT' || btn === 'RIGHT' || btn === 'LEFT') resetDinoGame();
         } else {
           if ((btn === 'SELECT' || btn === 'RIGHT' || btn === 'LEFT') && oled.dino.isGrounded) {
-            oled.dino.vy = -4.0;
+            oled.dino.vy = -3.2;
             oled.dino.isGrounded = false;
             beep(750, 0.05);
           }
@@ -3972,7 +3978,7 @@
           if (btn === 'SELECT' || btn === 'LEFT' || btn === 'RIGHT') resetFlappyGame();
         } else {
           if (btn === 'SELECT' || btn === 'LEFT' || btn === 'RIGHT') {
-            oled.flappy.vy = -2.8;
+            oled.flappy.vy = -1.5;
             beep(820, 0.04);
           }
         }
@@ -6473,16 +6479,21 @@
     }
 
     async function startGoogleAuthFlow(targetInputId = 'onboardEmail') {
-      let email = document.getElementById(targetInputId) ? document.getElementById(targetInputId).value.trim() : '';
+      const emailInput = document.getElementById(targetInputId);
+      let email = emailInput ? emailInput.value.trim() : '';
       if (!email) {
-        email = prompt('Google E-Posta Adresinizi Girin:\n(Örn: kullanici@gmail.com)');
-        if (!email) return;
-        email = email.trim();
-        if (document.getElementById(targetInputId)) document.getElementById(targetInputId).value = email;
+        if (emailInput) {
+          emailInput.focus();
+          emailInput.style.borderColor = '#4F46E5';
+          emailInput.style.boxShadow = '0 0 0 3px rgba(79, 70, 229, 0.2)';
+        }
+        showGlobalToast('ℹ️ Lütfen Google Gmail adresinizi kutucuğa yazın.');
+        return;
       }
 
       if (!email.includes('@')) {
-        alert('Lütfen geçerli bir Google e-posta adresi girin.');
+        showGlobalToast('⚠️ Lütfen geçerli bir e-posta adresi girin.');
+        if (emailInput) emailInput.focus();
         return;
       }
 
@@ -6960,9 +6971,10 @@
       setTimeout(() => checkAppVersionOnBoot(false), 1500);
       setTimeout(() => triggerSmartCompanionBriefing(), 2500);
 
-      // İlk açılış onboarding kontrolü
-      if (!localStorage.getItem('socies_onboarding_completed')) {
-        setTimeout(() => openOnboardingWizard(), 600);
+      // Kullanıcı girişi & profil oluşturma kontrolü (Giriş yapılmadıysa daima aç)
+      const hasUserAuth = !!(localStorage.getItem('socies_user_email') || (appData && appData.userEmail));
+      if (!hasUserAuth) {
+        setTimeout(() => openOnboardingWizard(), 400);
       }
     });
   </script>

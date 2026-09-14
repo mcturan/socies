@@ -21,12 +21,15 @@ import android.provider.Settings;
 import android.view.View;
 import android.webkit.DownloadListener;
 import android.webkit.JavascriptInterface;
+import android.webkit.JsPromptResult;
+import android.webkit.JsResult;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import java.io.File;
@@ -128,6 +131,72 @@ public class MainActivity extends Activity {
                     }
                 }
             }
+
+            @Override
+            public boolean onJsAlert(WebView view, String url, String message, final JsResult result) {
+                new AlertDialog.Builder(MainActivity.this)
+                    .setTitle("Socies")
+                    .setMessage(message)
+                    .setPositiveButton("Tamam", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            result.confirm();
+                        }
+                    })
+                    .setCancelable(false)
+                    .create()
+                    .show();
+                return true;
+            }
+
+            @Override
+            public boolean onJsConfirm(WebView view, String url, String message, final JsResult result) {
+                new AlertDialog.Builder(MainActivity.this)
+                    .setTitle("Socies")
+                    .setMessage(message)
+                    .setPositiveButton("Evet", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            result.confirm();
+                        }
+                    })
+                    .setNegativeButton("İptal", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            result.cancel();
+                        }
+                    })
+                    .setCancelable(false)
+                    .create()
+                    .show();
+                return true;
+            }
+
+            @Override
+            public boolean onJsPrompt(WebView view, String url, String message, String defaultValue, final JsPromptResult result) {
+                final EditText input = new EditText(MainActivity.this);
+                if (defaultValue != null) input.setText(defaultValue);
+                new AlertDialog.Builder(MainActivity.this)
+                    .setTitle("Socies")
+                    .setMessage(message)
+                    .setView(input)
+                    .setPositiveButton("Tamam", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            result.confirm(input.getText().toString());
+                        }
+                    })
+                    .setNegativeButton("İptal", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            result.cancel();
+                        }
+                    })
+                    .setCancelable(false)
+                    .create()
+                    .show();
+                return true;
+            }
         });
     }
 
@@ -189,7 +258,7 @@ public class MainActivity extends Activity {
             try {
                 return getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
             } catch (Exception e) {
-                return "1.0.15";
+                return "1.0.16";
             }
         }
     }
