@@ -194,13 +194,16 @@
     }
     .oled-screen {
       background: var(--oled-bg);
-      border-radius: 6px;
+      border-radius: 8px;
       border: 1.5px solid #0a1128;
-      box-shadow: 0 0 15px rgba(0, 240, 255, 0.15);
-      image-rendering: pixelated;
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.18);
+      image-rendering: auto;
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: crisp-edges;
       width: 100%;
       max-width: 360px;
-      height: 175px;
+      aspect-ratio: 2 / 1;
+      height: auto;
       cursor: pointer;
     }
 
@@ -716,7 +719,7 @@
     <div class="update-dialog">
       <div class="update-icon-badge">🚀</div>
       <div class="update-title">Yeni Güncelleme Mevcut!</div>
-      <div class="update-pill" id="updVersionTag">v1.0.16 Hazır</div>
+      <div class="update-pill" id="updVersionTag">v1.0.17 Hazır</div>
       <div class="update-notes-box" id="updReleaseNotes">
         Yeni özellikler ve iyileştirmeler yayınlandı.
       </div>
@@ -817,14 +820,15 @@
           </div>
         </div>
 
-        <!-- SUNUCU ADRESİ AYARI -->
+        <!-- HESAP İŞLEMLERİ & OTURUM -->
         <div style="width:100%; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:10px 14px; margin-bottom:8px; text-align:left;">
-          <label style="font-size:0.75rem; font-weight:800; color:var(--text-main);">🌐 MERKEZİ SUNUCU ADRESİ</label>
-          <div style="display:flex; gap:6px; margin-top:4px;">
-            <input type="text" id="inputSettingServerUrl" class="search-friend-input" style="flex:1; font-size:0.8rem; padding:0.5rem;" placeholder="http://46.1.173.159:3000">
-            <button type="button" class="btn-micro" style="background:#0284C7; color:#fff; font-weight:800; padding:0 8px;" onclick="saveServerUrlFromSettings()">Kaydet</button>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <div style="font-size:0.8rem; font-weight:800; color:var(--text-main);">🔐 Google Hesabı</div>
+              <div id="lblCurrentSettingEmail" style="font-size:0.72rem; color:#64748B;">Giriş Yapılmadı</div>
+            </div>
+            <button type="button" class="btn-micro" style="background:#4F46E5; color:#fff; font-weight:800; padding:6px 10px; font-size:0.75rem;" onclick="logoutOrSwitchAccount()">🚪 Hesap Değiştir</button>
           </div>
-          <div style="font-size:0.7rem; color:#64748B; margin-top:4px;">Statik IP: 46.1.173.159 (Port: 3000)</div>
         </div>
 
         <!-- BULUT YEDEKLEME -->
@@ -852,7 +856,7 @@
         </div>
 
         <div style="font-size:0.72rem; color:#94A3B8; text-align:center;">
-          Socies v1.0.16 (Build 17) • OTA Güncel
+          Socies v1.0.17 (Build 18) • OTA Güncel
         </div>
       </div>
 
@@ -1124,17 +1128,13 @@
           <span>⭐</span>
           <span>PRO</span>
         </div>
-        <div class="badge-chip" id="badgeGoogleAuth" onclick="openGoogleAuthModal()" title="Google Hesabı" style="cursor:pointer; background:#F8FAFC; border-color:#CBD5E1; color:#0F172A;">
-          <span id="icoGoogleAuth">🌐</span>
-          <span id="txtGoogleAuth">Google</span>
-        </div>
-        <div class="badge-chip" id="badgeServerNet" onclick="openServerModal()" title="Sunucu: Dokunarak Değiştir" style="cursor:pointer; background:#ECFDF5; border-color:#A7F3D0; color:#059669;">
-          <span id="icoServerNet">🟢</span>
-          <span id="txtServerNet">46.1.173.159</span>
+        <div class="badge-chip" id="badgeGoogleAuth" onclick="openGoogleAuthModal()" title="Kullanıcı Profili & Hesap" style="cursor:pointer; background:#F8FAFC; border-color:#CBD5E1; color:#0F172A;">
+          <span id="icoGoogleAuth">👤</span>
+          <span id="txtGoogleAuth">Giriş Yap</span>
         </div>
         <div class="badge-chip" id="badgeAppVersion" onclick="manualCheckUpdate()" title="Sürüm: Dokunarak Kontrol Et" style="cursor:pointer;">
           <span>🚀</span>
-          <span id="txtCurrentVersion">v1.0.16</span>
+          <span id="txtCurrentVersion">v1.0.17</span>
         </div>
       </div>
     </div>
@@ -1153,13 +1153,13 @@
           <div class="console-sub-tag">POCKET ARCADE</div>
         </div>
 
-        <!-- 128x64 OLED CANVAS (TOUCH SENSITIVE) -->
+        <!-- 256x128 HIGH-DPI OLED CANVAS (TOUCH SENSITIVE) -->
         <div class="screen-bezel">
-          <canvas id="oledCanvas" class="oled-screen" width="128" height="64"></canvas>
+          <canvas id="oledCanvas" class="oled-screen" width="256" height="128" onclick="handleConsoleBtn('SELECT')"></canvas>
         </div>
 
         <div class="mid-status-txt">
-          <span>🎮 10 RETRO OYUN</span>
+          <span>🎮 11 RETRO OYUN</span>
           <span style="color:#00ff66;" id="txtConsoleOnline">🟢 AKTİF</span>
         </div>
 
@@ -1515,7 +1515,7 @@
   </nav>
 
   <script>
-    const CURRENT_APP_VERSION = 'v1.0.16';
+    const CURRENT_APP_VERSION = 'v1.0.17';
 
     // --- 📡 ARKA PLAN TELEMETRİ VE HATA GÖZLEMCİSİ (SOCIES LOGGER) ---
     const SociesLogger = {
@@ -1948,7 +1948,8 @@
         '7. PARAŞÜT 🪂',
         '8. UÇAN PUFİ 🛩️',
         '9. KOVBOY 🤠',
-        '10. RPS ✂️'
+        '10. RPS ✂️',
+        '11. KÖSTEBEK 🐹'
       ],
       foodIdx: 0,
       gameIdx: 0,
@@ -2057,6 +2058,20 @@
       // 10. RPS Duel State
       rps: { playerChoice: null, cpuChoice: null, resultText: '', resolved: false },
 
+      // 11. Köstebek Yakalama State (Whack-a-Mole)
+      mole: {
+        holes: [24, 64, 104],
+        activeHole: -1,
+        timer: 0,
+        appearDuration: 55,
+        score: 0,
+        misses: 0,
+        maxMisses: 3,
+        isGameOver: false,
+        hitHole: -1,
+        hitTimer: 0
+      },
+
       // Pager & Morning Weather Marquee Banner
       marqueeMsg: null,
       marqueeX: 128
@@ -2092,6 +2107,8 @@
 
     function drawOledLoop() {
       try {
+        oled.ctx.save();
+        oled.ctx.scale(2, 2);
         oled.ctx.fillStyle = '#000814';
         oled.ctx.fillRect(0, 0, 128, 64);
 
@@ -2105,15 +2122,15 @@
           drawOledHeart(oled.ctx, 3 + i*8, 4, i < filledHearts);
         }
 
-        // Evcil Hayvan Adı & Seviyesi (Ham Cihaz ID Yerine Anlamlı İsim)
-        oled.ctx.font = '7.5px "JetBrains Mono"';
+        // Evcil Hayvan Adı & Seviyesi (Net ve Kalın Yazı Tipi)
+        oled.ctx.font = 'bold 8px "JetBrains Mono", monospace';
         const petNameStr = ((appData.petState && appData.petState.name) || 'PUFI');
         const petTitle = petNameStr.slice(0, 8).toUpperCase() + ' Lv.' + ((appData.needs && appData.needs.level) || (appData.petState && appData.petState.level) || 1);
         oled.ctx.fillText(petTitle, 38, 11);
 
         // Batarya Göstergesi (Gerçek Yüzde & İkon)
         const battPct = appData.batteryPct || 88;
-        oled.ctx.font = '7px "JetBrains Mono"';
+        oled.ctx.font = 'bold 7px "JetBrains Mono", monospace';
         oled.ctx.fillText(battPct + '%', 88, 11);
         oled.ctx.strokeRect(106, 3, 17, 9);
         oled.ctx.fillRect(123, 5, 2, 5); // Pil ucu
@@ -2149,6 +2166,8 @@
           renderOledCowboy();
         } else if (oled.mode === 'RPS') {
           renderOledRPS();
+        } else if (oled.mode === 'MOLE') {
+          renderOledMole();
         } else if (oled.mode === 'EATING') {
           renderOledEating();
         } else if (oled.mode === 'TOILET') {
@@ -2167,23 +2186,25 @@
           renderOledIdle();
         }
 
-        // 3. RETRO PAGER ÇAĞRI MARQUEE BANNER'I
+        // 3. RETRO PAGER ÇAĞRI MARQUEE BANNER'I (Sakin, Yavaş ve Okunaklı Akış)
         if (oled.marqueeMsg) {
           oled.ctx.fillStyle = '#020617';
           oled.ctx.fillRect(0, 48, 128, 16);
           oled.ctx.strokeStyle = '#00f0ff';
           oled.ctx.strokeRect(0, 48, 128, 16);
           oled.ctx.fillStyle = '#ffb703';
-          oled.ctx.font = '8px "JetBrains Mono"';
+          oled.ctx.font = 'bold 8px "JetBrains Mono", monospace';
           oled.ctx.fillText(oled.marqueeMsg, oled.marqueeX, 60);
-          oled.marqueeX -= 1.5;
+          oled.marqueeX -= 0.6;
           const txtWidth = oled.ctx.measureText(oled.marqueeMsg).width;
           if (oled.marqueeX < -txtWidth) {
             oled.marqueeMsg = null;
             oled.marqueeX = 128;
           }
         }
+        oled.ctx.restore();
       } catch (loopErr) {
+        try { oled.ctx.restore(); } catch(e) {}
         console.warn('[OLED] Render hatası yakalandı, IDLE moduna dönülüyor:', loopErr);
         oled.mode = 'IDLE';
       } finally {
@@ -2201,25 +2222,26 @@
       }
 
       oled.ctx.fillStyle = '#00f0ff';
-      if (oled.animFrame % 45 === 0) {
-        oled.petX += oled.petDir * 6;
+      // Sakin ve doğal yürüme temposu (90 frame = 1.5 saniyede bir adım)
+      if (oled.animFrame % 90 === 0) {
+        oled.petX += oled.petDir * 4;
         if (oled.petX > 88) oled.petDir = -1;
         if (oled.petX < 18) oled.petDir = 1;
       }
-      const bob = (oled.animFrame % 16 < 8) ? 0 : 1;
+      const bob = (oled.animFrame % 24 < 12) ? 0 : 1;
       drawModularSpriteToOled(oled.petX, 32 + bob);
 
-      // RASTGELE DİYALOG & OYUN TETİKLEME (HER ~30 SANİYEDE BİR)
-      if (!oled.idleDialogue.active && !appData.pendingBroadcast && oled.animFrame % 650 === 0 && Math.random() < 0.85) {
+      // RASTGELE DİYALOG & OYUN TETİKLEME (Sakin Aralık: ~45-50 saniyede bir)
+      if (!oled.idleDialogue.active && !appData.pendingBroadcast && oled.animFrame % 2200 === 0 && Math.random() < 0.75) {
         const roll = Math.random();
         if (roll < 0.45) {
           const q = IDLE_QUESTIONS_POOL[Math.floor(Math.random() * IDLE_QUESTIONS_POOL.length)];
-          oled.idleDialogue = { active: true, timer: 360, type: 'QUESTION', data: q };
+          oled.idleDialogue = { active: true, timer: 900, type: 'QUESTION', data: q };
         } else if (roll < 0.75) {
           const j = IDLE_JOKES_POOL[Math.floor(Math.random() * IDLE_JOKES_POOL.length)];
-          oled.idleDialogue = { active: true, timer: 360, type: 'JOKE', data: j };
+          oled.idleDialogue = { active: true, timer: 900, type: 'JOKE', data: j };
         } else {
-          oled.idleDialogue = { active: true, timer: 360, type: 'GUESS_GAME', data: null };
+          oled.idleDialogue = { active: true, timer: 900, type: 'GUESS_GAME', data: null };
         }
         beep(700, 0.08);
         setTimeout(() => beep(900, 0.1), 100);
@@ -2234,40 +2256,38 @@
       if (appData.pendingBroadcast) {
         const flash = (oled.animFrame % 24 < 12);
         oled.ctx.fillStyle = flash ? '#fde047' : '#00f0ff';
-        oled.ctx.font = '7.5px "JetBrains Mono"';
+        oled.ctx.font = 'bold 7.5px "JetBrains Mono", monospace';
         oled.ctx.fillText('✉️ YENI ANONS! [A]', 14, 25);
       } else if (oled.idleDialogue.active) {
-        const bBob = Math.sin(oled.animFrame * 0.25) * 2.5;
+        const bBob = Math.sin(oled.animFrame * 0.15) * 2;
         oled.ctx.fillStyle = '#fde047';
         oled.ctx.fillRect(oled.petX + 8, 16 + bBob, 8, 10);
         oled.ctx.fillStyle = '#000814';
-        oled.ctx.font = '8px "JetBrains Mono"';
+        oled.ctx.font = 'bold 8px "JetBrains Mono", monospace';
         oled.ctx.fillText('!', oled.petX + 11, 24 + bBob);
 
         oled.ctx.fillStyle = '#fde047';
-        oled.ctx.font = '7px "JetBrains Mono"';
+        oled.ctx.font = 'bold 7px "JetBrains Mono", monospace';
         const label = oled.idleDialogue.type === 'GUESS_GAME' ? '[A: OYNA 🎲]' : (oled.idleDialogue.type === 'JOKE' ? '[A: FIKRA 🎭]' : '[A: KONUS 💬]');
         oled.ctx.fillText(label, 36, 25);
       }
 
-      oled.ctx.font = '7px "JetBrains Mono"';
-      let petStatusTxt = 'SOCIES BLE HAZIR';
-      if (appData.petState && appData.petState.isSick) {
-        petStatusTxt = (appData.petState.sicknessReason === 'STOMACH_ACHE') ? 'KARIN AGRISI! 💊 ILAC' : 'HASTA! 💊 ILAC VER';
-      }
-      else if (appData.petState && appData.petState.poopCount > 0) petStatusTxt = 'KİRLİ! 💩 SİFON ÇEK';
-      else if (appData.needs.hunger < 35) petStatusTxt = 'AÇIKTI! 🍖 BESLE';
-      else if (appData.needs.sleep < 35) petStatusTxt = 'UYKULU! 🌙 UYUT';
-      else if (appData.needs.clean < 35) petStatusTxt = 'KİRLENDİ! 🧼 BANYO';
-      else if (appData.needs.fun < 35) petStatusTxt = 'SIKILDI! 🎮 OYNA';
-      else if (appData.needs.love < 35) petStatusTxt = 'SEV BENİ! 💖 OKŞA';
-      else {
-        const nickStr = (appData.nickname || 'PUFI');
-        const currentName = ((appData.petState && appData.petState.name) || nickStr);
-        petStatusTxt = 'MUTLU 🐾 ' + currentName.slice(0, 8);
-      }
+      // DİNAMİK KOMİK İHTİYAÇ SÖZLERİ (HER DURUMA ÖZEL MİZAHİ CÜMLELER)
+      const quip = getFunnyNeedQuip();
+      oled.ctx.font = 'bold 7.5px "JetBrains Mono", monospace';
+      const isUrgent = (appData.needs.hunger < 35 || (appData.petState && appData.petState.poopCount > 0) || (appData.petState && appData.petState.isSick));
+      oled.ctx.fillStyle = isUrgent ? '#ef4444' : '#fde047';
 
-      oled.ctx.fillText(petStatusTxt, 12, 60);
+      const qW = oled.ctx.measureText(quip).width;
+      if (qW > 116) {
+        if (oled.quipX === undefined) oled.quipX = 128;
+        oled.quipX -= 0.55;
+        if (oled.quipX < -qW) oled.quipX = 128;
+        oled.ctx.fillText(quip, Math.round(oled.quipX), 60);
+      } else {
+        oled.quipX = 6;
+        oled.ctx.fillText(quip, 6, 60);
+      }
     }
 
     function renderOledMenu() {
@@ -2331,59 +2351,140 @@
     }
 
     // =========================================================================
-    // BAKIM ANİMASYONLARI (YEMEK, TUVALET, BANYO, UYKU MODU)
+    // BAKIM ANİMASYONLARI (YEMEK, TUVALET, BANYO, UYKU MODU & CANLI DOLUM GÖSTERGESİ)
     // =========================================================================
+    function drawCareProgressBar(label, curVal, targetVal, prog) {
+      // 1. Sağ Kenar Gösterge Çerçevesi (Yanda beliren canlı dolum paneli)
+      oled.ctx.fillStyle = '#020617';
+      oled.ctx.fillRect(84, 17, 42, 45);
+      oled.ctx.strokeStyle = '#38bdf8';
+      oled.ctx.strokeRect(84, 17, 42, 45);
+
+      // Başlık
+      oled.ctx.fillStyle = '#fde047';
+      oled.ctx.font = 'bold 7px "JetBrains Mono", monospace';
+      oled.ctx.fillText(label.slice(0, 7), 87, 26);
+
+      // Dikey Dolum Termometresi / Barı
+      oled.ctx.strokeStyle = '#00f0ff';
+      oled.ctx.strokeRect(88, 30, 8, 28);
+      const barH = Math.round(26 * Math.min(1.0, prog));
+      oled.ctx.fillStyle = prog > 0.8 ? '#22c55e' : (prog > 0.4 ? '#38bdf8' : '#f59e0b');
+      oled.ctx.fillRect(89, 57 - barH, 6, barH);
+
+      // Yüzde Metni
+      oled.ctx.fillStyle = '#ffffff';
+      oled.ctx.font = 'bold 8px "JetBrains Mono", monospace';
+      oled.ctx.fillText(`%${Math.round(curVal)}`, 99, 42);
+
+      // Durum
+      oled.ctx.font = '6px "JetBrains Mono", monospace';
+      oled.ctx.fillStyle = '#38bdf8';
+      oled.ctx.fillText('DOLUYOR', 97, 52);
+    }
+
     function renderOledEating() {
       oled.ctx.fillStyle = '#00f0ff';
-      oled.ctx.font = '8px "JetBrains Mono"';
-      let title = 'HAM HAM HAM! 🍖';
-      if (oled.lastFoodType === 'ELMA') title = 'KITIR KITIR! 🍏';
-      else if (oled.lastFoodType === 'PASTA') title = 'NEFIS PASTA! 🍰';
-      else if (oled.lastFoodType === 'SU') title = 'LUKUR LUKUR! 💧';
-      oled.ctx.fillText(title, 16, 26);
+      oled.ctx.font = 'bold 8px "JetBrains Mono", monospace';
+      let title = 'HAM HAM! 🍖';
+      if (oled.lastFoodType === 'ELMA') title = 'KITIR! 🍏';
+      else if (oled.lastFoodType === 'PASTA') title = 'PASTA! 🍰';
+      else if (oled.lastFoodType === 'SU') title = 'LUKUR! 💧';
+      oled.ctx.fillText(title, 8, 25);
 
       const chew = (Math.floor(oled.animFrame / 8) % 2 === 0);
-      drawModularSpriteToOled(42, 34 + (chew ? 1 : 0));
+      drawModularSpriteToOled(26, 34 + (chew ? 1 : 0));
 
       // Yiyecek kırıntıları & tabak
       oled.ctx.fillStyle = '#ffb703';
-      oled.ctx.fillRect(72, 44, 10, 4); // Yiyecek
+      oled.ctx.fillRect(56, 44, 10, 4);
       if (chew) {
-        oled.ctx.fillRect(66, 38, 2, 2); // Uçuşan kırıntı
-        oled.ctx.fillRect(70, 36, 1, 1);
+        oled.ctx.fillRect(52, 38, 2, 2);
+        oled.ctx.fillRect(54, 36, 1, 1);
+      }
+
+      // Canlı Dolum Barı
+      if (oled.careProgress && oled.careProgress.active) {
+        const cp = oled.careProgress;
+        const prog = Math.min(1.0, (Date.now() - cp.startTime) / cp.durationMs);
+        cp.currentVal = cp.startVal + (cp.targetVal - cp.startVal) * prog;
+        appData.needs[cp.needKey] = Math.round(cp.currentVal);
+        drawCareProgressBar(cp.label, cp.currentVal, cp.targetVal, prog);
+
+        if (prog >= 1.0) {
+          cp.active = false;
+          oled.mode = 'IDLE';
+          playLevelUpFanfare();
+          saveNeeds();
+          updateNeedsUI();
+          showGlobalToast(cp.msg || '🍖 Karnı tıka basa doydu! Mutlu ve enerjik.');
+        }
       }
     }
 
     function renderOledToilet() {
       oled.ctx.fillStyle = '#00f0ff';
-      oled.ctx.font = '8px "JetBrains Mono"';
-      oled.ctx.fillText('SIFON CEKILIYOR 🚽', 14, 26);
+      oled.ctx.font = 'bold 8px "JetBrains Mono", monospace';
+      oled.ctx.fillText('SIFON 🚽', 14, 25);
 
       // Klozet ve Su Girdabı Animasyonu
       const swirl = (oled.animFrame % 12);
       oled.ctx.strokeStyle = '#00f0ff';
-      oled.ctx.strokeRect(48, 32, 32, 24);
+      oled.ctx.strokeRect(38, 30, 24, 24);
       oled.ctx.fillStyle = '#38bdf8';
-      oled.ctx.fillRect(52, 36 + (swirl % 6), 24, 2);
-      oled.ctx.fillRect(56, 42, 16, 2);
+      oled.ctx.fillRect(42, 34 + (swirl % 5), 16, 2);
 
-      drawModularSpriteToOled(22, 36);
+      drawModularSpriteToOled(12, 34);
+
+      // Canlı Dolum Barı
+      if (oled.careProgress && oled.careProgress.active) {
+        const cp = oled.careProgress;
+        const prog = Math.min(1.0, (Date.now() - cp.startTime) / cp.durationMs);
+        cp.currentVal = cp.startVal + (cp.targetVal - cp.startVal) * prog;
+        appData.needs[cp.needKey] = Math.round(cp.currentVal);
+        drawCareProgressBar(cp.label, cp.currentVal, cp.targetVal, prog);
+
+        if (prog >= 1.0) {
+          cp.active = false;
+          oled.mode = 'IDLE';
+          playLevelUpFanfare();
+          saveNeeds();
+          updateNeedsUI();
+          showGlobalToast(cp.msg || '🚽 Tuvalet pırıl pırıl temizlendi!');
+        }
+      }
     }
 
     function renderOledBath() {
       oled.ctx.fillStyle = '#00f0ff';
-      oled.ctx.font = '8px "JetBrains Mono"';
-      oled.ctx.fillText('MIS GIBI KOPUK 🧼', 16, 26);
+      oled.ctx.font = 'bold 8px "JetBrains Mono", monospace';
+      oled.ctx.fillText('BANYO 🧼', 14, 25);
 
-      // Köpük Baloncukları
-      drawModularSpriteToOled(48, 35);
+      // Köpük Baloncukları & Yıkanan Bebek
+      drawModularSpriteToOled(28, 34);
       oled.ctx.fillStyle = '#38bdf8';
-      const b1 = (oled.animFrame * 1.5) % 30;
-      const b2 = (oled.animFrame * 1.2 + 10) % 28;
-      const b3 = (oled.animFrame * 1.8 + 20) % 32;
-      oled.ctx.strokeRect(36, 52 - b1, 4, 4);
-      oled.ctx.strokeRect(76, 50 - b2, 5, 5);
-      oled.ctx.strokeRect(58, 48 - b3, 3, 3);
+      const b1 = (oled.animFrame * 1.5) % 26;
+      const b2 = (oled.animFrame * 1.2 + 8) % 24;
+      oled.ctx.strokeRect(18, 52 - b1, 4, 4);
+      oled.ctx.strokeRect(54, 50 - b2, 4, 4);
+
+      // Canlı Dolum Barı
+      if (oled.careProgress && oled.careProgress.active) {
+        const cp = oled.careProgress;
+        const prog = Math.min(1.0, (Date.now() - cp.startTime) / cp.durationMs);
+        cp.currentVal = cp.startVal + (cp.targetVal - cp.startVal) * prog;
+        appData.needs[cp.needKey] = Math.round(cp.currentVal);
+        drawCareProgressBar(cp.label, cp.currentVal, cp.targetVal, prog);
+
+        if (prog >= 1.0) {
+          cp.active = false;
+          oled.mode = 'IDLE';
+          playLevelUpFanfare();
+          saveNeeds();
+          updateNeedsUI();
+          showGlobalToast(cp.msg || '🧼 Mis gibi koktu, tertemiz oldu!');
+        }
+      }
     }
 
     function renderOledSleeping() {
@@ -2994,6 +3095,130 @@
     }
 
     // =========================================================================
+    // OYUN 11: 🐹 KÖSTEBEK YAKALA (WHACK-A-MOLE PRO)
+    // =========================================================================
+    function resetMoleGame() {
+      oled.mole.activeHole = -1;
+      oled.mole.timer = 0;
+      oled.mole.appearDuration = 55;
+      oled.mole.score = 0;
+      oled.mole.misses = 0;
+      oled.mole.isGameOver = false;
+      oled.mole.hitHole = -1;
+      oled.mole.hitTimer = 0;
+    }
+
+    function hitMoleHole(holeIdx) {
+      if (oled.mole.isGameOver) return;
+      if (oled.mole.activeHole === holeIdx) {
+        oled.mole.score += 10;
+        oled.mole.hitHole = holeIdx;
+        oled.mole.hitTimer = 16;
+        oled.mole.activeHole = -1;
+        oled.mole.timer = 0;
+        beep(920, 0.08);
+      } else {
+        beep(240, 0.04);
+      }
+    }
+
+    function renderOledMole() {
+      const m = oled.mole;
+      oled.ctx.fillStyle = '#ffb703';
+      oled.ctx.font = '7px "JetBrains Mono", monospace';
+      oled.ctx.fillText(`SKOR:${m.score}`, 6, 24);
+
+      // Kalan Canlar
+      const remHearts = Math.max(0, m.maxMisses - m.misses);
+      for (let i = 0; i < m.maxMisses; i++) {
+        drawOledHeart(oled.ctx, 96 + i * 10, 18, i < remHearts);
+      }
+
+      // Zemin çizgisi
+      oled.ctx.fillStyle = '#1e293b';
+      oled.ctx.fillRect(0, 58, 128, 1);
+
+      // 3 Delik Çizimi (x: 24, 64, 104; y: 48)
+      m.holes.forEach((hx, idx) => {
+        oled.ctx.strokeStyle = '#38bdf8';
+        oled.ctx.strokeRect(hx - 14, 48, 28, 9);
+        oled.ctx.fillStyle = '#0f172a';
+        oled.ctx.fillRect(hx - 13, 49, 26, 7);
+
+        // Tuş İpucu (SOL, SEÇ, SAĞ)
+        oled.ctx.font = '6px "JetBrains Mono", monospace';
+        oled.ctx.fillStyle = '#64748B';
+        const keyLabel = idx === 0 ? 'SOL' : (idx === 1 ? 'SEC' : 'SAG');
+        oled.ctx.fillText(keyLabel, hx - 5, 63);
+      });
+
+      if (m.isGameOver) {
+        oled.ctx.fillStyle = '#ef4444';
+        oled.ctx.font = 'bold 8px "JetBrains Mono", monospace';
+        oled.ctx.fillText('== OYUN BITTI! ==', 22, 34);
+        if (oled.animFrame % 30 < 18) {
+          oled.ctx.fillStyle = '#ffb703';
+          oled.ctx.font = '7px "JetBrains Mono", monospace';
+          oled.ctx.fillText('[SEC / DOKUN]: YENIDEN', 12, 45);
+        }
+        return;
+      }
+
+      // Hit animasyonu (Yıldız efekti)
+      if (m.hitTimer > 0) {
+        m.hitTimer--;
+        const hx = m.holes[m.hitHole];
+        oled.ctx.fillStyle = '#fde047';
+        oled.ctx.font = 'bold 8px "JetBrains Mono", monospace';
+        oled.ctx.fillText('+10!', hx - 8, 36);
+      }
+
+      // Köstebek Çıkma Mantığı
+      m.timer++;
+      if (m.activeHole === -1) {
+        if (m.timer > 32) {
+          m.timer = 0;
+          m.activeHole = Math.floor(Math.random() * 3);
+          beep(640, 0.03);
+        }
+      } else {
+        if (m.timer > m.appearDuration) {
+          m.misses++;
+          m.activeHole = -1;
+          m.timer = 0;
+          beep(200, 0.12);
+          if (m.misses >= m.maxMisses) {
+            m.isGameOver = true;
+            playWhineSound();
+            reportGameScore('KÖSTEBEK', m.score);
+            showGlobalToast(`🐹 Köstebek oyunu bitti! Skor: ${m.score}`);
+          }
+        } else {
+          // Köstebek Sprite Çizimi
+          const hx = m.holes[m.activeHole];
+          const peekY = 38;
+          // Kafa
+          oled.ctx.fillStyle = '#b45309';
+          oled.ctx.fillRect(hx - 8, peekY, 16, 11);
+          // Burun
+          oled.ctx.fillStyle = '#f43f5e';
+          oled.ctx.fillRect(hx - 2, peekY + 4, 4, 3);
+          // Gözler
+          oled.ctx.fillStyle = '#ffffff';
+          oled.ctx.fillRect(hx - 6, peekY + 1, 3, 3);
+          oled.ctx.fillRect(hx + 3, peekY + 1, 3, 3);
+          oled.ctx.fillStyle = '#000000';
+          oled.ctx.fillRect(hx - 5, peekY + 2, 1, 1);
+          oled.ctx.fillRect(hx + 4, peekY + 2, 1, 1);
+          // Kulaklar
+          oled.ctx.fillStyle = '#78350f';
+          oled.ctx.fillRect(hx - 9, peekY - 2, 3, 3);
+          oled.ctx.fillRect(hx + 6, peekY - 2, 3, 3);
+        }
+      }
+    }
+
+    // =========================================================================
     // OYUN 7: 🚀 UZAY SAVUNMASI (SPACE INVADERS / RETRO GALAGA)
     // =========================================================================
     function resetSpaceGame() {
@@ -3384,8 +3609,8 @@
       oled.ctx.fillRect(0, 62, 128, 1);
 
       if (!f.isGameOver) {
-        f.vy += 0.11;
-        f.vy = Math.min(f.vy, 1.6);
+        f.vy += 0.065;
+        f.vy = Math.min(f.vy, 1.05);
         f.petY += f.vy;
 
         // Tavan koruması: Asla tavana çarpınca ölmez! Tavan hizasında tatlı tatlı süzülür
@@ -3405,21 +3630,21 @@
         }
 
         f.spawnTimer++;
-        if (f.spawnTimer > 85) {
+        if (f.spawnTimer > 105) {
           f.spawnTimer = 0;
-          const gapY = Math.floor(Math.random() * 16) + 26;
-          const gapSize = 26; // Geniş, çocuk dostu geçit
+          const gapY = Math.floor(Math.random() * 14) + 26;
+          const gapSize = 32; // Ekstra geniş, çocuk dostu geçit
           f.pipes.push({
             x: 130,
-            topH: Math.max(4, gapY - gapSize / 2 - 16),
-            botY: Math.min(50, gapY + gapSize / 2),
+            topH: Math.max(3, gapY - gapSize / 2 - 16),
+            botY: Math.min(52, gapY + gapSize / 2),
             passed: false
           });
         }
 
         for (let i = f.pipes.length - 1; i >= 0; i--) {
           const p = f.pipes[i];
-          p.x -= 0.75; // Sakin, çocuk dostu hız
+          p.x -= 0.55; // Çok sakin, çocuk dostu hız
 
           if (!p.passed && p.x < 22) {
             p.passed = true;
@@ -3492,23 +3717,252 @@
     // =========================================================================
     // DİYALOG, ZERO-PARTY SORU, FIKRA & CANLI ANONS MOTORU
     // =========================================================================
+    // =========================================================================
+    // KOMİK & ESPRİLİ İHTİYAÇ SÖZLERİ (SASSY / HUMOROUS PET DIALOGUES)
+    // =========================================================================
+    const FUNNY_NEED_QUIPS = {
+      HUNGER: [
+        "Açlıktan ölmemi mi istiyorsun, besle beni!",
+        "Çok açım sahip, midem zil çalıyor!",
+        "Kendi işlerini bitirdiysen beni besle artık!",
+        "Gözüm kararıyor sahip, mama nerede?",
+        "Bir dilim pizza veya elmaya hayır demem!",
+        "Karnım gurulduyor, deprem oluyor sandım!",
+        "Yemek vermezsen terliklerini kemiririm...",
+        "Acil mama takviyesi lazım, enerjim bitti!",
+        "Buzdolabının kapısını açan oldu mu sanki?",
+        "Aç ayı oynamaz derler, ben hiç oynamam!",
+        "Mide alarmı: Bip bip bip! Mama lütfen!",
+        "Lezzetli bir şeyler var mı yoksa küseyim mi?"
+      ],
+      TOILET: [
+        "Buraları birazcık berbat ettim galiba...",
+        "Bu kaka kokusu da ne? Sen temizle sahip!",
+        "Ops! Halıya küçük bir sürpriz bıraktım...",
+        "Gözlerini kapa ve hemen sifonu çek!",
+        "Doğa çağırdı, ben de hemen cevap verdim.",
+        "Bakma öyle suçlu gibi, tutamadım işte!",
+        "Acil temizlik timi göreve, burası kokuyor!",
+        "Birisi patates mi bıraktı? Ayy yok o kaka!",
+        "Utanıyorum ama o şeyi oradan alsan iyi olur...",
+        "Temizlemezsen burnunu mandalla sahip!",
+        "Kazalar olur sahip, önemli olan dostluğumuz!",
+        "Sifon nerede? Ben uzanamıyorum da..."
+      ],
+      CLEAN: [
+        "Toz yumağına döndüm, beni yıka sahip!",
+        "Pireler benimle arkadaşlık kurmaya başladı!",
+        "Köpekbalığı gibi kokuyorum, acil banyo!",
+        "Köpük banyosu isterim, sarı ördeğimi getir!",
+        "Çamur banyosu modasından sıkıldım artık...",
+        "Üzerimdeki lekeler kürk deseni değil, kir!",
+        "Su fışkırtma zamanı! Köpükleri hazırla!",
+        "Pasaklı dediler bana, gururum incindi...",
+        "Biraz sabun, biraz su, mis kokarım doğrusu!",
+        "Hapşuuu! Tozdan burnum gıdıklanıyor!",
+        "Kirlenmek güzeldir ama bu kadarı fazla!",
+        "Beni yıka da parlaklığımdan gözün kamaşsın!"
+      ],
+      SLEEP: [
+        "Göz kapaklarım tonlarca ağırlıkta... Zzz...",
+        "Yatağım beni çağırıyor sahip, ışığı kapat...",
+        "Pili biten robot gibiyim, şarjım %1...",
+        "Esnerken ağzım ayrıldı, ninnimi söyle...",
+        "Ayakta uyuyorum, kafam öne düşüyor...",
+        "Koyunları saydım, 999'da takıldım...",
+        "Pufi yastığına kavuşmak istiyor, iyi geceler...",
+        "Beni battaniyeye sarıp uyutur musun?",
+        "Rüyamda havuç ve peynir göreceğim, dokunma!",
+        "Uykusuzluktan şaşı bakmaya başladım...",
+        "Zzz... Horlamıyorum, motorumu dinlendiriyorum!",
+        "Rüya seyahat biletim hazır, ben kaçtım!"
+      ],
+      BORED: [
+        "Sıkıntıdan patlamak üzereyim, oyun aç!",
+        "Tavana baka baka sinekleri ezberledim...",
+        "Beni unuttun mu yoksa? Hadi oyna benimle!",
+        "Biraz gıdıklanmaya veya sevilmeye ihtiyacım var!",
+        "Kaykayım köşede tozlandı, maratona çıkalım mı?",
+        "Beni biraz sev, mırlamaya başlayayım!",
+        "Kelimeler tükeniyor, aksiyon istiyorum sahip!",
+        "Dünyanın en tatlı bebeğini ihmal mi ediyorsun?",
+        "Kafamı okşa yoksa terlikleri saklarım!",
+        "Canım sıkıldı, duvarlarla konuşuyorum artık!",
+        "Oyun konsolunun tuşları paslanacak, aç artık!",
+        "Beni sevmeyen sahip pişman olur, bak demedi deme!"
+      ],
+      HAPPY: [
+        "Keyfim yerinde, krallar gibi yaşıyorum!",
+        "Sen harika bir sahipsin, sana 10 puan verdim!",
+        "Enerjim tavan yaptı! Koşalım mı?",
+        "Bugün dünyanın en tatlı sanal bebeğiyim!",
+        "Karnım tok, sırtım pek, yaşasın Socies!",
+        "Mutluluktan göbek atıyorum, izle beni!",
+        "Günün yıldızı benim, imza isteyen sıraya girsin!",
+        "İçim kıpır kıpır, dans havası çalın!",
+        "Böyle bir ilgi gördüm ya, keyfime diyecek yok!",
+        "Pufi seni çok seviyor, sakın unutma!"
+      ],
+      SICK: [
+        "Karnım gurulduyor ve sancıyor... İlaç lütfen!",
+        "Ateşim mi çıktı ne? Doktor amca nerede?",
+        "Hapşuuu! Burnumu silmeye mendilin var mı?",
+        "Kendimi hiç iyi hissetmiyorum sahip, sarıl bana...",
+        "İlacımı içir de hemen iyileşip oyun oynayayım!",
+        "Gözlerim süzülüyor, biraz şefkat ve şurup lazım...",
+        "Tatsız tuzsuz bir gün, acil şifa iksiri ver!"
+      ]
+    };
+
+    let cachedQuip = '';
+    let cachedQuipTime = 0;
+    let cachedQuipState = '';
+
+    function getFunnyNeedQuip() {
+      const now = Date.now();
+      let state = 'HAPPY';
+
+      if (appData.petState && appData.petState.isSick) state = 'SICK';
+      else if (appData.petState && appData.petState.poopCount > 0) state = 'TOILET';
+      else if (appData.needs.hunger < 35) state = 'HUNGER';
+      else if (appData.needs.clean < 35) state = 'CLEAN';
+      else if (appData.needs.sleep < 35) state = 'SLEEP';
+      else if (appData.needs.fun < 35 || appData.needs.love < 35) state = 'BORED';
+
+      if (cachedQuip && state === cachedQuipState && (now - cachedQuipTime) < 22000) {
+        return cachedQuip;
+      }
+
+      const list = FUNNY_NEED_QUIPS[state] || FUNNY_NEED_QUIPS.HAPPY;
+      cachedQuip = list[Math.floor(Math.random() * list.length)];
+      cachedQuipTime = now;
+      cachedQuipState = state;
+      return cachedQuip;
+    }
+
+    // =========================================================================
+    // DİYALOG, ZERO-PARTY SORU, FIKRA & CANLI ANONS MOTORU
+    // =========================================================================
     const IDLE_QUESTIONS_POOL = [
-      { q: "Kedi mi daha sevimli yoksa köpek mi?", l1: "Kedi mi kopek mi", l2: "daha sevimli?", cat: "pets", a: "Kedi 🐱", b: "Kopek 🐶" },
-      { q: "Resim çizmeyi mi spor yapmayı mı seversin?", l1: "Resim cizmeyi mi", l2: "sporu mu seversin?", cat: "hobbies", a: "Resim 🎨", b: "Spor ⚽" },
-      { q: "Bugün sabah dişlerini fırçaladın mı?", l1: "Sabah dislerini", l2: "fircaladin mi?", cat: "habits", a: "Evet ✨", b: "Unuttum 🙈" },
-      { q: "Uzaya gidip rokete binmek ister miydin?", l1: "Uzaya gidip rokete", l2: "binmek ister miydin?", cat: "adventure", a: "Evet! 🚀", b: "Hayir 🌍" },
-      { q: "Dondurmayı kışın da yer misin?", l1: "Dondurmayi kisin", l2: "da yer misin?", cat: "food", a: "Yerim 🍦", b: "Asla 🥶" },
-      { q: "Müzik çalınca dans eder misin?", l1: "Muzik calinca", l2: "dans eder misin?", cat: "music", a: "Ederim 💃", b: "Dinlerim 🎧" },
-      { q: "En çok çikolata mı seversin taze meyve mi?", l1: "Cikolata mi", l2: "taze meyve mi?", cat: "food", a: "Cikolata 🍫", b: "Meyve 🍎" },
-      { q: "Odanı bugün kendi başına topladın mı?", l1: "Odani bugun kendin", l2: "topladin mi?", cat: "habits", a: "Topladim ✨", b: "Daginik 🧸" }
+      {
+        q: "Kedi mi daha sevimli yoksa köpek mi?",
+        l1: "Kedi mi kopek mi", l2: "daha sevimli?", cat: "pets",
+        a: "Kedi 🐱", b: "Kopek 🐶",
+        reactA: "Miyav! Mırıl mırıl harika bir seçim! 🐱",
+        reactB: "Hav hav! Sadık dostlara bayılırım! 🐶"
+      },
+      {
+        q: "Resim çizmeyi mi spor yapmayı mı seversin?",
+        l1: "Resim cizmeyi mi", l2: "sporu mu seversin?", cat: "hobbies",
+        a: "Resim 🎨", b: "Spor ⚽",
+        reactA: "Ressam mısın sen? Resmimi de çizer misin! 🎨",
+        reactB: "Gooool! Şampiyon enerjisi hissediyorum! ⚽"
+      },
+      {
+        q: "Bugün sabah dişlerini fırçaladın mı?",
+        l1: "Sabah dislerini", l2: "fircaladin mi?", cat: "habits",
+        a: "Evet ✨", b: "Unuttum 🙈",
+        reactA: "Pırıl pırıl bembeyaz dişler! Aferin sana! ✨",
+        reactB: "Hemen banyoya koş, mikroplar kaçsın! 🪥"
+      },
+      {
+        q: "Uzaya gidip rokete binmek ister miydin?",
+        l1: "Uzaya gidip rokete", l2: "binmek ister miydin?", cat: "adventure",
+        a: "Evet! 🚀", b: "Hayir 🌍",
+        reactA: "Kemerleri bağla! Mars'a gidiyoruz! 🚀",
+        reactB: "Dünyamız harika, yerçekimi gibisi yok! 🌍"
+      },
+      {
+        q: "Dondurmayı kışın da yer misin?",
+        l1: "Dondurmayi kisin", l2: "da yer misin?", cat: "food",
+        a: "Yerim 🍦", b: "Asla 🥶",
+        reactA: "Çılgın seni! Boğazına dikkat et ama! 🍦",
+        reactB: "Aferin akıllı çocuk! Sıcacık süt içelim! 🥛"
+      },
+      {
+        q: "Müzik çalınca dans eder misin?",
+        l1: "Muzik calinca", l2: "dans eder misin?", cat: "music",
+        a: "Ederim 💃", b: "Dinlerim 🎧",
+        reactA: "Kıpır kıpır! Beraber göbek atalım! 💃",
+        reactB: "Cool takılıyorsun demek! Kulağına sağlık! 🎧"
+      },
+      {
+        q: "En çok çikolata mı seversin taze meyve mi?",
+        l1: "Cikolata mi", l2: "taze meyve mi?", cat: "food",
+        a: "Cikolata 🍫", b: "Meyve 🍎",
+        reactA: "Tatlı canavarı seni! Bana da bir parça ver! 🍫",
+        reactB: "Vitamin deposu! Güçlü kemikler, sağlıklı pufi! 🍎"
+      },
+      {
+        q: "Odanı bugün kendi başına topladın mı?",
+        l1: "Odani bugun kendin", l2: "topladin mi?", cat: "habits",
+        a: "Topladim ✨", b: "Daginik 🧸",
+        reactA: "Düzenli şampiyon! Ailen çok sevinecek! 🏆",
+        reactB: "Oyuncaklar isyanda! Beraber toplarız! 🧸"
+      },
+      {
+        q: "Karanlıktan birazcık korkar mısın?",
+        l1: "Karanliktan", l2: "korkar misin?", cat: "emotions",
+        a: "Hayir 💪", b: "Birazcik 🕯️",
+        reactA: "Cesur yürek! Canavarlar senden korksun! 💪",
+        reactB: "Korkma canım, ben yanındayım, minik ışık yak! 🌟"
+      },
+      {
+        q: "Uçabilmek mi isterdin görünmez olmak mı?",
+        l1: "Ucmak mi yoksa", l2: "gorunmezlik mi?", cat: "superpower",
+        a: "Ucmak 🦅", b: "Gorunmez 👻",
+        reactA: "Bulutların üstünde süzülelim! Harika güç! 🦅",
+        reactB: "Hih! Gizli ajan gibi şakalar yaparsın artık! 👻"
+      },
+      {
+        q: "Brokoli veya sebze yemeyi sever misin?",
+        l1: "Brokoli ve sebze", l2: "sever misin?", cat: "food",
+        a: "Severim 🥦", b: "Hic sevmem 😝",
+        reactA: "Minik ağaçları yiyen kahraman! Çok sağlıklısın! 🥦",
+        reactB: "Haha! Büyüyünce seveceksin, söz veriyorum! 🥕"
+      },
+      {
+        q: "Lunaparkta dönme dolaba biner misin?",
+        l1: "Lunaparkta donme", l2: "dolaba biner misin?", cat: "fun",
+        a: "Bayilirim 🎡", b: "Basim doner 😵",
+        reactA: "En tepeden şehre el salla! Yaşasın eğlence! 🎡",
+        reactB: "O zaman çarpışan arabalara binelim, sıkı tutun! 🚗"
+      }
     ];
 
     const IDLE_JOKES_POOL = [
+      { l1: "Nasreddin Hoca gole", l2: "maya calmis: 'Ya tutarsa'", l3: "demis! Hahaha! :D" },
+      { l1: "Hoca'ya sormuslar:", l2: "'Kazan dogurdu' demis.", l3: "Kazan olunce aglamislar!" },
       { l1: "Ogrenci: 'Hocam odevimi", l2: "kopegim yedi cunku", l3: "cok begenmis!' XD" },
       { l1: "Sivrisinekler neden", l2: "vizildar? Sarkinin", l3: "sozlerini unutmuslar! :)" },
-      { l1: "Hoca gole maya calmis:", l2: "'Ya tutarsa!' demis.", l3: "Gole yogurt olmus! :D" },
-      { l1: "En temiz deniz hangisi?", l2: "Deterjan dokulmus", l3: "kopuklu deniz! Hahaha" },
-      { l1: "Karinca file fisildamis:", l2: "'Sana bir sir vereyim:", l3: "Sen cok buyuksun!' :D" }
+      { l1: "En temiz deniz neresi?", l2: "Deterjan dokulmus", l3: "kopuklu deniz! Hehe" },
+      { l1: "Karinca file demis:", l2: "'Sana bir sir vereyim:", l3: "Sen cok buyuksun!' :D" },
+      { l1: "Baliklar neden susar?", l2: "Agizlari suyla dolu", l3: "da ondan! Glu glu! :)" },
+      { l1: "Kardan adamlar ne yer?", l2: "Buzlu dondurma ve", l3: "soguk sandvic! ⛄" },
+      { l1: "Gozluk takan tavuk:", l2: "'Git git artik her", l3: "seyi net goruyorum!' 👓" },
+      { l1: "Hangi araba gitmez?", l2: "Tabii ki tekerlegi", l3: "patlak araba! :P" },
+      { l1: "Deniz neden tuzludur?", l2: "Baliklar kokmasin", l3: "diye tuzlamislar! 🐟" },
+      { l1: "Ogretmen: '2+2 kac?'", l2: "Ali: 'Hocam alirken", l3: "mi satarken mi?' :D" },
+      { l1: "Gorunmez adam gelmis.", l2: "Doktor: 'Su an sizi", l3: "goremiyorum!' Hahaha" },
+      { l1: "Pufi aynaya bakmis:", l2: "'Bu kadar sevimli", l3: "olmak yasal mi?' 🐱" },
+      { l1: "Hangi biber aci ceker?", l2: "Tabii ki en aci", l3: "olan ACI biber! 🌶️" },
+      { l1: "Yuruyen merdivenler", l2: "neden yorulmaz? Cunku", l3: "adimi onlar atmaz! :)" },
+      { l1: "Timsahlar neden", l2: "disciye gitmez? Kuslar", l3: "disini temizler! 🐊" },
+      { l1: "Ay dede neden gece", l2: "cikar? Cunku gunesten", l3: "utanirmis! 🌙" },
+      { l1: "Kurbaga lokantada:", l2: "'Garson bey corbamda", l3: "sinek YOK!' 🐸" },
+      { l1: "Hoca esege ters binmis:", l2: "'Gozum arkamda olsun", l3: "diye bindim!' :D" },
+      { l1: "Ucakta kutup ayisi", l2: "gorursen ne dersin?", l3: "'Iyi ucuslar bayim!' ✈️" },
+      { l1: "Domates neden kizarir?", l2: "Salatanin sosunu", l3: "gorunce utanmis! 🍅" },
+      { l1: "Bilgisayar hasta olmus!", l2: "Cunku Windows'u", l3: "acik birakmislar! 💻" },
+      { l1: "Tavsanlar neden kosar?", l2: "Havuclarin bacaklari", l3: "yok da ondan! 🥕" },
+      { l1: "Zebra neden cizgili?", l2: "Dama tahtasina", l3: "oturmus da ondan! 🦓" },
+      { l1: "Hangi anahtar acmaz?", l2: "Tabii ki tornavida", l3: "ve INGILIZ anahtari! 🔧" },
+      { l1: "Temel parasutle atlamis.", l2: "Ip kopmus: 'Neyse ki", l3: "yagmur yagiyor!' :D" },
+      { l1: "Koyunlar neden yun", l2: "kazak giymez? Cunku", l3: "zaten yunluler! 🐑" },
+      { l1: "Kirpi balona sarilmis:", l2: "'Gum!' demis. Askin", l3: "gozu kordur! 🎈" },
+      { l1: "Filler neden bilgisayar", l2: "kullanmaz? Farelerden", l3: "cok korkarlar! 🐘" },
+      { l1: "Maymun aynaya bakmis:", l2: "'Iyi ki muz var,", l3: "yoksa cekilmez!' 🍌" },
+      { l1: "Arilar neden vizildar?", l2: "Kornalari bozulmus", l3: "da ondan! Bzzzt! 🐝" }
     ];
 
     function startDialogueFromIdle() {
@@ -3577,10 +4031,19 @@
         oled.ctx.fillText('[A / B]: Hahaha! Kapat', 10, 59);
       } else if (d.step === 'REACTION') {
         const bob = (oled.animFrame % 10 < 5) ? 0 : 2;
-        drawModularSpriteToOled(54, 30 + bob);
+        drawModularSpriteToOled(54, 22 + bob);
         oled.ctx.fillStyle = '#fde047';
-        oled.ctx.font = '8px "JetBrains Mono"';
-        oled.ctx.fillText(d.reactionText || 'Harikasin! +5 XP', 14, 57);
+        oled.ctx.font = 'bold 7px "JetBrains Mono", monospace';
+        const txt = d.reactionText || 'Harikasin! +5 XP';
+        if (txt.length > 21) {
+          const mid = txt.lastIndexOf(' ', 21);
+          const p1 = (mid > 0) ? txt.slice(0, mid) : txt.slice(0, 20);
+          const p2 = (mid > 0) ? txt.slice(mid + 1) : txt.slice(20);
+          oled.ctx.fillText(p1, 6, 48);
+          oled.ctx.fillText(p2, 6, 58);
+        } else {
+          oled.ctx.fillText(txt, 10, 52);
+        }
       }
     }
 
@@ -3610,14 +4073,16 @@
         sendUserInterestToServer(d.cat, d.q, chosen);
 
         d.step = 'REACTION';
-        d.reactionText = 'Harikasin! +5 XP';
+        d.reactionText = (chosen === d.a) ? (d.reactA || 'Biliyordum! Harika secim! +5 XP') : (d.reactB || 'Anladim! Farkli bir bakis! +5 XP');
         beep(880, 0.1);
         setTimeout(() => beep(1100, 0.12), 120);
 
         setTimeout(() => {
-          oled.mode = 'IDLE';
-          oled.currentDialogue = null;
-        }, 1800);
+          if (oled.currentDialogue && oled.currentDialogue.step === 'REACTION') {
+            oled.mode = 'IDLE';
+            oled.currentDialogue = null;
+          }
+        }, 4200);
 
       } else if (d.step === 'JOKE') {
         if (btn === 'SELECT' || btn === 'BACK') {
@@ -3978,7 +4443,7 @@
           if (btn === 'SELECT' || btn === 'LEFT' || btn === 'RIGHT') resetFlappyGame();
         } else {
           if (btn === 'SELECT' || btn === 'LEFT' || btn === 'RIGHT') {
-            oled.flappy.vy = -1.5;
+            oled.flappy.vy = -1.25;
             beep(820, 0.04);
           }
         }
@@ -4031,9 +4496,30 @@
         return;
       }
 
+      // 11. KÖSTEBEK YAKALAMA KONTROLLERİ
+      if (oled.mode === 'MOLE') {
+        if (btn === 'BACK') {
+          oled.mode = 'IDLE';
+          return;
+        }
+        if (oled.mole.isGameOver) {
+          if (btn === 'SELECT' || btn === 'LEFT' || btn === 'RIGHT') resetMoleGame();
+          return;
+        }
+        if (btn === 'LEFT') hitMoleHole(0);
+        else if (btn === 'SELECT') hitMoleHole(1);
+        else if (btn === 'RIGHT') hitMoleHole(2);
+        return;
+      }
+
       // Animasyon modlarındayken BACK iptal eder
       if (oled.mode === 'EATING' || oled.mode === 'TOILET' || oled.mode === 'BATH') {
-        if (btn === 'BACK') oled.mode = 'IDLE';
+        if (btn === 'BACK') {
+          if (oled.careProgress) oled.careProgress.active = false;
+          oled.mode = 'IDLE';
+          saveNeeds();
+          updateNeedsUI();
+        }
         return;
       }
 
@@ -4070,6 +4556,7 @@
             else if (oled.gameIdx === 7) { resetFlappyGame(); oled.mode = 'FLAPPY'; }
             else if (oled.gameIdx === 8) { resetCowboyGame(); oled.mode = 'COWBOY'; }
             else if (oled.gameIdx === 9) { oled.rps.resolved = false; oled.mode = 'RPS'; }
+            else if (oled.gameIdx === 10) { resetMoleGame(); oled.mode = 'MOLE'; }
           }
         } else if (oled.menuLevel === 'FOOD') {
           if (btn === 'LEFT') oled.foodIdx = (oled.foodIdx - 1 + oled.foodItems.length) % oled.foodItems.length;
@@ -4478,6 +4965,7 @@
       const txtGoogle = document.getElementById('txtGoogleAuth');
       const icoGoogle = document.getElementById('icoGoogleAuth');
       const badgeGoogle = document.getElementById('badgeGoogleAuth');
+      const lblSettingEmail = document.getElementById('lblCurrentSettingEmail');
 
       if (appData.userEmail) {
         if (tag) {
@@ -4486,6 +4974,7 @@
           tag.style.color = '#059669';
           tag.style.borderColor = '#A7F3D0';
         }
+        if (lblSettingEmail) lblSettingEmail.innerText = `🟢 ${appData.userEmail}`;
         if (txtGoogle) txtGoogle.innerText = appData.nickname || 'Google Bağlı';
         if (icoGoogle) icoGoogle.innerText = '✅';
         if (badgeGoogle) {
@@ -4500,6 +4989,7 @@
           tag.style.color = '#64748B';
           tag.style.borderColor = '#CBD5E1';
         }
+        if (lblSettingEmail) lblSettingEmail.innerText = 'Giriş Yapılmadı';
         if (txtGoogle) txtGoogle.innerText = 'Google Giriş';
         if (icoGoogle) icoGoogle.innerText = '🌐';
         if (badgeGoogle) {
@@ -4508,6 +4998,23 @@
           badgeGoogle.style.color = '#0F172A';
         }
       }
+    }
+
+    function logoutOrSwitchAccount() {
+      const confirmLogout = confirm('🚪 Google hesabınızdan çıkış yapmak veya farklı bir hesapla giriş yapmak istiyor musunuz?');
+      if (!confirmLogout) return;
+
+      localStorage.removeItem('socies_user_email');
+      localStorage.removeItem('socies_session_token');
+      localStorage.removeItem('socies_pro_mode');
+      appData.userEmail = '';
+      appData.isGoogleAuth = false;
+      appData.isPro = false;
+
+      closeGoogleAuthModal();
+      updateAuthStatusUI();
+      openOnboardingWizard();
+      showGlobalToast('🚪 Oturum kapatıldı. Yeni bir hesapla giriş yapabilir veya yeni bebek oluşturabilirsiniz.');
     }
 
     async function submitGoogleAuth() {
@@ -5792,35 +6299,40 @@
         return;
       }
 
-      playEatCrunchSound();
-      addPetXP(15);
-      oled.mode = 'EATING';
-      setTimeout(() => { if (oled.mode === 'EATING') oled.mode = 'IDLE'; }, 2400);
+      const curHunger = appData.needs.hunger || 0;
+      const deficit = Math.max(0, 100 - curHunger);
+      let hungerBonus = 20;
+      let foodLabel = 'MAMA';
+      let finishMsg = '🍗 Doyurucu tam öğün yendi! (+40 Açlık, sindirim başladı)';
 
       if (idx === 0) {
         // ELMA 🍏 (Atıştırmalık / Meyve)
         oled.lastFoodType = 'ELMA';
-        appData.needs.hunger = Math.min(100, appData.needs.hunger + 18);
+        hungerBonus = 18;
+        foodLabel = 'ELMA';
+        finishMsg = '🍏 Taze elma atıştırıldı! Hafif ve sağlıklı (+18 Açlık, +5 Neşe)';
         appData.needs.fun = Math.min(100, appData.needs.fun + 5);
         appData.needs.love = Math.min(100, appData.needs.love + 5);
         if (appData.petState) {
           appData.petState.junkFoodCount = Math.max(0, (appData.petState.junkFoodCount || 0) - 1);
         }
-        showGlobalToast('🍏 Taze elma atıştırıldı! Hafif ve sağlıklı (+18 Açlık, +5 Neşe)');
       } else if (idx === 1) {
         // MAMA 🍗 (Tam Öğün / Doyurucu Beslenme)
         oled.lastFoodType = 'MAMA';
-        appData.needs.hunger = Math.min(100, appData.needs.hunger + 40);
+        hungerBonus = 40;
+        foodLabel = 'MAMA';
+        finishMsg = '🍗 Doyurucu tam öğün yendi! (+40 Açlık, sindirim başladı)';
         appData.needs.sleep = Math.min(100, appData.needs.sleep + 5);
         appData.needs.toilet = Math.max(0, appData.needs.toilet - 14); // sindirim
         if (appData.petState) {
           appData.petState.junkFoodCount = 0;
         }
-        showGlobalToast('🍗 Doyurucu tam öğün yendi! (+40 Açlık, sindirim başladı)');
       } else if (idx === 2) {
         // PASTA 🍰 (Abur Cubur / Tatlı)
         oled.lastFoodType = 'PASTA';
-        appData.needs.hunger = Math.min(100, appData.needs.hunger + 10);
+        hungerBonus = 10;
+        foodLabel = 'PASTA';
+        finishMsg = '🍰 Nefis pasta yendi! Mutluluk tavan yaptı (+25 Sevgi)';
         appData.needs.love = Math.min(100, appData.needs.love + 25);
         appData.needs.fun = Math.min(100, appData.needs.fun + 15);
         if (appData.petState) {
@@ -5830,20 +6342,38 @@
             appData.petState.sicknessReason = 'STOMACH_ACHE';
             playWhineSound();
             showGlobalToast('🤢 Eyvah! Çok fazla pasta yediği için karnı ağrıdı ve hastalandı! 💊 Konsoldan İlaç ver.');
-          } else {
-            showGlobalToast(`🍰 Nefis pasta yendi! Mutluluk tavan yaptı (+25 Sevgi) (Tatlı: ${appData.petState.junkFoodCount}/3)`);
           }
         }
       } else if (idx === 3) {
         // SU 💧 (Su / Hidrasyon)
         oled.lastFoodType = 'SU';
-        appData.needs.hunger = Math.min(100, appData.needs.hunger + 5);
+        hungerBonus = 8;
+        foodLabel = 'SU';
+        finishMsg = '💧 Kana kana taze su içti! Midesi ve içi ferahladı.';
         appData.needs.clean = Math.min(100, appData.needs.clean + 10);
         appData.needs.toilet = Math.max(0, appData.needs.toilet - 8);
-        showGlobalToast('💧 Kana kana taze su içti! Midesi ve içi ferahladı.');
       }
 
-      saveNeeds();
+      // Orantılı süre: İhtiyaç ne kadar düşükse o kadar uzun sürer (3sn ile 8.5sn arası)
+      const durationMs = Math.max(3000, Math.min(8500, Math.round(deficit * 65) + 1200));
+      const targetVal = Math.min(100, curHunger + hungerBonus);
+
+      oled.careProgress = {
+        active: true,
+        startTime: Date.now(),
+        durationMs: durationMs,
+        startVal: curHunger,
+        targetVal: targetVal,
+        currentVal: curHunger,
+        needKey: 'hunger',
+        label: foodLabel,
+        msg: finishMsg
+      };
+
+      playEatCrunchSound();
+      addPetXP(15);
+      oled.mode = 'EATING';
+
       savePetState();
       updateNeedsUI();
       syncTelemetry();
@@ -5855,21 +6385,47 @@
       } else if (act === 'CLEAN_TOILET') {
         playTactileClick('select');
         beep(780, 0.12);
-        appData.needs.toilet = 100;
+        const curToilet = appData.needs.toilet || 0;
+        const deficit = Math.max(0, 100 - curToilet);
+        const durationMs = Math.max(2800, Math.min(8000, Math.round(deficit * 60) + 1200));
+
+        oled.careProgress = {
+          active: true,
+          startTime: Date.now(),
+          durationMs: durationMs,
+          startVal: curToilet,
+          targetVal: 100,
+          currentVal: curToilet,
+          needKey: 'toilet',
+          label: 'TUVALET',
+          msg: msg || '🚽 Sifon çekildi! Tuvalet pırıl pırıl.'
+        };
+
         appData.needs.clean = Math.min(100, appData.needs.clean + 20);
         if (appData.petState) appData.petState.poopCount = 0;
         oled.mode = 'TOILET';
-        setTimeout(() => { if (oled.mode === 'TOILET') oled.mode = 'IDLE'; }, 2200);
-        showGlobalToast(msg || '🚽 Sifon çekildi! Tuvalet pırıl pırıl.');
         addPetXP(15);
 
       } else if (act === 'BATH') {
         playTactileClick('select');
         beep(880, 0.12);
-        appData.needs.clean = 100;
+        const curClean = appData.needs.clean || 0;
+        const deficit = Math.max(0, 100 - curClean);
+        const durationMs = Math.max(3000, Math.min(8500, Math.round(deficit * 65) + 1200));
+
+        oled.careProgress = {
+          active: true,
+          startTime: Date.now(),
+          durationMs: durationMs,
+          startVal: curClean,
+          targetVal: 100,
+          currentVal: curClean,
+          needKey: 'clean',
+          label: 'TEMİZLİK',
+          msg: msg || '🧼 Mis gibi köpüklü banyo yapıldı!'
+        };
+
         oled.mode = 'BATH';
-        setTimeout(() => { if (oled.mode === 'BATH') oled.mode = 'IDLE'; }, 2200);
-        showGlobalToast(msg || '🧼 Mis gibi köpüklü banyo yapıldı!');
         addPetXP(15);
 
       } else if (act === 'SLEEP') {
