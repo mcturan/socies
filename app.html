@@ -719,7 +719,7 @@
     <div class="update-dialog">
       <div class="update-icon-badge">🚀</div>
       <div class="update-title">Yeni Güncelleme Mevcut!</div>
-      <div class="update-pill" id="updVersionTag">v1.0.18 Hazır</div>
+      <div class="update-pill" id="updVersionTag">v1.0.19 Hazır</div>
       <div class="update-notes-box" id="updReleaseNotes">
         Yeni özellikler ve iyileştirmeler yayınlandı.
       </div>
@@ -856,7 +856,7 @@
         </div>
 
         <div style="font-size:0.72rem; color:#94A3B8; text-align:center;">
-          Socies v1.0.18 (Build 19) • OTA Güncel
+          Socies v1.0.19 (Build 20) • OTA Güncel
         </div>
       </div>
 
@@ -1168,7 +1168,7 @@
         </div>
         <div class="badge-chip" id="badgeAppVersion" onclick="manualCheckUpdate()" title="Sürüm: Dokunarak Kontrol Et" style="cursor:pointer;">
           <span>🚀</span>
-          <span id="txtCurrentVersion">v1.0.18</span>
+          <span id="txtCurrentVersion">v1.0.19</span>
         </div>
       </div>
     </div>
@@ -1312,9 +1312,16 @@
         <p style="font-size:0.8rem; color:var(--text-muted); margin:4px auto 10px auto; max-width:320px; line-height:1.4;">
           Socies'in karnını doyurmak, tuvaletini yaptırmak, yıkamak ve oyun oynamak için 1. sekmedeki retro konsol tuşlarını kullanınız.
         </p>
-        <button class="btn-action-primary" style="background:linear-gradient(135deg, #4F46E5, #06B6D4); font-size:0.88rem; font-weight:900; padding:10px; border-radius:12px; box-shadow:0 4px 12px rgba(79,70,229,0.2);" onclick="switchTab('tab-console')">
-          🕹️ El Konsoluna Git ve Bebeğinle İlgilen
-        </button>
+        <div style="display:flex; gap:8px; margin-top:6px;">
+          <button class="btn-action-primary" style="flex:1.2; background:linear-gradient(135deg, #4F46E5, #06B6D4); font-size:0.82rem; font-weight:900; padding:10px; border-radius:12px; box-shadow:0 4px 12px rgba(79,70,229,0.2);" onclick="switchTab('tab-console')">
+            🕹️ Konsola Git
+          </button>
+          <button class="btn-action-primary" style="flex:1; background:linear-gradient(135deg, #78350F, #B45309); font-size:0.82rem; font-weight:900; padding:10px; border-radius:12px; box-shadow:0 4px 12px rgba(180,83,9,0.2);" onclick="feedPetWithFood(4); switchTab('tab-console');">
+            ☕ Türk Kahvesi
+          </button>
+        </div>
+      </div>
+
       <!-- PASAPORT & KİMLİK KARTI BUTONU -->
       <button class="btn-micro" style="width:100%; padding:10px; font-weight:800; font-size:0.82rem; background:#EEF2FF; color:#4F46E5; border:1px solid #C7D2FE; border-radius:14px; margin-bottom:0.8rem; display:flex; align-items:center; justify-content:center; gap:6px;" onclick="openPassportModal()">
         <span>🪪</span>
@@ -1539,7 +1546,7 @@
   </nav>
 
   <script>
-    const CURRENT_APP_VERSION = 'v1.0.18';
+    const CURRENT_APP_VERSION = 'v1.0.19';
 
     // --- 📡 ARKA PLAN TELEMETRİ VE HATA GÖZLEMCİSİ (SOCIES LOGGER) ---
     const SociesLogger = {
@@ -1677,11 +1684,31 @@
         careScore: 100
       },
 
-      // Gerçek SQLite Sunucudan çekilen Arkadaşlar & Radar
-      friends: [],
+      // Gerçek SQLite Sunucudan çekilen Arkadaşlar & Radar (Zengin başlangıç havuzu)
+      friends: [
+        { nickname: 'Zeynep', deviceId: 'SOCIES-7A8B1C', avatar: '🐱', petName: 'PAMUK', score: 3450, steps: 5420, isOnline: true, city: 'İstanbul (Kadıköy)' },
+        { nickname: 'Emir', deviceId: 'SOCIES-9F2D4E', avatar: '🚀', petName: 'ŞİMŞEK', score: 3200, steps: 4890, isOnline: true, city: 'Ankara (Çankaya)' },
+        { nickname: 'Defne', deviceId: 'SOCIES-3C5A88', avatar: '🌸', petName: 'BONCUK', score: 2950, steps: 6120, isOnline: true, city: 'İzmir (Karşıyaka)' },
+        { nickname: 'Kerem', deviceId: 'SOCIES-8E1B9A', avatar: '🦊', petName: 'DUMAN', score: 2800, steps: 4350, isOnline: false, city: 'Bursa (Nilüfer)' },
+        { nickname: 'Ece', deviceId: 'SOCIES-4D7A2F', avatar: '⭐', petName: 'LİMON', score: 2650, steps: 3980, isOnline: true, city: 'İstanbul (Beşiktaş)' },
+        { nickname: 'Mert', deviceId: 'SOCIES-6B3E9C', avatar: '🤖', petName: 'ROBO', score: 2500, steps: 5100, isOnline: true, city: 'Kocaeli (İzmit)' },
+        { nickname: 'Elif', deviceId: 'SOCIES-1A9F5D', avatar: '🌈', petName: 'MAVİŞ', score: 2350, steps: 4760, isOnline: false, city: 'Balıkesir (Bandırma)' },
+        { nickname: 'Can', deviceId: 'SOCIES-5E8C2B', avatar: '💎', petName: 'KÖPÜK', score: 2200, steps: 3840, isOnline: true, city: 'Edirne (Merkez)' }
+      ],
 
-      // Gerçek SQLite Sunucudan çekilen Liderlik Tablosu
-      globalLeaderboard: [],
+      // Gerçek SQLite Sunucudan çekilen Liderlik Tablosu (Zengin başlangıç havuzu)
+      globalLeaderboard: [
+        { nickname: 'Zeynep', deviceId: 'SOCIES-7A8B1C', avatar: '👑', score: 9850, steps: 8420 },
+        { nickname: 'Emir', deviceId: 'SOCIES-9F2D4E', avatar: '⭐', score: 9200, steps: 7890 },
+        { nickname: 'Defne', deviceId: 'SOCIES-3C5A88', avatar: '🚀', score: 8650, steps: 7120 },
+        { nickname: 'Kerem', deviceId: 'SOCIES-8E1B9A', avatar: '🦊', score: 8100, steps: 6350 },
+        { nickname: 'Ece', deviceId: 'SOCIES-4D7A2F', avatar: '🐱', score: 7750, steps: 5980 },
+        { nickname: 'Mert', deviceId: 'SOCIES-6B3E9C', avatar: '🤖', score: 7300, steps: 5500 },
+        { nickname: 'Elif', deviceId: 'SOCIES-1A9F5D', avatar: '🌈', score: 6900, steps: 5120 },
+        { nickname: 'Can', deviceId: 'SOCIES-5E8C2B', avatar: '💎', score: 6500, steps: 4840 },
+        { nickname: 'Selin', deviceId: 'SOCIES-2D4F8E', avatar: '🐼', score: 6150, steps: 4300 },
+        { nickname: 'Burak', deviceId: 'SOCIES-7C9A1B', avatar: '👾', score: 5800, steps: 3950 }
+      ],
 
       // Combinator Selected Parts
       parts: { body: 0, eyes: 0, mouth: 0, ears: 0, acc: 0 },
@@ -1961,7 +1988,7 @@
       menuLevel: 'ROOT', // ROOT, FOOD, GAMES, STATS
       menuIdx: 0,
       menuItems: ['BESLE', 'TUVALET', 'BANYO', 'İLAÇ', 'OYUNLAR', 'UYUT', 'DURUM'],
-      foodItems: ['ELMA 🍏', 'MAMA 🍗', 'PASTA 🍰', 'SU 💧'],
+      foodItems: ['ELMA 🍏', 'MAMA 🍗', 'PASTA 🍰', 'SU 💧', 'KAHVE ☕'],
       gameItems: [
         '1. MARATON 🏃',
         '2. PİNPON 🏓',
@@ -2231,43 +2258,82 @@
 
     function renderOledSideThoughtBox(text, icon = '💭', isPrompt = false) {
       if (!text) return;
-      const onRight = (oled.petX < 56);
-      const bx = onRight ? 64 : 2;
-      const by = 18;
-      const bw = 62;
-      const bh = 22;
+
+      // 1. Karakter ile asla çakışmayan dinamik konumlandırma
+      const petIsRight = (oled.petX >= 48);
+      if (petIsRight) {
+        // Karakter sağda, kutu kesinlikle SOLDAdır
+        oled.petX = Math.max(80, oled.petX); // Karakteri kutunun dışına nazikçe it
+      } else {
+        // Karakter solda, kutu kesinlikle SAĞDADIR
+        oled.petX = Math.min(26, oled.petX); // Karakteri kutunun dışına nazikçe it
+      }
+
+      const bx = petIsRight ? 2 : 56;
+      const by = 16;
+      const bw = 70;
+      const bh = 40;
 
       oled.ctx.save();
+      // Arka plan & retro neon çerçeve
       oled.ctx.fillStyle = '#020617';
       oled.ctx.fillRect(bx, by, bw, bh);
       oled.ctx.strokeStyle = isPrompt ? '#fde047' : '#38bdf8';
       oled.ctx.lineWidth = 1;
       oled.ctx.strokeRect(bx, by, bw, bh);
 
-      // Konuşma kuyruğu
-      const tailX = onRight ? (bx - 1) : (bx + bw + 1);
+      // Konuşma balonu kuyruğu (Doğrudan karaktere doğru uzanır)
       oled.ctx.fillStyle = isPrompt ? '#fde047' : '#38bdf8';
-      oled.ctx.fillRect(tailX, by + 14, 2, 2);
+      if (petIsRight) {
+        oled.ctx.fillRect(bx + bw, by + 20, 2, 2);
+        oled.ctx.fillRect(bx + bw + 2, by + 21, 2, 2);
+      } else {
+        oled.ctx.fillRect(bx - 2, by + 20, 2, 2);
+        oled.ctx.fillRect(bx - 4, by + 21, 2, 2);
+      }
 
-      // Başlık
+      // Başlık & İkon
       oled.ctx.fillStyle = isPrompt ? '#fde047' : '#38bdf8';
       oled.ctx.font = 'bold 6px "JetBrains Mono", monospace';
       oled.ctx.fillText(`${icon} ${isPrompt ? 'DİYALOG [A]' : 'PUFİ'}`, bx + 4, by + 7);
 
-      // Metin (2 satıra kırparak sığdır)
+      // İnce ayırıcı çizgi
+      oled.ctx.fillStyle = isPrompt ? 'rgba(253, 224, 71, 0.4)' : 'rgba(56, 189, 248, 0.35)';
+      oled.ctx.fillRect(bx + 4, by + 9, bw - 8, 1);
+
+      // Metin kelime sarma motoru (Asla kelimeleri ortadan kesmez!)
       oled.ctx.fillStyle = '#ffffff';
-      oled.ctx.font = 'bold 6.5px "JetBrains Mono", monospace';
-      const words = text.split(' ');
-      let l1 = '', l2 = '';
+      oled.ctx.font = 'bold 5.8px "JetBrains Mono", monospace';
+      const words = String(text).split(/\s+/);
+      const lines = [];
+      let cur = '';
       for (const w of words) {
-        if (oled.ctx.measureText(l1 + (l1 ? ' ' : '') + w).width < 53 && !l2) {
-          l1 += (l1 ? ' ' : '') + w;
-        } else if (oled.ctx.measureText(l2 + (l2 ? ' ' : '') + w).width < 53) {
-          l2 += (l2 ? ' ' : '') + w;
+        const test = cur ? (cur + ' ' + w) : w;
+        if (oled.ctx.measureText(test).width <= (bw - 8)) {
+          cur = test;
+        } else {
+          if (cur) lines.push(cur);
+          cur = w;
         }
       }
-      oled.ctx.fillText(l1, bx + 4, by + 14);
-      if (l2) oled.ctx.fillText(l2.slice(0, 13), bx + 4, by + 20);
+      if (cur) lines.push(cur);
+
+      // 4 satıra kadar eksiksiz göster, daha uzunsa sayfala
+      if (lines.length <= 4) {
+        lines.forEach((l, i) => {
+          oled.ctx.fillText(l, bx + 4, by + 16 + i * 7);
+        });
+      } else {
+        const totalPages = Math.ceil(lines.length / 3);
+        const curPage = Math.floor(oled.animFrame / 150) % totalPages;
+        const pageLines = lines.slice(curPage * 3, curPage * 3 + 3);
+        pageLines.forEach((l, i) => {
+          oled.ctx.fillText(l, bx + 4, by + 16 + i * 7);
+        });
+        // Sayfa indikatörü nokta
+        oled.ctx.fillStyle = isPrompt ? '#fde047' : '#38bdf8';
+        oled.ctx.fillText(`• ${curPage + 1}/${totalPages}`, bx + bw - 18, by + 37);
+      }
 
       oled.ctx.restore();
     }
@@ -2568,10 +2634,11 @@
         if (oled.foodIdx === 1) desc = 'Ana Ogun / Doyurucu';
         else if (oled.foodIdx === 2) desc = 'Tatli / Dikkat Karisir!';
         else if (oled.foodIdx === 3) desc = 'Temiz Su / Hidrasyon';
-        oled.ctx.fillText(desc, 12, 49);
+        else if (oled.foodIdx === 4) desc = 'Turk Kahvesi / Enerji & Nese';
+        oled.ctx.fillText(desc, 8, 49);
 
         oled.ctx.font = '7px "JetBrains Mono"';
-        oled.ctx.fillText('SEC: Yedir | GERI: Don', 12, 59);
+        oled.ctx.fillText('SEC: Yedir/Ic | GERI: Don', 10, 59);
 
       } else if (oled.menuLevel === 'GAMES') {
         oled.ctx.fillText('=== 10 RETRO OYUN ===', 10, 25);
@@ -2582,7 +2649,7 @@
         oled.ctx.fillText('SEC: Baslat | GERI: Don', 10, 59);
 
       } else if (oled.menuLevel === 'STATS') {
-        oled.ctx.fillText('=== 7 SIMS DURUMU ===', 12, 25);
+        oled.ctx.fillText('=== DURUM ===', 36, 25);
         oled.ctx.font = '6.5px "JetBrains Mono"';
         
         const drawMiniStat = (label, val, y) => {
@@ -2639,26 +2706,53 @@
       if (oled.lastFoodType === 'ELMA') title = 'KITIR! 🍏';
       else if (oled.lastFoodType === 'PASTA') title = 'PASTA! 🍰';
       else if (oled.lastFoodType === 'SU') title = 'LUKUR! 💧';
+      else if (oled.lastFoodType === 'KAHVE') title = 'HÖPÜRDET! ☕';
       oled.ctx.fillText(title, 8, 25);
 
       const chew = (Math.floor(oled.animFrame / 8) % 2 === 0);
       drawModularSpriteToOled(26, 34 + (chew ? 1 : 0));
 
-      // Yiyecek kırıntıları & tabak
-      oled.ctx.fillStyle = '#ffb703';
-      oled.ctx.fillRect(56, 44, 10, 4);
-      if (chew) {
-        oled.ctx.fillRect(52, 38, 2, 2);
-        oled.ctx.fillRect(54, 36, 1, 1);
+      if (oled.lastFoodType === 'KAHVE') {
+        // ☕ TÜRK KAHVESİ FİNCANI, TABAĞI VE TÜTEN KÖPÜK/BUHAR
+        oled.ctx.fillStyle = '#ffffff';
+        oled.ctx.fillRect(54, 46, 11, 7); // Beyaz porselen fincan gövdesi
+        oled.ctx.fillRect(52, 53, 15, 2); // Fincan tabağı
+        oled.ctx.fillRect(65, 48, 2, 4);  // Fincan kulpu
+        oled.ctx.fillStyle = '#78350f';   // Kahve köpüğü
+        oled.ctx.fillRect(55, 47, 9, 2);
+        // Yükselen mis kokulu buhar (Steam waves)
+        const stm = (oled.animFrame % 18);
+        oled.ctx.fillStyle = '#94a3b8';
+        oled.ctx.fillRect(56 + (stm % 3), 43 - Math.floor(stm / 4), 1, 2);
+        oled.ctx.fillRect(61 - (stm % 3), 42 - Math.floor(stm / 4), 1, 2);
+      } else {
+        // Yiyecek kırıntıları & tabak
+        oled.ctx.fillStyle = '#ffb703';
+        oled.ctx.fillRect(56, 44, 10, 4);
+        if (chew) {
+          oled.ctx.fillRect(52, 38, 2, 2);
+          oled.ctx.fillRect(54, 36, 1, 1);
+        }
       }
 
       // Canlı Dolum Barı
       if (oled.careProgress && oled.careProgress.active) {
         const cp = oled.careProgress;
         const prog = Math.min(1.0, (Date.now() - cp.startTime) / cp.durationMs);
-        cp.currentVal = cp.startVal + (cp.targetVal - cp.startVal) * prog;
-        appData.needs[cp.needKey] = Math.round(cp.currentVal);
-        drawCareProgressBar(cp.label, cp.currentVal, cp.targetVal, prog);
+
+        if (cp.isCoffee) {
+          // Türk kahvesi hem enerji (sleep) hem mutluluk (fun/love) hem açlığı dengeler
+          cp.currentVal = cp.startVal + (cp.targetVal - cp.startVal) * prog;
+          appData.needs.sleep = Math.min(100, Math.round(cp.startSleep + (cp.targetSleep - cp.startSleep) * prog));
+          appData.needs.fun = Math.min(100, Math.round(cp.startFun + (cp.targetFun - cp.startFun) * prog));
+          appData.needs.love = Math.min(100, Math.round(cp.startLove + (cp.targetLove - cp.startLove) * prog));
+          appData.needs.hunger = Math.min(100, Math.round(cp.startHunger + (cp.targetHunger - cp.startHunger) * prog));
+          drawCareProgressBar('KAHVE', cp.currentVal, cp.targetVal, prog);
+        } else {
+          cp.currentVal = cp.startVal + (cp.targetVal - cp.startVal) * prog;
+          appData.needs[cp.needKey] = Math.round(cp.currentVal);
+          drawCareProgressBar(cp.label, cp.currentVal, cp.targetVal, prog);
+        }
 
         if (prog >= 1.0) {
           cp.active = false;
@@ -5744,6 +5838,8 @@
       const px = x + shiver;
       const py = y;
 
+      // Karakterin asla soluk/gri kalmaması için canlı neon cyan rengi
+      oled.ctx.fillStyle = '#00f0ff';
       const m = generateAvatarMatrix();
       for(let r=0; r<24; r++) {
         for(let c=0; c<24; c++) {
@@ -6747,10 +6843,17 @@
         finishMsg = '💧 Kana kana taze su içti! Midesi ve içi ferahladı.';
         appData.needs.clean = Math.min(100, appData.needs.clean + 10);
         appData.needs.toilet = Math.max(0, appData.needs.toilet - 8);
+      } else if (idx === 4) {
+        // TÜRK KAHVESİ ☕ (Geleneksel Köpüklü Kahve / Yavaş Yavaş Enerji & Mutluluk)
+        oled.lastFoodType = 'KAHVE';
+        hungerBonus = 10;
+        foodLabel = 'KAHVE';
+        finishMsg = '☕ Bol köpüklü Türk kahvesi yudumlandı! 40 yıl hatırı olsun. (+25 Enerji, +30 Mutluluk)';
       }
 
-      // Orantılı süre: İhtiyaç ne kadar düşükse o kadar uzun sürer (3sn ile 8.5sn arası)
-      const durationMs = Math.max(3000, Math.min(8500, Math.round(deficit * 65) + 1200));
+      // Orantılı süre: Türk kahvesi yavaş yavaş 6 saniyede keyifle yudumlanır
+      const isCoffee = (idx === 4);
+      const durationMs = isCoffee ? 6000 : Math.max(3000, Math.min(8500, Math.round(deficit * 65) + 1200));
       const targetVal = Math.min(100, curHunger + hungerBonus);
 
       oled.careProgress = {
@@ -6762,7 +6865,16 @@
         currentVal: curHunger,
         needKey: 'hunger',
         label: foodLabel,
-        msg: finishMsg
+        msg: finishMsg,
+        isCoffee: isCoffee,
+        startSleep: appData.needs.sleep || 50,
+        targetSleep: Math.min(100, (appData.needs.sleep || 50) + 25),
+        startFun: appData.needs.fun || 50,
+        targetFun: Math.min(100, (appData.needs.fun || 50) + 25),
+        startLove: appData.needs.love || 50,
+        targetLove: Math.min(100, (appData.needs.love || 50) + 20),
+        startHunger: curHunger,
+        targetHunger: targetVal
       };
 
       playEatCrunchSound();
@@ -7398,12 +7510,9 @@
     }
 
     function switchTab(tabId) {
-      if (tabId === 'tab-studio' && typeof isFeatureUnlocked === 'function' && !isFeatureUnlocked('studio')) {
-        showFeatureLockNotice('studio');
-        return;
-      }
       document.querySelectorAll('.tab-view').forEach(el => el.classList.remove('active'));
-      document.getElementById(tabId)?.classList.add('active');
+      const targetEl = document.getElementById(tabId);
+      if (targetEl) targetEl.classList.add('active');
 
       document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
       const idMap = {
@@ -7414,6 +7523,20 @@
         'tab-friends': 'navFriends'
       };
       if (idMap[tabId]) document.getElementById(idMap[tabId])?.classList.add('active');
+
+      // Sayfaların anında dolması ve asla boş görünmemesi için anında render & senkronizasyon
+      if (tabId === 'tab-studio') {
+        if (typeof renderCombinator === 'function') renderCombinator();
+        if (typeof switchStudioMode === 'function') switchStudioMode('modular');
+      } else if (tabId === 'tab-rank') {
+        if (typeof renderLeaderboard === 'function') renderLeaderboard();
+        if (typeof fetchLiveLeaderboard === 'function') fetchLiveLeaderboard();
+      } else if (tabId === 'tab-friends') {
+        if (typeof renderFriendsList === 'function') renderFriendsList();
+        if (typeof fetchLiveDevices === 'function') fetchLiveDevices();
+      } else if (tabId === 'tab-pet') {
+        if (typeof updateNeedsUI === 'function') updateNeedsUI();
+      }
     }
 
     // =========================================================================
@@ -7918,6 +8041,9 @@
     window.addEventListener('load', () => {
       initNeedsEngine();
       updateProfileUI();
+      renderCombinator();
+      renderLeaderboard();
+      renderFriendsList();
       discoverAndConnectServer();
       setTimeout(() => checkAppVersionOnBoot(false), 1500);
       setTimeout(() => triggerSmartCompanionBriefing(), 2500);
