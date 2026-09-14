@@ -14,7 +14,9 @@ mkdir -p $BUILD_DIR/bin $BUILD_DIR/assets $BUILD_DIR/src/io/socies/app $BUILD_DI
 # 1.1 Embed app.html as index.html
 cp $SRC_DIR/app.html $BUILD_DIR/assets/index.html
 
-# 1.2 Strings & Manifest
+# 1.2 Copy drawables, mipmaps & strings
+cp -r $SRC_DIR/mobile_app/android/app/src/main/res/* $BUILD_DIR/res/
+
 cat << 'EOS' > $BUILD_DIR/res/values/strings.xml
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
@@ -26,8 +28,8 @@ cat << 'EOM' > $BUILD_DIR/AndroidManifest.xml
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="io.socies.app"
-    android:versionCode="18"
-    android:versionName="1.0.17">
+    android:versionCode="19"
+    android:versionName="1.0.18">
 
     <uses-sdk android:minSdkVersion="21" android:targetSdkVersion="28" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -44,6 +46,8 @@ cat << 'EOM' > $BUILD_DIR/AndroidManifest.xml
 
     <application
         android:label="@string/app_name"
+        android:icon="@drawable/ic_launcher"
+        android:roundIcon="@drawable/ic_launcher"
         android:allowBackup="true"
         android:hardwareAccelerated="true"
         android:usesCleartextTraffic="true">
@@ -80,7 +84,7 @@ zipalign -f -p 4 $BUILD_DIR/unaligned.apk $BUILD_DIR/aligned.apk
 
 echo "=== 5. APK Sign with apksigner ==="
 apksigner sign --ks $KEYSTORE --ks-pass pass:android --key-pass pass:android --out $SRC_DIR/downloads/socies-app.apk $BUILD_DIR/aligned.apk
-cp $SRC_DIR/downloads/socies-app.apk $SRC_DIR/downloads/socies-v1.0.17.apk
+cp $SRC_DIR/downloads/socies-app.apk $SRC_DIR/downloads/socies-v1.0.18.apk
 
 echo "=== 6. Verify APK Signature & Package Info ==="
 apksigner verify -v $SRC_DIR/downloads/socies-app.apk

@@ -237,7 +237,7 @@ try {
     };
     const statsObj = {
       location: { country: 'Türkiye', city: b.city, district: b.dist, flag: '🇹🇷' },
-      phone: { model: idx % 2 === 0 ? 'Samsung Galaxy A54' : 'Redmi Note 12', os: 'Android 14', batteryPct: Math.floor(Math.random() * 30) + 68, stepsToday: Math.floor(Math.random() * 6000) + 2000, connection: '4.5G / Wi-Fi', appVersion: 'v1.0.17', latencyMs: Math.floor(Math.random() * 30) + 15 }
+      phone: { model: idx % 2 === 0 ? 'Samsung Galaxy A54' : 'Redmi Note 12', os: 'Android 14', batteryPct: Math.floor(Math.random() * 30) + 68, stepsToday: Math.floor(Math.random() * 6000) + 2000, connection: '4.5G / Wi-Fi', appVersion: 'v1.0.18', latencyMs: Math.floor(Math.random() * 30) + 15 }
     };
 
     insertBotStmt.run(
@@ -260,7 +260,7 @@ try {
   allRows.forEach(r => {
     const parsedStats = JSON.parse(r.stats_json || '{}');
     const location = parsedStats.location || { country: 'Türkiye', city: 'İstanbul', district: 'Kadıköy', flag: '🇹🇷' };
-    const phone = parsedStats.phone || { model: 'Mobil Telefon', os: 'Android', batteryPct: 85, stepsToday: 3500, connection: 'Wi-Fi', appVersion: 'v1.0.17', latencyMs: 22 };
+    const phone = parsedStats.phone || { model: 'Mobil Telefon', os: 'Android', batteryPct: 85, stepsToday: 3500, connection: 'Wi-Fi', appVersion: 'v1.0.18', latencyMs: 22 };
 
     database.devices.set(r.device_id, {
       deviceId: r.device_id,
@@ -427,7 +427,7 @@ const server = http.createServer((req, res) => {
     if (fs.existsSync(apkFile)) {
       res.writeHead(200, {
         'Content-Type': 'application/vnd.android.package-archive',
-        'Content-Disposition': 'attachment; filename="socies-v1.0.17.apk"',
+        'Content-Disposition': 'attachment; filename="socies-v1.0.18.apk"',
         'Access-Control-Allow-Origin': '*'
       });
       return fs.createReadStream(apkFile).pipe(res);
@@ -1141,7 +1141,7 @@ const server = http.createServer((req, res) => {
             log.details ? (typeof log.details === 'string' ? log.details : JSON.stringify(log.details)) : null,
             log.userEmail || null,
             log.deviceId || null,
-            log.appVersion || 'v1.0.17',
+            log.appVersion || 'v1.0.18',
             log.timestamp || now
           );
           inserted++;
@@ -1441,23 +1441,23 @@ const server = http.createServer((req, res) => {
     });
   }
 
-  // 8. GITHUB SÜRÜM / OTA KONTROLÜ (SemVer 2.0.0 v1.0.17)
+  // 8. GITHUB SÜRÜM / OTA KONTROLÜ (SemVer 2.0.0 v1.0.18)
   if (path === '/api/v1/version/check' && method === 'GET') {
     const host = req.headers.host || '46.1.173.159:3000';
     return sendJSON(res, 200, {
-      latestVersion: 'v1.0.17',
+      latestVersion: 'v1.0.18',
       semver: {
         major: 1,
         minor: 0,
-        patch: 17,
-        build: 18
+        patch: 18,
+        build: 19
       },
-      versionCode: 18,
-      latestCommitHash: 'socies-v1.0.17',
+      versionCode: 19,
+      latestCommitHash: 'socies-v1.0.18',
       mandatoryUpdate: false,
-      releaseNotes: 'v1.0.17: OLED 256x128 High-DPI Çözünürlük, 32+ Türk Fıkrası ve Diyalog Havuzu, 12+ Komik Sitemkar İhtiyaç Replikleri, Orantılı İhtiyaç Giderme ve Canlı İlerleme Çubuğu, OYUN 11: Köstebek Yakalama, Uçan Pufi Çocuk Dostu Süzülme Fiziği, Gelişmiş Google Hesap Yönetimi ve IP/Port Temizliği.',
+      releaseNotes: 'v1.0.18: Retro Uzaylı Logo (App Icon), 10 Zengin Rastgele Boşta Davranışı (Kaykay, Takla, Kitap, İp Atlama, Sakız, Dans...), Tam Ekran OLED & Dinamik Yan Konuşma Baloncuğu, Yenilenen Canlı Ön Kamera ve Yüz Elips Kılavuzu, Netleşen Atölye İfadeleri, My Buddy Sekmesi ve Social Buddies Sloganı.',
       apkDownloadUrl: `http://${host}/download/socies-app.apk`,
-      githubApkUrl: 'https://github.com/mcturan/socies/releases/download/v1.0.17/socies-app.apk'
+      githubApkUrl: 'https://github.com/mcturan/socies/releases/download/v1.0.18/socies-app.apk'
     });
   }
 
@@ -1572,7 +1572,7 @@ function serveSociesNetworkPage(res) {
       <div class="nav-links">
         <a href="/dashboard" class="nav-btn">📊 Sunucu Paneli</a>
         <a href="/" class="nav-btn">🎮 Web Emülatörü</a>
-        <a href="/download/socies-app.apk" class="dl-btn">📥 APK İndir (v1.0.17)</a>
+        <a href="/download/socies-app.apk" class="dl-btn">📥 APK İndir (v1.0.18)</a>
       </div>
     </div>
 
@@ -1590,7 +1590,7 @@ function serveSociesNetworkPage(res) {
         <div class="kpi-lbl">${countries.join(', ')}</div>
       </div>
       <div class="kpi-card">
-        <div class="kpi-val" style="color:#ffe600;">v1.0.17</div>
+        <div class="kpi-val" style="color:#ffe600;">v1.0.18</div>
         <div class="kpi-lbl">Ağ Sürümü (SemVer 2.0.0)</div>
       </div>
     </div>
