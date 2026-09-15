@@ -197,7 +197,7 @@
       border-radius: 8px;
       border: 1.5px solid #0a1128;
       box-shadow: 0 0 15px rgba(0, 240, 255, 0.18);
-      image-rendering: auto;
+      image-rendering: pixelated;
       image-rendering: -webkit-optimize-contrast;
       image-rendering: crisp-edges;
       width: 100%;
@@ -205,6 +205,13 @@
       aspect-ratio: 2 / 1;
       height: auto;
       cursor: pointer;
+    }
+
+    @media (max-width: 380px) {
+      .retro-horiz-btn { height: 48px; padding: 2px; }
+      .horiz-btn-icon { font-size: 1.05rem; }
+      .horiz-btn-lbl { font-size: 0.52rem; }
+      .app-container { padding: 0.2rem 0.4rem; }
     }
 
     .mid-status-txt {
@@ -719,7 +726,7 @@
     <div class="update-dialog">
       <div class="update-icon-badge">🚀</div>
       <div class="update-title">Yeni Güncelleme Mevcut!</div>
-      <div class="update-pill" id="updVersionTag">v1.0.19 Hazır</div>
+      <div class="update-pill" id="updVersionTag">v1.0.20 Hazır</div>
       <div class="update-notes-box" id="updReleaseNotes">
         Yeni özellikler ve iyileştirmeler yayınlandı.
       </div>
@@ -856,7 +863,7 @@
         </div>
 
         <div style="font-size:0.72rem; color:#94A3B8; text-align:center;">
-          Socies v1.0.19 (Build 20) • OTA Güncel
+          Socies v1.0.20 (Build 21) • OTA Güncel
         </div>
       </div>
 
@@ -984,8 +991,9 @@
           </div>
         </div>
 
-        <div style="display:flex; gap:6px;">
-          <button class="btn-update-action" style="flex:1;" onclick="goToOnboardStep(2)">İleri: Yumurtanı Seç ➔</button>
+        <div style="display:flex; gap:8px;">
+          <button type="button" class="btn-update-dismiss" style="flex:1; margin-top:0;" onclick="dismissOnboardingModal()">Misafir Olarak Keşfet</button>
+          <button type="button" class="btn-update-action" style="flex:1.4;" onclick="goToOnboardStep(2)">İleri: Yumurtanı Seç ➔</button>
         </div>
       </div>
 
@@ -1168,7 +1176,7 @@
         </div>
         <div class="badge-chip" id="badgeAppVersion" onclick="manualCheckUpdate()" title="Sürüm: Dokunarak Kontrol Et" style="cursor:pointer;">
           <span>🚀</span>
-          <span id="txtCurrentVersion">v1.0.19</span>
+          <span id="txtCurrentVersion">v1.0.20</span>
         </div>
       </div>
     </div>
@@ -1546,7 +1554,7 @@
   </nav>
 
   <script>
-    const CURRENT_APP_VERSION = 'v1.0.19';
+    const CURRENT_APP_VERSION = 'v1.0.20';
 
     // --- 📡 ARKA PLAN TELEMETRİ VE HATA GÖZLEMCİSİ (SOCIES LOGGER) ---
     const SociesLogger = {
@@ -2156,10 +2164,30 @@
       }
     }
 
-    function drawOledLoop() {
+    let oledLastFrameTime = 0;
+    function drawOledLoop(timestamp) {
+      if (!timestamp) timestamp = (typeof performance !== 'undefined' ? performance.now() : Date.now());
+      const elapsed = timestamp - oledLastFrameTime;
+      // 90Hz, 120Hz, 144Hz ekranlarda oyun ve animasyonların aşırı hızlanmasını engelle (Sabit ~60 FPS)
+      if (oledLastFrameTime > 0 && elapsed < 14.5) {
+        requestAnimationFrame(drawOledLoop);
+        return;
+      }
+      oledLastFrameTime = timestamp;
+
       try {
         oled.ctx.save();
         oled.ctx.scale(2, 2);
+
+        // STANDBY / EKRAN UYKU MODU (1 dk hareketsizlik sonrası güç tasarrufu)
+        if (oled.mode === 'STANDBY') {
+          renderOledStandby();
+          oled.ctx.restore();
+          oled.animFrame++;
+          requestAnimationFrame(drawOledLoop);
+          return;
+        }
+
         oled.ctx.fillStyle = '#000814';
         oled.ctx.fillRect(0, 0, 128, 64);
 
@@ -2256,19 +2284,55 @@
       }
     }
 
+    function renderOledStandby() {
+      // 1. Ekran tamamen kararır (Retro CRT kapanış ve derin bekleme)
+      oled.ctx.fillStyle = '#00040a';
+      oled.ctx.fillRect(0, 0, 128, 64);
+
+      const elapsedStandby = Date.now() - (oled.standbyStart || Date.now());
+      if (elapsedStandby < 380) {
+        // CRT TV Kapanış Efekti (Yatay çizgi büzülür ve kapanır)
+        const p = elapsedStandby / 380;
+        const lineW = Math.round(128 * (1 - p));
+        const lineH = Math.max(1, Math.round(3 * (1 - p)));
+        oled.ctx.fillStyle = '#ffffff';
+        oled.ctx.fillRect(64 - Math.round(lineW / 2), 32 - Math.round(lineH / 2), lineW, lineH);
+        return;
+      }
+
+      // Hafif nefes alan standby ledi ve uyanma ipucu
+      const pulse = (Math.sin(oled.animFrame * 0.05) + 1) / 2;
+      oled.ctx.fillStyle = `rgba(16, 185, 129, ${0.25 + pulse * 0.55})`;
+      oled.ctx.fillRect(118, 56, 3, 3);
+
+      if (oled.animFrame % 180 < 120) {
+        oled.ctx.font = '6px "JetBrains Mono", monospace';
+        oled.ctx.fillStyle = `rgba(148, 163, 184, ${0.3 + pulse * 0.4})`;
+        oled.ctx.fillText('STANDBY • DOKUN', 34, 34);
+      }
+    }
+
+    function wakeOledFromStandby() {
+      oled.lastUserAction = Date.now();
+      oled.deepActivity = null;
+      oled.farewellPlayed = false;
+      if (oled.mode === 'STANDBY' || oled.petX > 90 || oled.petX < -15) {
+        oled.mode = 'IDLE';
+        oled.petX = -12; // Ekrana soldan sevinçle koşarak girer
+        oled.petDir = 1;
+        if (!oled.idleBehavior) oled.idleBehavior = { type: 'WALK', timer: 150, frame: 0, dir: 1 };
+        oled.idleBehavior.type = 'WALK';
+        oled.stuntCooldown = 600; // 10s cooldown
+        beep(880, 0.1);
+        renderOledSideThoughtBox('Geri geldin! Çok sevindim! 🥰', '💖', false);
+      }
+    }
+
     function renderOledSideThoughtBox(text, icon = '💭', isPrompt = false) {
       if (!text) return;
 
-      // 1. Karakter ile asla çakışmayan dinamik konumlandırma
-      const petIsRight = (oled.petX >= 48);
-      if (petIsRight) {
-        // Karakter sağda, kutu kesinlikle SOLDAdır
-        oled.petX = Math.max(80, oled.petX); // Karakteri kutunun dışına nazikçe it
-      } else {
-        // Karakter solda, kutu kesinlikle SAĞDADIR
-        oled.petX = Math.min(26, oled.petX); // Karakteri kutunun dışına nazikçe it
-      }
-
+      // 1. Karakteri kitlemeyen dinamik yan kutu konumu
+      const petIsRight = (oled.petX >= 56);
       const bx = petIsRight ? 2 : 56;
       const by = 16;
       const bw = 70;
@@ -2301,15 +2365,30 @@
       oled.ctx.fillStyle = isPrompt ? 'rgba(253, 224, 71, 0.4)' : 'rgba(56, 189, 248, 0.35)';
       oled.ctx.fillRect(bx + 4, by + 9, bw - 8, 1);
 
-      // Metin kelime sarma motoru (Asla kelimeleri ortadan kesmez!)
+      // Metin kelime sarma motoru (Uzun Türkçe kelimeleri heceleyerek/bölerek sarar, asla kutudan taşmaz)
       oled.ctx.fillStyle = '#ffffff';
       oled.ctx.font = 'bold 5.8px "JetBrains Mono", monospace';
       const words = String(text).split(/\s+/);
       const lines = [];
       let cur = '';
-      for (const w of words) {
+      const maxW = bw - 8;
+      for (const rawW of words) {
+        let w = rawW;
+        // Eğer tek bir kelime kutudan daha genişse böl:
+        while (oled.ctx.measureText(w).width > maxW) {
+          let part = '';
+          for (let i = 0; i < w.length; i++) {
+            if (oled.ctx.measureText(part + w[i] + '-').width <= maxW) {
+              part += w[i];
+            } else break;
+          }
+          if (part.length === 0) part = w.slice(0, 10);
+          lines.push(part + '-');
+          w = w.slice(part.length);
+        }
+
         const test = cur ? (cur + ' ' + w) : w;
-        if (oled.ctx.measureText(test).width <= (bw - 8)) {
+        if (oled.ctx.measureText(test).width <= maxW) {
           cur = test;
         } else {
           if (cur) lines.push(cur);
@@ -2330,7 +2409,6 @@
         pageLines.forEach((l, i) => {
           oled.ctx.fillText(l, bx + 4, by + 16 + i * 7);
         });
-        // Sayfa indikatörü nokta
         oled.ctx.fillStyle = isPrompt ? '#fde047' : '#38bdf8';
         oled.ctx.fillText(`• ${curPage + 1}/${totalPages}`, bx + bw - 18, by + 37);
       }
@@ -2346,7 +2424,7 @@
         return;
       }
 
-      // 1. ZEMİN VE ÇİM ÇİZİMİ (Alt alan artık tamamen açık ve ferah!)
+      // 1. ZEMİN VE ÇİM ÇİZİMİ
       oled.ctx.fillStyle = '#1e293b';
       oled.ctx.fillRect(0, 58, 128, 1);
       oled.ctx.fillStyle = '#334155';
@@ -2355,51 +2433,158 @@
       oled.ctx.fillRect(88, 57, 2, 1);
       oled.ctx.fillRect(116, 57, 2, 1);
 
-      // 2. BOŞTA RASTGELE 10 DAVRANIŞ MOTORU
       if (!oled.idleBehavior) {
         oled.idleBehavior = { type: 'WALK', timer: 150, frame: 0, dir: 1 };
       }
       const b = oled.idleBehavior;
       b.frame++;
-      b.timer--;
 
-      if (b.timer <= 0) {
-        const behaviors = ['WALK', 'SKATE', 'ROLL', 'CATNAP', 'BOOK', 'ROPE', 'BUBBLE', 'DANCE', 'EXPLORE', 'STRETCH'];
-        if (b.type !== 'WALK' && Math.random() < 0.35) {
-          b.type = 'WALK';
-          b.timer = Math.floor(Math.random() * 120) + 120;
-        } else {
-          const pool = behaviors.filter(t => t !== b.type);
-          b.type = pool[Math.floor(Math.random() * pool.length)];
-          if (b.type === 'CATNAP') b.timer = 300; // Tam 5 saniye kestirme
-          else if (b.type === 'SKATE') b.timer = 180;
-          else if (b.type === 'ROLL') b.timer = 150;
-          else if (b.type === 'BOOK') b.timer = 220;
-          else if (b.type === 'ROPE') b.timer = 200;
-          else if (b.type === 'BUBBLE') b.timer = 180;
-          else if (b.type === 'DANCE') b.timer = 210;
-          else if (b.type === 'EXPLORE') b.timer = 220;
-          else if (b.type === 'STRETCH') b.timer = 180;
-          else b.timer = 150;
+      if (!oled.lastUserAction) oled.lastUserAction = Date.now();
+      const idleDuration = Date.now() - oled.lastUserAction;
+
+      // =======================================================================
+      // 1 DAKİKA HAREKETSİZLİK YAŞAM DÖNGÜSÜ (MEŞGALE -> VEDA -> ÇIKIŞ -> STANDBY)
+      // =======================================================================
+      if (idleDuration >= 48000 && idleDuration < 60000) {
+        // EVRE 1: DERİN MEŞGALE (48s - 60s): Kitap, Örgü, TV, Küvet
+        if (!oled.deepActivity) {
+          const deepList = ['BOOK', 'KNIT', 'TV', 'BATH_TUB'];
+          oled.deepActivity = deepList[Math.floor(Math.random() * deepList.length)];
         }
-        b.frame = 0;
+        b.type = oled.deepActivity;
+
+      } else if (idleDuration >= 60000 && idleDuration < 66000) {
+        // EVRE 2: VEDA EL SALLAMA (60s - 66s)
+        b.type = 'FAREWELL';
+        renderOledSideThoughtBox('Sen meşgulsün galiba, görüşürüz! 👋', '👋', false);
+
+      } else if (idleDuration >= 66000) {
+        // EVRE 3: EKRANDAN ÇIKIŞ VE EKRAN KAPANIŞI (STANDBY)
+        b.type = 'WALK_EXIT';
+        oled.petX += 1.0;
+        oled.petDir = 1;
+        if (oled.petX > 132) {
+          // Karakter tamamen ekrandan çıktı, ekran uykuya geçer!
+          oled.mode = 'STANDBY';
+          oled.standbyStart = Date.now();
+          oled.deepActivity = null;
+          return;
+        }
+
+      } else {
+        // NORMAL BOŞTA DURUMU (< 48s): 20 SANİYE SAKİN GEZİNME ARALIĞI
+        oled.stuntCooldown = (oled.stuntCooldown || 0) - 1;
+
+        if (b.type === 'WALK') {
+          if (oled.stuntCooldown <= 0 && Math.random() < 0.05) {
+            // Tam 20 saniyede bir kısa 4 saniyelik eğlenceli numara
+            const stunts = ['SKATE', 'ROLL', 'ROPE', 'BUBBLE', 'DANCE', 'STRETCH', 'CATNAP', 'EXPLORE'];
+            b.type = stunts[Math.floor(Math.random() * stunts.length)];
+            b.timer = 240; // ~4 saniye
+            b.frame = 0;
+            oled.stuntCooldown = 1200; // 20 saniye cooldown!
+          }
+        } else {
+          b.timer--;
+          if (b.timer <= 0) {
+            b.type = 'WALK';
+            b.frame = 0;
+            oled.stuntCooldown = 1200; // 20 saniye sakin gezinme
+          }
+        }
       }
 
       // --- DAVRANIŞLARIN ANİMASYONLARI ---
-      if (b.type === 'SKATE') {
-        // 1. KAYKAYLA KAYMA (Hızlı geçiş & zıplama)
-        oled.petX += b.dir * 1.5;
+      if (b.type === 'KNIT') {
+        // 🧶 ÖRGÜ ÖRME (Şişler, tık-tık hareketi ve pembe yün yumağı)
+        const kx = Math.round(oled.petX);
+        const ky = 36;
+        drawModularSpriteToOled(kx, ky);
+        // İki şiş
+        oled.ctx.strokeStyle = '#fde047';
+        oled.ctx.lineWidth = 1;
+        const knitTick = (Math.floor(b.frame / 14) % 2 === 0);
+        oled.ctx.beginPath();
+        oled.ctx.moveTo(kx + 10, ky + (knitTick ? 4 : 2));
+        oled.ctx.lineTo(kx + 16, ky + 10);
+        oled.ctx.moveTo(kx + 16, ky + (knitTick ? 2 : 4));
+        oled.ctx.lineTo(kx + 10, ky + 10);
+        oled.ctx.stroke();
+        // Yün yumağı
+        oled.ctx.fillStyle = '#ec4899';
+        oled.ctx.beginPath();
+        oled.ctx.arc(kx + 19, ky + 12, 3, 0, Math.PI * 2);
+        oled.ctx.fill();
+
+      } else if (b.type === 'TV') {
+        // 📺 TV İZLEME (Antenli retro televizyon ve parıldayan ekran)
+        const tx = Math.round(oled.petX);
+        const ty = 36;
+        drawModularSpriteToOled(tx, ty);
+        // TV Kasası
+        oled.ctx.fillStyle = '#334155';
+        oled.ctx.fillRect(tx - 22, ty + 2, 16, 13);
+        oled.ctx.fillStyle = '#0f172a';
+        oled.ctx.fillRect(tx - 20, ty + 4, 11, 9);
+        // TV Ekran Paraziti / Görüntü
+        oled.ctx.fillStyle = (b.frame % 6 < 3) ? '#38bdf8' : '#e0f2fe';
+        oled.ctx.fillRect(tx - 19, ty + 5, 9, 7);
+        // TV Anteni (V şeklinde)
+        oled.ctx.strokeStyle = '#94a3b8';
+        oled.ctx.lineWidth = 1;
+        oled.ctx.beginPath();
+        oled.ctx.moveTo(tx - 18, ty - 3);
+        oled.ctx.lineTo(tx - 14, ty + 2);
+        oled.ctx.lineTo(tx - 10, ty - 3);
+        oled.ctx.stroke();
+
+      } else if (b.type === 'BATH_TUB') {
+        // 🛁 KÜVETTE DUŞ ALMA (Ahşap küvet, köpükler & sünger)
+        const bx = Math.round(oled.petX);
+        const by = 36;
+        oled.ctx.fillStyle = '#78350f';
+        oled.ctx.fillRect(bx - 5, by + 8, 26, 8); // Ahşap leğen
+        oled.ctx.fillStyle = '#0284c7';
+        oled.ctx.fillRect(bx - 3, by + 9, 22, 3); // Su
+        drawModularSpriteToOled(bx, by);
+        // Uçuşan sabun baloncukları
+        const bub1 = (b.frame * 0.4) % 16;
+        const bub2 = (b.frame * 0.4 + 8) % 16;
+        oled.ctx.fillStyle = '#bae6fd';
+        oled.ctx.fillRect(bx - 3 + Math.sin(b.frame * 0.1) * 2, by + 6 - bub1, 2, 2);
+        oled.ctx.fillRect(bx + 16 + Math.cos(b.frame * 0.1) * 2, by + 6 - bub2, 2, 2);
+        // Sarı banyo süngeri
+        oled.ctx.fillStyle = '#fde047';
+        oled.ctx.fillRect(bx + 11, by + 5, 3, 2);
+
+      } else if (b.type === 'FAREWELL') {
+        // 👋 VEDA EL SALLAMA
+        const fx = Math.round(oled.petX);
+        const fy = 36;
+        drawModularSpriteToOled(fx, fy);
+        const wave = (Math.floor(b.frame / 8) % 2 === 0);
+        oled.ctx.fillStyle = '#00f0ff';
+        oled.ctx.fillRect(fx + 16, fy + (wave ? -3 : 0), 3, 3);
+        oled.ctx.fillStyle = '#fde047';
+        oled.ctx.fillRect(fx + 17, fy + (wave ? -5 : -2), 1, 2);
+
+      } else if (b.type === 'WALK_EXIT') {
+        // 🚶 EKRANDAN ÇIKIŞ (Sağa doğru yürüyüş)
+        const bob = (oled.animFrame % 16 < 8) ? 0 : 1;
+        drawModularSpriteToOled(Math.round(oled.petX), 36 + bob);
+
+      } else if (b.type === 'SKATE') {
+        // 1. KAYKAYLA KAYMA
+        oled.petX += b.dir * 1.4;
         if (oled.petX > 88) { b.dir = -1; oled.petX = 88; }
         if (oled.petX < 18) { b.dir = 1; oled.petX = 18; }
         const sx = Math.round(oled.petX);
         const sy = 36;
-        // Kaykay Tahtası & Tekerleri
         oled.ctx.fillStyle = '#ffb703';
         oled.ctx.fillRect(sx - 3, sy + 13, 22, 2);
         oled.ctx.fillStyle = '#00f0ff';
         oled.ctx.fillRect(sx - 1, sy + 15, 3, 2);
         oled.ctx.fillRect(sx + 14, sy + 15, 3, 2);
-        // Rüzgar Hız Çizgileri
         if (b.frame % 6 < 4) {
           oled.ctx.fillStyle = '#38bdf8';
           const tailX = b.dir > 0 ? (sx - 8) : (sx + 21);
@@ -2409,8 +2594,8 @@
         drawModularSpriteToOled(sx, sy);
 
       } else if (b.type === 'ROLL') {
-        // 2. YUVARLANARAK GELME (Takla atarak ilerleme)
-        oled.petX += b.dir * 1.1;
+        // 2. YUVARLANARAK GELME
+        oled.petX += b.dir * 1.0;
         if (oled.petX > 86) b.dir = -1;
         if (oled.petX < 18) b.dir = 1;
         const rx = Math.round(oled.petX);
@@ -2421,21 +2606,18 @@
         oled.ctx.translate(-(rx + 8), -38);
         drawModularSpriteToOled(rx, 36);
         oled.ctx.restore();
-        // Yuvarlanma tozu
         if (b.frame % 8 === 0) {
           oled.ctx.fillStyle = '#fde047';
           oled.ctx.fillRect(rx + (b.dir < 0 ? 18 : -2), 48, 2, 2);
         }
 
       } else if (b.type === 'CATNAP') {
-        // 3. 5 SANİYE KESTİRME / UYUMA (Yastık & z Z Z)
+        // 3. 5 SANİYE KESTİRME / UYUMA
         const nx = Math.round(oled.petX);
         const ny = 38;
-        // Minik Yastık
         oled.ctx.fillStyle = '#475569';
         oled.ctx.fillRect(nx - 5, ny + 9, 8, 4);
         drawModularSpriteToOled(nx, ny);
-        // Havada süzülen z Z Z
         oled.ctx.fillStyle = '#38bdf8';
         oled.ctx.font = '7px "JetBrains Mono", monospace';
         const z1 = (b.frame * 0.4) % 18;
@@ -2444,15 +2626,14 @@
         oled.ctx.fillText('Z', nx + 19 + Math.cos(b.frame * 0.1) * 2, ny - z2);
 
       } else if (b.type === 'BOOK') {
-        // 4. KİTAP OKUMA (Bağdaş kurup sayfa çevirme)
+        // 4. KİTAP OKUMA
         const bx = Math.round(oled.petX);
         const by = 36;
         drawModularSpriteToOled(bx, by);
-        // Açık Piksel Kitap
         oled.ctx.fillStyle = '#fde047';
         oled.ctx.fillRect(bx + 10, by + 4, 10, 7);
         oled.ctx.fillStyle = '#0f172a';
-        oled.ctx.fillRect(bx + 14, by + 4, 2, 7); // Cilt
+        oled.ctx.fillRect(bx + 14, by + 4, 2, 7);
         oled.ctx.fillStyle = '#ffffff';
         oled.ctx.fillRect(bx + 11, by + 6, 2, 1);
         oled.ctx.fillRect(bx + 11, by + 8, 2, 1);
@@ -2465,7 +2646,7 @@
         }
 
       } else if (b.type === 'ROPE') {
-        // 5. İP ATLAMA (Baş üstünden ve ayak altından dönen ip)
+        // 5. İP ATLAMA
         const jx = Math.round(oled.petX);
         const ropePhase = (b.frame % 30) / 30;
         const isJump = (ropePhase > 0.45 && ropePhase < 0.75);
@@ -2479,7 +2660,7 @@
         oled.ctx.stroke();
 
       } else if (b.type === 'BUBBLE') {
-        // 6. BALON ŞİŞİRİP PATLATMA
+        // 6. SAKIZ BALONU
         const gx = Math.round(oled.petX);
         const gy = 36;
         drawModularSpriteToOled(gx, gy);
@@ -2502,16 +2683,14 @@
         }
 
       } else if (b.type === 'DANCE') {
-        // 7. KULAKLIKLA DANS / MÜZİK
+        // 7. KULAKLIKLA DANS
         const dx = Math.round(oled.petX) + (Math.floor(b.frame / 10) % 2 === 0 ? -1 : 1);
         const dy = 36 + (Math.floor(b.frame / 5) % 2 === 0 ? 0 : -1);
         drawModularSpriteToOled(dx, dy);
-        // Kulaklık Bandı & Hoparlörleri
         oled.ctx.fillStyle = '#a855f7';
         oled.ctx.fillRect(dx - 3, dy - 5, 2, 5);
         oled.ctx.fillRect(dx + 17, dy - 5, 2, 5);
         oled.ctx.fillRect(dx - 2, dy - 7, 20, 2);
-        // Uçuşan Müzik Notaları
         oled.ctx.fillStyle = '#00f0ff';
         oled.ctx.font = '7px "JetBrains Mono", monospace';
         const n1 = (b.frame * 0.5) % 18;
@@ -2520,19 +2699,17 @@
         oled.ctx.fillText('♫', dx - 6 + Math.cos(b.frame * 0.15) * 3, dy - n2);
 
       } else if (b.type === 'EXPLORE') {
-        // 8. BÜYÜTEÇLE KELEBEK İNCELEME
+        // 8. BÜYÜTEÇLE KELEBEK KEŞFİ
         oled.petX += b.dir * 0.35;
         if (oled.petX > 80) b.dir = -1;
         if (oled.petX < 20) b.dir = 1;
         const ex = Math.round(oled.petX);
         const ey = 37;
         drawModularSpriteToOled(ex, ey);
-        // Büyüteç
         oled.ctx.strokeStyle = '#fde047';
         oled.ctx.strokeRect(ex + (b.dir > 0 ? 14 : -4), ey + 4, 5, 5);
         oled.ctx.fillStyle = '#fde047';
         oled.ctx.fillRect(ex + (b.dir > 0 ? 18 : -6), ey + 8, 3, 1);
-        // Uçuşan Kelebek
         const bfx = ex + b.dir * 18 + Math.sin(b.frame * 0.2) * 3;
         const bfy = ey - 4 + Math.cos(b.frame * 0.25) * 4;
         oled.ctx.fillStyle = '#38bdf8';
@@ -2543,7 +2720,7 @@
         }
 
       } else if (b.type === 'STRETCH') {
-        // 9. ESNEME & YOGA POZU
+        // 9. ESNEME & YOGA
         const sx = Math.round(oled.petX);
         const sy = 36;
         drawModularSpriteToOled(sx, sy);
@@ -2560,9 +2737,15 @@
         }
 
       } else {
-        // 10. SAKİN YÜRÜYÜŞ (WALK)
+        // 10. SAKİN GEZİNME (WALK)
         if (oled.animFrame % 60 === 0) {
-          oled.petX += oled.petDir * 3;
+          oled.petX += oled.petDir * 2.5;
+          // Konuşma kutusu açıksa karakter kutuya çarpmadan doğal döner
+          const hasBox = (oled.idleDialogue && oled.idleDialogue.active) || appData.pendingBroadcast;
+          if (hasBox) {
+            if (oled.petX < 76 && oled.petDir < 0 && (oled.petX >= 56)) oled.petDir = 1;
+            if (oled.petX > 36 && oled.petDir > 0 && (oled.petX < 56)) oled.petDir = -1;
+          }
           if (oled.petX > 88) oled.petDir = -1;
           if (oled.petX < 18) oled.petDir = 1;
         }
@@ -2571,7 +2754,7 @@
       }
 
       // 3. SAKİNLEŞTİRİLMİŞ DİYALOG & SORU TETİKLEME (Her 2.5 - 3 dakikada bir nadir sürpriz)
-      if (!oled.idleDialogue.active && !appData.pendingBroadcast && oled.animFrame % 7200 === 0 && Math.random() < 0.35) {
+      if (idleDuration < 48000 && !oled.idleDialogue.active && !appData.pendingBroadcast && oled.animFrame % 7200 === 0 && Math.random() < 0.35) {
         const roll = Math.random();
         if (roll < 0.45) {
           const q = IDLE_QUESTIONS_POOL[Math.floor(Math.random() * IDLE_QUESTIONS_POOL.length)];
@@ -2589,18 +2772,19 @@
         if (oled.idleDialogue.timer <= 0) oled.idleDialogue.active = false;
       }
 
-      // 4. YAN KUTUCUK (MESAJLAR / ANONS / SOHBET ARTIK YANDA ŞIK KUTUCUKTA GÖRÜNÜR)
-      if (appData.pendingBroadcast) {
-        renderOledSideThoughtBox('YENİ ANONS VAR!', '✉️', true);
-      } else if (oled.idleDialogue.active) {
-        const label = oled.idleDialogue.type === 'GUESS_GAME' ? 'Sayı Tahmin Oyunu Oynayalım mı?' : (oled.idleDialogue.type === 'JOKE' ? 'Sana bir fıkra anlatayım mı?' : (oled.idleDialogue.data ? oled.idleDialogue.data.q : 'Seninle biraz konuşalım mı?'));
-        renderOledSideThoughtBox(label, '💬', true);
-      } else {
-        // İhtiyaç kritikse veya arada bir kısa mizahi düşünce belirir
-        const isUrgent = (appData.needs.hunger < 35 || (appData.petState && appData.petState.poopCount > 0) || (appData.petState && appData.petState.isSick));
-        if (isUrgent || (oled.animFrame % 1400 < 320)) {
-          const quip = getFunnyNeedQuip();
-          renderOledSideThoughtBox(quip, isUrgent ? '⚠️' : '💭', false);
+      // 4. YAN KUTUCUK (MESAJLAR / ANONS / SOHBET)
+      if (idleDuration < 48000) {
+        if (appData.pendingBroadcast) {
+          renderOledSideThoughtBox('YENİ ANONS VAR!', '✉️', true);
+        } else if (oled.idleDialogue.active) {
+          const label = oled.idleDialogue.type === 'GUESS_GAME' ? 'Sayı Tahmin Oyunu Oynayalım mı?' : (oled.idleDialogue.type === 'JOKE' ? 'Sana bir fıkra anlatayım mı?' : (oled.idleDialogue.data ? oled.idleDialogue.data.q : 'Seninle biraz konuşalım mı?'));
+          renderOledSideThoughtBox(label, '💬', true);
+        } else {
+          const isUrgent = (appData.needs.hunger < 35 || (appData.petState && appData.petState.poopCount > 0) || (appData.petState && appData.petState.isSick));
+          if (isUrgent || (oled.animFrame % 1800 < 280)) {
+            const quip = getFunnyNeedQuip();
+            renderOledSideThoughtBox(quip, isUrgent ? '⚠️' : '💭', false);
+          }
         }
       }
     }
@@ -3709,7 +3893,7 @@
     // =========================================================================
     // OYUN 8: 🧱 TUĞLA KIRMA (ARKANOID / BRICK BREAKER)
     // =========================================================================
-    function resetBrickGame() {
+    function resetBrickGame(keepScore = false) {
       const b = oled.brick;
       b.padX = 48;
       b.padW = 32;
@@ -3718,7 +3902,7 @@
       b.vx = (Math.random() > 0.5 ? 0.70 : -0.70);
       b.vy = -0.65;
       b.bricks = [];
-      b.score = 0;
+      if (!keepScore) b.score = 0;
       b.lives = 3;
       b.isGameOver = false;
 
@@ -3796,7 +3980,7 @@
           b.score += 150;
           playLevelUpFanfare();
           showGlobalToast('🧱 Tüm tuğlalar kırıldı! (+150 XP)');
-          resetBrickGame();
+          resetBrickGame(true);
         }
       }
 
@@ -4646,6 +4830,14 @@
     // 4 HORIZONTAL BUTTON HANDLER (WITH HOLD & REPEAT & TOUCH CANVAS)
     // =========================================================================
     function handleConsoleBtn(btn, isRepeat = false) {
+      oled.lastUserAction = Date.now();
+
+      // STANDBY / EKRAN UYKU MODUNDAYSA HERHANGİ BİR TUŞA BASIŞ HEMEN EKRANI AÇAR VE BEBEĞİ GETİRİR!
+      if (oled.mode === 'STANDBY') {
+        wakeOledFromStandby();
+        return;
+      }
+
       // Ses ve Haptic
       playTactileClick(isRepeat ? 'repeat' : (btn === 'SELECT' ? 'select' : (btn === 'BACK' ? 'back' : 'click')));
 
@@ -4707,7 +4899,7 @@
         if (oled.snake.isGameOver) {
           if (btn === 'SELECT' || btn === 'LEFT' || btn === 'RIGHT') resetSnakeGame();
         } else {
-          const d = oled.snake.dir;
+          const d = oled.snake.nextDir || oled.snake.dir;
           if (btn === 'LEFT') {
             // Saat yönünün tersine 90 derece dön
             if (d === 'RIGHT') oled.snake.nextDir = 'UP';
@@ -4949,6 +5141,11 @@
         const rect = oled.canvas.getBoundingClientRect();
         const clickX = ((e.clientX - rect.left) / rect.width) * 128;
         
+        if (oled.mode === 'STANDBY') {
+          wakeOledFromStandby();
+          return;
+        }
+        
         if (oled.mode === 'SLEEPING' || (appData.petState && appData.petState.isSleeping)) {
           wakeUpPet();
           return;
@@ -4970,7 +5167,8 @@
           (oled.mode === 'BRICK' && oled.brick.isGameOver) ||
           (oled.mode === 'PARACHUTE' && oled.parachute.isGameOver) ||
           (oled.mode === 'FLAPPY' && oled.flappy.isGameOver) ||
-          (oled.mode === 'COWBOY' && oled.cowboy.isGameOver)
+          (oled.mode === 'COWBOY' && oled.cowboy.isGameOver) ||
+          (oled.mode === 'MOLE' && oled.mole && oled.mole.isGameOver)
         );
         if (isOver) {
           handleConsoleBtn('SELECT');
@@ -5002,6 +5200,10 @@
           handleConsoleBtn('SELECT');
         } else if (oled.mode === 'COWBOY') {
           handleConsoleBtn('SELECT');
+        } else if (oled.mode === 'MOLE') {
+          if (clickX < 44) handleConsoleBtn('LEFT');
+          else if (clickX <= 84) handleConsoleBtn('SELECT');
+          else handleConsoleBtn('RIGHT');
         } else if (oled.mode === 'RPS') {
           if (clickX < 42) handleConsoleBtn('LEFT');
           else if (clickX < 85) handleConsoleBtn('SELECT');
@@ -6018,6 +6220,18 @@
       }
       if (video) video.srcObject = null;
     }
+
+    // Sekme arka plana geçtiğinde veya Escape basıldığında kamera akışını serbest bırak
+    window.addEventListener('visibilitychange', () => {
+      if (document.hidden && liveCameraStream) {
+        closeLiveSelfieCamera();
+      }
+    });
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && liveCameraStream) {
+        closeLiveSelfieCamera();
+      }
+    });
 
     function captureLiveSelfieFrame() {
       const video = document.getElementById('selfieLiveVideo');
@@ -7478,6 +7692,7 @@
       else if (game === 'PARACHUTE') resetParachuteGame();
       else if (game === 'FLAPPY') resetFlappyGame();
       else if (game === 'COWBOY') resetCowboyGame();
+      else if (game === 'MOLE') resetMoleGame();
       else if (game === 'RPS') {
         oled.rps.resolved = false;
         oled.rps.playerChoice = null;
@@ -7510,6 +7725,10 @@
     }
 
     function switchTab(tabId) {
+      oled.lastUserAction = Date.now();
+      if (tabId === 'tab-console' && oled.mode === 'STANDBY') {
+        wakeOledFromStandby();
+      }
       document.querySelectorAll('.tab-view').forEach(el => el.classList.remove('active'));
       const targetEl = document.getElementById(tabId);
       if (targetEl) targetEl.classList.add('active');
@@ -7706,9 +7925,11 @@
     function finishOnboardingAndHatch() {
       const petName = document.getElementById('onboardPetName').value.trim() || 'Pufi';
       appData.petState.name = petName;
-      appData.petState.stage = 1; // Stage 1 (Bebek 🍼)
-      appData.petState.birthTime = Date.now();
-      appData.petState.ageDays = 1;
+      if (!appData.petState.hatched || !appData.petState.stage) {
+        appData.petState.stage = 1; // Stage 1 (Bebek 🍼)
+        appData.petState.birthTime = Date.now();
+        appData.petState.ageDays = 1;
+      }
       appData.petState.eggType = selectedEggChoice;
       appData.petState.hatched = true;
       appData.eggType = selectedEggChoice;
@@ -7730,6 +7951,15 @@
         syncDeviceRegistration();
         setTimeout(() => openPassportModal(), 400);
       }, 700);
+    }
+
+    function dismissOnboardingModal() {
+      const modal = document.getElementById('onboardingModal');
+      if (modal) modal.style.display = 'none';
+      localStorage.setItem('socies_onboarding_completed', '1');
+      appData.onboardingCompleted = true;
+      beep(450, 0.06);
+      showGlobalToast('✨ Misafir modunda devam ediliyor. Profil sekmesinden dilediğin zaman Google ile bağlanabilirsin!');
     }
 
     // =========================================================================
@@ -8048,9 +8278,10 @@
       setTimeout(() => checkAppVersionOnBoot(false), 1500);
       setTimeout(() => triggerSmartCompanionBriefing(), 2500);
 
-      // Kullanıcı girişi & profil oluşturma kontrolü (Giriş yapılmadıysa daima aç)
+      // Kullanıcı girişi & profil oluşturma kontrolü (Tamamlanmamışsa veya giriş yoksa aç)
+      const hasCompletedOnboard = localStorage.getItem('socies_onboarding_completed') === '1';
       const hasUserAuth = !!(localStorage.getItem('socies_user_email') || (appData && appData.userEmail));
-      if (!hasUserAuth) {
+      if (!hasUserAuth && !hasCompletedOnboard) {
         setTimeout(() => openOnboardingWizard(), 400);
       }
     });
