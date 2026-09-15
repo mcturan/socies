@@ -385,11 +385,15 @@ const server = http.createServer((req, res) => {
     return serveSociesNetworkPage(res);
   }
 
-  // 1.1 YENİ BİRLEŞİK UYGULAMA (TEK UYGULAMA: KONSOL + YOLDAŞ + LİDERLİK + ARKADAŞLAR)
   if (path === '/app' || path === '/mobile' || path === '/unified' || path === '/companion' || path === '/pocket' || path === '/console') {
     const appPath = pathModule.join(__dirname, '../app.html');
     if (fs.existsSync(appPath)) {
-      res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+      res.writeHead(200, {
+        'Content-Type': 'text/html; charset=utf-8',
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+      });
       return fs.createReadStream(appPath).pipe(res);
     }
   }
@@ -1445,19 +1449,19 @@ const server = http.createServer((req, res) => {
   if (path === '/api/v1/version/check' && method === 'GET') {
     const host = req.headers.host || '46.1.173.159:3000';
     return sendJSON(res, 200, {
-      latestVersion: 'v1.0.21',
+      latestVersion: 'v1.0.22',
       semver: {
         major: 1,
         minor: 0,
-        patch: 21,
-        build: 22
+        patch: 22,
+        build: 23
       },
-      versionCode: 22,
-      latestCommitHash: 'socies-v1.0.21',
+      versionCode: 23,
+      latestCommitHash: 'socies-v1.0.22',
       mandatoryUpdate: false,
-      releaseNotes: 'v1.0.21: 11 Mini Oyun İlerleme ve Hızlanma Sistemi (Maraton yıldız/meyve toplama, Köstebek bomba/patlama refleksi, Pinpon masa yıldızı, Yılan altın elma, Uzay çift lazer, Tuğla genişletici, vb.), 2 sn Değişen İhtiyaç Göstergesi, Çapraz İhtiyaç Etkileşimleri, Kademeli Yemek Değerleri (Mama %80, Atıştırmalıklar %25), Yükselen Termometre Barı, 2 Saatlik İhmal Hastalanma Sistemi, Gündüz Molası (Okul, Park, Şekerleme) ve 22:00-08:00 Uyku Siklusu & 10 Huysuz/Komik Uyandırma Tepkisi.',
+      releaseNotes: 'v1.0.22: Cihaz içi Mola Sistemi (Okul 2 saat, Park 1 saat, Alışveriş 45 dk) ve %10 ihtiyaç karşılama, Mini Oyunlarda Neşe (Fun) kazanımı, Maraton dengeli %5 hızlanma, Konsol menüsünde canlı ihtiyaç çubukları ve ilk basışta Durum ekranı, Çakışmasız ferah OLED uyku ve durum satırı tasarımı.',
       apkDownloadUrl: `http://${host}/download/socies-app.apk`,
-      githubApkUrl: 'https://github.com/mcturan/socies/releases/download/v1.0.21/socies-app.apk'
+      githubApkUrl: 'https://github.com/mcturan/socies/releases/download/v1.0.22/socies-app.apk'
     });
   }
 
