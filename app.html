@@ -1158,8 +1158,8 @@
 
   <div class="app-container">
     
-    <!-- TOP BAR - ULTRA COMPACT -->
-    <div class="top-header">
+    <!-- TOP BAR - CLEAN & AIRY -->
+    <div class="top-header" style="display:flex; justify-content:space-between; align-items:center;">
       <div class="player-profile" onclick="openGoogleAuthModal()" style="cursor:pointer;" title="Hesap ve Profil">
         <div class="player-avatar" id="txtPlayerAvatar">👑</div>
         <div class="player-info">
@@ -1167,23 +1167,10 @@
           <span class="player-sub" id="txtPlayerXp">XP: 0/2000 • 250 ⭐</span>
         </div>
       </div>
-      <div class="top-header-badges">
-        <div class="badge-chip" id="badgeNeedTicker" title="Canlı İhtiyaç Göstergesi (2sn Sırayla)" style="cursor:pointer; background:#0f172a; border-color:#38bdf8; color:#38bdf8; font-weight:700;" onclick="switchTab('tab-pet')">
-          <span id="icoNeedTicker">🍗</span>
-          <span id="txtNeedTicker">Açlık: %85</span>
-        </div>
-        <div class="badge-chip" id="badgeProMode" onclick="promptProCode()" title="PRO Üyelik: Tüm Özellikler Açık" style="display:none; cursor:pointer; background:linear-gradient(135deg, #FEF3C7, #FDE68A); border-color:#F59E0B; color:#92400E; font-weight:900;">
-          <span>⭐</span>
-          <span>PRO</span>
-        </div>
-        <div class="badge-chip" id="badgeGoogleAuth" onclick="openGoogleAuthModal()" title="Kullanıcı Profili & Hesap" style="cursor:pointer; background:#F8FAFC; border-color:#CBD5E1; color:#0F172A;">
-          <span id="icoGoogleAuth">👤</span>
-          <span id="txtGoogleAuth">Giriş Yap</span>
-        </div>
-        <div class="badge-chip" id="badgeAppVersion" onclick="manualCheckUpdate()" title="Sürüm: Dokunarak Kontrol Et" style="cursor:pointer;">
-          <span>🚀</span>
-          <span id="txtCurrentVersion">v1.0.20</span>
-        </div>
+      <div class="top-header-badges" style="display:flex; align-items:center; gap:8px;">
+        <button type="button" class="btn-micro" onclick="openServerSettingsModal()" title="Sunucu & Ayarlar" style="background:#F1F5F9; color:#475569; border:1px solid #CBD5E1; border-radius:10px; padding:6px 10px; font-size:0.85rem; font-weight:700; display:flex; align-items:center; gap:4px; box-shadow:none;">
+          <span>⚙️</span>
+        </button>
       </div>
     </div>
 
@@ -2228,25 +2215,24 @@
           drawOledHeart(oled.ctx, 3 + i*8, 4, i < filledHearts);
         }
 
-        // Evcil Hayvan Adı & Seviyesi (Net ve Kalın Yazı Tipi)
-        oled.ctx.font = 'bold 8px "JetBrains Mono", monospace';
-        const petNameStr = ((appData.petState && appData.petState.name) || 'PUFI');
-        const petTitle = petNameStr.slice(0, 8).toUpperCase() + ' Lv.' + ((appData.needs && appData.needs.level) || (appData.petState && appData.petState.level) || 1);
-        oled.ctx.fillText(petTitle, 38, 11);
+        // Evcil Hayvan Adı & Seviyesi (Net, ferah ve çakışmasız)
+        oled.ctx.fillStyle = '#fde047';
+        oled.ctx.font = 'bold 7.5px "JetBrains Mono", monospace';
+        const petNameStr = ((appData.petState && (appData.petState.nickname || appData.petState.name)) || 'PUFI');
+        const petLvl = ((appData.needs && appData.needs.level) || (appData.petState && appData.petState.level) || 1);
+        const petTitle = `${petNameStr.slice(0, 8).toUpperCase()} Lv.${petLvl}`;
+        oled.ctx.fillText(petTitle, 36, 11);
 
-        // 1.1 SAĞ ÜSTTE 2 SANİYEDE BİR SIRAYLA DÖNEN İHTİYAÇ GÖSTERGESİ & PİL
-        const needCycle = Math.floor(Date.now() / 2000) % 6;
-        let tickerIcon = 'AÇL';
-        let tickerVal = appData.needs ? (appData.needs.hunger || 0) : 80;
-        if (needCycle === 1) { tickerIcon = 'TUV'; tickerVal = appData.needs ? (appData.needs.toilet || 0) : 80; }
-        else if (needCycle === 2) { tickerIcon = 'HIJ'; tickerVal = appData.needs ? (appData.needs.clean || 0) : 80; }
-        else if (needCycle === 3) { tickerIcon = 'ENR'; tickerVal = appData.needs ? (appData.needs.sleep || 0) : 80; }
-        else if (needCycle === 4) { tickerIcon = 'SEV'; tickerVal = appData.needs ? (appData.needs.love || 0) : 80; }
-        else if (needCycle === 5) { tickerIcon = 'NES'; tickerVal = appData.needs ? (appData.needs.fun || 0) : 80; }
-
-        oled.ctx.font = 'bold 7px "JetBrains Mono", monospace';
-        oled.ctx.fillStyle = tickerVal < 35 ? '#ef4444' : '#fde047';
-        oled.ctx.fillText(`${tickerIcon}:${Math.round(tickerVal)}%`, 78, 11);
+        // Kriz / Acil Durum Mini Uyarısı (Hasta veya Kaka Varsa)
+        if (appData.petState && appData.petState.isSick) {
+          oled.ctx.fillStyle = '#ef4444';
+          oled.ctx.font = 'bold 6.5px "JetBrains Mono", monospace';
+          if (oled.animFrame % 40 < 25) oled.ctx.fillText('!ILAC', 88, 11);
+        } else if (appData.petState && appData.petState.poopCount > 0) {
+          oled.ctx.fillStyle = '#f59e0b';
+          oled.ctx.font = 'bold 6.5px "JetBrains Mono", monospace';
+          if (oled.animFrame % 40 < 25) oled.ctx.fillText('!TUV', 90, 11);
+        }
 
         // Minik batarya simgesi (En sağda 114-126)
         const battPct = appData.batteryPct || 88;
@@ -3376,31 +3362,51 @@
     }
 
     function renderOledSleeping() {
-      // GECE UYKU MODU (Zzz Animasyonu & Ay Işığı)
-      oled.ctx.fillStyle = '#ffb703';
-      oled.ctx.font = '8px "JetBrains Mono"';
-      oled.ctx.fillText('UYKU MODU 🌙', 32, 24);
+      // GECE UYKU MODU (Ferah Piksel Gece Gökyüzü & Yatak Sahnesi - Sıfır Çakışma)
+      // 1. Üst Başlık (Sol üstte ferah: x: 8, y: 24)
+      oled.ctx.fillStyle = '#fde047';
+      oled.ctx.font = 'bold 7.5px "JetBrains Mono", monospace';
+      oled.ctx.fillText('🌙 UYKU MODU', 8, 24);
 
-      // Hilal Ay
-      oled.ctx.fillRect(14, 20, 4, 8);
-      oled.ctx.fillRect(18, 22, 2, 4);
+      // 2. Sağ Üst Gökyüzü: Piksel Hilal Ay & Yıldızlar (x: 102 - 114, y: 17 - 26)
+      oled.ctx.fillStyle = '#fef08a';
+      oled.ctx.fillRect(106, 18, 5, 8);
+      oled.ctx.fillRect(104, 19, 3, 6);
+      oled.ctx.fillStyle = '#000814'; // Hilal oyuğu
+      oled.ctx.fillRect(107, 17, 5, 10);
 
-      // Yatakta Uyuyan Pufi
-      drawModularSpriteToOled(44, 38);
+      // Yanıp sönen tatlı yıldızlar
+      if (oled.animFrame % 60 < 30) {
+        oled.ctx.fillStyle = '#7dd3fc';
+        oled.ctx.fillRect(72, 20, 1, 1);
+        oled.ctx.fillRect(92, 25, 2, 1);
+        oled.ctx.fillRect(84, 18, 1, 2);
+      }
 
-      // Kayan Zzz Animasyonu
+      // 3. Rahat Yatak & Yastık (x: 36 - 80, y: 46 - 52)
+      oled.ctx.fillStyle = '#1e293b';
+      oled.ctx.fillRect(38, 48, 44, 5); // Yatak tahtası
+      oled.ctx.fillStyle = '#475569';
+      oled.ctx.fillRect(36, 45, 9, 6);  // Yumuşak yastık
+      oled.ctx.fillStyle = '#334155';
+      oled.ctx.fillRect(44, 46, 38, 4); // Yatak örtüsü
+
+      // 4. Uyuyan Pufi (px: 46, py: 42 -> Taç en fazla y:26'ya kadar çıkar, başlık x:8'de kalır ve ASLA çakışmaz)
+      drawModularSpriteToOled(46, 42);
+
+      // 5. Yükselen Zzz Efekti (Pufi'nin başından sağ yukarı doğru süzülür: x: 72 -> 86)
+      const zTick = (oled.animFrame * 0.35) % 18;
       oled.ctx.fillStyle = '#38bdf8';
-      oled.ctx.font = '7px "JetBrains Mono"';
-      const zOffset = (oled.animFrame % 40);
-      oled.ctx.fillText('z', 72 + zOffset * 0.3, 38 - zOffset * 0.3);
-      oled.ctx.font = '9px "JetBrains Mono"';
-      oled.ctx.fillText('Z', 78 + zOffset * 0.4, 32 - zOffset * 0.4);
+      oled.ctx.font = 'bold 6px "JetBrains Mono", monospace';
+      oled.ctx.fillText('z', 72 + zTick * 0.4, 38 - zTick);
+      oled.ctx.font = 'bold 8px "JetBrains Mono", monospace';
+      oled.ctx.fillText('Z', 80 + zTick * 0.5, 32 - zTick);
 
-      // Alt Bilgilendirme
-      if (oled.animFrame % 30 < 20) {
+      // 6. Alt Bilgilendirme (y: 61)
+      if (oled.animFrame % 60 < 42) {
         oled.ctx.fillStyle = '#64748b';
-        oled.ctx.font = '6.5px "JetBrains Mono"';
-        oled.ctx.fillText('[TUSA BAS]: UYANDIR', 16, 60);
+        oled.ctx.font = 'bold 6.5px "JetBrains Mono", monospace';
+        oled.ctx.fillText('[TUŞA BAS: UYANDIR]', 18, 61);
       }
     }
 
