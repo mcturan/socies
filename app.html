@@ -863,7 +863,7 @@
         </div>
 
         <div style="font-size:0.72rem; color:#94A3B8; text-align:center;">
-          Socies v1.0.20 (Build 21) • OTA Güncel
+          Socies v1.0.21 (Build 22) • OTA Güncel
         </div>
       </div>
 
@@ -1102,6 +1102,65 @@
     </div>
   </div>
 
+  <!-- GÜNDÜZ MOLASI & DIŞARI GÖNDERME MODALI -->
+  <div id="petOutingModal" class="update-overlay" style="display:none; z-index:11000; background:rgba(15,23,42,0.85); backdrop-filter:blur(8px);">
+    <div class="update-dialog" style="max-width:390px; width:94%; padding:18px; border:2px solid #10B981; background:linear-gradient(160deg, #064E3B 0%, #0F172A 100%); color:#F8FAFC; box-shadow:0 12px 36px rgba(16,185,129,0.35);">
+      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px dashed #10B981; padding-bottom:8px; margin-bottom:12px;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="font-size:1.6rem;">🌍</span>
+          <div style="text-align:left;">
+            <div style="font-size:0.95rem; font-weight:900; color:#6EE7B7;">GÜNDÜZ MOLASI & DIŞARI GÖNDER</div>
+            <div style="font-size:0.68rem; color:#94A3B8;">Pufi kendi başına gezer, öğrenir ve eğlenir</div>
+          </div>
+        </div>
+        <button type="button" class="btn-micro" style="background:#1F2937; color:#fff;" onclick="closeOutingModal()">✕</button>
+      </div>
+
+      <div id="outingStatusPanel" style="display:none; background:rgba(0,0,0,0.35); border:1px solid #10B981; border-radius:12px; padding:12px; margin-bottom:12px; text-align:center;">
+        <div style="font-size:1.4rem;" id="txtOutingActiveIco">🎒</div>
+        <div style="font-weight:900; font-size:0.95rem; color:#FDE047; margin:4px 0;" id="txtOutingActiveTitle">Pufi Okulda!</div>
+        <div style="font-size:0.75rem; color:#CBD5E1; margin-bottom:8px;" id="txtOutingActiveDesc">Ders çalışıyor, yeni şeyler öğreniyor...</div>
+        <div style="font-size:1.2rem; font-weight:900; font-family:'Courier New', monospace; color:#38BDF8;" id="txtOutingCountdown">Dönüşe: 14:25</div>
+        <button type="button" class="btn-micro" style="background:#EF4444; color:#fff; font-weight:900; margin-top:8px; padding:6px 12px;" onclick="cancelPetOutingEarly()">⚡ Erken Eve Çağır</button>
+      </div>
+
+      <div id="outingChoicesPanel" style="display:flex; flex-direction:column; gap:10px;">
+        <div class="outing-card" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); border-radius:12px; padding:12px; display:flex; align-items:center; justify-content:space-between; cursor:pointer;" onclick="startPetOuting('SCHOOL')">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span style="font-size:1.8rem;">🎒</span>
+            <div style="text-align:left;">
+              <div style="font-weight:900; font-size:0.88rem; color:#FDE047;">Okula Gönder (15 dk)</div>
+              <div style="font-size:0.72rem; color:#CBD5E1;">Ders dinler, bilgi & XP toplar (+80 XP, +20 Sevgi)</div>
+            </div>
+          </div>
+          <button type="button" class="btn-micro" style="background:#10B981; color:#fff; font-weight:900;">Gönder ➔</button>
+        </div>
+
+        <div class="outing-card" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); border-radius:12px; padding:12px; display:flex; align-items:center; justify-content:space-between; cursor:pointer;" onclick="startPetOuting('PARK')">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span style="font-size:1.8rem;">🌳</span>
+            <div style="text-align:left;">
+              <div style="font-weight:900; font-size:0.88rem; color:#38BDF8;">Parka Oynamaya Gönder (10 dk)</div>
+              <div style="font-size:0.72rem; color:#CBD5E1;">Salıncakta sallanır, sosyalleşir (+50 XP, +35 Neşe)</div>
+            </div>
+          </div>
+          <button type="button" class="btn-micro" style="background:#0EA5E9; color:#fff; font-weight:900;">Gönder ➔</button>
+        </div>
+
+        <div class="outing-card" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); border-radius:12px; padding:12px; display:flex; align-items:center; justify-content:space-between; cursor:pointer;" onclick="startPetOuting('NAP')">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span style="font-size:1.8rem;">🏕️</span>
+            <div style="text-align:left;">
+              <div style="font-weight:900; font-size:0.88rem; color:#F472B6;">Şekerleme & Piknik (8 dk)</div>
+              <div style="font-size:0.72rem; color:#CBD5E1;">Ağaç gölgesinde hamakta dinlenir (+40 XP, +45 Enerji)</div>
+            </div>
+          </div>
+          <button type="button" class="btn-micro" style="background:#EC4899; color:#fff; font-weight:900;">Gönder ➔</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- FEATURE LOCK MODAL -->
   <div id="featureLockModal" class="update-overlay" style="display:none;">
     <div class="update-dialog" style="max-width:350px;">
@@ -1166,6 +1225,10 @@
         </div>
       </div>
       <div class="top-header-badges">
+        <div class="badge-chip" id="badgeNeedTicker" title="Canlı İhtiyaç Göstergesi (2sn Sırayla)" style="cursor:pointer; background:#0f172a; border-color:#38bdf8; color:#38bdf8; font-weight:700;" onclick="switchTab('tab-pet')">
+          <span id="icoNeedTicker">🍗</span>
+          <span id="txtNeedTicker">Açlık: %85</span>
+        </div>
         <div class="badge-chip" id="badgeProMode" onclick="promptProCode()" title="PRO Üyelik: Tüm Özellikler Açık" style="display:none; cursor:pointer; background:linear-gradient(135deg, #FEF3C7, #FDE68A); border-color:#F59E0B; color:#92400E; font-weight:900;">
           <span>⭐</span>
           <span>PRO</span>
@@ -1321,11 +1384,14 @@
           Socies'in karnını doyurmak, tuvaletini yaptırmak, yıkamak ve oyun oynamak için 1. sekmedeki retro konsol tuşlarını kullanınız.
         </p>
         <div style="display:flex; gap:8px; margin-top:6px;">
-          <button class="btn-action-primary" style="flex:1.2; background:linear-gradient(135deg, #4F46E5, #06B6D4); font-size:0.82rem; font-weight:900; padding:10px; border-radius:12px; box-shadow:0 4px 12px rgba(79,70,229,0.2);" onclick="switchTab('tab-console')">
-            🕹️ Konsola Git
+          <button class="btn-action-primary" style="flex:1.1; background:linear-gradient(135deg, #4F46E5, #06B6D4); font-size:0.82rem; font-weight:900; padding:10px; border-radius:12px; box-shadow:0 4px 12px rgba(79,70,229,0.2);" onclick="switchTab('tab-console')">
+            🕹️ Konsol
           </button>
           <button class="btn-action-primary" style="flex:1; background:linear-gradient(135deg, #78350F, #B45309); font-size:0.82rem; font-weight:900; padding:10px; border-radius:12px; box-shadow:0 4px 12px rgba(180,83,9,0.2);" onclick="feedPetWithFood(4); switchTab('tab-console');">
-            ☕ Türk Kahvesi
+            ☕ Kahve
+          </button>
+          <button class="btn-action-primary" style="flex:1.2; background:linear-gradient(135deg, #059669, #10B981); font-size:0.82rem; font-weight:900; padding:10px; border-radius:12px; box-shadow:0 4px 12px rgba(16,185,129,0.2);" onclick="openOutingModal()">
+            🌍 Mola & Dışarı
           </button>
         </div>
       </div>
@@ -1554,7 +1620,7 @@
   </nav>
 
   <script>
-    const CURRENT_APP_VERSION = 'v1.0.20';
+    const CURRENT_APP_VERSION = 'v1.0.21';
 
     // --- 📡 ARKA PLAN TELEMETRİ VE HATA GÖZLEMCİSİ (SOCIES LOGGER) ---
     const SociesLogger = {
@@ -1995,7 +2061,7 @@
       mode: 'IDLE', // IDLE, MENU, DINO, PONG, SNAKE, CATCHER, COWBOY, RPS, EATING, TOILET, BATH, SLEEPING
       menuLevel: 'ROOT', // ROOT, FOOD, GAMES, STATS
       menuIdx: 0,
-      menuItems: ['BESLE', 'TUVALET', 'BANYO', 'İLAÇ', 'OYUNLAR', 'UYUT', 'DURUM'],
+      menuItems: ['BESLE', 'TUVALET', 'BANYO', 'İLAÇ', 'OYUNLAR', 'UYUT', 'MOLA', 'DURUM'],
       foodItems: ['ELMA 🍏', 'MAMA 🍗', 'PASTA 🍰', 'SU 💧', 'KAHVE ☕'],
       gameItems: [
         '1. MARATON 🏃',
@@ -2025,6 +2091,8 @@
         vy: 0,
         isGrounded: true,
         obstacles: [],
+        collectibles: [],
+        bonusFloating: null,
         groundOffset: 0,
         score: 0,
         hiScore: 0,
@@ -2033,11 +2101,12 @@
         spawnTimer: 0
       },
 
-      // 2. Pong Squash Pro State (Çocuk Dostu Rahat Hız)
+      // 2. Pong Squash Pro State
       pong: {
         ballX: 64, ballY: 28,
         vx: 0.65, vy: 0.60,
         padX: 48, padW: 28,
+        bonusStar: { x: 64, y: 32, active: false, timer: 0 },
         score: 0, lives: 3,
         isGameOver: false
       },
@@ -2048,6 +2117,7 @@
         dir: 'RIGHT',
         nextDir: 'RIGHT',
         food: {x: 20, y: 5},
+        goldenFood: { x: -1, y: -1, active: false, timer: 0 },
         score: 0, hiScore: 0,
         isGameOver: false,
         moveTimer: 0
@@ -2068,6 +2138,9 @@
         shipX: 56,
         bullets: [],
         aliens: [],
+        powerups: [],
+        dualLasers: false,
+        laserTimer: 0,
         alienDir: 1,
         alienDropTimer: 0,
         score: 0,
@@ -2079,6 +2152,8 @@
       brick: {
         padX: 48,
         padW: 32,
+        wideTimer: 0,
+        powerups: [],
         ballX: 64,
         ballY: 46,
         vx: 0.70,
@@ -2112,15 +2187,16 @@
       },
 
       // 9. Cowboy Duel State
-      cowboy: { canShoot: false, timer: 0, reactionMs: 0, isGameOver: false },
+      cowboy: { canShoot: false, timer: 0, reactionMs: 0, streak: 0, isGameOver: false },
 
       // 10. RPS Duel State
-      rps: { playerChoice: null, cpuChoice: null, resultText: '', resolved: false },
+      rps: { playerChoice: null, cpuChoice: null, resultText: '', streak: 0, resolved: false },
 
       // 11. Köstebek Yakalama State (Whack-a-Mole)
       mole: {
         holes: [24, 64, 104],
         activeHole: -1,
+        activeType: 'MOLE', // 'MOLE' veya 'BOMB'
         timer: 0,
         appearDuration: 55,
         score: 0,
@@ -2128,6 +2204,7 @@
         maxMisses: 3,
         isGameOver: false,
         hitHole: -1,
+        hitType: 'MOLE',
         hitTimer: 0
       },
 
@@ -2207,14 +2284,29 @@
         const petTitle = petNameStr.slice(0, 8).toUpperCase() + ' Lv.' + ((appData.needs && appData.needs.level) || (appData.petState && appData.petState.level) || 1);
         oled.ctx.fillText(petTitle, 38, 11);
 
-        // Batarya Göstergesi (Gerçek Yüzde & İkon)
-        const battPct = appData.batteryPct || 88;
+        // 1.1 SAĞ ÜSTTE 2 SANİYEDE BİR SIRAYLA DÖNEN İHTİYAÇ GÖSTERGESİ & PİL
+        const needCycle = Math.floor(Date.now() / 2000) % 6;
+        let tickerIcon = 'AÇL';
+        let tickerVal = appData.needs ? (appData.needs.hunger || 0) : 80;
+        if (needCycle === 1) { tickerIcon = 'TUV'; tickerVal = appData.needs ? (appData.needs.toilet || 0) : 80; }
+        else if (needCycle === 2) { tickerIcon = 'HIJ'; tickerVal = appData.needs ? (appData.needs.clean || 0) : 80; }
+        else if (needCycle === 3) { tickerIcon = 'ENR'; tickerVal = appData.needs ? (appData.needs.sleep || 0) : 80; }
+        else if (needCycle === 4) { tickerIcon = 'SEV'; tickerVal = appData.needs ? (appData.needs.love || 0) : 80; }
+        else if (needCycle === 5) { tickerIcon = 'NES'; tickerVal = appData.needs ? (appData.needs.fun || 0) : 80; }
+
         oled.ctx.font = 'bold 7px "JetBrains Mono", monospace';
-        oled.ctx.fillText(battPct + '%', 88, 11);
-        oled.ctx.strokeRect(106, 3, 17, 9);
-        oled.ctx.fillRect(123, 5, 2, 5); // Pil ucu
-        const fillW = Math.round(13 * Math.min(100, Math.max(5, battPct)) / 100);
-        oled.ctx.fillRect(108, 5, fillW, 5);
+        oled.ctx.fillStyle = tickerVal < 35 ? '#ef4444' : '#fde047';
+        oled.ctx.fillText(`${tickerIcon}:${Math.round(tickerVal)}%`, 78, 11);
+
+        // Minik batarya simgesi (En sağda 114-126)
+        const battPct = appData.batteryPct || 88;
+        oled.ctx.strokeStyle = '#64748b';
+        oled.ctx.strokeRect(114, 4, 10, 7);
+        oled.ctx.fillStyle = '#64748b';
+        oled.ctx.fillRect(124, 6, 1, 3);
+        const bFill = Math.max(1, Math.round(8 * (Math.min(100, Math.max(10, battPct)) / 100)));
+        oled.ctx.fillStyle = battPct < 25 ? '#ef4444' : '#22c55e';
+        oled.ctx.fillRect(115, 5, bFill, 5);
 
         // Divider line
         oled.ctx.fillStyle = '#1e293b';
@@ -2261,6 +2353,8 @@
           renderOledGuessGame();
         } else if (oled.mode === 'BROADCAST') {
           renderOledBroadcast();
+        } else if (oled.mode === 'OUTING') {
+          renderOledOuting();
         } else {
           renderOledIdle();
         }
@@ -2326,6 +2420,227 @@
         beep(880, 0.1);
         renderOledSideThoughtBox('Geri geldin! Çok sevindim! 🥰', '💖', false);
       }
+    }
+
+    // =========================================================================
+    // GÜNDÜZ UZUN SÜRELİ ARA VERME & DIŞARI GÖNDERME MOTORU (OKUL / PARK / PİKNİK)
+    // =========================================================================
+    function renderOledOuting() {
+      const o = appData.outing;
+      if (!o || !o.active) {
+        oled.mode = 'IDLE';
+        return;
+      }
+
+      const now = Date.now();
+      const remMs = o.endTime - now;
+      if (remMs <= 0) {
+        finishPetOuting();
+        return;
+      }
+
+      const remSec = Math.max(0, Math.ceil(remMs / 1000));
+      const mm = Math.floor(remSec / 60);
+      const ss = remSec % 60;
+      const timeStr = `${mm}:${ss < 10 ? '0' : ''}${ss}`;
+
+      // Zemin
+      oled.ctx.fillStyle = '#1e293b';
+      oled.ctx.fillRect(0, 56, 128, 1);
+
+      if (o.type === 'SCHOOL') {
+        // 🏫 OKUL SAHNESİ: Karatahta, tebeşir, okul binası & sıralar
+        oled.ctx.fillStyle = '#14532d'; // Koyu yeşil karatahta
+        oled.ctx.fillRect(44, 20, 50, 22);
+        oled.ctx.strokeStyle = '#78350f'; // Ahşap çerçeve
+        oled.ctx.strokeRect(44, 20, 50, 22);
+
+        oled.ctx.fillStyle = '#f8fafc';
+        oled.ctx.font = '5.5px "JetBrains Mono", monospace';
+        oled.ctx.fillText('A B C • 1 2 3', 48, 29);
+        oled.ctx.fillText('SOCIES AKADEMI', 47, 38);
+
+        // Öğrenci Pufi (Sırasında ders dinliyor)
+        const px = 20;
+        const py = 38;
+        drawModularSpriteToOled(px, py);
+        oled.ctx.fillStyle = '#b45309';
+        oled.ctx.fillRect(px + 12, py + 8, 14, 10);
+        oled.ctx.fillStyle = '#ffffff';
+        oled.ctx.fillRect(px + 14, py + 6, 8, 3); // Açık defter
+
+      } else if (o.type === 'PARK') {
+        // 🌳 PARK SAHNESİ: Ağaç, salıncak, koşan Pufi
+        oled.ctx.fillStyle = '#78350f';
+        oled.ctx.fillRect(16, 26, 6, 30); // Gövde
+        oled.ctx.fillStyle = '#16a34a';
+        oled.ctx.fillRect(6, 18, 26, 16); // Yapraklar
+        oled.ctx.fillRect(10, 14, 18, 6);
+
+        // Salıncak
+        const swingTick = Math.sin(oled.animFrame * 0.08) * 4;
+        oled.ctx.strokeStyle = '#94a3b8';
+        oled.ctx.lineWidth = 1;
+        oled.ctx.beginPath();
+        oled.ctx.moveTo(80, 20);
+        oled.ctx.lineTo(76 + swingTick, 46);
+        oled.ctx.moveTo(92, 20);
+        oled.ctx.lineTo(88 + swingTick, 46);
+        oled.ctx.stroke();
+        oled.ctx.fillStyle = '#f59e0b';
+        oled.ctx.fillRect(74 + swingTick, 46, 16, 2); // Salıncak tahtası
+
+        // Parkta koşan neşeli Pufi
+        const px = Math.round(44 + Math.sin(oled.animFrame * 0.05) * 8);
+        drawModularSpriteToOled(px, 38);
+
+      } else {
+        // 🏕️ ŞEKERLEME / PİKNİK SAHNESİ: Hamak, gölge & hafif zZZ
+        oled.ctx.fillStyle = '#78350f';
+        oled.ctx.fillRect(18, 24, 4, 32);
+        oled.ctx.fillRect(98, 24, 4, 32);
+
+        oled.ctx.strokeStyle = '#f59e0b';
+        oled.ctx.lineWidth = 1;
+        const bob = Math.sin(oled.animFrame * 0.04) * 2;
+        oled.ctx.beginPath();
+        oled.ctx.moveTo(22, 28);
+        oled.ctx.quadraticCurveTo(60, 48 + bob, 98, 28);
+        oled.ctx.stroke();
+
+        // Hamakta yatan Pufi
+        drawModularSpriteToOled(52, 34 + Math.round(bob));
+        // Süzülen zZ
+        oled.ctx.fillStyle = '#38bdf8';
+        oled.ctx.font = '6px "JetBrains Mono", monospace';
+        const zOff = (oled.animFrame * 0.3) % 14;
+        oled.ctx.fillText('z', 72, 32 - zOff);
+      }
+
+      // Canlı Geri Sayım ve Başlık Kutusu (Alt Kısım)
+      oled.ctx.fillStyle = 'rgba(2, 6, 23, 0.9)';
+      oled.ctx.fillRect(2, 46, 124, 17);
+      oled.ctx.strokeStyle = '#38bdf8';
+      oled.ctx.strokeRect(2, 46, 124, 17);
+
+      oled.ctx.fillStyle = '#fde047';
+      oled.ctx.font = 'bold 6.5px "JetBrains Mono", monospace';
+      oled.ctx.fillText(o.title || 'MOLADA', 6, 54);
+
+      oled.ctx.fillStyle = '#00f0ff';
+      oled.ctx.font = 'bold 7px "JetBrains Mono", monospace';
+      oled.ctx.fillText(`DÖNÜŞ: ${timeStr}`, 70, 54);
+
+      oled.ctx.fillStyle = '#94a3b8';
+      oled.ctx.font = '5.2px "JetBrains Mono", monospace';
+      oled.ctx.fillText(o.sub || 'Lütfen dönmesini bekleyin', 6, 61);
+    }
+
+    function startPetOuting(type, customMins) {
+      if (appData.petState && appData.petState.isSleeping) {
+        showGlobalToast('😴 Pufi şu an uyuyor, önce uyandır!');
+        return;
+      }
+      if (appData.petState && appData.petState.isSick) {
+        showGlobalToast('🤒 Pufi hasta, dışarı çıkamaz! Önce İLAÇ ver.');
+        return;
+      }
+
+      const durationMins = customMins || (type === 'SCHOOL' ? 15 : (type === 'PARK' ? 10 : 8));
+      let title = '🎒 PUFİ OKULDA';
+      let sub = 'Ders dinliyor, yeni şeyler öğreniyor';
+      if (type === 'PARK') {
+        title = '🌳 PARKTA KOŞUYOR';
+        sub = 'Arkadaşlarıyla neşeyle saklambaç oynuyor';
+      } else if (type === 'NAP') {
+        title = '🏕️ PİKNİKTE ŞEKERLEME';
+        sub = 'Kuş sesleri eşliğinde hamakta dinleniyor';
+      }
+
+      appData.outing = {
+        active: true,
+        type,
+        durationMins,
+        startTime: Date.now(),
+        endTime: Date.now() + durationMins * 60 * 1000,
+        title,
+        sub
+      };
+      localStorage.setItem('socies_pet_outing', JSON.stringify(appData.outing));
+
+      oled.mode = 'OUTING';
+      playTactileClick('select');
+      beep(780, 0.15);
+      showGlobalToast(`🚀 Pufi yola çıktı! (${durationMins} dakika sonra dönecek)`);
+      closeOutingModal();
+    }
+
+    function finishPetOuting() {
+      if (!appData.outing) return;
+      const type = appData.outing.type;
+      appData.outing = null;
+      localStorage.removeItem('socies_pet_outing');
+      oled.mode = 'IDLE';
+
+      playLevelUpFanfare();
+      if (type === 'SCHOOL') {
+        addPetXP(80);
+        appData.needs.love = Math.min(100, (appData.needs.love || 50) + 20);
+        showGlobalToast('🎓 Pufi okuldan gururla döndü! Sınavdan 100 aldı (+80 XP, +20 Sevgi)');
+        renderOledSideThoughtBox('Okul çok güzeldi! 100 aldım! 🎓', '📚', false);
+      } else if (type === 'PARK') {
+        addPetXP(50);
+        appData.needs.fun = Math.min(100, (appData.needs.fun || 50) + 35);
+        appData.needs.social = Math.min(100, (appData.needs.social || 50) + 30);
+        showGlobalToast('⚽ Pufi parkta arkadaşlarıyla doyasıya eğlendi! (+50 XP, +35 Neşe)');
+        renderOledSideThoughtBox('Parkta yeni arkadaşlar edindim! ⚽', '🎉', false);
+      } else {
+        addPetXP(40);
+        appData.needs.sleep = Math.min(100, (appData.needs.sleep || 50) + 45);
+        showGlobalToast('🛋️ Pufi hamakta derin bir şekerleme yaptı! Enerjisi tavan (+45 Enerji)');
+        renderOledSideThoughtBox('Harika bir şekerlemeydi, zımba gibiyim! 🥪', '✨', false);
+      }
+      savePetState();
+      saveNeeds();
+      updateNeedsUI();
+    }
+
+    function cancelPetOutingEarly() {
+      if (!appData.outing) return;
+      if (confirm('⚠️ Pufi henüz etkinliğini bitirmedi. Onu erkenden eve çağırmak istiyor musun?')) {
+        appData.outing = null;
+        localStorage.removeItem('socies_pet_outing');
+        oled.mode = 'IDLE';
+        beep(440, 0.1);
+        showGlobalToast('🏠 Pufi erkenden eve döndü.');
+        closeOutingModal();
+      }
+    }
+
+    function openOutingModal() {
+      const modal = document.getElementById('petOutingModal');
+      const statusPan = document.getElementById('outingStatusPanel');
+      const choicePan = document.getElementById('outingChoicesPanel');
+      if (!modal) return;
+
+      if (appData.outing && appData.outing.active) {
+        statusPan.style.display = 'block';
+        choicePan.style.display = 'none';
+        const o = appData.outing;
+        document.getElementById('txtOutingActiveIco').innerText = o.type === 'SCHOOL' ? '🎒' : (o.type === 'PARK' ? '🌳' : '🏕️');
+        document.getElementById('txtOutingActiveTitle').innerText = o.title;
+        document.getElementById('txtOutingActiveDesc').innerText = o.sub;
+      } else {
+        statusPan.style.display = 'none';
+        choicePan.style.display = 'flex';
+      }
+      modal.style.display = 'flex';
+      beep(660, 0.08);
+    }
+
+    function closeOutingModal() {
+      const modal = document.getElementById('petOutingModal');
+      if (modal) modal.style.display = 'none';
     }
 
     function renderOledSideThoughtBox(text, icon = '💭', isPrompt = false) {
@@ -2865,11 +3180,11 @@
       oled.ctx.font = 'bold 7px "JetBrains Mono", monospace';
       oled.ctx.fillText(label.slice(0, 7), 87, 26);
 
-      // Dikey Dolum Termometresi / Barı
+      // Dikey Dolum Termometresi / Barı (Mevcut yüzde seviyesinden hedef seviyeye yükselir)
       oled.ctx.strokeStyle = '#00f0ff';
       oled.ctx.strokeRect(88, 30, 8, 28);
-      const barH = Math.round(26 * Math.min(1.0, prog));
-      oled.ctx.fillStyle = prog > 0.8 ? '#22c55e' : (prog > 0.4 ? '#38bdf8' : '#f59e0b');
+      const barH = Math.round(26 * Math.min(1.0, Math.max(0.04, curVal / 100)));
+      oled.ctx.fillStyle = curVal > 75 ? '#22c55e' : (curVal > 35 ? '#38bdf8' : '#f59e0b');
       oled.ctx.fillRect(89, 57 - barH, 6, barH);
 
       // Yüzde Metni
@@ -3051,11 +3366,14 @@
       oled.dino.vy = 0;
       oled.dino.isGrounded = true;
       oled.dino.obstacles = [];
+      oled.dino.collectibles = [];
+      oled.dino.bonusFloating = null;
       oled.dino.groundOffset = 0;
       oled.dino.score = 0;
       oled.dino.speed = 0.95;
       oled.dino.isGameOver = false;
       oled.dino.spawnTimer = 0;
+      oled.dino.itemTimer = 0;
     }
 
     function renderOledDino() {
@@ -3078,10 +3396,12 @@
         oled.ctx.fillRect(px + 7, 56, 1, 1);
       }
 
-      // 3. FİZİK & GRAVİTİ
+      // 3. FİZİK & GRAVİTİ & %10 HIZLANMA
       if (!d.isGameOver) {
         d.score += 0.15;
-        d.speed = 0.95 + Math.min(0.8, d.score * 0.0008);
+        // Her 80 puanda %10 hızlanma (çocuk dostu kademeli artış)
+        const speedMultiplier = 1 + Math.min(1.2, Math.floor(d.score / 80) * 0.10);
+        d.speed = 0.95 * speedMultiplier;
 
         d.vy += 0.18;
         d.petY += d.vy;
@@ -3093,9 +3413,9 @@
 
         // Engel Oluşturma (Kaktüsler ve Uçan Kuşlar)
         d.spawnTimer++;
-        if (d.spawnTimer > (80 + Math.random() * 50)) {
+        if (d.spawnTimer > (85 + Math.random() * 45)) {
           d.spawnTimer = 0;
-          const isBird = (d.score > 140 && Math.random() < 0.28);
+          const isBird = (d.score > 120 && Math.random() < 0.28);
           if (isBird) {
             d.obstacles.push({ x: 130, y: 30, w: 10, h: 6, type: 'bird' });
           } else if (Math.random() < 0.5) {
@@ -3105,15 +3425,49 @@
           }
         }
 
-        // Engel Hareketi & Temizleme
+        // Yolda Toplanabilir Meyve ve Yıldız Oluşturma (Her 70-110 frame)
+        d.itemTimer = (d.itemTimer || 0) + 1;
+        if (d.itemTimer > (70 + Math.random() * 50)) {
+          d.itemTimer = 0;
+          const isStar = Math.random() < 0.45;
+          d.collectibles.push({
+            x: 130,
+            y: Math.random() < 0.5 ? 26 : 43, // Havada (zıplayarak) veya yerde
+            type: isStar ? 'star' : 'berry'
+          });
+        }
+
+        // Engel ve Eşya Hareketi
         for (let i = d.obstacles.length - 1; i >= 0; i--) {
           const obs = d.obstacles[i];
           obs.x -= d.speed;
           if (obs.x < -16) d.obstacles.splice(i, 1);
         }
+
+        for (let i = (d.collectibles || []).length - 1; i >= 0; i--) {
+          const col = d.collectibles[i];
+          col.x -= d.speed;
+          if (col.x < -16) d.collectibles.splice(i, 1);
+        }
       }
 
-      // 4. ENGELLERİ ÇİZ
+      // 4. TOPLANABİLİR EŞYALARI ÇİZ (Yıldız ⭐ ve Meyve 🍎)
+      for (const col of (d.collectibles || [])) {
+        const cx = Math.round(col.x);
+        const cy = Math.round(col.y);
+        if (col.type === 'star') {
+          oled.ctx.fillStyle = '#fde047';
+          oled.ctx.fillRect(cx + 1, cy, 3, 5);
+          oled.ctx.fillRect(cx, cy + 1, 5, 3);
+        } else {
+          oled.ctx.fillStyle = '#f43f5e';
+          oled.ctx.fillRect(cx, cy + 1, 4, 4);
+          oled.ctx.fillStyle = '#22c55e';
+          oled.ctx.fillRect(cx + 1, cy, 2, 1); // Sapı
+        }
+      }
+
+      // 5. ENGELLERİ ÇİZ
       for (const obs of d.obstacles) {
         oled.ctx.fillStyle = '#00f0ff';
         if (obs.type === 'cactus_s') {
@@ -3133,21 +3487,21 @@
         }
       }
 
-      // 5. PUFİ KOŞUCU KARAKTERİ (SANAL BEBEK MARATONDA!)
+      // 6. PUFİ KOŞUCU KARAKTERİ
       const rx = 18;
       const ry = Math.round(d.petY);
       oled.ctx.fillStyle = '#38bdf8';
 
-      // Sevimli Kulaklar (Tavşan/Kedi Kulakları)
+      // Kulaklar
       oled.ctx.fillRect(rx + 4, ry - 3, 2, 4);
       oled.ctx.fillRect(rx + 8, ry - 3, 2, 4);
-      // Baş & Gövde Silüeti (Tombiş Pufi)
+      // Gövde
       oled.ctx.fillRect(rx + 2, ry, 10, 11);
       // Gözler
       oled.ctx.fillStyle = '#000814';
       oled.ctx.fillRect(rx + 8, ry + 2, 2, 2);
       oled.ctx.fillStyle = '#38bdf8';
-      // Minik Kuyruk
+      // Kuyruk
       oled.ctx.fillRect(rx, ry + 5, 2, 2);
 
       // Koşan Patiler
@@ -3161,14 +3515,27 @@
           oled.ctx.fillRect(rx + 8, ry + 11, 2, 4);
         }
       } else {
-        // Zıplarken patiler arkaya doğru
         oled.ctx.fillRect(rx + 2, ry + 11, 2, 3);
         oled.ctx.fillRect(rx + 7, ry + 11, 2, 3);
       }
 
-      // 6. ÇARPIŞMA TESTİ
+      // 7. ÇARPIŞMA VE TOPLAMA TESTİ
       if (!d.isGameOver) {
         const pBox = { x: rx + 2, y: ry, w: 10, h: 14 };
+
+        // Toplanabilir eşya alma testi
+        for (let i = (d.collectibles || []).length - 1; i >= 0; i--) {
+          const col = d.collectibles[i];
+          if (pBox.x + pBox.w > col.x && pBox.x < col.x + 6 &&
+              pBox.y + pBox.h > col.y && pBox.y < col.y + 6) {
+            d.score += 25;
+            beep(1080, 0.06);
+            d.bonusFloating = { text: '+25! ⭐', timer: 20 };
+            d.collectibles.splice(i, 1);
+          }
+        }
+
+        // Engel çarpma testi
         for (const obs of d.obstacles) {
           if (pBox.x + pBox.w > obs.x + 1 && pBox.x < obs.x + obs.w - 1 &&
               pBox.y + pBox.h > obs.y + 1 && pBox.y < obs.y + obs.h) {
@@ -3180,7 +3547,17 @@
             break;
           }
         }
-      } else {
+      }
+
+      // Kayan +25! Bonusu
+      if (d.bonusFloating && d.bonusFloating.timer > 0) {
+        d.bonusFloating.timer--;
+        oled.ctx.fillStyle = '#fde047';
+        oled.ctx.font = 'bold 7px "JetBrains Mono"';
+        oled.ctx.fillText(d.bonusFloating.text, rx, ry - 5);
+      }
+
+      if (d.isGameOver) {
         oled.ctx.fillStyle = '#ef4444';
         oled.ctx.font = '8px "JetBrains Mono"';
         oled.ctx.fillText('== YORULDUN! ==', 28, 38);
@@ -3202,6 +3579,8 @@
       oled.pong.vy = 0.60;
       oled.pong.padX = 48;
       oled.pong.padW = 28;
+      oled.pong.bonusStar = { x: 64, y: 32, active: false };
+      oled.pong.starTimer = 0;
       oled.pong.score = 0;
       oled.pong.lives = 3;
       oled.pong.isGameOver = false;
@@ -3224,9 +3603,31 @@
       oled.ctx.fillRect(125, 16, 1, 48); // Sağ duvar
 
       if (!p.isGameOver) {
-        // Top Hareketi (Akıcı, Sakin ve Çocuk Dostu Hız)
-        p.ballX += p.vx;
-        p.ballY += p.vy;
+        // Her 30 skorda +%5 hızlanma
+        const speedScale = 1 + Math.min(0.65, Math.floor(p.score / 30) * 0.05);
+        p.ballX += p.vx * speedScale;
+        p.ballY += p.vy * speedScale;
+
+        // Masa Ortasında Bonus Yıldız Doğumu
+        p.starTimer = (p.starTimer || 0) + 1;
+        if (p.starTimer > 150 && (!p.bonusStar || !p.bonusStar.active)) {
+          p.starTimer = 0;
+          p.bonusStar = {
+            x: Math.floor(Math.random() * 70) + 28,
+            y: Math.floor(Math.random() * 16) + 24,
+            active: true
+          };
+        }
+
+        // Top Bonus Yıldıza Çarptı mı?
+        if (p.bonusStar && p.bonusStar.active) {
+          const bs = p.bonusStar;
+          if (Math.abs(p.ballX - bs.x) < 6 && Math.abs(p.ballY - bs.y) < 6) {
+            bs.active = false;
+            p.score += 25;
+            beep(1200, 0.08);
+          }
+        }
 
         // Yan Duvarlardan Sekme
         if (p.ballX <= 4) {
@@ -3246,7 +3647,7 @@
           playTactileClick('click');
         }
 
-        // Raket Vuruşu (y = 53-56 arası)
+        // Raket Vuruşu (y = 52-56 arası)
         if (p.ballY >= 52 && p.ballY <= 56) {
           if (p.ballX >= p.padX - 2 && p.ballX <= p.padX + p.padW + 2) {
             p.vy = -Math.abs(p.vy);
@@ -3277,6 +3678,15 @@
         }
       }
 
+      // Bonus Yıldız Çizimi
+      if (p.bonusStar && p.bonusStar.active) {
+        oled.ctx.fillStyle = '#fde047';
+        const bx = Math.round(p.bonusStar.x);
+        const by = Math.round(p.bonusStar.y);
+        oled.ctx.fillRect(bx + 1, by, 3, 5);
+        oled.ctx.fillRect(bx, by + 1, 5, 3);
+      }
+
       // Top ve Raket Çizimi
       oled.ctx.fillStyle = '#00f0ff';
       oled.ctx.fillRect(Math.round(p.ballX), Math.round(p.ballY), 3, 3);
@@ -3303,6 +3713,7 @@
       oled.snake.dir = 'RIGHT';
       oled.snake.nextDir = 'RIGHT';
       oled.snake.food = {x: 20, y: 5};
+      oled.snake.goldenFood = { x: -1, y: -1, active: false, timer: 0 };
       oled.snake.score = 0;
       oled.snake.isGameOver = false;
       oled.snake.moveTimer = 0;
@@ -3323,7 +3734,16 @@
 
       if (!s.isGameOver) {
         s.moveTimer++;
-        if (s.moveTimer >= 9) {
+        // Skor arttıkça hızlanma (9 frameden 5 frame'e kadar)
+        const stepInterval = Math.max(5, 9 - Math.floor(s.score / 45));
+
+        // Altın Elma Geri Sayımı
+        if (s.goldenFood && s.goldenFood.active) {
+          s.goldenFood.timer--;
+          if (s.goldenFood.timer <= 0) s.goldenFood.active = false;
+        }
+
+        if (s.moveTimer >= stepInterval) {
           s.moveTimer = 0;
           s.dir = s.nextDir;
 
@@ -3350,16 +3770,38 @@
             s.hiScore = Math.max(s.hiScore, s.score);
             reportGameScore('SNAKE', s.score);
           } else {
-            // Yem Yeme Testi
+            let ateFood = false;
+
+            // Altın Elma Yeme Testi (+40 Skor)
+            if (s.goldenFood && s.goldenFood.active && nx === s.goldenFood.x && ny === s.goldenFood.y) {
+              s.score += 40;
+              s.goldenFood.active = false;
+              beep(1200, 0.12);
+              ateFood = true;
+            }
+
+            // Normal Yem Yeme Testi (+15 Skor)
             if (nx === s.food.x && ny === s.food.y) {
               s.score += 15;
               beep(920, 0.06);
-              // Yeni rastgele yem
+              ateFood = true;
               s.food = {
                 x: Math.floor(Math.random() * 26) + 1,
                 y: Math.floor(Math.random() * 8) + 1
               };
-            } else {
+
+              // Skor 30 üzerindeyse %25 ihtimalle Altın Elma doğur
+              if (s.score >= 30 && (!s.goldenFood || !s.goldenFood.active) && Math.random() < 0.28) {
+                s.goldenFood = {
+                  x: Math.floor(Math.random() * 26) + 1,
+                  y: Math.floor(Math.random() * 8) + 1,
+                  active: true,
+                  timer: 55
+                };
+              }
+            }
+
+            if (!ateFood) {
               s.body.pop();
             }
             s.body.unshift({x: nx, y: ny});
@@ -3383,12 +3825,22 @@
         }
       }
 
-      // Yemi Çiz (Yanıp Sönen Piksel Elma)
+      // Normal Yemi Çiz (Yanıp Sönen Piksel Elma)
       if (oled.animFrame % 14 < 10) {
         oled.ctx.fillStyle = '#ffb703';
         const fx = 8 + s.food.x * 4;
         const fy = 19 + s.food.y * 4;
         oled.ctx.fillRect(fx, fy, 4, 4);
+      }
+
+      // Altın Elmayı Çiz (Yanıp sönen parlak altın rengi)
+      if (s.goldenFood && s.goldenFood.active && (oled.animFrame % 10 < 7)) {
+        oled.ctx.fillStyle = '#fde047';
+        const gfx = 8 + s.goldenFood.x * 4;
+        const gfy = 19 + s.goldenFood.y * 4;
+        oled.ctx.fillRect(gfx, gfy, 4, 4);
+        oled.ctx.fillStyle = '#ef4444';
+        oled.ctx.fillRect(gfx + 1, gfy - 1, 2, 1); // Yaprak
       }
 
       if (s.isGameOver) {
@@ -3431,16 +3883,22 @@
       oled.ctx.fillRect(0, 56, 128, 1);
 
       if (!c.isGameOver) {
-        // Düşen Nesne Oluştur (Çocuk Dostu Yavaş Düşüş)
+        // Her 40 skorda %8 hızlanma
+        const speedMult = 1 + Math.min(0.75, Math.floor(c.score / 40) * 0.08);
+
+        // Düşen Nesne Oluştur
         c.spawnTimer++;
-        if (c.spawnTimer > 55) {
+        if (c.spawnTimer > Math.max(34, 55 - Math.floor(c.score / 50) * 3)) {
           c.spawnTimer = 0;
           const rx = Math.floor(Math.random() * 112) + 8;
           const rnd = Math.random();
           let type = 'apple';
           if (rnd < 0.25) type = 'bomb';
           else if (rnd < 0.45) type = 'star';
-          c.items.push({ x: rx, y: 18, type, vy: (type === 'star' ? 0.85 : 0.65) });
+          else if (c.score >= 30 && rnd < 0.58) type = 'rainbow'; // Nadir Gökkuşağı Elması
+          
+          let baseVy = (type === 'star' ? 0.85 : (type === 'rainbow' ? 0.90 : 0.65));
+          c.items.push({ x: rx, y: 18, type, vy: baseVy * speedMult });
         }
 
         // Düşen Nesneleri Güncelle
@@ -3456,6 +3914,11 @@
             } else if (it.type === 'star') {
               c.score += 25;
               playTactileClick('select');
+            } else if (it.type === 'rainbow') {
+              c.score += 50;
+              if (c.lives < 3) c.lives++;
+              playLevelUpFanfare();
+              showGlobalToast('🌈 Gökkuşağı Elması! +50 Skor & +1 Can!');
             } else if (it.type === 'bomb') {
               c.lives--;
               beep(180, 0.2);
@@ -3487,6 +3950,12 @@
           oled.ctx.fillStyle = '#ffb703';
           oled.ctx.fillRect(Math.round(it.x + 1), Math.round(it.y), 3, 5);
           oled.ctx.fillRect(Math.round(it.x), Math.round(it.y + 1), 5, 3);
+        } else if (it.type === 'rainbow') {
+          // Çok renkli gökkuşağı elması
+          oled.ctx.fillStyle = (oled.animFrame % 6 < 3) ? '#f43f5e' : '#a855f7';
+          oled.ctx.fillRect(Math.round(it.x), Math.round(it.y), 5, 5);
+          oled.ctx.fillStyle = '#22c55e';
+          oled.ctx.fillRect(Math.round(it.x + 2), Math.round(it.y - 1), 1, 1);
         } else if (it.type === 'bomb') {
           oled.ctx.fillStyle = '#ef4444';
           oled.ctx.fillRect(Math.round(it.x), Math.round(it.y), 5, 5);
@@ -3530,17 +3999,24 @@
     }
 
     function renderOledCowboy() {
+      const cb = oled.cowboy;
+      cb.streak = cb.streak || 0;
+
       oled.ctx.fillStyle = '#00f0ff';
       oled.ctx.font = '8px "JetBrains Mono"';
-      oled.ctx.fillText('KOVBOY DUELLOSU', 16, 26);
+      oled.ctx.fillText('KOVBOY DUELLOSU', 12, 24);
+      oled.ctx.fillStyle = '#fde047';
+      oled.ctx.font = '7px "JetBrains Mono"';
+      oled.ctx.fillText(`SERİ:${cb.streak}`, 88, 24);
 
-      if (oled.cowboy.isGameOver) {
-        if (oled.cowboy.winner === 'PLAYER') {
+      if (cb.isGameOver) {
+        if (cb.winner === 'PLAYER') {
           oled.ctx.fillStyle = '#22c55e';
-          oled.ctx.fillText('KAZANDIN! 🤠 +50XP', 10, 40);
+          const xpBonus = 50 + cb.streak * 15;
+          oled.ctx.fillText(`KAZANDIN! 🤠 +${xpBonus}XP`, 8, 40);
         } else {
           oled.ctx.fillStyle = '#ef4444';
-          oled.ctx.fillText(oled.cowboy.winner === 'FAUL' ? 'FAUL! ERKEN ATES' : 'VURULDUN! 💀', 14, 40);
+          oled.ctx.fillText(cb.winner === 'FAUL' ? 'FAUL! ERKEN ATES' : 'VURULDUN! 💀', 14, 40);
         }
         if (oled.animFrame % 30 < 18) {
           oled.ctx.fillStyle = '#ffb703';
@@ -3550,44 +4026,52 @@
         return;
       }
 
-      if (!oled.cowboy.canShoot) {
+      if (!cb.canShoot) {
+        oled.ctx.fillStyle = '#00f0ff';
         oled.ctx.fillText('HAZIRLAN...', 34, 42);
-        if (oled.cowboy.timer > 40 && Math.random() < 0.035) {
-          oled.cowboy.canShoot = true;
-          oled.cowboy.shootTimer = 0;
+        if (cb.timer > 40 && Math.random() < 0.035) {
+          cb.canShoot = true;
+          cb.shootTimer = 0;
           beep(990, 0.2);
         }
       } else {
-        oled.cowboy.shootTimer++;
+        cb.shootTimer++;
         oled.ctx.fillStyle = '#ffb703';
         oled.ctx.fillText('>> ATES ET! <<', 18, 42);
-        // Çocuk dostu tepki süresi: Rakip 65 frame (yaklaşık 1.1 saniye) sonra ateş eder!
-        if (oled.cowboy.shootTimer > 65) {
-          oled.cowboy.isGameOver = true;
-          oled.cowboy.winner = 'CPU';
+        // Seri kazandıkça rakibin tepki süresi kısalır (65 -> 52 -> 40 -> 32 frame)
+        const cpuThreshold = Math.max(30, 65 - cb.streak * 11);
+        if (cb.shootTimer > cpuThreshold) {
+          cb.isGameOver = true;
+          cb.winner = 'CPU';
+          cb.streak = 0;
           beep(220, 0.25);
-          showGlobalToast('💀 Rakip daha hızlı davrandı!');
+          showGlobalToast('💀 Rakip daha hızlı davrandı! Seri sıfırlandı.');
         }
       }
-      oled.cowboy.timer++;
+      cb.timer++;
     }
 
     function renderOledRPS() {
       oled.ctx.fillStyle = '#00f0ff';
       oled.ctx.font = '8px "JetBrains Mono"';
-      oled.ctx.fillText('TAS - KAGIT - MAKAS', 10, 26);
+      oled.ctx.fillText('TAS - KAGIT - MAKAS', 8, 24);
+      oled.ctx.fillStyle = '#fde047';
+      oled.ctx.font = '7px "JetBrains Mono"';
+      oled.ctx.fillText(`SERİ:${oled.rps.streak || 0}`, 88, 24);
 
       if (!oled.rps.resolved) {
+        oled.ctx.fillStyle = '#38bdf8';
         oled.ctx.font = '7px "JetBrains Mono"';
         oled.ctx.fillText('HAMLENI SEC:', 32, 38);
         oled.ctx.fillStyle = '#ffb703';
         oled.ctx.fillText('SOL:TAS  SEC:KGT  SAG:MKS', 2, 52);
       } else {
         oled.ctx.font = '7px "JetBrains Mono"';
+        oled.ctx.fillStyle = '#38bdf8';
         oled.ctx.fillText(`SEN:${oled.rps.playerChoice} vs CPU:${oled.rps.cpuChoice}`, 8, 38);
         oled.ctx.fillStyle = '#ffb703';
         oled.ctx.font = '8px "JetBrains Mono"';
-        oled.ctx.fillText(oled.rps.resultText, 14, 50);
+        oled.ctx.fillText(oled.rps.resultText, 10, 50);
         oled.ctx.font = '6px "JetBrains Mono"';
         oled.ctx.fillStyle = '#94A3B8';
         oled.ctx.fillText('GERI: Cikis | DIGER TUS: Yeniden', 4, 60);
@@ -3596,9 +4080,21 @@
 
     function playRpsRound(playerChoice) {
       const choices = ['TAS', 'KAGIT', 'MAKAS'];
-      const cpuChoice = choices[Math.floor(Math.random() * choices.length)];
+      let cpuChoice;
+
+      // Seri 2 ve üzerindeyse rakip taktiksel davranır (%45 ihtimalle önceki hamleyi kontralar)
+      oled.rps.streak = oled.rps.streak || 0;
+      if (oled.rps.streak >= 2 && oled.rps.lastPlayerChoice && Math.random() < 0.45) {
+        if (oled.rps.lastPlayerChoice === 'TAS') cpuChoice = 'KAGIT';
+        else if (oled.rps.lastPlayerChoice === 'KAGIT') cpuChoice = 'MAKAS';
+        else cpuChoice = 'TAS';
+      } else {
+        cpuChoice = choices[Math.floor(Math.random() * choices.length)];
+      }
+
       oled.rps.playerChoice = playerChoice;
       oled.rps.cpuChoice = cpuChoice;
+      oled.rps.lastPlayerChoice = playerChoice;
       oled.rps.resolved = true;
 
       if (playerChoice === cpuChoice) {
@@ -3610,11 +4106,16 @@
         (playerChoice === 'KAGIT' && cpuChoice === 'TAS') ||
         (playerChoice === 'MAKAS' && cpuChoice === 'KAGIT')
       ) {
-        oled.rps.resultText = '🎉 KAZANDIN! (+40 XP)';
+        oled.rps.streak++;
+        const mult = Math.min(3, oled.rps.streak);
+        const xp = 40 * mult;
+        oled.rps.resultText = `🎉 KAZANDIN! (+${xp} XP)`;
         playLevelUpFanfare();
-        showGlobalToast(`🏆 Kazandın! Sen: ${playerChoice}, Rakip: ${cpuChoice} (+40 XP)`);
-        reportGameScore('RPS', 40);
+        addPetXP(xp);
+        showGlobalToast(`🏆 Kazandın! Seri: ${oled.rps.streak} (x${mult} Çarpan - +${xp} XP)`);
+        reportGameScore('RPS', xp);
       } else {
+        oled.rps.streak = 0;
         oled.rps.resultText = '💥 KAYBETTIN!';
         playWhineSound();
         showGlobalToast(`💀 Kaybettin! Sen: ${playerChoice}, Rakip: ${cpuChoice}`);
@@ -3626,24 +4127,45 @@
     // =========================================================================
     function resetMoleGame() {
       oled.mole.activeHole = -1;
+      oled.mole.activeType = 'MOLE';
       oled.mole.timer = 0;
       oled.mole.appearDuration = 55;
       oled.mole.score = 0;
       oled.mole.misses = 0;
       oled.mole.isGameOver = false;
       oled.mole.hitHole = -1;
+      oled.mole.hitType = 'MOLE';
       oled.mole.hitTimer = 0;
     }
 
     function hitMoleHole(holeIdx) {
       if (oled.mole.isGameOver) return;
       if (oled.mole.activeHole === holeIdx) {
-        oled.mole.score += 10;
-        oled.mole.hitHole = holeIdx;
-        oled.mole.hitTimer = 16;
-        oled.mole.activeHole = -1;
-        oled.mole.timer = 0;
-        beep(920, 0.08);
+        if (oled.mole.activeType === 'BOMB') {
+          // Oyuncu bombaya bastı!
+          oled.mole.misses++;
+          oled.mole.hitHole = holeIdx;
+          oled.mole.hitType = 'BOMB';
+          oled.mole.hitTimer = 22;
+          oled.mole.activeHole = -1;
+          oled.mole.timer = 0;
+          beep(130, 0.35);
+          playWhineSound();
+          showGlobalToast('💥 BOOM! Bombaya bastın! -1 Can');
+          if (oled.mole.misses >= oled.mole.maxMisses) {
+            oled.mole.isGameOver = true;
+            reportGameScore('KÖSTEBEK', oled.mole.score);
+          }
+        } else {
+          // Köstebeğe vurdu!
+          oled.mole.score += 10;
+          oled.mole.hitHole = holeIdx;
+          oled.mole.hitType = 'MOLE';
+          oled.mole.hitTimer = 16;
+          oled.mole.activeHole = -1;
+          oled.mole.timer = 0;
+          beep(920, 0.08);
+        }
       } else {
         beep(240, 0.04);
       }
@@ -3691,56 +4213,90 @@
         return;
       }
 
-      // Hit animasyonu (Yıldız efekti)
+      // Hit animasyonu (Yıldız veya Patlama efekti)
       if (m.hitTimer > 0) {
         m.hitTimer--;
         const hx = m.holes[m.hitHole];
-        oled.ctx.fillStyle = '#fde047';
-        oled.ctx.font = 'bold 8px "JetBrains Mono", monospace';
-        oled.ctx.fillText('+10!', hx - 8, 36);
+        if (m.hitType === 'BOMB') {
+          oled.ctx.fillStyle = '#ef4444';
+          oled.ctx.font = 'bold 8px "JetBrains Mono", monospace';
+          oled.ctx.fillText('💥 BOOM!', hx - 14, 36);
+        } else {
+          oled.ctx.fillStyle = '#fde047';
+          oled.ctx.font = 'bold 8px "JetBrains Mono", monospace';
+          oled.ctx.fillText('+10!', hx - 8, 36);
+        }
       }
 
-      // Köstebek Çıkma Mantığı
+      // Skor arttıkça köstebek daha hızlı kaçar (55 frame -> 28 frame)
+      m.appearDuration = Math.max(28, 55 - Math.floor(m.score / 20) * 4);
+
+      // Çıkma Mantığı
       m.timer++;
       if (m.activeHole === -1) {
-        if (m.timer > 32) {
+        if (m.timer > 30) {
           m.timer = 0;
           m.activeHole = Math.floor(Math.random() * 3);
-          beep(640, 0.03);
+          // Skor 25 ve üzerindeyse %28 ihtimalle bomba çıkar!
+          if (m.score >= 25 && Math.random() < 0.28) {
+            m.activeType = 'BOMB';
+            beep(320, 0.05);
+          } else {
+            m.activeType = 'MOLE';
+            beep(640, 0.03);
+          }
         }
       } else {
         if (m.timer > m.appearDuration) {
-          m.misses++;
+          // Süre doldu: Köstebek ise ıskalandı (-1 can), Bomba ise basılmadığı için tebrikler (ceza yok)!
+          if (m.activeType === 'MOLE') {
+            m.misses++;
+            beep(200, 0.12);
+            if (m.misses >= m.maxMisses) {
+              m.isGameOver = true;
+              playWhineSound();
+              reportGameScore('KÖSTEBEK', m.score);
+              showGlobalToast(`🐹 Köstebek oyunu bitti! Skor: ${m.score}`);
+            }
+          }
           m.activeHole = -1;
           m.timer = 0;
-          beep(200, 0.12);
-          if (m.misses >= m.maxMisses) {
-            m.isGameOver = true;
-            playWhineSound();
-            reportGameScore('KÖSTEBEK', m.score);
-            showGlobalToast(`🐹 Köstebek oyunu bitti! Skor: ${m.score}`);
-          }
         } else {
-          // Köstebek Sprite Çizimi
           const hx = m.holes[m.activeHole];
           const peekY = 38;
-          // Kafa
-          oled.ctx.fillStyle = '#b45309';
-          oled.ctx.fillRect(hx - 8, peekY, 16, 11);
-          // Burun
-          oled.ctx.fillStyle = '#f43f5e';
-          oled.ctx.fillRect(hx - 2, peekY + 4, 4, 3);
-          // Gözler
-          oled.ctx.fillStyle = '#ffffff';
-          oled.ctx.fillRect(hx - 6, peekY + 1, 3, 3);
-          oled.ctx.fillRect(hx + 3, peekY + 1, 3, 3);
-          oled.ctx.fillStyle = '#000000';
-          oled.ctx.fillRect(hx - 5, peekY + 2, 1, 1);
-          oled.ctx.fillRect(hx + 4, peekY + 2, 1, 1);
-          // Kulaklar
-          oled.ctx.fillStyle = '#78350f';
-          oled.ctx.fillRect(hx - 9, peekY - 2, 3, 3);
-          oled.ctx.fillRect(hx + 6, peekY - 2, 3, 3);
+
+          if (m.activeType === 'BOMB') {
+            // BOMBA SPRİTE ÇİZİMİ (Yanıp sönen fitil ve dinamit gövdesi)
+            oled.ctx.fillStyle = '#ef4444';
+            oled.ctx.fillRect(hx - 6, peekY + 2, 12, 9);
+            oled.ctx.fillStyle = '#1e293b';
+            oled.ctx.fillRect(hx - 2, peekY, 4, 3);
+            // Ateş kıvılcımı
+            oled.ctx.fillStyle = (oled.animFrame % 6 < 3) ? '#fde047' : '#ffb703';
+            oled.ctx.fillRect(hx - 1, peekY - 2, 2, 2);
+            oled.ctx.fillStyle = '#ffffff';
+            oled.ctx.font = 'bold 6px "JetBrains Mono"';
+            oled.ctx.fillText('💣', hx - 5, peekY + 8);
+          } else {
+            // KÖSTEBEK SPRİTE ÇİZİMİ
+            // Kafa
+            oled.ctx.fillStyle = '#b45309';
+            oled.ctx.fillRect(hx - 8, peekY, 16, 11);
+            // Burun
+            oled.ctx.fillStyle = '#f43f5e';
+            oled.ctx.fillRect(hx - 2, peekY + 4, 4, 3);
+            // Gözler
+            oled.ctx.fillStyle = '#ffffff';
+            oled.ctx.fillRect(hx - 6, peekY + 1, 3, 3);
+            oled.ctx.fillRect(hx + 3, peekY + 1, 3, 3);
+            oled.ctx.fillStyle = '#000000';
+            oled.ctx.fillRect(hx - 5, peekY + 2, 1, 1);
+            oled.ctx.fillRect(hx + 4, peekY + 2, 1, 1);
+            // Kulaklar
+            oled.ctx.fillStyle = '#78350f';
+            oled.ctx.fillRect(hx - 9, peekY - 2, 3, 3);
+            oled.ctx.fillRect(hx + 6, peekY - 2, 3, 3);
+          }
         }
       }
     }
@@ -3753,6 +4309,9 @@
       s.shipX = 56;
       s.bullets = [];
       s.aliens = [];
+      s.powerups = [];
+      s.dualLasers = false;
+      s.laserTimer = 0;
       s.alienDir = 1;
       s.alienDropTimer = 0;
       s.score = 0;
@@ -3778,11 +4337,22 @@
       oled.ctx.fillStyle = '#ffb703';
       oled.ctx.font = '7px "JetBrains Mono"';
       oled.ctx.fillText(`UZAY:${s.score}`, 6, 24);
+      if (s.dualLasers) {
+        oled.ctx.fillStyle = '#fde047';
+        oled.ctx.fillText('⚡2X', 68, 24);
+      }
       for(let i=0; i<s.lives; i++) {
         drawOledHeart(oled.ctx, 96 + i*8, 18, true);
       }
 
       if (!s.isGameOver) {
+        // Çift lazer süresi geri sayımı
+        if (s.laserTimer > 0) {
+          s.laserTimer--;
+          if (s.laserTimer <= 0) s.dualLasers = false;
+        }
+
+        // Mermi Hareketi
         for (let i = s.bullets.length - 1; i >= 0; i--) {
           const b = s.bullets[i];
           b.y -= 2.0;
@@ -3797,13 +4367,39 @@
               s.bullets.splice(i, 1);
               s.score += 20;
               beep(960, 0.05);
+
+              // %22 ihtimalle Çift Lazer Kapsülü (P) düşür
+              if (Math.random() < 0.22 && (!s.powerups || s.powerups.length < 2)) {
+                s.powerups.push({ x: al.x + 2, y: al.y, vy: 0.75 });
+              }
               break;
             }
           }
         }
 
+        // Düşen Power-up Hareketi ve Yakalama
+        for (let i = (s.powerups || []).length - 1; i >= 0; i--) {
+          const pup = s.powerups[i];
+          pup.y += pup.vy;
+
+          if (pup.y >= 48 && pup.y <= 58 && pup.x >= s.shipX - 3 && pup.x <= s.shipX + 15) {
+            s.dualLasers = true;
+            s.laserTimer = 220;
+            beep(1250, 0.1);
+            showGlobalToast('⚡ ÇİFT LAZER AKTİF! (Hızlı Ateş)');
+            s.powerups.splice(i, 1);
+            continue;
+          }
+
+          if (pup.y > 60) {
+            s.powerups.splice(i, 1);
+          }
+        }
+
+        // Uzaylı Hareketi ve Hızlanma
         s.alienDropTimer++;
-        if (s.alienDropTimer > 36) {
+        const dropThreshold = Math.max(16, 36 - Math.floor(s.score / 70) * 4);
+        if (s.alienDropTimer > dropThreshold) {
           s.alienDropTimer = 0;
           let hitWall = false;
           for (const al of s.aliens) {
@@ -3845,11 +4441,24 @@
         }
       }
 
+      // Mermileri Çiz
       oled.ctx.fillStyle = '#ffb703';
       for (const b of s.bullets) {
         oled.ctx.fillRect(Math.round(b.x), Math.round(b.y), 1, 3);
       }
 
+      // Düşen Power-Up (P) Çiz
+      for (const pup of (s.powerups || [])) {
+        oled.ctx.fillStyle = '#fde047';
+        const px = Math.round(pup.x);
+        const py = Math.round(pup.y);
+        oled.ctx.fillRect(px, py, 6, 6);
+        oled.ctx.fillStyle = '#000814';
+        oled.ctx.font = 'bold 5px "JetBrains Mono"';
+        oled.ctx.fillText('P', px + 1, py + 5);
+      }
+
+      // Uzaylıları Çiz
       oled.ctx.fillStyle = '#00f0ff';
       const wingFrame = (Math.floor(oled.animFrame / 14) % 2 === 0);
       for (const al of s.aliens) {
@@ -3871,7 +4480,7 @@
 
       // Karakterimizin Uzay Gemisi
       const sx = s.shipX;
-      oled.ctx.fillStyle = '#38bdf8';
+      oled.ctx.fillStyle = s.dualLasers ? '#fde047' : '#38bdf8';
       oled.ctx.fillRect(sx + 5, 50, 4, 3);
       oled.ctx.fillRect(sx + 2, 53, 10, 4);
       oled.ctx.fillRect(sx, 57, 14, 2);
@@ -3897,6 +4506,8 @@
       const b = oled.brick;
       b.padX = 48;
       b.padW = 32;
+      b.wideTimer = 0;
+      b.powerups = [];
       b.ballX = 64;
       b.ballY = 46;
       b.vx = (Math.random() > 0.5 ? 0.70 : -0.70);
@@ -3925,6 +4536,10 @@
       oled.ctx.fillStyle = '#ffb703';
       oled.ctx.font = '7px "JetBrains Mono"';
       oled.ctx.fillText(`TUĞLA:${b.score}`, 6, 24);
+      if (b.wideTimer > 0) {
+        oled.ctx.fillStyle = '#fde047';
+        oled.ctx.fillText('📏GENİŞ', 64, 24);
+      }
       for(let i=0; i<b.lives; i++) {
         drawOledHeart(oled.ctx, 96 + i*8, 18, true);
       }
@@ -3934,8 +4549,35 @@
       oled.ctx.fillRect(125, 16, 1, 48);
 
       if (!b.isGameOver) {
-        b.ballX += b.vx;
-        b.ballY += b.vy;
+        // Geniş raket süresi
+        if (b.wideTimer > 0) {
+          b.wideTimer--;
+          if (b.wideTimer <= 0) b.padW = 32;
+        }
+
+        // Top Hızı Ölçekleme (+%8 her 60 skorda)
+        const speedScale = 1 + Math.min(0.65, Math.floor(b.score / 60) * 0.08);
+        b.ballX += b.vx * speedScale;
+        b.ballY += b.vy * speedScale;
+
+        // Düşen Kapsülleri Güncelle
+        for (let i = (b.powerups || []).length - 1; i >= 0; i--) {
+          const pup = b.powerups[i];
+          pup.y += pup.vy;
+
+          if (pup.y >= 52 && pup.y <= 58 && pup.x >= b.padX - 2 && pup.x <= b.padX + b.padW + 2) {
+            b.padW = 46;
+            b.wideTimer = 350;
+            beep(1200, 0.1);
+            showGlobalToast('📏 GENİŞ RAKET AKTİF!');
+            b.powerups.splice(i, 1);
+            continue;
+          }
+
+          if (pup.y > 60) {
+            b.powerups.splice(i, 1);
+          }
+        }
 
         if (b.ballX <= 4) { b.ballX = 4; b.vx = Math.abs(b.vx); playTactileClick('click'); }
         if (b.ballX >= 122) { b.ballX = 122; b.vx = -Math.abs(b.vx); playTactileClick('click'); }
@@ -3957,6 +4599,11 @@
             b.vy *= -1;
             b.score += 15;
             beep(920, 0.05);
+
+            // %22 ihtimalle Geniş Raket Kapsülü düşür
+            if (Math.random() < 0.22 && (!b.powerups || b.powerups.length < 2)) {
+              b.powerups.push({ x: br.x + 4, y: br.y, vy: 0.75 });
+            }
             break;
           }
         }
@@ -3984,6 +4631,7 @@
         }
       }
 
+      // Tuğlaları Çiz
       for (const br of b.bricks) {
         if (!br.alive) continue;
         oled.ctx.fillStyle = '#00f0ff';
@@ -3992,9 +4640,20 @@
         oled.ctx.fillRect(br.x, br.y, 1, 1);
       }
 
+      // Düşen Genişletme Kapsülü (W)
+      for (const pup of (b.powerups || [])) {
+        oled.ctx.fillStyle = '#fde047';
+        const px = Math.round(pup.x);
+        const py = Math.round(pup.y);
+        oled.ctx.fillRect(px, py, 6, 6);
+        oled.ctx.fillStyle = '#000814';
+        oled.ctx.font = 'bold 5px "JetBrains Mono"';
+        oled.ctx.fillText('W', px + 1, py + 5);
+      }
+
       oled.ctx.fillStyle = '#ffb703';
       oled.ctx.fillRect(Math.round(b.ballX), Math.round(b.ballY), 3, 3);
-      oled.ctx.fillStyle = '#38bdf8';
+      oled.ctx.fillStyle = b.wideTimer > 0 ? '#fde047' : '#38bdf8';
       oled.ctx.fillRect(Math.round(b.padX), 55, b.padW, 3);
 
       if (b.isGameOver) {
@@ -4041,12 +4700,16 @@
       }
 
       if (!p.isGameOver) {
+        // Her 30 skorda %8 hızlanma
+        const speedMult = 1 + Math.min(0.65, Math.floor(p.score / 30) * 0.08);
+
         p.spawnTimer++;
-        if (p.spawnTimer > 70) {
+        if (p.spawnTimer > Math.max(45, 70 - Math.floor(p.score / 40) * 4)) {
           p.spawnTimer = 0;
           const col = Math.floor(Math.random() * 3);
           const colX = col === 0 ? 24 : (col === 1 ? 56 : 88);
-          p.jumpers.push({ col, x: colX, y: 18, vy: 0.38 });
+          const isGolden = Math.random() < 0.22;
+          p.jumpers.push({ col, x: colX, y: 18, vy: 0.38 * speedMult, isGolden });
         }
 
         for (let i = p.jumpers.length - 1; i >= 0; i--) {
@@ -4055,8 +4718,14 @@
 
           if (j.y >= 47 && j.y <= 54) {
             if (p.boatCol === j.col) {
-              p.score += 10;
-              beep(880, 0.07);
+              const pts = j.isGolden ? 30 : 10;
+              p.score += pts;
+              if (j.isGolden) {
+                beep(1150, 0.1);
+                showGlobalToast('🌟 Altın Paraşütçü Kurtarıldı! +30 Skor');
+              } else {
+                beep(880, 0.07);
+              }
               p.jumpers.splice(i, 1);
               continue;
             }
@@ -4079,12 +4748,12 @@
       for (const j of p.jumpers) {
         const jx = Math.round(j.x);
         const jy = Math.round(j.y);
-        oled.ctx.fillStyle = '#00f0ff';
+        oled.ctx.fillStyle = j.isGolden ? '#fde047' : '#00f0ff';
         oled.ctx.fillRect(jx - 4, jy, 9, 3);
         oled.ctx.fillRect(jx - 2, jy - 1, 5, 1);
         oled.ctx.fillRect(jx - 3, jy + 3, 1, 2);
         oled.ctx.fillRect(jx + 3, jy + 3, 1, 2);
-        oled.ctx.fillStyle = '#ffb703';
+        oled.ctx.fillStyle = j.isGolden ? '#ef4444' : '#ffb703';
         oled.ctx.fillRect(jx - 1, jy + 5, 3, 3);
       }
 
@@ -4136,6 +4805,9 @@
       oled.ctx.fillRect(0, 62, 128, 1);
 
       if (!f.isGameOver) {
+        // Her 25 skorda %8 hızlanma
+        const flapSpeed = 0.55 * (1 + Math.min(0.65, Math.floor(f.score / 25) * 0.08));
+
         f.vy += 0.065;
         f.vy = Math.min(f.vy, 1.05);
         f.petY += f.vy;
@@ -4157,21 +4829,30 @@
         }
 
         f.spawnTimer++;
-        if (f.spawnTimer > 105) {
+        if (f.spawnTimer > Math.max(70, 105 - Math.floor(f.score / 35) * 6)) {
           f.spawnTimer = 0;
           const gapY = Math.floor(Math.random() * 14) + 26;
           const gapSize = 32; // Ekstra geniş, çocuk dostu geçit
           f.pipes.push({
             x: 130,
+            gapY,
             topH: Math.max(3, gapY - gapSize / 2 - 16),
             botY: Math.min(52, gapY + gapSize / 2),
-            passed: false
+            passed: false,
+            starCollected: false
           });
         }
 
         for (let i = f.pipes.length - 1; i >= 0; i--) {
           const p = f.pipes[i];
-          p.x -= 0.55; // Çok sakin, çocuk dostu hız
+          p.x -= flapSpeed;
+
+          // Boru Arası Yıldız Toplama (+15 Skor)
+          if (!p.starCollected && p.x >= 18 && p.x <= 30 && Math.abs(f.petY - p.gapY) < 10) {
+            p.starCollected = true;
+            f.score += 15;
+            beep(1120, 0.06);
+          }
 
           if (!p.passed && p.x < 22) {
             p.passed = true;
@@ -4201,6 +4882,16 @@
         oled.ctx.fillRect(px - 1, 16 + p.topH - 2, 10, 2);
         oled.ctx.fillRect(px, p.botY, 8, 62 - p.botY);
         oled.ctx.fillRect(px - 1, p.botY, 10, 2);
+
+        // Boru Arasındaki Bonus Yıldız
+        if (!p.starCollected && p.x > 0 && p.x < 125) {
+          oled.ctx.fillStyle = '#fde047';
+          const sx = px + 2;
+          const sy = Math.round(p.gapY) - 2;
+          oled.ctx.fillRect(sx + 1, sy, 3, 5);
+          oled.ctx.fillRect(sx, sy + 1, 5, 3);
+          oled.ctx.fillStyle = '#00f0ff';
+        }
       }
 
       const py = Math.round(f.petY);
@@ -4226,16 +4917,84 @@
     }
 
     // =========================================================================
-    // UYKU MODUNDAN UYANDIRMA FONKSİYONU (KESİN VE KALICI)
+    // UYKU ZAMANI & 10 KOMİK VE KIZGIN UYANDIRMA TEPKİSİ
     // =========================================================================
+    const GRUMPY_SLEEP_QUIPS = [
+      "Şimdi uyku zamanı, sabah görüşürüz! 🥱💤",
+      "Tüm gün canım çıktı, beni rahatsız etme lütfen! 😤",
+      "Göz kapaklarım tonlarca ağırlıkta sahip, bırak uyuyayım! 🛏️",
+      "Rüyamda tam dev bir börek yiyordum, beni niye dürttün?! 🥐😡",
+      "Gecenin bu saatinde ne acelesi var, dünya mı kurtarıyoruz? 🦉",
+      "Uykumu alamazsam yarın huysuz olurum bak, sonra karışmam! 😾",
+      "Piksel gözlerim kapanıyor... 5 dakika sonra yine uyuyacağım! 😴",
+      "Bebekler gece büyür sahip, boyum kısa kalsın mı istiyorsun?! 📏💢",
+      "Alarmım çalmadıysa ben de uyanmam! İyi geceler! 🛌",
+      "Şarjım yüzde 1 sahip, beynim kapandı bile... Zzz... 🔌💤"
+    ];
+
+    function isPetBedtime() {
+      const h = new Date().getHours();
+      return (h >= 22 || h < 8);
+    }
+
+    let sleepDisturbTimer = null;
     function wakeUpPet() {
-      if (appData.petState) {
+      if (!appData.petState) return;
+
+      const isBedtime = isPetBedtime();
+
+      if (isBedtime) {
+        appData.petState.nightWakeCount = (appData.petState.nightWakeCount || 0) + 1;
+
+        if (appData.petState.nightWakeCount > 2) {
+          // En fazla 2 defa sonra kesin red ve sabah görüşürüz!
+          beep(200, 0.25);
+          playWhineSound();
+          showGlobalToast('😴 Sabah görüşürüz canım! Uyanma Saati: 08:00 🌅');
+          renderOledSideThoughtBox('Sabah görüşürüz canım! Uyanma: 08:00 🌅', '💤', true);
+          oled.mode = 'SLEEPING';
+          appData.petState.isSleeping = true;
+          savePetState();
+          updateNeedsUI();
+          return;
+        }
+
+        // 1. veya 2. kez uyandırma: 10 komik/kızgın uyarıdan biri random seçilir!
+        const randomQuip = GRUMPY_SLEEP_QUIPS[Math.floor(Math.random() * GRUMPY_SLEEP_QUIPS.length)];
+        beep(380, 0.18);
+        playWhineSound();
+        showGlobalToast(`🥱 ${randomQuip}`);
+        renderOledSideThoughtBox(randomQuip, '😤', false);
+
         appData.petState.isSleeping = false;
+        oled.mode = 'IDLE';
+
+        // 5 dakika sonra otomatik olarak tekrar uykuya dalar!
+        if (sleepDisturbTimer) clearTimeout(sleepDisturbTimer);
+        sleepDisturbTimer = setTimeout(() => {
+          if (appData.petState && !appData.petState.isSleeping && isPetBedtime()) {
+            appData.petState.isSleeping = true;
+            oled.mode = 'SLEEPING';
+            beep(260, 0.2);
+            showGlobalToast('💤 5 dakika doldu, Pufi dayanamadı ve tekrar uykuya daldı. Zzz...');
+            renderOledSideThoughtBox('5 dakika bitti, ben yatıyorum... Zzz...', '💤', false);
+            savePetState();
+            updateNeedsUI();
+          }
+        }, 5 * 60 * 1000);
+
+        savePetState();
+        updateNeedsUI();
+        syncTelemetry();
+        return;
       }
+
+      // Normal gündüz uyanması
+      appData.petState.isSleeping = false;
       oled.mode = 'IDLE';
       beep(880, 0.15);
       playGiggleSound();
-      showGlobalToast('☀️ Günaydın! Pufi gerinerek uyandı.');
+      showGlobalToast('☀️ Günaydın! Pufi gerinerek neşeyle uyandı.');
       savePetState();
       updateNeedsUI();
       syncTelemetry();
@@ -4838,6 +5597,16 @@
         return;
       }
 
+      // DIŞARI / GÜNDÜZ MOLASINDAYKEN TUŞLAR BEBEĞİN DÖNÜŞ SÜRESİNİ HATIRLATIR
+      if (oled.mode === 'OUTING') {
+        const o = appData.outing;
+        const remSec = o ? Math.max(0, Math.ceil((o.endTime - Date.now()) / 1000)) : 0;
+        const mm = Math.floor(remSec / 60);
+        const ss = remSec % 60;
+        showGlobalToast(`🎒 ${o ? o.title : 'Pufi Dışarıda'}! Dönüşe ${mm}dk ${ss}sn kaldı. Rahatça vakit geçirsin.`);
+        return;
+      }
+
       // Ses ve Haptic
       playTactileClick(isRepeat ? 'repeat' : (btn === 'SELECT' ? 'select' : (btn === 'BACK' ? 'back' : 'click')));
 
@@ -4938,9 +5707,16 @@
           if (btn === 'LEFT') oled.space.shipX = Math.max(4, oled.space.shipX - (isRepeat ? 5 : 8));
           if (btn === 'RIGHT') oled.space.shipX = Math.min(110, oled.space.shipX + (isRepeat ? 5 : 8));
           if (btn === 'SELECT') {
-            if (oled.space.bullets.length < 2) {
-              oled.space.bullets.push({ x: oled.space.shipX + 6, y: 49 });
-              beep(1100, 0.03);
+            const maxBullets = oled.space.dualLasers ? 4 : 2;
+            if (oled.space.bullets.length < maxBullets) {
+              if (oled.space.dualLasers) {
+                oled.space.bullets.push({ x: oled.space.shipX + 2, y: 49 });
+                oled.space.bullets.push({ x: oled.space.shipX + 11, y: 49 });
+                beep(1200, 0.03);
+              } else {
+                oled.space.bullets.push({ x: oled.space.shipX + 6, y: 49 });
+                beep(1100, 0.03);
+              }
             }
           }
         }
@@ -4998,14 +5774,18 @@
         }
         if (btn === 'SELECT') {
           if (oled.cowboy.canShoot) {
+            oled.cowboy.streak = (oled.cowboy.streak || 0) + 1;
+            const xpBonus = 50 + oled.cowboy.streak * 15;
             beep(1200, 0.3);
-            showGlobalToast('🤠 DÜELLOYU KAZANDIN! +50 XP');
-            reportGameScore('COWBOY', 50);
+            showGlobalToast(`🤠 DÜELLOYU KAZANDIN! (Seri: ${oled.cowboy.streak} - +${xpBonus} XP)`);
+            addPetXP(xpBonus);
+            reportGameScore('COWBOY', xpBonus);
             oled.cowboy.isGameOver = true;
             oled.cowboy.winner = 'PLAYER';
           } else {
+            oled.cowboy.streak = 0;
             beep(180, 0.25);
-            showGlobalToast('🚫 FAUL! Çok erken ateş ettin.');
+            showGlobalToast('🚫 FAUL! Çok erken ateş ettin. Seri sıfırlandı.');
             oled.cowboy.isGameOver = true;
             oled.cowboy.winner = 'FAUL';
           }
@@ -5075,6 +5855,7 @@
             else if (sel === 'BANYO') { oled.mode = 'BATH'; performNeedAction('BATH'); }
             else if (sel === 'İLAÇ') { performNeedAction('MEDICINE'); oled.mode = 'IDLE'; }
             else if (sel === 'UYUT') { performNeedAction('SLEEP'); }
+            else if (sel === 'MOLA') { openOutingModal(); oled.mode = 'IDLE'; }
           }
         } else if (oled.menuLevel === 'GAMES') {
           if (btn === 'LEFT') oled.gameIdx = (oled.gameIdx - 1 + oled.gameItems.length) % oled.gameItems.length;
@@ -5148,6 +5929,10 @@
         
         if (oled.mode === 'SLEEPING' || (appData.petState && appData.petState.isSleeping)) {
           wakeUpPet();
+          return;
+        }
+        if (oled.mode === 'OUTING') {
+          openOutingModal();
           return;
         }
         if (oled.mode === 'MENU') {
@@ -6569,6 +7354,23 @@
         } catch(e) {}
       }
 
+      // 1.1 Aktif Dışarı / Mola Durumunu Geri Yükle
+      try {
+        const savedOuting = localStorage.getItem('socies_pet_outing');
+        if (savedOuting) {
+          const parsed = JSON.parse(savedOuting);
+          if (parsed && parsed.endTime) {
+            if (parsed.endTime > Date.now()) {
+              appData.outing = parsed;
+              oled.mode = 'OUTING';
+            } else {
+              appData.outing = parsed;
+              setTimeout(() => finishPetOuting(), 1000);
+            }
+          }
+        }
+      } catch(e) {}
+
       // 2. DELTA-TIME ZAMAN KAYBI HESAPLAMASI (Kullanıcı Yokken Geçen Süre)
       if (appData.needs.lastTick) {
         const elapsedMins = Math.min(720, Math.floor((Date.now() - appData.needs.lastTick) / 60000));
@@ -6621,11 +7423,15 @@
       setInterval(() => {
         const isSleep = (appData.petState && appData.petState.isSleeping);
 
+        // 3.1 İHTİYAÇLARIN BİRBİRİNİ ETKİLEMESİ (CROSS-INFLUENCE)
+        const isDigesting = (appData.needs.digestBoostUntil && Date.now() < appData.needs.digestBoostUntil);
+        const isPlayingGame = (oled.mode !== 'IDLE' && oled.mode !== 'MENU' && oled.mode !== 'SLEEPING' && oled.mode !== 'STANDBY' && oled.mode !== 'OUTING');
+
         if (isSleep) {
           // UYKU MODUNDA: Uyku şarj olur, diğer ihtiyaçlar %80 daha yavaş azalır
           appData.needs.sleep = Math.min(100, appData.needs.sleep + 4);
           appData.needs.hunger = Math.max(5, appData.needs.hunger - 0.2);
-          appData.needs.toilet = Math.max(0, appData.needs.toilet - 0.3);
+          appData.needs.toilet = Math.max(0, appData.needs.toilet - (isDigesting ? 0.45 : 0.3));
           appData.needs.clean = Math.max(5, appData.needs.clean - 0.1);
           appData.needs.fun = Math.max(5, appData.needs.fun - 0.1);
           appData.needs.love = Math.max(5, appData.needs.love - 0.1);
@@ -6633,24 +7439,44 @@
         } else {
           // NORMAL MOD:
           appData.needs.hunger = Math.max(5, appData.needs.hunger - 1);
-          appData.needs.toilet = Math.max(0, appData.needs.toilet - 1.5);
-          appData.needs.fun = Math.max(5, appData.needs.fun - 1);
-          appData.needs.sleep = Math.max(5, appData.needs.sleep - 0.7);
+          // Yemek yerken / sindirimdeyken tuvalet ihtiyacı %50 hızlanır (1.5 -> 2.25)
+          appData.needs.toilet = Math.max(0, appData.needs.toilet - (isDigesting ? 2.25 : 1.5));
+          appData.needs.fun = Math.max(5, appData.needs.fun - (isPlayingGame ? 0.3 : 1.0)); // Oyun neşeyi korur
+          // Oyun oynarken dinlenme / enerji ihtiyacı %60 hızlanır (0.7 -> 1.4)
+          appData.needs.sleep = Math.max(5, appData.needs.sleep - (isPlayingGame ? 1.4 : 0.7));
           appData.needs.clean = Math.max(5, appData.needs.clean - 0.5);
           appData.needs.love = Math.max(5, appData.needs.love - 0.7);
           appData.needs.social = Math.max(5, (appData.needs.social || 85) - 0.5);
         }
 
-        // Kaka Kazası Kontrolü: Tuvalet iyice sıkışınca yere kaka yapar!
+        // Kaka Kazası Kontrolü: Tuvalet iyice sıkışınca yere kaka yapar ve etraf kirlenir!
         if (!isSleep && appData.needs.toilet <= 15 && appData.petState.poopCount < 3) {
           appData.petState.poopCount++;
-          appData.needs.toilet = 75; // Rahatladı ama etraf kirlendi
-          appData.needs.clean = Math.max(5, appData.needs.clean - 25);
+          appData.needs.toilet = 75; // Rahatladı ama kirlendi
+          appData.needs.clean = Math.max(5, appData.needs.clean - 30); // Tuvalette banyo ihtiyacı artar
           playPoopSound();
           showGlobalToast('💩 Eyvah! Bebek tuvaletini tutamadı ve kaka yaptı!');
         }
 
-        // Hastalık Kontrolü: Kaka uzun süre temizlenmez veya hijyen < 20 olursa
+        // 3.2 İKİLİ İHMAL HASTALIK KONTROLÜ (Banyo ve tuvalet beraber 2 saatten fazla giderilmezse hastalanır)
+        const isDualNeglected = (appData.needs.clean < 35 && (appData.needs.toilet < 35 || appData.petState.poopCount > 0));
+        if (isDualNeglected) {
+          if (!appData.petState.dualNeglectStartTime) {
+            appData.petState.dualNeglectStartTime = Date.now();
+          } else {
+            const elapsedHours = (Date.now() - appData.petState.dualNeglectStartTime) / 3600000;
+            if (elapsedHours >= 2.0 && !appData.petState.isSick) {
+              appData.petState.isSick = true;
+              appData.petState.sicknessReason = 'DUAL_NEGLECT';
+              playWhineSound();
+              showGlobalToast('🤒 Hem banyo hem tuvalet ihtiyacı saatlerce giderilmediği için Pufi hastalandı! 💊 Konsoldan İlaç ver.');
+            }
+          }
+        } else {
+          appData.petState.dualNeglectStartTime = null;
+        }
+
+        // Genel kirlilik veya mikrop hastalığı
         if ((appData.petState.poopCount >= 2 || appData.needs.clean < 20) && !appData.petState.isSick) {
           if (Math.random() < 0.35) {
             appData.petState.isSick = true;
@@ -6841,10 +7667,36 @@
         }
       }
 
+      updateHeaderNeedTicker();
       checkPetCrisisState();
       updateProfileUI();
       updateRetentionUI();
     }
+
+    // 2 SANİYEDE BİR SAĞ ÜSTTE İHTİYAÇ GÖSTERGESİ GEÇİŞİ
+    function updateHeaderNeedTicker() {
+      const elIco = document.getElementById('icoNeedTicker');
+      const elTxt = document.getElementById('txtNeedTicker');
+      if (!elIco || !elTxt || !appData || !appData.needs) return;
+
+      const items = [
+        { ico: '🍖', name: 'Açlık', val: appData.needs.hunger },
+        { ico: '🚽', name: 'Tuvalet', val: appData.needs.toilet },
+        { ico: '🧼', name: 'Hijyen', val: appData.needs.clean },
+        { ico: '⚡', name: 'Enerji', val: appData.needs.sleep },
+        { ico: '💖', name: 'Sevgi', val: appData.needs.love },
+        { ico: '🎮', name: 'Neşe', val: appData.needs.fun }
+      ];
+      const cur = items[Math.floor(Date.now() / 2000) % items.length];
+      elIco.innerText = cur.ico;
+      elTxt.innerText = `${cur.name}: %${Math.round(cur.val || 0)}`;
+      const chip = document.getElementById('badgeNeedTicker');
+      if (chip) {
+        chip.style.borderColor = (cur.val < 35) ? '#ef4444' : '#38bdf8';
+        chip.style.color = (cur.val < 35) ? '#ef4444' : '#38bdf8';
+      }
+    }
+    setInterval(updateHeaderNeedTicker, 2000);
 
     // =========================================================================
     // MODÜL 5: GÜNLÜK SADAKAT, 3.000 ADIM SANDIĞI & REBIRTH MOTORU
@@ -7006,40 +7858,43 @@
 
       const curHunger = appData.needs.hunger || 0;
       const deficit = Math.max(0, 100 - curHunger);
-      let hungerBonus = 20;
+      let hungerBonus = 25;
       let foodLabel = 'MAMA';
-      let finishMsg = '🍗 Doyurucu tam öğün yendi! (+40 Açlık, sindirim başladı)';
+      let finishMsg = '🍗 Doyurucu ana öğün yendi! (+80 Açlık, sindirim hızlandı)';
+
+      // Yemek yerken tuvalet ihtiyacı %50 hızlanır (Sindirim metabolizması aktif)
+      appData.needs.digestBoostUntil = Date.now() + 90000;
 
       if (idx === 0) {
-        // ELMA 🍏 (Atıştırmalık / Meyve)
+        // ELMA 🍏 (Atıştırmalık / Meyve - %25)
         oled.lastFoodType = 'ELMA';
-        hungerBonus = 18;
+        hungerBonus = 25;
         foodLabel = 'ELMA';
-        finishMsg = '🍏 Taze elma atıştırıldı! Hafif ve sağlıklı (+18 Açlık, +5 Neşe)';
-        appData.needs.fun = Math.min(100, appData.needs.fun + 5);
+        finishMsg = '🍏 Taze elma atıştırıldı! Hafif ve sağlıklı (+25 Açlık, +8 Neşe)';
+        appData.needs.fun = Math.min(100, appData.needs.fun + 8);
         appData.needs.love = Math.min(100, appData.needs.love + 5);
         if (appData.petState) {
           appData.petState.junkFoodCount = Math.max(0, (appData.petState.junkFoodCount || 0) - 1);
         }
       } else if (idx === 1) {
-        // MAMA 🍗 (Tam Öğün / Doyurucu Beslenme)
+        // MAMA 🍗 (Ana Öğün / Tam Beslenme - %80)
         oled.lastFoodType = 'MAMA';
-        hungerBonus = 40;
+        hungerBonus = 80;
         foodLabel = 'MAMA';
-        finishMsg = '🍗 Doyurucu tam öğün yendi! (+40 Açlık, sindirim başladı)';
+        finishMsg = '🍗 Doyurucu ana öğün yendi! (+80 Açlık, sindirim hızlandı)';
         appData.needs.sleep = Math.min(100, appData.needs.sleep + 5);
-        appData.needs.toilet = Math.max(0, appData.needs.toilet - 14); // sindirim
+        appData.needs.toilet = Math.max(0, appData.needs.toilet - 18); // Hızlı sindirim
         if (appData.petState) {
           appData.petState.junkFoodCount = 0;
         }
       } else if (idx === 2) {
-        // PASTA 🍰 (Abur Cubur / Tatlı)
+        // PASTA 🍰 (Tatlı / Atıştırmalık - %25)
         oled.lastFoodType = 'PASTA';
-        hungerBonus = 10;
+        hungerBonus = 25;
         foodLabel = 'PASTA';
-        finishMsg = '🍰 Nefis pasta yendi! Mutluluk tavan yaptı (+25 Sevgi)';
-        appData.needs.love = Math.min(100, appData.needs.love + 25);
-        appData.needs.fun = Math.min(100, appData.needs.fun + 15);
+        finishMsg = '🍰 Nefis pasta yendi! Mutluluk tavan yaptı (+25 Açlık, +30 Sevgi)';
+        appData.needs.love = Math.min(100, appData.needs.love + 30);
+        appData.needs.fun = Math.min(100, appData.needs.fun + 20);
         if (appData.petState) {
           appData.petState.junkFoodCount = (appData.petState.junkFoodCount || 0) + 1;
           if (appData.petState.junkFoodCount >= 3) {
@@ -7050,19 +7905,19 @@
           }
         }
       } else if (idx === 3) {
-        // SU 💧 (Su / Hidrasyon)
+        // SU 💧 (İçecek - %25)
         oled.lastFoodType = 'SU';
-        hungerBonus = 8;
+        hungerBonus = 25;
         foodLabel = 'SU';
-        finishMsg = '💧 Kana kana taze su içti! Midesi ve içi ferahladı.';
-        appData.needs.clean = Math.min(100, appData.needs.clean + 10);
-        appData.needs.toilet = Math.max(0, appData.needs.toilet - 8);
+        finishMsg = '💧 Kana kana taze su içti! Midesi ve içi ferahladı (+25 Açlık, +15 Hijyen)';
+        appData.needs.clean = Math.min(100, appData.needs.clean + 15);
+        appData.needs.toilet = Math.max(0, appData.needs.toilet - 12);
       } else if (idx === 4) {
-        // TÜRK KAHVESİ ☕ (Geleneksel Köpüklü Kahve / Yavaş Yavaş Enerji & Mutluluk)
+        // TÜRK KAHVESİ ☕ (Geleneksel Köpüklü Kahve - %25)
         oled.lastFoodType = 'KAHVE';
-        hungerBonus = 10;
+        hungerBonus = 25;
         foodLabel = 'KAHVE';
-        finishMsg = '☕ Bol köpüklü Türk kahvesi yudumlandı! 40 yıl hatırı olsun. (+25 Enerji, +30 Mutluluk)';
+        finishMsg = '☕ Bol köpüklü Türk kahvesi yudumlandı! 40 yıl hatırı olsun (+25 Açlık, +35 Enerji, +30 Mutluluk)';
       }
 
       // Orantılı süre: Türk kahvesi yavaş yavaş 6 saniyede keyifle yudumlanır

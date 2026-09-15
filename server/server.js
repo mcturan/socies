@@ -1445,19 +1445,19 @@ const server = http.createServer((req, res) => {
   if (path === '/api/v1/version/check' && method === 'GET') {
     const host = req.headers.host || '46.1.173.159:3000';
     return sendJSON(res, 200, {
-      latestVersion: 'v1.0.20',
+      latestVersion: 'v1.0.21',
       semver: {
         major: 1,
         minor: 0,
-        patch: 20,
-        build: 21
+        patch: 21,
+        build: 22
       },
-      versionCode: 21,
-      latestCommitHash: 'socies-v1.0.20',
+      versionCode: 22,
+      latestCommitHash: 'socies-v1.0.21',
       mandatoryUpdate: false,
-      releaseNotes: 'v1.0.20: Standby Yaşam Döngüsü (1 dk hareketsizlik sonrası derin meşgale, veda, çıkış ve CRT uyku modu), Sabit 60 FPS Hız Sınırlayıcı (120Hz ekran hızlanma koruması), Tuğla Kırma skor koruma, Köstebek dokunmatik kontrolleri & tam QA denetim onarımları.',
+      releaseNotes: 'v1.0.21: 11 Mini Oyun İlerleme ve Hızlanma Sistemi (Maraton yıldız/meyve toplama, Köstebek bomba/patlama refleksi, Pinpon masa yıldızı, Yılan altın elma, Uzay çift lazer, Tuğla genişletici, vb.), 2 sn Değişen İhtiyaç Göstergesi, Çapraz İhtiyaç Etkileşimleri, Kademeli Yemek Değerleri (Mama %80, Atıştırmalıklar %25), Yükselen Termometre Barı, 2 Saatlik İhmal Hastalanma Sistemi, Gündüz Molası (Okul, Park, Şekerleme) ve 22:00-08:00 Uyku Siklusu & 10 Huysuz/Komik Uyandırma Tepkisi.',
       apkDownloadUrl: `http://${host}/download/socies-app.apk`,
-      githubApkUrl: 'https://github.com/mcturan/socies/releases/download/v1.0.20/socies-app.apk'
+      githubApkUrl: 'https://github.com/mcturan/socies/releases/download/v1.0.21/socies-app.apk'
     });
   }
 
