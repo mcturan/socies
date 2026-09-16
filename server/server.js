@@ -126,6 +126,32 @@ try {
   `);
 } catch(e) {}
 
+try {
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS feed_posts (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      post_type TEXT,
+      device_id TEXT,
+      nickname TEXT,
+      avatar TEXT,
+      pet_name TEXT,
+      badge_icon TEXT,
+      title TEXT,
+      details TEXT,
+      likes_count INTEGER DEFAULT 0,
+      created_at INTEGER
+    );
+    CREATE TABLE IF NOT EXISTS feed_likes (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      post_id INTEGER,
+      liker_device_id TEXT,
+      liker_nickname TEXT,
+      created_at INTEGER,
+      UNIQUE(post_id, liker_device_id)
+    );
+  `);
+} catch(e) {}
+
 // IN-MEMORY CACHE & WEBSOCKET KÖPRÜSÜ
 const database = {
   devices: new Map(),        // deviceId -> { deviceId, mac, userEmail, pet, needs, stats, lastSeen, isOnline }
@@ -277,6 +303,33 @@ try {
       isOnline: (Date.now() - r.last_seen) < 180000
     });
   });
+
+  // FEED POSTS SEED (İlk açılışta canlı sosyal akış için zengin içerik)
+  try {
+    const postCount = db.prepare('SELECT COUNT(*) AS c FROM feed_posts').get().c;
+    if (postCount === 0) {
+      const now = Date.now();
+      const initialPosts = [
+        { type: 'HIGHSCORE', dev: 'SOCIES-7A8B1C', nick: 'Zeynep', av: '🐱', pet: 'PAMUK', icon: '🏃‍♀️', title: 'Maraton Koşusunda Yeni Rekor!', details: 'Maraton mini oyununda 340 puan yaparak rekor kırdı!', likes: 7, ago: 12 * 60000 },
+        { type: 'LEVEL_UP', dev: 'SOCIES-9F2D4E', nick: 'Emir', av: '🚀', pet: 'ŞİMŞEK', icon: '⚡', title: 'Seviye 5 ve Sportif Evrim!', details: 'Şimşek Seviye 5 oldu ve Sportif Evrim rozetini kazandı!', likes: 11, ago: 35 * 60000 },
+        { type: 'STORE_PURCHASE', dev: 'SOCIES-3C5A88', nick: 'Defne', av: '🌸', pet: 'BONCUK', icon: '🧙‍♂️', title: 'Mağazadan Yeni Şapka Aldı!', details: 'Boncuk için Yıldızlı Sihirbaz Külahı satın aldı ve kuşandı.', likes: 5, ago: 60 * 60000 },
+        { type: 'STREAK', dev: 'SOCIES-8E1B9A', nick: 'Kerem', av: '🦊', pet: 'DUMAN', icon: '🔥', title: '7 Günlük Aktiflik Ateşi!', details: 'Üst üste 7 gün boyunca bebeğini yalnız bırakmadı.', likes: 14, ago: 90 * 60000 },
+        { type: 'SOUVENIR', dev: 'SOCIES-4D7A2F', nick: 'Ece', av: '⭐', pet: 'LİMON', icon: '🍀', title: 'Park Molasından Hatıra!', details: 'Limon park molasından Dört Yapraklı Yonca hatırası getirdi.', likes: 6, ago: 120 * 60000 },
+        { type: 'GAME_CLEAR', dev: 'SOCIES-6B3E9C', nick: 'Mert', av: '🤖', pet: 'ROBO', icon: '🧱', title: 'Tuğla Kırma Ustası!', details: 'Tuğla Kırma oyununda tüm bölümleri sıfır hatayla geçti!', likes: 8, ago: 180 * 60000 },
+        { type: 'LEVEL_UP', dev: 'SOCIES-1A9F5D', nick: 'Elif', av: '🌈', pet: 'MAVİŞ', icon: '🍼', title: 'Yumurta Çatladı!', details: 'Gökkuşağı yumurtasını çatlatıp Maviş ile maceraya başladı.', likes: 19, ago: 240 * 60000 }
+      ];
+      const insertFeed = db.prepare(`
+        INSERT INTO feed_posts (post_type, device_id, nickname, avatar, pet_name, badge_icon, title, details, likes_count, created_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `);
+      initialPosts.forEach(p => {
+        insertFeed.run(p.type, p.dev, p.nick, p.av, p.pet, p.icon, p.title, p.details, p.likes, now - p.ago);
+      });
+      console.log('[DB] 7 Sosyal Akış Başlangıç Etkinliği Eklendi.');
+    }
+  } catch(e) {
+    console.error('[DB] Feed post seed error:', e.message);
+  }
 } catch(e) {
   console.error('[DB SYNC ERROR]', e);
 }
@@ -431,7 +484,7 @@ const server = http.createServer((req, res) => {
     if (fs.existsSync(apkFile)) {
       res.writeHead(200, {
         'Content-Type': 'application/vnd.android.package-archive',
-        'Content-Disposition': 'attachment; filename="socies-v1.0.20.apk"',
+        'Content-Disposition': 'attachment; filename="socies-v1.0.23.apk"',
         'Access-Control-Allow-Origin': '*'
       });
       return fs.createReadStream(apkFile).pipe(res);
@@ -614,6 +667,101 @@ const server = http.createServer((req, res) => {
       `).all();
 
       return sendJSON(res, 200, { success: true, leaderboard: topScores });
+    } catch(e) {
+      return sendJSON(res, 500, { error: e.message });
+    }
+  }
+
+  // 2.6 SOSYAL AKIŞ & BAŞARILAR (GET FEED)
+  if (path === '/api/v1/feed' && method === 'GET') {
+    const myDev = (parsedUrl.query && parsedUrl.query.deviceId) || '';
+    try {
+      const posts = db.prepare(`
+        SELECT p.*,
+          CASE WHEN EXISTS(SELECT 1 FROM feed_likes l WHERE l.post_id = p.id AND l.liker_device_id = ?) THEN 1 ELSE 0 END AS is_liked
+        FROM feed_posts p
+        ORDER BY p.created_at DESC
+        LIMIT 40
+      `).all(myDev);
+      return sendJSON(res, 200, { success: true, posts });
+    } catch(e) {
+      return sendJSON(res, 500, { error: e.message });
+    }
+  }
+
+  // 2.7 SOSYAL AKIŞA YENİ BAŞARI / ETKİNLİK GÖNDERME (POST TO FEED)
+  if (path === '/api/v1/feed/post' && method === 'POST') {
+    return parseBody(req, (body) => {
+      const { postType, deviceId, nickname, avatar, petName, badgeIcon, title, details } = body;
+      if (!deviceId || !title) return sendJSON(res, 400, { error: 'deviceId ve title zorunludur' });
+      try {
+        const result = db.prepare(`
+          INSERT INTO feed_posts (post_type, device_id, nickname, avatar, pet_name, badge_icon, title, details, likes_count, created_at)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0, ?)
+        `).run(
+          postType || 'ACHIEVEMENT',
+          deviceId,
+          nickname || 'Oyuncu',
+          avatar || '👑',
+          petName || 'Pufi',
+          badgeIcon || '⭐',
+          title,
+          details || '',
+          Date.now()
+        );
+        return sendJSON(res, 200, { success: true, postId: result.lastInsertRowid });
+      } catch(e) {
+        return sendJSON(res, 500, { error: e.message });
+      }
+    });
+  }
+
+  // 2.8 SOSYAL AKIŞ PAYLAŞIMINA KALP / LIKE ATMA (LIKE POST)
+  if (path === '/api/v1/feed/like' && method === 'POST') {
+    return parseBody(req, (body) => {
+      const { postId, deviceId, nickname } = body;
+      if (!postId || !deviceId) return sendJSON(res, 400, { error: 'postId ve deviceId zorunludur' });
+      try {
+        const post = db.prepare('SELECT * FROM feed_posts WHERE id = ?').get(postId);
+        if (!post) return sendJSON(res, 404, { error: 'Paylaşım bulunamadı' });
+
+        const existing = db.prepare('SELECT id FROM feed_likes WHERE post_id = ? AND liker_device_id = ?').get(postId, deviceId);
+        let isLiked = false;
+        if (existing) {
+          db.prepare('DELETE FROM feed_likes WHERE id = ?').run(existing.id);
+          db.prepare('UPDATE feed_posts SET likes_count = MAX(0, likes_count - 1) WHERE id = ?').run(postId);
+          isLiked = false;
+        } else {
+          db.prepare('INSERT INTO feed_likes (post_id, liker_device_id, liker_nickname, created_at) VALUES (?, ?, ?, ?)').run(
+            postId, deviceId, nickname || 'Dost', Date.now()
+          );
+          db.prepare('UPDATE feed_posts SET likes_count = likes_count + 1 WHERE id = ?').run(postId);
+          isLiked = true;
+
+          // Eğer kendi paylaşımı değilse, paylaşım sahibine bildirim poke'u gönder!
+          if (post.device_id !== deviceId) {
+            db.prepare('INSERT INTO pokes (from_dev, from_nick, target_dev, poke_type, is_read, created_at) VALUES (?, ?, ?, ?, 0, ?)').run(
+              deviceId, nickname || 'Bir arkadaşın', post.device_id, 'LIKE_EVENT', Date.now()
+            );
+          }
+        }
+        const updated = db.prepare('SELECT likes_count FROM feed_posts WHERE id = ?').get(postId);
+        return sendJSON(res, 200, { success: true, isLiked, likesCount: updated ? updated.likes_count : 0 });
+      } catch(e) {
+        return sendJSON(res, 500, { error: e.message });
+      }
+    });
+  }
+
+  // 2.9 KİŞİSEL BAŞARI GÜNLÜĞÜ (GET MILESTONES)
+  if (path === '/api/v1/feed/milestones' && method === 'GET') {
+    const targetDev = (parsedUrl.query && parsedUrl.query.deviceId);
+    if (!targetDev) return sendJSON(res, 400, { error: 'deviceId zorunludur' });
+    try {
+      const milestones = db.prepare(`
+        SELECT * FROM feed_posts WHERE device_id = ? ORDER BY created_at DESC LIMIT 30
+      `).all(targetDev);
+      return sendJSON(res, 200, { success: true, milestones });
     } catch(e) {
       return sendJSON(res, 500, { error: e.message });
     }
@@ -1449,19 +1597,19 @@ const server = http.createServer((req, res) => {
   if (path === '/api/v1/version/check' && method === 'GET') {
     const host = req.headers.host || '46.1.173.159:3000';
     return sendJSON(res, 200, {
-      latestVersion: 'v1.0.22',
+      latestVersion: 'v1.0.23',
       semver: {
         major: 1,
         minor: 0,
-        patch: 22,
-        build: 23
+        patch: 23,
+        build: 24
       },
-      versionCode: 23,
-      latestCommitHash: 'socies-v1.0.22',
+      versionCode: 24,
+      latestCommitHash: 'socies-v1.0.23',
       mandatoryUpdate: false,
-      releaseNotes: 'v1.0.22: Cihaz içi Mola Sistemi (Okul 2 saat, Park 1 saat, Alışveriş 45 dk) ve %10 ihtiyaç karşılama, Mini Oyunlarda Neşe (Fun) kazanımı, Maraton dengeli %5 hızlanma, Konsol menüsünde canlı ihtiyaç çubukları ve ilk basışta Durum ekranı, Çakışmasız ferah OLED uyku ve durum satırı tasarımı.',
+      releaseNotes: 'v1.0.23: XP Mağazası & Gardırop (10 Seviyeli Şapka ve OLED piksel çizimi), Duolingo tarzı Günlük Seri (Streak) & XP ile Telafi Dondurucu (6 güne kadar), Günün 3 Görevi, Sosyal Akış & Beğeni (❤️) & Kişisel Başarı Günlüğü, Dallanan Evrim Mizaçları (Sportif, Bilge, Gurme), Mola Hatıraları Çantası, Dinamik Hava Durumu Simülasyonu ve Sokak Karşılaşmaları.',
       apkDownloadUrl: `http://${host}/download/socies-app.apk`,
-      githubApkUrl: 'https://github.com/mcturan/socies/releases/download/v1.0.22/socies-app.apk'
+      githubApkUrl: 'https://github.com/mcturan/socies/releases/download/v1.0.23/socies-app.apk'
     });
   }
 
@@ -1576,7 +1724,7 @@ function serveSociesNetworkPage(res) {
       <div class="nav-links">
         <a href="/dashboard" class="nav-btn">📊 Sunucu Paneli</a>
         <a href="/" class="nav-btn">🎮 Web Emülatörü</a>
-        <a href="/download/socies-app.apk" class="dl-btn">📥 APK İndir (v1.0.20)</a>
+        <a href="/download/socies-app.apk" class="dl-btn">📥 APK İndir (v1.0.23)</a>
       </div>
     </div>
 
@@ -1594,7 +1742,7 @@ function serveSociesNetworkPage(res) {
         <div class="kpi-lbl">${countries.join(', ')}</div>
       </div>
       <div class="kpi-card">
-        <div class="kpi-val" style="color:#ffe600;">v1.0.20</div>
+        <div class="kpi-val" style="color:#ffe600;">v1.0.23</div>
         <div class="kpi-lbl">Ağ Sürümü (SemVer 2.0.0)</div>
       </div>
     </div>

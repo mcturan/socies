@@ -278,7 +278,7 @@ public class MainActivity extends Activity {
             try {
                 return getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
             } catch (Exception e) {
-                return "1.0.22";
+                return "1.0.23";
             }
         }
     }

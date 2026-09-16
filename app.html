@@ -717,6 +717,300 @@
       transform: scale(0.98);
       background: #F8FAFC;
     }
+
+    /* XP STORE & WARDROBE STYLES */
+    .store-cat-bar {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding: 4px 2px 10px 2px;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    .store-cat-bar::-webkit-scrollbar { display: none; }
+    .store-cat-pill {
+      padding: 6px 14px;
+      background: #F1F5F9;
+      color: #475569;
+      border: 1.5px solid #CBD5E1;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .store-cat-pill.active {
+      background: #4F46E5;
+      color: #FFFFFF;
+      border-color: #4F46E5;
+      box-shadow: 0 4px 12px rgba(79,70,229,0.3);
+    }
+    .store-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      width: 100%;
+    }
+    .store-card {
+      background: #FFFFFF;
+      border: 1.5px solid #E2E8F0;
+      border-radius: 18px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.03);
+      position: relative;
+      transition: all 0.2s;
+    }
+    .store-card.equipped {
+      border-color: #10B981;
+      background: #F0FDF4;
+      box-shadow: 0 6px 18px rgba(16,185,129,0.18);
+    }
+    .store-card.locked {
+      opacity: 0.65;
+      background: #F8FAFC;
+    }
+    .store-card-icon {
+      font-size: 2.2rem;
+      margin: 4px 0;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+    }
+    .store-card-name {
+      font-size: 0.82rem;
+      font-weight: 900;
+      color: var(--text-main);
+      margin-bottom: 2px;
+    }
+    .store-card-price {
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: #D97706;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+    .store-btn {
+      width: 100%;
+      padding: 6px 8px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 900;
+      border: none;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .store-btn-buy {
+      background: linear-gradient(135deg, #10B981, #059669);
+      color: #FFFFFF;
+      box-shadow: 0 4px 10px rgba(16,185,129,0.25);
+    }
+    .store-btn-equip {
+      background: #4F46E5;
+      color: #FFFFFF;
+      box-shadow: 0 4px 10px rgba(79,70,229,0.25);
+    }
+    .store-btn-unequip {
+      background: #DC2626;
+      color: #FFFFFF;
+    }
+    .store-btn-locked {
+      background: #E2E8F0;
+      color: #64748B;
+      cursor: not-allowed;
+    }
+
+    /* ACTIVITY FEED (SOSYAL AKIŞ) STYLES */
+    .feed-container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
+    }
+    .feed-card {
+      background: #FFFFFF;
+      border: 1.5px solid #E2E8F0;
+      border-radius: 20px;
+      padding: 14px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.03);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      text-align: left;
+    }
+    .feed-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .feed-user-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .feed-user-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: #F1F5F9;
+      border: 1.5px solid #CBD5E1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.35rem;
+    }
+    .feed-author-nick {
+      font-size: 0.88rem;
+      font-weight: 900;
+      color: var(--text-main);
+    }
+    .feed-author-sub {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+    .feed-card-body {
+      background: #F8FAFC;
+      border-radius: 14px;
+      padding: 10px 12px;
+      border: 1px solid #EEF2F6;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .feed-badge-icon {
+      font-size: 1.8rem;
+      line-height: 1;
+    }
+    .feed-card-title {
+      font-size: 0.85rem;
+      font-weight: 900;
+      color: #1E293B;
+    }
+    .feed-card-desc {
+      font-size: 0.76rem;
+      color: #64748B;
+      margin-top: 2px;
+      line-height: 1.35;
+    }
+    .feed-card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 4px;
+    }
+    .feed-time-text {
+      font-size: 0.72rem;
+      color: #94A3B8;
+      font-weight: 700;
+    }
+    .feed-heart-btn {
+      background: #FFF1F2;
+      color: #E11D48;
+      border: 1px solid #FECDD3;
+      border-radius: 999px;
+      padding: 4px 12px;
+      font-size: 0.78rem;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .feed-heart-btn.liked {
+      background: #E11D48;
+      color: #FFFFFF;
+      border-color: #BE123C;
+      box-shadow: 0 4px 12px rgba(225,29,72,0.35);
+    }
+    .feed-heart-btn:active {
+      transform: scale(1.15);
+    }
+
+    /* DUOLINGO-STYLE STREAK & QUEST STYLES */
+    .streak-week-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+      width: 100%;
+      margin: 12px 0;
+    }
+    .streak-day-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+    .streak-day-lbl {
+      font-size: 0.65rem;
+      font-weight: 800;
+      color: #64748B;
+    }
+    .streak-day-circle {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: #F1F5F9;
+      border: 2px solid #CBD5E1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      font-weight: 900;
+      color: #94A3B8;
+    }
+    .streak-day-circle.active {
+      background: #FFF7ED;
+      border-color: #F97316;
+      color: #EA580C;
+      box-shadow: 0 4px 10px rgba(249,115,22,0.3);
+    }
+    .streak-day-circle.today {
+      border-width: 3px;
+      transform: scale(1.08);
+    }
+    .streak-day-circle.missed {
+      background: #FEF2F2;
+      border-color: #EF4444;
+      color: #DC2626;
+    }
+
+    /* QUESTS CARD */
+    .quest-card {
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 16px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      text-align: left;
+      width: 100%;
+    }
+    .quest-card.completed {
+      background: #F0FDF4;
+      border-color: #A7F3D0;
+    }
+    .quest-bar-bg {
+      width: 100%;
+      height: 8px;
+      background: #E2E8F0;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .quest-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #4F46E5, #06B6D4);
+      border-radius: 999px;
+      transition: width 0.3s;
+    }
+    .quest-card.completed .quest-bar-fill {
+      background: linear-gradient(90deg, #10B981, #059669);
+    }
   </style>
 </head>
 <body>
@@ -863,7 +1157,7 @@
         </div>
 
         <div style="font-size:0.72rem; color:#94A3B8; text-align:center;">
-          Socies v1.0.22 (Build 23) • OTA Güncel
+          Socies v1.0.23 (Build 24) • OTA Güncel
         </div>
       </div>
 
@@ -1156,6 +1450,112 @@
     </div>
   </div>
 
+  <!-- ===================================================================== -->
+  <!-- DUOLINGO-STYLE STREAK & CALENDAR MODAL -->
+  <!-- ===================================================================== -->
+  <div id="streakModal" class="update-overlay" style="display:none; z-index:11500;">
+    <div class="update-dialog" style="max-width:370px; border:2px solid #F97316;">
+      <div class="update-icon-badge" style="background:linear-gradient(135deg, #F97316, #EA580C); font-size:2.5rem; box-shadow:0 8px 24px rgba(249,115,22,0.4);">
+        🔥
+      </div>
+      <div class="update-title" style="color:#C2410C;">
+        <span id="txtStreakModalCount">1</span> Günlük Seri!
+      </div>
+      <p style="font-size:0.8rem; color:var(--text-muted); margin:0;">
+        Her gün Socies'e uğrayıp bebeğine baktıkça serin büyür. Duolingo tarzı aktiflik ateşini sakın söndürme!
+      </p>
+
+      <!-- 7 GÜNLÜK HAFTALIK TAKVİM ÇEMBERLERİ -->
+      <div class="streak-week-grid" id="streakWeekGrid">
+        <!-- Injected via JavaScript (Pzt, Sal, Çar, Per, Cum, Cmt, Paz) -->
+      </div>
+
+      <!-- SERİ KURTARMA / TAMAMLAMA KARTI (6 GÜNE KADAR XP İLE TELAFİ) -->
+      <div id="boxStreakRepair" style="width:100%; background:#FFF7ED; border:1.5px dashed #FDBA74; border-radius:14px; padding:10px 12px; display:none; flex-direction:column; gap:6px; text-align:left;">
+        <div style="font-weight:900; font-size:0.82rem; color:#9A3412; display:flex; align-items:center; gap:6px;">
+          <span>❄️</span> Kaçırılan Günleri XP ile Kurtar
+        </div>
+        <p style="font-size:0.75rem; color:#C2410C; margin:0; line-height:1.35;" id="txtStreakRepairDesc">
+          Serin bozuldu ama endişelenme! 6 güne kadar kaçırdığın günleri XP puanınla onarabilirsin.
+        </p>
+        <button id="btnRepairStreak" class="btn-micro" style="width:100%; padding:8px; background:linear-gradient(135deg, #EA580C, #C2410C); color:#fff; font-weight:900; font-size:0.8rem; border:none; border-radius:10px; cursor:pointer;" onclick="repairMissedStreak()">
+          🛠️ 1 Günü Kurtar (-150 XP)
+        </button>
+      </div>
+
+      <button class="btn-update-action" onclick="closeStreakModal()" style="background:linear-gradient(135deg, #F97316, #EA580C);">
+        Süper, Devam Et! ➔
+      </button>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- GÜNÜN GÖREVLERİ (DAILY QUESTS) MODAL -->
+  <!-- ===================================================================== -->
+  <div id="dailyQuestsModal" class="update-overlay" style="display:none; z-index:11500;">
+    <div class="update-dialog" style="max-width:380px; border:2px solid #6366F1;">
+      <div class="update-icon-badge" style="background:linear-gradient(135deg, #6366F1, #4F46E5); font-size:2.4rem; box-shadow:0 8px 24px rgba(99,102,241,0.35);">
+        🎯
+      </div>
+      <div class="update-title" style="color:#4338CA;">Günün Görevleri</div>
+      <p style="font-size:0.8rem; color:var(--text-muted); margin:0;">
+        Her gün 3 özel görevi tamamla, bolca XP kazan ve Günün Şampiyonu Rozetini kap!
+      </p>
+
+      <div id="questsContainer" style="width:100%; display:flex; flex-direction:column; gap:8px; margin:6px 0;">
+        <!-- Injected via JavaScript -->
+      </div>
+
+      <button class="btn-update-action" onclick="closeDailyQuestsModal()" style="background:linear-gradient(135deg, #4F46E5, #3730A3);">
+        Kapat
+      </button>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- KİŞİSEL BAŞARI GÜNLÜĞÜ (PERSONAL MILESTONES LOG) MODAL -->
+  <!-- ===================================================================== -->
+  <div id="personalMilestoneModal" class="update-overlay" style="display:none; z-index:11600;">
+    <div class="update-dialog" style="max-width:390px; border:2px solid #EC4899;">
+      <div class="update-icon-badge" style="background:linear-gradient(135deg, #EC4899, #DB2777); font-size:2.3rem; box-shadow:0 8px 24px rgba(236,72,153,0.35);">
+        📜
+      </div>
+      <div class="update-title" style="color:#BE185D;">Kişisel Başarı Günlüğü</div>
+      <p style="font-size:0.78rem; color:var(--text-muted); margin:0;">
+        Tüm seviye atlamaların, oyun rekorların ve arkadaşlarından gelen ❤️ beğeniler burada toplanır.
+      </p>
+
+      <div id="personalMilestonesList" style="width:100%; max-height:260px; overflow-y:auto; display:flex; flex-direction:column; gap:8px; padding-right:4px;">
+        <!-- Injected via JavaScript -->
+      </div>
+
+      <button class="btn-update-action" onclick="closePersonalMilestoneModal()" style="background:linear-gradient(135deg, #EC4899, #BE185D);">
+        Kapat
+      </button>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- MOLA HATIRA EŞYASI POPUP MODAL -->
+  <!-- ===================================================================== -->
+  <div id="outingsSouvenirModal" class="update-overlay" style="display:none; z-index:11800;">
+    <div class="update-dialog" style="max-width:360px; border:2px solid #10B981; animation:bounce 0.4s ease;">
+      <div class="update-icon-badge" id="souvenirBadgeIcon" style="background:linear-gradient(135deg, #10B981, #059669); font-size:2.8rem; box-shadow:0 8px 24px rgba(16,185,129,0.35);">
+        🍀
+      </div>
+      <div class="update-title" id="souvenirTitle" style="color:#065F46;">Mola Hatırası!</div>
+      <p id="souvenirDesc" style="font-size:0.85rem; color:#334155; margin:0; line-height:1.4;">
+        Pufi parktan sana özel bir hatıra eşyası getirdi ve çantasına koydu!
+      </p>
+      <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:14px; padding:10px; width:100%; font-size:0.8rem; font-weight:800; color:#047857;">
+        🎒 Çantaya Eklendi • +40 XP & +15 Sevgi
+      </div>
+      <button class="btn-update-action" onclick="closeSouvenirModal()" style="background:linear-gradient(135deg, #10B981, #047857);">
+        Harika! Çantayı Gör ➔
+      </button>
+    </div>
+  </div>
+
   <div class="app-container">
     
     <!-- TOP BAR - CLEAN & AIRY -->
@@ -1167,7 +1567,19 @@
           <span class="player-sub" id="txtPlayerXp">XP: 0/2000 • 250 ⭐</span>
         </div>
       </div>
-      <div class="top-header-badges" style="display:flex; align-items:center; gap:8px;">
+      <div class="top-header-badges" style="display:flex; align-items:center; gap:6px;">
+        <!-- DUOLINGO-STYLE STREAK FLAME BADGE -->
+        <div id="badgeStreak" onclick="openStreakModal()" title="Aktiflik Ateşi & Seri" style="background:#FFF7ED; color:#EA580C; border:1px solid #FDBA74; border-radius:12px; padding:4px 8px; font-size:0.78rem; font-weight:900; display:flex; align-items:center; gap:4px; cursor:pointer; box-shadow:0 2px 6px rgba(234,88,12,0.15);">
+          <span style="font-size:1rem;">🔥</span>
+          <span id="txtStreakVal">1</span>
+        </div>
+
+        <!-- DAILY QUESTS BADGE -->
+        <div id="badgeDailyQuests" onclick="openDailyQuestsModal()" title="Günün Görevleri" style="background:#EEF2FF; color:#4F46E5; border:1px solid #C7D2FE; border-radius:12px; padding:4px 8px; font-size:0.78rem; font-weight:900; display:flex; align-items:center; gap:4px; cursor:pointer; box-shadow:0 2px 6px rgba(79,70,229,0.15);">
+          <span style="font-size:0.95rem;">🎯</span>
+          <span id="txtQuestsDoneBadge">0/3</span>
+        </div>
+
         <button type="button" class="btn-micro" onclick="openServerSettingsModal()" title="Sunucu & Ayarlar" style="background:#F1F5F9; color:#475569; border:1px solid #CBD5E1; border-radius:10px; padding:6px 10px; font-size:0.85rem; font-weight:700; display:flex; align-items:center; gap:4px; box-shadow:none;">
           <span>⚙️</span>
         </button>
@@ -1332,6 +1744,48 @@
         <span>Socies Vatandaşlık Pasaportu & Kimlik Kartı</span>
       </button>
 
+      <!-- KARAKTER KİŞİLİĞİ & EVRİM ROZETİ KARTI -->
+      <div style="background:linear-gradient(135deg, #FAF5FF, #F3E8FF); border:1.5px solid #D8B4FE; border-radius:16px; padding:12px 14px; margin-bottom:0.8rem; display:flex; justify-content:space-between; align-items:center;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span style="font-size:1.8rem;" id="txtPetArchetypeIcon">🏃‍♂️</span>
+          <div style="text-align:left;">
+            <div style="font-weight:900; font-size:0.88rem; color:#6B21A8;" id="txtPetArchetypeName">Sportif Pufi (Evrim Kolu)</div>
+            <div style="font-size:0.74rem; color:#7E22CE;" id="txtPetArchetypeDesc">Çok oyun oynadı; oyunlarda +%10 bonus puan kazanır!</div>
+          </div>
+        </div>
+        <button class="btn-micro" style="background:#8B5CF6; color:#fff; font-weight:800; font-size:0.75rem; padding:6px 10px; border:none; border-radius:10px;" onclick="openPersonalMilestoneModal()">📜 Başarı Günlüğü</button>
+      </div>
+
+      <!-- PUFİ'NİN ÇANTASI & MOLA HATIRA KOLEKSİYONU -->
+      <div style="background:#F8FAFC; border:1.5px solid #E2E8F0; border-radius:16px; padding:12px 14px; margin-bottom:0.8rem; text-align:left;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <div style="font-weight:900; font-size:0.88rem; color:#0F172A; display:flex; align-items:center; gap:6px;">
+            <span>🎒</span> Pufi'nin Çantası & Hatıralar
+          </div>
+          <span style="font-size:0.72rem; color:#64748B; font-weight:800;" id="txtBackpackCount">0 Eşya</span>
+        </div>
+        <div id="backpackGridContainer" style="display:flex; gap:8px; overflow-x:auto; padding-bottom:4px;">
+          <!-- Injected via JavaScript -->
+        </div>
+      </div>
+
+      <!-- ORTAM & HAVA DURUMU SİSTEMİ -->
+      <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:16px; padding:10px 14px; margin-bottom:0.8rem; display:flex; justify-content:space-between; align-items:center;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="font-size:1.6rem;" id="txtWeatherHeroIcon">☀️</span>
+          <div style="text-align:left;">
+            <div style="font-weight:900; font-size:0.85rem; color:#166534;" id="txtWeatherTitle">Güneşli ve Berrak</div>
+            <div style="font-size:0.72rem; color:#15803D;">Konsol gökyüzü ortamı senkronize</div>
+          </div>
+        </div>
+        <div style="display:flex; gap:4px;">
+          <button class="btn-micro" style="padding:4px 8px; font-size:0.8rem;" onclick="setAmbientWeather('sunny')">☀️</button>
+          <button class="btn-micro" style="padding:4px 8px; font-size:0.8rem;" onclick="setAmbientWeather('rain')">🌧️</button>
+          <button class="btn-micro" style="padding:4px 8px; font-size:0.8rem;" onclick="setAmbientWeather('snow')">❄️</button>
+          <button class="btn-micro" style="padding:4px 8px; font-size:0.8rem;" onclick="setAmbientWeather('stars')">🌌</button>
+        </div>
+      </div>
+
       <!-- GÜNLÜK BAĞLILIK & 3000 ADIM SANDIĞI -->
       <div style="margin-top:0.4rem; display:flex; flex-direction:column; gap:8px;">
         <!-- GÜNLÜK SERİ KARTI -->
@@ -1495,37 +1949,87 @@
     </div>
 
     <!-- ===================================================================== -->
-    <!-- TAB 5: 🏆 SKOR TABLOSU (LEADERBOARD) -->
+    <!-- TAB 3: 🛍️ SOCIES XP MAĞAZASI & KIYAFET DOLABI -->
     <!-- ===================================================================== -->
-    <div id="tab-rank" class="tab-view">
-      <div class="rank-tabs-row">
-        <button class="rank-tab-btn active" id="btnRankFriends" onclick="setRankView('friends')">👥 Arkadaşlarım (4)</button>
-        <button class="rank-tab-btn" id="btnRankGlobal" onclick="setRankView('global')">🌍 Genel Sıralama (Top 10)</button>
+    <div id="tab-store" class="tab-view">
+      <!-- XP BALANCE BANNER -->
+      <div style="background:linear-gradient(135deg, #4F46E5, #06B6D4); border-radius:20px; padding:14px 18px; color:#FFFFFF; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 8px 24px rgba(79,70,229,0.3);">
+        <div style="text-align:left;">
+          <div style="font-size:0.75rem; color:#E0E7FF; font-weight:800; text-transform:uppercase; letter-spacing:0.5px;">MAĞAZA BAKİYEN</div>
+          <div style="font-size:1.4rem; font-weight:900; display:flex; align-items:center; gap:6px;">
+            <span id="txtStoreBalanceXp">0</span> <span style="font-size:1.1rem; color:#FDE047;">⭐ XP</span>
+          </div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:0.75rem; color:#E0E7FF; font-weight:800;">EĞİTMEN SEVİYESİ</div>
+          <div id="txtStoreTrainerLevel" style="font-size:1.1rem; font-weight:900; color:#4ADE80;">Lv.1</div>
+        </div>
       </div>
 
-      <div class="rank-list" id="rankListContainer">
+      <!-- CATEGORY PILLS BAR -->
+      <div class="store-cat-bar" id="storeCatBar">
+        <button class="store-cat-pill active" onclick="switchStoreCategory('hats', this)">🧢 Şapkalar (10)</button>
+        <button class="store-cat-pill" onclick="switchStoreCategory('outfits', this)">👕 Kıyafetler</button>
+        <button class="store-cat-pill" onclick="switchStoreCategory('accessories', this)">🕶️ Aksesuarlar</button>
+        <button class="store-cat-pill" onclick="switchStoreCategory('phones', this)">📱 Gadget'lar</button>
+        <button class="store-cat-pill" onclick="switchStoreCategory('pets', this)">🐞 Mini Evcil</button>
+        <button class="store-cat-pill" onclick="switchStoreCategory('decors', this)">🛋️ Dekorasyon</button>
+      </div>
+
+      <!-- ITEMS GRID -->
+      <div class="store-grid" id="storeItemsGrid">
         <!-- Injected via JavaScript -->
       </div>
     </div>
 
     <!-- ===================================================================== -->
-    <!-- TAB 6: 👥 ARKADAŞLAR & RADAR -->
+    <!-- TAB 4: 🌟 SOSYAL HUB (AKIŞ & BAŞARILAR, SIRALAMA, ARKADAŞLAR) -->
     <!-- ===================================================================== -->
-    <div id="tab-friends" class="tab-view">
-      <!-- SEARCH BOX -->
-      <div class="search-friend-box">
-        <input type="text" id="friendSearchInput" class="search-friend-input" placeholder="Nickname veya Cihaz ID ara (örn: Zeynep, 84920A)...">
-        <button class="btn-action-primary" style="width:auto; padding:0.6rem 1rem;" onclick="addFriendAction()">Ekle</button>
+    <div id="tab-social" class="tab-view">
+      <!-- SUB-NAVIGATION PILLS -->
+      <div style="display:flex; background:#F1F5F9; border-radius:14px; padding:4px; margin-bottom:12px; gap:4px;">
+        <button class="rank-tab-btn active" id="btnSubTabFeed" style="flex:1; border-radius:10px; padding:8px 6px; font-size:0.78rem;" onclick="switchSocialSubTab('feed')">🌟 Akış & Başarılar</button>
+        <button class="rank-tab-btn" id="btnSubTabRank" style="flex:1; border-radius:10px; padding:8px 6px; font-size:0.78rem;" onclick="switchSocialSubTab('rank')">🏆 Sıralama</button>
+        <button class="rank-tab-btn" id="btnSubTabFriends" style="flex:1; border-radius:10px; padding:8px 6px; font-size:0.78rem;" onclick="switchSocialSubTab('friends')">👥 Arkadaşlar</button>
       </div>
 
-      <div class="friends-list-box" id="friendsListContainer">
-        <!-- Friend Cards Injected via JavaScript -->
+      <!-- SUBPANE 1: 🌟 AKIŞ & BAŞARILAR -->
+      <div id="socialSubpaneFeed" style="display:flex; flex-direction:column; gap:10px; width:100%;">
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:0 4px;">
+          <span style="font-size:0.85rem; font-weight:900; color:var(--text-main);">📢 Topluluk ve Arkadaş Akışı</span>
+          <button class="btn-micro" style="font-size:0.75rem; padding:4px 8px;" onclick="loadSocialFeed(true)">🔄 Yenile</button>
+        </div>
+        <div class="feed-container" id="feedListContainer">
+          <!-- Injected via JavaScript -->
+        </div>
+      </div>
+
+      <!-- SUBPANE 2: 🏆 SIRALAMA (LEADERBOARD) -->
+      <div id="socialSubpaneRank" style="display:none; flex-direction:column; gap:10px; width:100%;">
+        <div class="rank-tabs-row">
+          <button class="rank-tab-btn active" id="btnRankFriends" onclick="setRankView('friends')">👥 Arkadaşlarım</button>
+          <button class="rank-tab-btn" id="btnRankGlobal" onclick="setRankView('global')">🌍 Genel Sıralama (Top 25)</button>
+        </div>
+        <div class="rank-list" id="rankListContainer">
+          <!-- Injected via JavaScript -->
+        </div>
+      </div>
+
+      <!-- SUBPANE 3: 👥 ARKADAŞLAR & RADAR -->
+      <div id="socialSubpaneFriends" style="display:none; flex-direction:column; gap:10px; width:100%;">
+        <div class="search-friend-box">
+          <input type="text" id="friendSearchInput" class="search-friend-input" placeholder="Nickname veya Cihaz ID ara (örn: Zeynep, 84920A)...">
+          <button class="btn-action-primary" style="width:auto; padding:0.6rem 1rem;" onclick="addFriendAction()">Ekle</button>
+        </div>
+        <div class="friends-list-box" id="friendsListContainer">
+          <!-- Injected via JavaScript -->
+        </div>
       </div>
     </div>
 
   </div>
 
-  <!-- BOTTOM NAVIGATION (5 TABS) -->
+  <!-- BOTTOM NAVIGATION (5 TABS: KONSOL, MY BUDDY, MAĞAZA, SOSYAL, ATÖLYE) -->
   <nav class="bottom-nav">
     <div class="nav-btn active" id="navConsole" onclick="switchTab('tab-console')">
       <span class="nav-icon">🎮</span>
@@ -1535,22 +2039,22 @@
       <span class="nav-icon">🐾</span>
       <span>My Buddy</span>
     </div>
+    <div class="nav-btn" id="navStore" onclick="switchTab('tab-store')">
+      <span class="nav-icon">🛍️</span>
+      <span>Mağaza</span>
+    </div>
+    <div class="nav-btn" id="navSocial" onclick="switchTab('tab-social')">
+      <span class="nav-icon">🌟</span>
+      <span>Sosyal</span>
+    </div>
     <div class="nav-btn" id="navStudio" onclick="switchTab('tab-studio')">
       <span class="nav-icon">🎨</span>
       <span>Atölye</span>
     </div>
-    <div class="nav-btn" id="navRank" onclick="switchTab('tab-rank')">
-      <span class="nav-icon">🏆</span>
-      <span>Sıralama</span>
-    </div>
-    <div class="nav-btn" id="navFriends" onclick="switchTab('tab-friends')">
-      <span class="nav-icon">👥</span>
-      <span>Arkadaşlar</span>
-    </div>
   </nav>
 
   <script>
-    const CURRENT_APP_VERSION = 'v1.0.22';
+    const CURRENT_APP_VERSION = 'v1.0.23';
 
     // --- 📡 ARKA PLAN TELEMETRİ VE HATA GÖZLEMCİSİ (SOCIES LOGGER) ---
     const SociesLogger = {
@@ -1686,6 +2190,55 @@
         isSick: false,
         poopCount: 0,
         careScore: 100
+      },
+
+      // STORE, WARDROBE & EQUIPPED ITEMS (XP STORE)
+      store: {
+        inventory: (function() {
+          try { return JSON.parse(localStorage.getItem('socies_store_inv') || '["hat_baseball"]'); } catch(e) { return ['hat_baseball']; }
+        })(),
+        equipped: (function() {
+          try { return JSON.parse(localStorage.getItem('socies_store_equipped') || '{"hat":"hat_baseball"}'); } catch(e) { return { hat: 'hat_baseball' }; }
+        })()
+      },
+
+      // DUOLINGO-STYLE STREAK & ACTIVE DAYS
+      streak: {
+        count: parseInt(localStorage.getItem('socies_streak_count') || '1', 10),
+        lastActiveDate: localStorage.getItem('socies_streak_last_date') || new Date().toISOString().split('T')[0],
+        history: (function() {
+          try { return JSON.parse(localStorage.getItem('socies_streak_history') || '[]'); } catch(e) { return []; }
+        })(),
+        repairsAvailable: 0
+      },
+
+      // GÜNÜN 3 GÖREVİ (DAILY QUESTS)
+      dailyQuests: {
+        date: localStorage.getItem('socies_quests_date') || new Date().toISOString().split('T')[0],
+        list: (function() {
+          try { return JSON.parse(localStorage.getItem('socies_quests_list') || 'null'); } catch(e) { return null; }
+        })()
+      },
+
+      // PUFİ'NİN ÇANTASI & MOLA HATIRALARI (SOUVENIRS)
+      backpack: (function() {
+        try { return JSON.parse(localStorage.getItem('socies_backpack') || '[]'); } catch(e) { return []; }
+      })(),
+
+      // KİŞİSEL BAŞARI GÜNLÜĞÜ (PERSONAL MILESTONES)
+      personalMilestones: (function() {
+        try { return JSON.parse(localStorage.getItem('socies_milestones') || '[]'); } catch(e) { return []; }
+      })(),
+
+      // ORTAM & HAVA DURUMU SİSTEMİ
+      weather: localStorage.getItem('socies_weather') || 'sunny',
+
+      // DALLANAN EVRİM & MİZAÇ (ARCHETYPES)
+      evolution: {
+        archetype: localStorage.getItem('socies_archetype') || 'sporty', // sporty, scholar, chubby
+        gamesPlayedCount: parseInt(localStorage.getItem('socies_stat_games') || '0', 10),
+        sleepCount: parseInt(localStorage.getItem('socies_stat_sleep') || '0', 10),
+        mealsCount: parseInt(localStorage.getItem('socies_stat_meals') || '0', 10)
       },
 
       // Gerçek SQLite Sunucudan çekilen Arkadaşlar & Radar (Zengin başlangıç havuzu)
@@ -2613,8 +3166,11 @@
         addPetXP(80);
         appData.needs.fun = Math.min(100, (appData.needs.fun || 50) + 35);
         appData.needs.social = Math.min(100, (appData.needs.social || 50) + 30);
-        showGlobalToast(`⚽ ${petName} parkta arkadaşlarıyla doyasıya eğlendi! (+80 XP, +35 Neşe)`);
-        renderOledSideThoughtBox('Parkta yeni arkadaşlar edindim! ⚽', '🎉', false);
+        // StreetPass / Park Encounter: Parkta komşu arkadaş / bot ile karşılaşma
+        const parkFriends = ['Kerem & Boncuk', 'Zeynep & Pamuk', 'Emir & Çıtır', 'Ece & Mavi'];
+        const metFriend = parkFriends[Math.floor(Math.random() * parkFriends.length)];
+        showGlobalToast(`⚽ ${petName} parkta ${metFriend} ile karşılaştı! (+80 XP, +35 Neşe)`);
+        renderOledSideThoughtBox(`Parkta ${metFriend.split(' ')[0]} ile koştuk! ⚽`, '🎉', false);
       } else {
         addPetXP(60);
         appData.needs.fun = Math.min(100, (appData.needs.fun || 50) + 30);
@@ -2622,6 +3178,11 @@
         showGlobalToast(`🛍️ ${petName} çarşı alışverişinden mutlu döndü! (+60 XP, +30 Neşe)`);
         renderOledSideThoughtBox('Alışveriş turu çok keyifliydi! 🛍️', '✨', false);
       }
+
+      // Mola Hatırası & Günlük Görev İlerlemesi
+      if (typeof dropOutingSouvenir === 'function') dropOutingSouvenir(type);
+      if (typeof progressDailyQuest === 'function') progressDailyQuest('q_outing', 1);
+
       savePetState();
       saveNeeds();
       updateNeedsUI();
@@ -2746,6 +3307,52 @@
       oled.ctx.restore();
     }
 
+    function renderOledWeather() {
+      const w = appData.weather || 'sunny';
+      if (w === 'sunny') {
+        oled.ctx.fillStyle = '#fde047';
+        oled.ctx.fillRect(116, 4, 4, 4);
+        if (Math.floor(oled.animFrame / 15) % 2 === 0) {
+          oled.ctx.fillRect(113, 5, 2, 2);
+          oled.ctx.fillRect(121, 5, 2, 2);
+          oled.ctx.fillRect(117, 1, 2, 2);
+          oled.ctx.fillRect(117, 9, 2, 2);
+        }
+      } else if (w === 'rain') {
+        oled.ctx.fillStyle = '#38bdf8';
+        for (let i = 0; i < 12; i++) {
+          const rx = (i * 11 + Math.floor(oled.animFrame * 1.5)) % 128;
+          const ry = ((i * 17) + Math.floor(oled.animFrame * 2.2)) % 56;
+          oled.ctx.fillRect(rx, ry, 1, 2);
+        }
+      } else if (w === 'snow') {
+        oled.ctx.fillStyle = '#ffffff';
+        for (let i = 0; i < 14; i++) {
+          const sway = Math.round(Math.sin((oled.animFrame + i * 20) * 0.05) * 2);
+          const sx = ((i * 13) + sway + 128) % 128;
+          const sy = ((i * 15) + Math.floor(oled.animFrame * 0.6)) % 57;
+          oled.ctx.fillRect(sx, sy, 1, 1);
+        }
+      } else if (w === 'stars') {
+        const starCoords = [
+          [8, 6], [24, 12], [42, 4], [60, 14], [78, 8], [95, 5], [110, 12],
+          [16, 20], [35, 24], [52, 18], [88, 22], [105, 18], [120, 8]
+        ];
+        for (let i = 0; i < starCoords.length; i++) {
+          const [sx, sy] = starCoords[i];
+          const twinkle = (oled.animFrame + i * 17) % 60;
+          if (twinkle < 35) {
+            oled.ctx.fillStyle = (i % 3 === 0) ? '#fde047' : '#ffffff';
+            oled.ctx.fillRect(sx, sy, 1, 1);
+          } else if (twinkle < 40 && i % 2 === 0) {
+            oled.ctx.fillStyle = '#38bdf8';
+            oled.ctx.fillRect(sx - 1, sy, 3, 1);
+            oled.ctx.fillRect(sx, sy - 1, 1, 3);
+          }
+        }
+      }
+    }
+
     function renderOledIdle() {
       // Eğer bebek uyuyorsa direkt SLEEPING moduna geç
       if (appData.petState && appData.petState.isSleeping) {
@@ -2762,6 +3369,9 @@
       oled.ctx.fillRect(48, 57, 2, 1);
       oled.ctx.fillRect(88, 57, 2, 1);
       oled.ctx.fillRect(116, 57, 2, 1);
+
+      // 1.5. HAVA DURUMU SİMÜLASYONU (Güneş, Yağmur, Kar, Yıldızlar)
+      renderOledWeather();
 
       if (!oled.idleBehavior) {
         oled.idleBehavior = { type: 'WALK', timer: 150, frame: 0, dir: 1 };
@@ -6989,6 +7599,84 @@
         oled.ctx.fillRect(px - 3, py - 5, 2, 2);
         oled.ctx.fillRect(px + 17, py - 4, 2, 2);
       }
+
+      // 6. KUŞANILAN ŞAPKA ÇİZİMİ (XP MAĞAZASI EŞYASI)
+      const equippedHat = (appData.store && appData.store.equipped && appData.store.equipped.hat);
+      if (equippedHat) {
+        drawOledHat(px, py, equippedHat);
+      }
+    }
+
+    function drawOledHat(px, py, hatId) {
+      oled.ctx.fillStyle = '#fde047'; // Parlak altın sarısı piksel şapka
+      switch(hatId) {
+        case 'hat_baseball': // 🧢 Kırmızı/Sarı Beyzbol Kepi
+          oled.ctx.fillRect(px + 4, py - 13, 11, 3);
+          oled.ctx.fillRect(px + 14, py - 11, 4, 1);
+          oled.ctx.fillRect(px + 9, py - 14, 1, 1);
+          break;
+        case 'hat_party': // 🥳 Parti Külahı
+          oled.ctx.fillRect(px + 7, py - 19, 2, 2);
+          oled.ctx.fillRect(px + 7, py - 17, 2, 2);
+          oled.ctx.fillRect(px + 6, py - 15, 4, 2);
+          oled.ctx.fillRect(px + 5, py - 13, 6, 2);
+          oled.ctx.fillRect(px + 4, py - 11, 8, 1);
+          break;
+        case 'hat_detective': // 🕵️‍♂️ Dedektif Fötr
+          oled.ctx.fillRect(px + 2, py - 11, 14, 1);
+          oled.ctx.fillRect(px + 5, py - 14, 8, 3);
+          oled.ctx.fillStyle = '#f43f5e';
+          oled.ctx.fillRect(px + 5, py - 12, 8, 1);
+          break;
+        case 'hat_chef': // 👨‍🍳 Master Şef Aşçı
+          oled.ctx.fillRect(px + 5, py - 12, 8, 2);
+          oled.ctx.fillRect(px + 3, py - 18, 12, 6);
+          oled.ctx.fillStyle = '#38bdf8';
+          oled.ctx.fillRect(px + 6, py - 16, 2, 3);
+          oled.ctx.fillRect(px + 10, py - 16, 2, 3);
+          break;
+        case 'hat_cowboy': // 🤠 Kovboy Şapkası
+          oled.ctx.fillRect(px + 1, py - 12, 2, 1);
+          oled.ctx.fillRect(px + 3, py - 11, 12, 1);
+          oled.ctx.fillRect(px + 15, py - 12, 2, 1);
+          oled.ctx.fillRect(px + 5, py - 15, 8, 4);
+          oled.ctx.fillRect(px + 8, py - 16, 2, 1);
+          break;
+        case 'hat_wizard': // 🧙‍♂️ Sihirbaz Külahı
+          oled.ctx.fillRect(px + 3, py - 11, 12, 1);
+          oled.ctx.fillRect(px + 5, py - 14, 8, 3);
+          oled.ctx.fillRect(px + 6, py - 17, 6, 3);
+          oled.ctx.fillRect(px + 7, py - 20, 3, 3);
+          oled.ctx.fillStyle = '#38bdf8';
+          oled.ctx.fillRect(px + 8, py - 16, 2, 2);
+          break;
+        case 'hat_crown': // 👑 Kraliyet Tacı
+          oled.ctx.fillRect(px + 3, py - 12, 12, 1);
+          oled.ctx.fillRect(px + 3, py - 15, 2, 3);
+          oled.ctx.fillRect(px + 8, py - 16, 2, 4);
+          oled.ctx.fillRect(px + 13, py - 15, 2, 3);
+          break;
+        case 'hat_viking': // ⚔️ Viking Miğferi
+          oled.ctx.fillRect(px + 4, py - 13, 10, 3);
+          oled.ctx.fillRect(px + 1, py - 16, 2, 3);
+          oled.ctx.fillRect(px + 3, py - 14, 1, 2);
+          oled.ctx.fillRect(px + 15, py - 16, 2, 3);
+          oled.ctx.fillRect(px + 14, py - 14, 1, 2);
+          break;
+        case 'hat_astronaut': // 🧑‍🚀 Uzay Kaskı
+          oled.ctx.strokeStyle = '#38bdf8';
+          oled.ctx.strokeRect(px + 1, py - 13, 16, 15);
+          oled.ctx.fillRect(px + 15, py - 14, 2, 2);
+          break;
+        case 'hat_dragon': // 🐉 Ejderha Miğferi
+          oled.ctx.fillRect(px + 4, py - 12, 10, 2);
+          oled.ctx.fillRect(px + 2, py - 16, 2, 4);
+          oled.ctx.fillRect(px + 14, py - 16, 2, 4);
+          oled.ctx.fillRect(px + 8, py - 17, 2, 5);
+          break;
+        default:
+          break;
+      }
     }
 
     function sendAvatarToConsole() {
@@ -8103,6 +8791,15 @@
       addPetXP(15);
       oled.mode = 'EATING';
 
+      if (appData.evolution) {
+        appData.evolution.mealsCount = (appData.evolution.mealsCount || 0) + 1;
+        localStorage.setItem('socies_stat_meals', appData.evolution.mealsCount);
+        if (typeof updatePetArchetype === 'function') updatePetArchetype();
+      }
+      if (typeof progressDailyQuest === 'function') {
+        progressDailyQuest('q_care', 1);
+      }
+
       savePetState();
       updateNeedsUI();
       syncTelemetry();
@@ -8134,6 +8831,7 @@
         if (appData.petState) appData.petState.poopCount = 0;
         oled.mode = 'TOILET';
         addPetXP(15);
+        if (typeof progressDailyQuest === 'function') progressDailyQuest('q_care', 1);
 
       } else if (act === 'BATH') {
         playTactileClick('select');
@@ -8156,11 +8854,17 @@
 
         oled.mode = 'BATH';
         addPetXP(15);
+        if (typeof progressDailyQuest === 'function') progressDailyQuest('q_care', 1);
 
       } else if (act === 'SLEEP') {
         playTactileClick('click');
         if (appData.petState) appData.petState.isSleeping = true;
         oled.mode = 'SLEEPING';
+        if (appData.evolution) {
+          appData.evolution.sleepCount = (appData.evolution.sleepCount || 0) + 1;
+          localStorage.setItem('socies_stat_sleep', appData.evolution.sleepCount);
+          if (typeof updatePetArchetype === 'function') updatePetArchetype();
+        }
         showGlobalToast(msg || '🌙 Pufi derin uyku moduna geçti. İhtiyaç azalmaları %80 yavaşladı. Uyandırmak için konsol tuşuna bas.');
         addPetXP(10);
 
@@ -8173,6 +8877,7 @@
           appData.needs.clean = Math.min(100, appData.needs.clean + 25);
           showGlobalToast('💊 İlaç şifa oldu! Karın ağrısı ve mikroplar geçti.');
           addPetXP(30);
+          if (typeof progressDailyQuest === 'function') progressDailyQuest('q_care', 1);
         } else {
           beep(520, 0.08);
           showGlobalToast('💖 Bebek şu an hasta değil, enerjisi harika!');
@@ -8315,9 +9020,19 @@
           appData.petState.stage = newStage;
           triggerEvolutionModal(newStage);
         }
+
+        if (typeof logPersonalMilestone === 'function') {
+          logPersonalMilestone('LEVEL_UP', `Tebrikler! Seviye ${appData.needs.level}'e ulaştın! 🏆`, `${(appData.petState && appData.petState.nickname) || 'Pufi'} Seviye ${appData.needs.level} başarımını kaydetti.`, '⭐');
+        }
+        if (typeof publishToFeed === 'function') {
+          publishToFeed('LEVEL_UP', `Seviye Atlama!`, `${(appData.petState && appData.petState.nickname) || 'Pufi'} Seviye ${appData.needs.level}'e yükseldi! 🎉`, '⭐');
+        }
       }
 
       updateProfileUI();
+      const storeXp = document.getElementById('storeXpBalance');
+      if (storeXp) storeXp.innerText = `${appData.needs.xp || 0} XP`;
+
       saveNeeds();
       savePetState();
     }
@@ -8687,9 +9402,33 @@
         updateNeedsUI();
       }
 
+      if (typeof progressDailyQuest === 'function') {
+        progressDailyQuest('q_game', score);
+      }
+
+      if (appData.evolution) {
+        appData.evolution.gamesPlayedCount = (appData.evolution.gamesPlayedCount || 0) + 1;
+        localStorage.setItem('socies_stat_games', appData.evolution.gamesPlayedCount);
+        if (typeof updatePetArchetype === 'function') updatePetArchetype();
+      }
+
       if (score > 0) {
         addPetXP(score); // SEVİYE, EVRİM (STAGE 1-4) VE ÖDÜL MOTORUNU TETİKLER!
         submitGameScore(game, score);
+
+        // Kişisel Rekor Kontrolü & Akış Paylaşımı
+        const bestKey = 'socies_best_' + game;
+        const prevBest = parseInt(localStorage.getItem(bestKey) || '0', 10);
+        if (score > prevBest && score >= 40) {
+          localStorage.setItem(bestKey, score);
+          if (typeof logPersonalMilestone === 'function') {
+            logPersonalMilestone('HIGHSCORE', `${game.toUpperCase()} Rekoru!`, `${game} oyununda ${score} puan ile yeni kişisel rekor kırdı! 🏆`, '🏆');
+          }
+          if (typeof publishToFeed === 'function') {
+            publishToFeed('HIGHSCORE', `${game.toUpperCase()} Rekoru!`, `${(appData.petState && appData.petState.nickname) || 'Pufi'} ${game} oyununda ${score} puan yaparak yeni rekor kırdı! 🏆`, '🏆');
+          }
+        }
+
         showGlobalToast(`🎮 ${game} bitti! +${funGain} Neşe kazandın (%${Math.round(appData.needs.fun)}) • ${score} Puan!`);
       } else {
         showGlobalToast(`🎮 ${game} oynandı! +${funGain} Neşe kazandın (%${Math.round(appData.needs.fun)})`);
@@ -8759,6 +9498,16 @@
       if (tabId === 'tab-console' && oled.mode === 'STANDBY') {
         wakeOledFromStandby();
       }
+
+      // Backwards-compatibility for older calls to tab-rank and tab-friends
+      if (tabId === 'tab-rank') {
+        tabId = 'tab-social';
+        setTimeout(() => switchSocialSubTab('rank'), 10);
+      } else if (tabId === 'tab-friends') {
+        tabId = 'tab-social';
+        setTimeout(() => switchSocialSubTab('friends'), 10);
+      }
+
       document.querySelectorAll('.tab-view').forEach(el => el.classList.remove('active'));
       const targetEl = document.getElementById(tabId);
       if (targetEl) targetEl.classList.add('active');
@@ -8767,9 +9516,9 @@
       const idMap = {
         'tab-console': 'navConsole',
         'tab-pet': 'navPet',
-        'tab-studio': 'navStudio',
-        'tab-rank': 'navRank',
-        'tab-friends': 'navFriends'
+        'tab-store': 'navStore',
+        'tab-social': 'navSocial',
+        'tab-studio': 'navStudio'
       };
       if (idMap[tabId]) document.getElementById(idMap[tabId])?.classList.add('active');
 
@@ -8777,14 +9526,14 @@
       if (tabId === 'tab-studio') {
         if (typeof renderCombinator === 'function') renderCombinator();
         if (typeof switchStudioMode === 'function') switchStudioMode('modular');
-      } else if (tabId === 'tab-rank') {
-        if (typeof renderLeaderboard === 'function') renderLeaderboard();
-        if (typeof fetchLiveLeaderboard === 'function') fetchLiveLeaderboard();
-      } else if (tabId === 'tab-friends') {
-        if (typeof renderFriendsList === 'function') renderFriendsList();
-        if (typeof fetchLiveDevices === 'function') fetchLiveDevices();
+      } else if (tabId === 'tab-store') {
+        if (typeof renderStoreUI === 'function') renderStoreUI();
+      } else if (tabId === 'tab-social') {
+        if (typeof switchSocialSubTab === 'function') switchSocialSubTab(currentSocialSubTab || 'feed');
       } else if (tabId === 'tab-pet') {
         if (typeof updateNeedsUI === 'function') updateNeedsUI();
+        if (typeof renderBackpackUI === 'function') renderBackpackUI();
+        if (typeof updatePetArchetype === 'function') updatePetArchetype();
       }
     }
 
@@ -9264,6 +10013,747 @@
     }
 
     // =========================================================================
+    // MODÜL 8: XP MAĞAZASI & EŞYA KATALOĞU (STORE & WARDROBE ENGINE)
+    // =========================================================================
+    const STORE_CATALOG = {
+      hats: [
+        { id: 'hat_baseball', name: 'Beyzbol Şapkası', icon: '🧢', minLevel: 1, price: 100, desc: 'Enerjik ve havalı kırmızı spor şapkası.' },
+        { id: 'hat_party', name: 'Parti Külahı', icon: '🥳', minLevel: 1, price: 150, desc: 'Neşeli kutlamalar için renkli külah.' },
+        { id: 'hat_detective', name: 'Dedektif Fötr', icon: '🕵️‍♂️', minLevel: 2, price: 250, desc: 'Gizemleri çözen bilge fötr şapka.' },
+        { id: 'hat_chef', name: 'Master Şef Şapkası', icon: '👨‍🍳', minLevel: 3, price: 350, desc: 'Leziz yemeklerin ustası aşçı şapkası.' },
+        { id: 'hat_cowboy', name: 'Kovboy Şapkası', icon: '🤠', minLevel: 4, price: 500, desc: 'Vahşi batının efsanevi geniş kenarlı şapkası.' },
+        { id: 'hat_wizard', name: 'Sihirbaz Külahı', icon: '🧙‍♂️', minLevel: 5, price: 650, desc: 'Yıldız tozuyla parlayan büyücü başlığı.' },
+        { id: 'hat_crown', name: 'Kraliyet Tacı', icon: '👑', minLevel: 6, price: 800, desc: 'Saf altından görkemli hükümdar tacı.' },
+        { id: 'hat_viking', name: 'Viking Miğferi', icon: '⚔️', minLevel: 7, price: 1000, desc: 'Boynuzlu cesur savaşçı miğferi.' },
+        { id: 'hat_astronaut', name: 'Uzay Kaskı', icon: '🧑‍🚀', minLevel: 8, price: 1250, desc: 'Yıldızlararası yolculuk cam kaskı.' },
+        { id: 'hat_dragon', name: 'Ejderha Miğferi', icon: '🐉', minLevel: 10, price: 1500, desc: 'Efsanevi ejderha pulları ve boynuzları.' }
+      ],
+      outfits: [
+        { id: 'outfit_hoodie', name: 'Sokak Kapüşonlusu', icon: '🧥', minLevel: 2, price: 300, desc: 'Retro neon kapüşonlu spor ceket.' },
+        { id: 'outfit_tuxedo', name: 'Şık Smokin', icon: '🤵', minLevel: 4, price: 550, desc: 'Resmi davetler ve balolar için smokin.' },
+        { id: 'outfit_superhero', name: 'Kahraman Pelerini', icon: '🦸‍♂️', minLevel: 5, price: 700, desc: 'Rüzgarda dalgalanan cesur pelerin.' },
+        { id: 'outfit_ninja', name: 'Gölge Ninja', icon: '🥷', minLevel: 7, price: 950, desc: 'Sessiz ve çevik gece kostümü.' }
+      ],
+      accessories: [
+        { id: 'acc_sunglasses', name: 'Cool Gözlük', icon: '🕶️', minLevel: 1, price: 180, desc: 'Güneşli havalarda parlayan siyah gözlük.' },
+        { id: 'acc_headphones', name: 'DJ Kulaklığı', icon: '🎧', minLevel: 3, price: 400, desc: 'Ritim tutan neon müzik kulaklığı.' },
+        { id: 'acc_scarf', name: 'Kışlık Atkı', icon: '🧣', minLevel: 2, price: 220, desc: 'Sımsıcak yün kış atkısı.' },
+        { id: 'acc_medal', name: 'Altın Madalya', icon: '🥇', minLevel: 6, price: 750, desc: 'Şampiyonluk ödülü parlak madalya.' }
+      ],
+      phones: [
+        { id: 'phone_pager', name: 'Retro Pager', icon: '📟', minLevel: 1, price: 200, desc: '90\'ların efsanevi çağrı cihazı.' },
+        { id: 'phone_flip', name: 'Kapaklı Telefon', icon: '📱', minLevel: 3, price: 450, desc: 'Nostaljik neon kapaklı mobil telefon.' },
+        { id: 'phone_walkie', name: 'Ajan Telsizi', icon: '📻', minLevel: 4, price: 600, desc: 'Uzun menzilli gizli telsiz.' },
+        { id: 'phone_holo', name: 'Holo-Cihaz', icon: '🔮', minLevel: 8, price: 1100, desc: 'Geleceğin 3D hologramlı iletişim cihazı.' }
+      ],
+      pets: [
+        { id: 'pet_ladybug', name: 'Uğur Böceği', icon: '🐞', minLevel: 2, price: 280, desc: 'Pufi\'nin omzunda gezen şans böceği.' },
+        { id: 'pet_chick', name: 'Sarı Civciv', icon: '🐥', minLevel: 3, price: 420, desc: 'Cıvıl cıvıl sevimli minik civciv.' },
+        { id: 'pet_butterfly', name: 'Mor Kelebek', icon: '🦋', minLevel: 5, price: 680, desc: 'Işıltılı kanatlarıyla uçuşan kelebek.' },
+        { id: 'pet_minidragon', name: 'Cep Ejderhası', icon: '🐲', minLevel: 9, price: 1400, desc: 'Küçük alevler üfleyen cep ejderhası.' }
+      ],
+      decors: [
+        { id: 'decor_rug', name: 'Piksel Halı', icon: '🧶', minLevel: 1, price: 150, desc: 'Odayı ısıtan renkli desenli halı.' },
+        { id: 'decor_lamp', name: 'Lav Lambası', icon: '💡', minLevel: 2, price: 260, desc: 'Büyüleyici retro neon lamba.' },
+        { id: 'decor_arcade', name: 'Mini Arcade', icon: '🕹️', minLevel: 4, price: 520, desc: 'Köşeye konan jetonlu nostalji kabini.' },
+        { id: 'decor_trophy', name: 'Kristal Kupa', icon: '🏆', minLevel: 6, price: 850, desc: 'Vitrine konan parlak zafer kupası.' }
+      ]
+    };
+
+    let currentStoreCategory = 'hats';
+
+    function switchStoreCategory(cat, btn) {
+      currentStoreCategory = cat;
+      document.querySelectorAll('.store-cat-pill').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      renderStoreUI();
+    }
+
+    function renderStoreUI() {
+      const grid = document.getElementById('storeItemsGrid');
+      const balanceEl = document.getElementById('txtStoreBalanceXp');
+      const levelEl = document.getElementById('txtStoreTrainerLevel');
+      if (!grid) return;
+
+      const curXp = (appData.needs && appData.needs.xp) || 0;
+      const curLvl = (appData.needs && appData.needs.level) || 1;
+      if (balanceEl) balanceEl.innerText = curXp.toLocaleString('tr-TR');
+      if (levelEl) levelEl.innerText = `Lv.${curLvl}`;
+
+      const items = STORE_CATALOG[currentStoreCategory] || [];
+      const inv = (appData.store && appData.store.inventory) || [];
+      const equipped = (appData.store && appData.store.equipped) || {};
+
+      let catKey = 'hat';
+      if (currentStoreCategory === 'outfits') catKey = 'outfit';
+      else if (currentStoreCategory === 'accessories') catKey = 'acc';
+      else if (currentStoreCategory === 'phones') catKey = 'phone';
+      else if (currentStoreCategory === 'pets') catKey = 'petMini';
+      else if (currentStoreCategory === 'decors') catKey = 'decor';
+
+      grid.innerHTML = items.map(item => {
+        const isOwned = inv.includes(item.id);
+        const isEquipped = equipped[catKey] === item.id;
+        const isLevelLocked = curLvl < item.minLevel;
+        const canAfford = curXp >= item.price;
+
+        let actionBtn = '';
+        if (isEquipped) {
+          actionBtn = `<button class="store-btn store-btn-unequip" onclick="unequipStoreItem('${catKey}')">✕ Çıkar</button>`;
+        } else if (isOwned) {
+          actionBtn = `<button class="store-btn store-btn-equip" onclick="equipStoreItem('${catKey}', '${item.id}')">✨ Kuşan</button>`;
+        } else if (isLevelLocked) {
+          actionBtn = `<button class="store-btn store-btn-locked" disabled>🔒 Lv.${item.minLevel} Gerekli</button>`;
+        } else if (!canAfford) {
+          actionBtn = `<button class="store-btn store-btn-locked" disabled>⭐ XP Yetersiz (${item.price})</button>`;
+        } else {
+          actionBtn = `<button class="store-btn store-btn-buy" onclick="buyStoreItem('${item.id}', '${catKey}', ${item.price})">🛒 Satın Al (${item.price} XP)</button>`;
+        }
+
+        const cardClass = isEquipped ? 'store-card equipped' : (isLevelLocked ? 'store-card locked' : 'store-card');
+
+        return `
+          <div class="${cardClass}">
+            <div class="store-card-icon">${item.icon}</div>
+            <div class="store-card-name">${item.name}</div>
+            <div class="store-card-price">
+              ${isOwned ? '<span style="color:#10B981;">✓ Sahipsin</span>' : `⭐ ${item.price} XP`}
+            </div>
+            <div style="font-size:0.7rem; color:#64748B; margin-bottom:8px; line-height:1.25;">${item.desc}</div>
+            ${actionBtn}
+          </div>
+        `;
+      }).join('');
+    }
+
+    function buyStoreItem(itemId, catKey, price) {
+      if (!catKey || price === undefined) {
+        for (const cat in STORE_CATALOG) {
+          const found = STORE_CATALOG[cat].find(i => i.id === itemId);
+          if (found) {
+            catKey = cat;
+            price = found.price;
+            break;
+          }
+        }
+      }
+      const curXp = (appData.needs && appData.needs.xp) || 0;
+      if (price === undefined || curXp < price) {
+        playWhineSound();
+        showGlobalToast(`⚠️ Yetersiz XP! ${price || 0} XP gerekiyor (Mevcut: ${curXp} XP)`);
+        return;
+      }
+
+      appData.needs.xp -= price;
+      if (!appData.store) appData.store = { inventory: [], equipped: {} };
+      if (!appData.store.inventory) appData.store.inventory = [];
+      if (!appData.store.equipped) appData.store.equipped = {};
+
+      appData.store.inventory.push(itemId);
+      appData.store.equipped[catKey] = itemId;
+
+      localStorage.setItem('socies_store_inv', JSON.stringify(appData.store.inventory));
+      localStorage.setItem('socies_store_equipped', JSON.stringify(appData.store.equipped));
+      saveNeeds();
+      updateNeedsUI();
+
+      playLevelUpFanfare();
+      showGlobalToast(`🛍️ Tebrikler! Eşya satın alındı ve Pufi\'ye kuşandırıldı!`);
+
+      // Otomatik Akış Paylaşımı ve Kişisel Log
+      let itemName = itemId;
+      let itemIcon = '🛍️';
+      for (const cat in STORE_CATALOG) {
+        const found = STORE_CATALOG[cat].find(i => i.id === itemId);
+        if (found) { itemName = found.name; itemIcon = found.icon; break; }
+      }
+
+      logPersonalMilestone('STORE', `${itemName} Kuşandı!`, `Mağazadan ${itemIcon} ${itemName} satın aldı ve bebeğine giydirdi.`, itemIcon);
+      publishToFeed('STORE_PURCHASE', `${itemName} Satın Aldı!`, `${(appData.petState && appData.petState.nickname) || 'Pufi'} için ${itemIcon} ${itemName} satın aldı!`, itemIcon);
+
+      renderStoreUI();
+    }
+
+    function equipStoreItem(catKey, itemId) {
+      if (!itemId) {
+        itemId = catKey;
+        for (const cat in STORE_CATALOG) {
+          const found = STORE_CATALOG[cat].find(i => i.id === itemId);
+          if (found) { catKey = cat; break; }
+        }
+      }
+      if (!appData.store) appData.store = { inventory: [], equipped: {} };
+      if (!appData.store.equipped) appData.store.equipped = {};
+
+      appData.store.equipped[catKey] = itemId;
+      localStorage.setItem('socies_store_equipped', JSON.stringify(appData.store.equipped));
+      playTactileClick('select');
+      beep(880, 0.12);
+
+      let itemName = itemId;
+      let itemIcon = '✨';
+      for (const cat in STORE_CATALOG) {
+        const found = STORE_CATALOG[cat].find(i => i.id === itemId);
+        if (found) { itemName = found.name; itemIcon = found.icon; break; }
+      }
+      showGlobalToast(`${itemIcon} ${itemName} kuşandı!`);
+      renderStoreUI();
+    }
+
+    function unequipStoreItem(catKey) {
+      if (appData.store && appData.store.equipped) {
+        delete appData.store.equipped[catKey];
+        localStorage.setItem('socies_store_equipped', JSON.stringify(appData.store.equipped));
+      }
+      playTactileClick('back');
+      showGlobalToast(`Eşya çıkarıldı.`);
+      renderStoreUI();
+    }
+
+    // =========================================================================
+    // MODÜL 9: DUOLINGO-STYLE STREAK & CALENDAR ENGINE
+    // =========================================================================
+    function checkDailyStreak() {
+      const today = new Date().toISOString().split('T')[0];
+      if (!appData.streak) {
+        appData.streak = { count: 1, lastActiveDate: today, history: [today], repairsAvailable: 0 };
+      }
+      const s = appData.streak;
+      if (!s.history) s.history = [];
+
+      if (s.lastActiveDate === today) {
+        // Bugün zaten aktif
+        if (!s.history.includes(today)) s.history.push(today);
+      } else {
+        const lastTime = new Date(s.lastActiveDate).getTime();
+        const todayTime = new Date(today).getTime();
+        const diffDays = Math.floor((todayTime - lastTime) / (1000 * 60 * 60 * 24));
+
+        if (diffDays === 1) {
+          // Üst üste gün, seri artar!
+          s.count = (s.count || 0) + 1;
+          s.lastActiveDate = today;
+          s.history.push(today);
+          playLevelUpFanfare();
+          showGlobalToast(`🔥 SERİ DEVAM EDİYOR! ${s.count} Günlük Aktiflik Ateşi!`);
+          if (s.count === 3 || s.count === 7 || s.count === 14 || s.count === 30) {
+            publishToFeed('STREAK', `${s.count} Günlük Seri Rekoru!`, `Üst üste ${s.count} gün boyunca bebeğine sadık kaldı! 🔥`, '🔥');
+            logPersonalMilestone('STREAK', `${s.count} Günlük Seri!`, `Kesintisiz ${s.count} gün giriş başarısı.`, '🔥');
+          }
+        } else if (diffDays > 1) {
+          // Gün kaçırılmış! Kaçırılan gün sayısı
+          const gap = diffDays - 1;
+          if (gap <= 6) {
+            s.repairsAvailable = gap;
+          } else {
+            s.count = 1;
+            s.repairsAvailable = 0;
+          }
+          s.lastActiveDate = today;
+          s.history.push(today);
+        }
+      }
+
+      localStorage.setItem('socies_streak_count', s.count);
+      localStorage.setItem('socies_streak_last_date', s.lastActiveDate);
+      localStorage.setItem('socies_streak_history', JSON.stringify(s.history.slice(-14)));
+
+      const badgeVal = document.getElementById('txtStreakVal');
+      if (badgeVal) badgeVal.innerText = s.count;
+    }
+
+    function openStreakModal() {
+      checkDailyStreak();
+      const s = appData.streak;
+      const countEl = document.getElementById('txtStreakModalCount');
+      if (countEl) countEl.innerText = s.count;
+
+      const grid = document.getElementById('streakWeekGrid');
+      if (grid) {
+        const days = ['Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt', 'Paz'];
+        const now = new Date();
+        const currentDayIdx = (now.getDay() + 6) % 7; // 0: Pzt, 6: Paz
+
+        grid.innerHTML = days.map((d, idx) => {
+          const isToday = (idx === currentDayIdx);
+          const isPassed = (idx < currentDayIdx);
+          let circleClass = 'streak-day-circle';
+          let icon = '○';
+
+          if (isToday) {
+            circleClass += ' active today';
+            icon = '🔥';
+          } else if (isPassed) {
+            circleClass += ' active';
+            icon = '✓';
+          }
+
+          return `
+            <div class="streak-day-box">
+              <span class="streak-day-lbl">${d}</span>
+              <div class="${circleClass}">${icon}</div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // Repair card
+      const repairBox = document.getElementById('boxStreakRepair');
+      const repairBtn = document.getElementById('btnRepairStreak');
+      const repairDesc = document.getElementById('txtStreakRepairDesc');
+      if (s.repairsAvailable > 0 && repairBox) {
+        repairBox.style.display = 'flex';
+        const cost = s.repairsAvailable * 150;
+        if (repairBtn) repairBtn.innerText = `🛠️ ${s.repairsAvailable} Günü Kurtar (-${cost} XP)`;
+        if (repairDesc) repairDesc.innerText = `${s.repairsAvailable} gün ara verdin! ${cost} XP harcayarak serini kurtarabilirsin (Mevcut XP: ${(appData.needs && appData.needs.xp) || 0}).`;
+      } else if (repairBox) {
+        repairBox.style.display = 'none';
+      }
+
+      document.getElementById('streakModal').style.display = 'flex';
+    }
+
+    function closeStreakModal() {
+      document.getElementById('streakModal').style.display = 'none';
+    }
+
+    function repairMissedStreak() {
+      const s = appData.streak;
+      if (!s || s.repairsAvailable <= 0) return;
+      const cost = s.repairsAvailable * 150;
+      const curXp = (appData.needs && appData.needs.xp) || 0;
+
+      if (curXp < cost) {
+        playWhineSound();
+        showGlobalToast(`⚠️ Yetersiz XP! ${cost} XP gerekiyor (Mevcut: ${curXp} XP)`);
+        return;
+      }
+
+      appData.needs.xp -= cost;
+      s.count += s.repairsAvailable;
+      s.repairsAvailable = 0;
+      saveNeeds();
+      updateNeedsUI();
+
+      localStorage.setItem('socies_streak_count', s.count);
+      playLevelUpFanfare();
+      showGlobalToast(`🔥 SERİ ONARILDI! Duolingo tarzı aktiflik serin korundu (+${s.count} Gün)!`);
+
+      publishToFeed('STREAK', 'Seri XP ile Kurtarıldı!', `Kaçırılan günleri telafi etti ve ${s.count} günlük serisini korudu! 🛠️🔥`, '🔥');
+      logPersonalMilestone('STREAK', `Seri Onarımı`, `${s.count} günlük seriyi başarıyla kurtardı.`, '🛠️');
+
+      openStreakModal();
+    }
+
+    // =========================================================================
+    // MODÜL 10: GÜNÜN GÖREVLERİ (DAILY QUESTS ENGINE)
+    // =========================================================================
+    function initDailyQuests() {
+      const today = new Date().toISOString().split('T')[0];
+      if (!appData.dailyQuests || appData.dailyQuests.date !== today || !appData.dailyQuests.list) {
+        appData.dailyQuests = {
+          date: today,
+          list: [
+            { id: 'q_game', title: 'Mini Oyun Şampiyonu', desc: 'Herhangi bir mini oyunda en az 80 skor yap', target: 80, current: 0, reward: 100, done: false },
+            { id: 'q_care', title: 'Sevgi Dolu Bakım', desc: 'Bebeğini besle veya banyo yaptır', target: 1, current: 0, reward: 60, done: false },
+            { id: 'q_outing', title: 'Açık Hava Molası', desc: 'Bebeğini parka, okula veya alışverişe gönder', target: 1, current: 0, reward: 80, done: false }
+          ]
+        };
+        localStorage.setItem('socies_quests_date', today);
+        localStorage.setItem('socies_quests_list', JSON.stringify(appData.dailyQuests.list));
+      }
+      updateQuestsBadge();
+    }
+
+    function progressDailyQuest(questId, amount) {
+      if (!appData.dailyQuests || !appData.dailyQuests.list) initDailyQuests();
+      const q = appData.dailyQuests.list.find(item => item.id === questId);
+      if (!q || q.done) return;
+
+      q.current = Math.min(q.target, q.current + amount);
+      localStorage.setItem('socies_quests_list', JSON.stringify(appData.dailyQuests.list));
+      updateQuestsBadge();
+    }
+
+    function updateQuestsBadge() {
+      const badge = document.getElementById('txtQuestsDoneBadge');
+      if (!badge || !appData.dailyQuests || !appData.dailyQuests.list) return;
+      const completed = appData.dailyQuests.list.filter(q => q.done || q.current >= q.target).length;
+      badge.innerText = `${completed}/3`;
+    }
+
+    function openDailyQuestsModal() {
+      initDailyQuests();
+      const container = document.getElementById('questsContainer');
+      if (!container) return;
+
+      container.innerHTML = appData.dailyQuests.list.map(q => {
+        const isReady = q.current >= q.target && !q.done;
+        const pct = Math.min(100, Math.round((q.current / q.target) * 100));
+
+        let btn = '';
+        if (q.done) {
+          btn = `<span style="font-size:0.75rem; color:#10B981; font-weight:900;">✓ Tamamlandı</span>`;
+        } else if (isReady) {
+          btn = `<button class="btn-micro" style="background:#10B981; color:#fff; font-weight:900; padding:6px 12px; border:none;" onclick="claimQuestReward('${q.id}')">🎁 ${q.reward} XP Al</button>`;
+        } else {
+          btn = `<span style="font-size:0.72rem; color:#64748B; font-weight:800;">${q.current}/${q.target}</span>`;
+        }
+
+        return `
+          <div class="quest-card ${q.done ? 'completed' : ''}">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-weight:900; font-size:0.85rem; color:#1E293B;">${q.title}</span>
+              ${btn}
+            </div>
+            <div style="font-size:0.75rem; color:#64748B;">${q.desc}</div>
+            <div class="quest-bar-bg">
+              <div class="quest-bar-fill" style="width:${pct}%;"></div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('dailyQuestsModal').style.display = 'flex';
+    }
+
+    function closeDailyQuestsModal() {
+      document.getElementById('dailyQuestsModal').style.display = 'none';
+    }
+
+    function claimQuestReward(questId) {
+      const q = appData.dailyQuests.list.find(item => item.id === questId);
+      if (!q || q.done || q.current < q.target) return;
+
+      q.done = true;
+      localStorage.setItem('socies_quests_list', JSON.stringify(appData.dailyQuests.list));
+      addPetXP(q.reward);
+      playLevelUpFanfare();
+      showGlobalToast(`🎯 Görev tamamlandı! +${q.reward} XP hesabına eklendi.`);
+
+      // Check if all 3 done
+      const allDone = appData.dailyQuests.list.every(item => item.done);
+      if (allDone) {
+        addPetXP(150);
+        showGlobalToast(`🏆 GÜNÜN ŞAMPİYONU! Tüm günlük görevler bitti, +150 Bonus XP!`);
+        publishToFeed('DAILY_CHAMPION', 'Günün Şampiyonu Rozeti!', `Tüm günlük görevleri eksiksiz bitirerek şampiyonluk rozeti kazandı! 🏆`, '🏆');
+        logPersonalMilestone('QUEST', 'Günün Şampiyonu', '3 günlük görevi tamamladı.', '🏆');
+      }
+
+      openDailyQuestsModal();
+      updateQuestsBadge();
+    }
+
+    // =========================================================================
+    // MODÜL 11: SOSYAL HUB & AKTİVİTE AKIŞI (ACTIVITY FEED & LIKE ENGINE)
+    // =========================================================================
+    let currentSocialSubTab = 'feed';
+
+    function switchSocialSubTab(subTab) {
+      currentSocialSubTab = subTab;
+      document.getElementById('btnSubTabFeed')?.classList.toggle('active', subTab === 'feed');
+      document.getElementById('btnSubTabRank')?.classList.toggle('active', subTab === 'rank');
+      document.getElementById('btnSubTabFriends')?.classList.toggle('active', subTab === 'friends');
+
+      document.getElementById('socialSubpaneFeed').style.display = (subTab === 'feed') ? 'flex' : 'none';
+      document.getElementById('socialSubpaneRank').style.display = (subTab === 'rank') ? 'flex' : 'none';
+      document.getElementById('socialSubpaneFriends').style.display = (subTab === 'friends') ? 'flex' : 'none';
+
+      if (subTab === 'feed') loadSocialFeed();
+      else if (subTab === 'rank') { renderLeaderboard(); fetchLiveLeaderboard(); }
+      else if (subTab === 'friends') { renderFriendsList(); fetchLiveDevices(); }
+    }
+
+    async function loadSocialFeed(forceRefresh = false) {
+      const container = document.getElementById('feedListContainer');
+      if (!container) return;
+
+      try {
+        const url = `${appData.serverUrl}/api/v1/feed?deviceId=${encodeURIComponent(appData.deviceId)}`;
+        const res = await fetch(url, { signal: AbortSignal.timeout(4000) });
+        const data = await res.json();
+
+        if (data && data.success && data.posts && data.posts.length > 0) {
+          container.innerHTML = data.posts.map(p => {
+            const timeAgo = formatTimeAgo(p.created_at);
+            const isLiked = !!p.is_liked;
+            return `
+              <div class="feed-card" id="feedPost_${p.id}">
+                <div class="feed-card-header">
+                  <div class="feed-user-row">
+                    <div class="feed-user-avatar">${p.avatar || '👑'}</div>
+                    <div>
+                      <div class="feed-author-nick">${escapeHtml(p.nickname)}</div>
+                      <div class="feed-author-sub">🐾 ${escapeHtml(p.pet_name || 'Pufi')}</div>
+                    </div>
+                  </div>
+                  <span class="feed-time-text">${timeAgo}</span>
+                </div>
+                <div class="feed-card-body">
+                  <span class="feed-badge-icon">${p.badge_icon || '⭐'}</span>
+                  <div>
+                    <div class="feed-card-title">${escapeHtml(p.title)}</div>
+                    <div class="feed-card-desc">${escapeHtml(p.details || '')}</div>
+                  </div>
+                </div>
+                <div class="feed-card-footer">
+                  <span style="font-size:0.75rem; color:#64748B;">🎉 Tebrik et & kutla</span>
+                  <button class="feed-heart-btn ${isLiked ? 'liked' : ''}" onclick="toggleFeedLike(${p.id})">
+                    <span>${isLiked ? '❤️' : '🤍'}</span>
+                    <span id="txtLikes_${p.id}">${p.likes_count || 0}</span>
+                  </button>
+                </div>
+              </div>
+            `;
+          }).join('');
+        }
+      } catch(e) {
+        console.warn('[FEED] Akış yüklenemedi:', e.message);
+      }
+    }
+
+    async function toggleFeedLike(postId) {
+      playTactileClick('select');
+      beep(980, 0.1);
+
+      const btn = document.querySelector(`#feedPost_${postId} .feed-heart-btn`);
+      const countEl = document.getElementById(`txtLikes_${postId}`);
+      if (btn && countEl) {
+        const wasLiked = btn.classList.contains('liked');
+        btn.classList.toggle('liked', !wasLiked);
+        btn.querySelector('span').innerText = !wasLiked ? '❤️' : '🤍';
+        let c = parseInt(countEl.innerText || '0', 10);
+        countEl.innerText = !wasLiked ? c + 1 : Math.max(0, c - 1);
+      }
+
+      try {
+        const res = await fetch(`${appData.serverUrl}/api/v1/feed/like`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            postId,
+            deviceId: appData.deviceId,
+            nickname: appData.nickname
+          }),
+          signal: AbortSignal.timeout(4000)
+        });
+        const data = await res.json();
+        if (data && data.success && countEl) {
+          countEl.innerText = data.likesCount;
+        }
+      } catch(e) {}
+    }
+
+    async function publishToFeed(postType, title, details, badgeIcon = '⭐') {
+      try {
+        await fetch(`${appData.serverUrl}/api/v1/feed/post`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            postType,
+            deviceId: appData.deviceId,
+            nickname: appData.nickname,
+            avatar: appData.avatar,
+            petName: (appData.petState && appData.petState.nickname) || 'Pufi',
+            badgeIcon,
+            title,
+            details
+          }),
+          signal: AbortSignal.timeout(4000)
+        });
+      } catch(e) {}
+    }
+
+    function formatTimeAgo(ts) {
+      if (!ts) return 'Az önce';
+      const diff = Date.now() - ts;
+      const mins = Math.floor(diff / 60000);
+      if (mins < 1) return 'Az önce';
+      if (mins < 60) return `${mins} dk önce`;
+      const hours = Math.floor(mins / 60);
+      if (hours < 24) return `${hours} saat önce`;
+      const days = Math.floor(hours / 24);
+      return `${days} gün önce`;
+    }
+
+    // =========================================================================
+    // MODÜL 12: KİŞİSEL BAŞARI GÜNLÜĞÜ (PERSONAL MILESTONES ENGINE)
+    // =========================================================================
+    function logPersonalMilestone(type, title, details, icon = '⭐') {
+      if (!appData.personalMilestones) appData.personalMilestones = [];
+      const item = {
+        id: 'm_' + Date.now(),
+        type,
+        title,
+        details,
+        icon,
+        date: Date.now()
+      };
+      appData.personalMilestones.unshift(item);
+      if (appData.personalMilestones.length > 30) appData.personalMilestones.pop();
+      localStorage.setItem('socies_milestones', JSON.stringify(appData.personalMilestones));
+    }
+
+    function openPersonalMilestoneModal() {
+      const listEl = document.getElementById('personalMilestonesList');
+      if (!listEl) return;
+
+      const milestones = appData.personalMilestones || [];
+      if (milestones.length === 0) {
+        listEl.innerHTML = `<div style="text-align:center; padding:20px; color:#94A3B8; font-size:0.85rem;">Henüz bir başarı kaydın yok. Oyun oyna ve seviye atla! 🚀</div>`;
+      } else {
+        listEl.innerHTML = milestones.map(m => {
+          const dateStr = new Date(m.date).toLocaleDateString('tr-TR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+          return `
+            <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:10px 12px; display:flex; align-items:center; gap:10px; text-align:left;">
+              <span style="font-size:1.8rem;">${m.icon || '⭐'}</span>
+              <div style="flex:1;">
+                <div style="font-weight:900; font-size:0.85rem; color:#1E293B;">${escapeHtml(m.title)}</div>
+                <div style="font-size:0.75rem; color:#64748B;">${escapeHtml(m.details)}</div>
+                <div style="font-size:0.68rem; color:#94A3B8; margin-top:2px;">${dateStr}</div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      document.getElementById('personalMilestoneModal').style.display = 'flex';
+    }
+
+    function closePersonalMilestoneModal() {
+      document.getElementById('personalMilestoneModal').style.display = 'none';
+    }
+
+    // =========================================================================
+    // MODÜL 13: MOLA HATIRALARI & ÇANTA (SOUVENIRS & BACKPACK ENGINE)
+    // =========================================================================
+    function dropOutingSouvenir(placeType) {
+      if (!appData.backpack) appData.backpack = [];
+
+      const souvenirPool = {
+        SCHOOL: [
+          { id: 'souv_art', name: 'Resim Defteri', icon: '🎨', desc: 'Pufi okulda çizdiği güzel bir resmi getirdi.' },
+          { id: 'souv_book', name: 'Bilgi Kitabı', icon: '📖', desc: 'Kütüphaneden ödünç aldığı harika bir kitap.' },
+          { id: 'souv_medal', name: 'Onur Belgesi', icon: '🏅', desc: 'Derslerindeki başarısı için öğretmeninden madalya.' }
+        ],
+        PARK: [
+          { id: 'souv_clover', name: 'Dört Yapraklı Yonca', icon: '🍀', desc: 'Parkta çimlerin arasında bulduğu şanslı yonca.' },
+          { id: 'souv_cone', name: 'Çam Kozalağı', icon: '🌲', desc: 'Parkın en büyük çam ağacından düşen kozalak.' },
+          { id: 'souv_pebble', name: 'Parlak Çakıl Taşı', icon: '🪨', desc: 'Güneşte parıldayan nehir çakıl taşı.' }
+        ],
+        SHOPPING: [
+          { id: 'souv_tape', name: 'Retro Kaset', icon: '📼', desc: 'Müzik dükkanından aldığı nostaljik kaset.' },
+          { id: 'souv_car', name: 'Oyuncak Araba', icon: '🚗', desc: 'Oyuncakçıdan aldığı minik model araba.' },
+          { id: 'souv_choco', name: 'Fındıklı Çikolata', icon: '🍫', desc: 'Marketten getirdiği lezzetli çikolata.' }
+        ]
+      };
+
+      const pool = souvenirPool[placeType] || souvenirPool.PARK;
+      const picked = pool[Math.floor(Math.random() * pool.length)];
+
+      appData.backpack.unshift({ ...picked, date: Date.now() });
+      if (appData.backpack.length > 20) appData.backpack.pop();
+      localStorage.setItem('socies_backpack', JSON.stringify(appData.backpack));
+
+      // Popup dialog
+      const bIcon = document.getElementById('souvenirBadgeIcon');
+      const bTitle = document.getElementById('souvenirTitle');
+      const bDesc = document.getElementById('souvenirDesc');
+      if (bIcon) bIcon.innerText = picked.icon;
+      if (bTitle) bTitle.innerText = `${picked.name} Bulundu!`;
+      if (bDesc) bDesc.innerText = picked.desc;
+
+      document.getElementById('outingsSouvenirModal').style.display = 'flex';
+      renderBackpackUI();
+
+      publishToFeed('SOUVENIR', `${picked.name} Bulundu!`, `${(appData.petState && appData.petState.nickname) || 'Pufi'} moladan dönerken ${picked.icon} ${picked.name} getirdi!`, picked.icon);
+      logPersonalMilestone('SOUVENIR', `${picked.name} Bulundu`, picked.desc, picked.icon);
+    }
+
+    function closeSouvenirModal() {
+      document.getElementById('outingsSouvenirModal').style.display = 'none';
+      switchTab('tab-pet');
+    }
+
+    function renderBackpackUI() {
+      const container = document.getElementById('backpackGridContainer');
+      const countEl = document.getElementById('txtBackpackCount');
+      if (!container) return;
+
+      const items = appData.backpack || [];
+      if (countEl) countEl.innerText = `${items.length} Hatıra`;
+
+      if (items.length === 0) {
+        container.innerHTML = `<div style="font-size:0.75rem; color:#94A3B8; padding:8px;">Henüz bir hatıra yok. Bebeğini okula veya parka gönder! 🎒</div>`;
+      } else {
+        container.innerHTML = items.map(it => `
+          <div style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:12px; padding:6px 10px; display:flex; align-items:center; gap:6px; flex-shrink:0;" title="${it.desc}">
+            <span style="font-size:1.3rem;">${it.icon}</span>
+            <span style="font-size:0.75rem; font-weight:800; color:#1E293B; white-space:nowrap;">${it.name}</span>
+          </div>
+        `).join('');
+      }
+    }
+
+    // =========================================================================
+    // MODÜL 14: ORTAM & HAVA DURUMU SİSTEMİ (AMBIENT WEATHER)
+    // =========================================================================
+    function setAmbientWeather(type) {
+      appData.weather = type;
+      localStorage.setItem('socies_weather', type);
+      playTactileClick('select');
+
+      const iconEl = document.getElementById('txtWeatherHeroIcon');
+      const titleEl = document.getElementById('txtWeatherTitle');
+      const map = {
+        sunny: { icon: '☀️', title: 'Güneşli ve Berrak' },
+        rain: { icon: '🌧️', title: 'Hafif Yağmurlu' },
+        snow: { icon: '❄️', title: 'Büyüleyici Kar Yağışı' },
+        stars: { icon: '🌌', title: 'Kozmik Gece & Yıldızlar' }
+      };
+      if (iconEl && map[type]) iconEl.innerText = map[type].icon;
+      if (titleEl && map[type]) titleEl.innerText = map[type].title;
+
+      showGlobalToast(`🌤️ Konsol ortamı ${map[type].title} olarak ayarlandı!`);
+    }
+
+    // =========================================================================
+    // MODÜL 15: DALLANAN EVRİM & MİZAÇ (ARCHETYPE SYSTEM)
+    // =========================================================================
+    function updatePetArchetype() {
+      if (!appData.evolution) appData.evolution = { archetype: 'sporty', gamesPlayedCount: 0, sleepCount: 0, mealsCount: 0 };
+      const e = appData.evolution;
+
+      if (e.gamesPlayedCount >= e.sleepCount && e.gamesPlayedCount >= e.mealsCount) {
+        e.archetype = 'sporty';
+      } else if (e.sleepCount >= e.gamesPlayedCount && e.sleepCount >= e.mealsCount) {
+        e.archetype = 'scholar';
+      } else {
+        e.archetype = 'chubby';
+      }
+      localStorage.setItem('socies_archetype', e.archetype);
+
+      const iconEl = document.getElementById('txtPetArchetypeIcon');
+      const nameEl = document.getElementById('txtPetArchetypeName');
+      const descEl = document.getElementById('txtPetArchetypeDesc');
+
+      const petName = (appData.petState && appData.petState.nickname) || 'Pufi';
+      if (e.archetype === 'sporty') {
+        if (iconEl) iconEl.innerText = '🏃‍♂️';
+        if (nameEl) nameEl.innerText = `Sportif ${petName} (Evrim Kolu)`;
+        if (descEl) descEl.innerText = 'Çok oyun oynadı; mini oyunlarda +%10 bonus puan kazanır!';
+      } else if (e.archetype === 'scholar') {
+        if (iconEl) iconEl.innerText = '📚';
+        if (nameEl) nameEl.innerText = `Bilge ${petName} (Evrim Kolu)`;
+        if (descEl) descEl.innerText = 'Düzenli dinlendi; ihtiyaçları %15 daha yavaş tükenir!';
+      } else {
+        if (iconEl) iconEl.innerText = '🍩';
+        if (nameEl) nameEl.innerText = `Gurme ${petName} (Evrim Kolu)`;
+        if (descEl) descEl.innerText = 'Karnı hep tok; yemek yerken +%20 ekstra neşe kazanır!';
+      }
+    }
+
+    // =========================================================================
     // AKILLI TELEFON - CİHAZ ENTEGRASYONU: GÜNLÜK HAVA DURUMU & DOST SELAMI
     // =========================================================================
     function triggerSmartCompanionBriefing() {
@@ -9305,6 +10795,18 @@
       renderLeaderboard();
       renderFriendsList();
       discoverAndConnectServer();
+
+      // Yeni Nesil Sistemleri Canlı Başlatıcılar
+      if (typeof checkDailyStreak === 'function') checkDailyStreak();
+      if (typeof initDailyQuests === 'function') initDailyQuests();
+      if (typeof renderStoreUI === 'function') renderStoreUI();
+      if (typeof loadSocialFeed === 'function') loadSocialFeed();
+      if (typeof renderBackpackUI === 'function') renderBackpackUI();
+      if (typeof updatePetArchetype === 'function') updatePetArchetype();
+
+      const savedWeather = localStorage.getItem('socies_weather') || 'sunny';
+      if (typeof setAmbientWeather === 'function') setAmbientWeather(savedWeather);
+
       setTimeout(() => checkAppVersionOnBoot(false), 1500);
       setTimeout(() => triggerSmartCompanionBriefing(), 2500);
 
