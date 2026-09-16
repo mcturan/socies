@@ -10836,7 +10836,7 @@
           if (mData.messages && mData.messages.length > 0) {
             mData.messages.forEach(m => {
               playPagerChimeSound();
-              if (navigator.vibrate) navigator.vibrate([200, 100, 200, 100, 300]);
+              triggerHaptic('fanfare');
               showGlobalToast(`📟 [${m.from_nick}]: ${m.message}`);
               oled.marqueeMsg = `📟 [${m.from_nick}]: ${m.message}   `;
               oled.marqueeX = 128;
