@@ -1664,6 +1664,20 @@
             <span class="horiz-btn-lbl">GERİ</span>
           </button>
         </div>
+
+        <!-- 🐾 QUICK DOCK: KARAKTER SEÇİCİ VE HIZLI OYUN BAŞLATICI -->
+        <div style="width:100%; margin-top:0.6rem; display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.35); border-radius:12px; padding:6px 10px; border:1px solid rgba(255,255,255,0.08);">
+          <div style="display:flex; align-items:center; gap:6px; cursor:pointer;" onclick="openCharacterSelectModal()" title="Karakterini Değiştir">
+            <span style="font-size:1.2rem;" id="txtActiveCharIcon">🐱</span>
+            <span style="font-size:0.75rem; font-weight:800; color:#e2d1f9;" id="txtActiveCharName">Tekir Kedi</span>
+            <span style="font-size:0.65rem; background:#38bdf8; color:#020617; font-weight:900; padding:1px 5px; border-radius:6px;">DEĞİŞTİR 🐾</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:4px;">
+            <button onclick="launchGameOnConsole('RACER')" class="btn-micro" style="background:#0f172a; border:1px solid #38bdf8; color:#38bdf8; font-size:0.68rem; padding:3px 6px; border-radius:6px; font-weight:800;" title="Micro Racer Başlat">🏎️</button>
+            <button onclick="launchGameOnConsole('STACKER')" class="btn-micro" style="background:#0f172a; border:1px solid #fde047; color:#fde047; font-size:0.68rem; padding:3px 6px; border-radius:6px; font-weight:800;" title="Pixel Stacker Başlat">🏗️</button>
+            <button onclick="launchGameOnConsole('DINO')" class="btn-micro" style="background:#0f172a; border:1px solid #22c55e; color:#22c55e; font-size:0.68rem; padding:3px 6px; border-radius:6px; font-weight:800;" title="Maraton Başlat">🏃</button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -2074,6 +2088,657 @@
 
   <script>
     const CURRENT_APP_VERSION = 'v1.0.24';
+
+// =========================================================================
+    // MODÜL 7.8: 21 GERÇEK PİKSEL KARAKTER & 8 DUYGU İFADE MOTORU (128x64 OLED)
+    // =========================================================================
+    const characters = {
+    "cat": {
+        "id": "cat",
+        "name": "Tekir Kedi",
+        "icon": "🐱",
+        "color": "#38bdf8",
+        "desc": "Sivri kulaklı, kıvrık kuyruklu sevimli kedi dostumuz.",
+        "grid": [
+            "....#.........#.....",
+            "...###.......###....",
+            "...####.....####....",
+            "...#.##.....##.#....",
+            "..################..",
+            ".##################.",
+            ".##################.",
+            ".###..########..###.",
+            ".###..########..###.",
+            ".##################.",
+            ".######..##..######.",
+            "..#####......#####..",
+            "...##############...",
+            "....############....",
+            "...##############...",
+            "..################..",
+            "..###..####..####.#.",
+            "..###..####..####.##",
+            "..##....##....##...#",
+            "...................#"
+        ]
+    },
+    "dog": {
+        "id": "dog",
+        "name": "Sadık Shiba",
+        "icon": "🐶",
+        "color": "#f59e0b",
+        "desc": "Sarkık kulaklı, kuyruğunu neşeyle sallayan sadık köpekçik.",
+        "grid": [
+            "...####.....####....",
+            "..######...######...",
+            ".#######...#######..",
+            ".##.####...####.##..",
+            ".##.###########.##..",
+            ".##.###########.##..",
+            ".##.###########.##..",
+            "..##..#######..##...",
+            "..##..#######..##...",
+            "...#############....",
+            "...#####.#.#####....",
+            "....####...####.....",
+            ".....#########......",
+            "....###########.....",
+            "...#############....",
+            "...##############.#.",
+            "..###..####..####.##",
+            "..###..####..####.#.",
+            "..##....##....##....",
+            "...................."
+        ]
+    },
+    "pacman": {
+        "id": "pacman",
+        "name": "Retro Pac-Man",
+        "icon": "🟡",
+        "color": "#fde047",
+        "desc": "80'lerin efsanevi sarı disk kahramanı!",
+        "grid": [
+            "......########......",
+            "....############....",
+            "...##############...",
+            "..################..",
+            ".##################.",
+            ".##################.",
+            ".#######..#########.",
+            "########..#########.",
+            "#########..########.",
+            "##########..........",
+            "#########...........",
+            "########............",
+            "#########...........",
+            "##########..........",
+            ".##################.",
+            ".##################.",
+            "..################..",
+            "...##############...",
+            "....############....",
+            "......########......"
+        ]
+    },
+    "fox": {
+        "id": "fox",
+        "name": "Kurnaz Tilki",
+        "icon": "🦊",
+        "color": "#f97316",
+        "desc": "Görkemli pofuduk kuyruklu ve sivri kulaklı orman tilkisi.",
+        "grid": [
+            "...##.........##....",
+            "..####.......####...",
+            "..#####.....#####...",
+            "..##.##.....##.##...",
+            "..##.##.....##.##...",
+            "..###############...",
+            ".#################..",
+            ".###..#######..###..",
+            ".###..#######..###..",
+            ".#################..",
+            "..#####..#..#####...",
+            "...####.....####....",
+            "....###########.....",
+            "...#############....",
+            "..###############.#.",
+            "..##############.###",
+            "..###..####..##..###",
+            "..###..####..##...##",
+            "..##....##....##..#.",
+            "...................."
+        ]
+    },
+    "panda": {
+        "id": "panda",
+        "name": "Tombul Panda",
+        "icon": "🐼",
+        "color": "#f8fafc",
+        "desc": "Gözlerinde siyah halkaları olan bambu aşığı sevimli panda.",
+        "grid": [
+            "..####.......####...",
+            ".######.....######..",
+            ".######.....######..",
+            "..####.......####...",
+            "...#############....",
+            "..###############...",
+            ".#################..",
+            ".##..###...###..##..",
+            ".##..###...###..##..",
+            ".#################..",
+            "..######...######...",
+            "...#####.#.#####....",
+            "....###########.....",
+            "..###############...",
+            ".#################..",
+            ".#################..",
+            ".###..#########..##.",
+            ".###..#########..##.",
+            "..##...##...##...##.",
+            "...................."
+        ]
+    },
+    "penguin": {
+        "id": "penguin",
+        "name": "Kutup Pengueni",
+        "icon": "🐧",
+        "color": "#38bdf8",
+        "desc": "Kutuplardan gelen paytak yürüyüşlü smokinli penguen.",
+        "grid": [
+            "......########......",
+            "....############....",
+            "...##############...",
+            "..################..",
+            "..###..######..###..",
+            "..###..######..###..",
+            "..################..",
+            "...#####.##.#####...",
+            "...######..######...",
+            "...##############...",
+            "..################..",
+            ".###..########..###.",
+            ".###..########..###.",
+            ".###..########..###.",
+            "..##..########..##..",
+            "..##..########..##..",
+            "...##############...",
+            "....############....",
+            "....###......###....",
+            "...#####....#####..."
+        ]
+    },
+    "dino": {
+        "id": "dino",
+        "name": "Bebek Dino",
+        "icon": "🦖",
+        "color": "#22c55e",
+        "desc": "Sırtında minik dikenleri olan sevimli yeşil dinozor.",
+        "grid": [
+            "........########....",
+            ".......##########...",
+            "......############..",
+            "......############..",
+            "......###..#######..",
+            "......###..#######..",
+            "......############..",
+            "......###########...",
+            "......########......",
+            ".....##########.....",
+            ".#..############....",
+            "##.##############...",
+            "#################...",
+            ".################...",
+            "..##############....",
+            "..##############....",
+            "...############.....",
+            "...####....####.....",
+            "...####....####.....",
+            "..#####....#####...."
+        ]
+    },
+    "bunny": {
+        "id": "bunny",
+        "name": "Zıpzıp Tavşan",
+        "icon": "🐰",
+        "color": "#ec4899",
+        "desc": "Upuzun dik kulakları ve pofuduk burnu olan minik tavşan.",
+        "grid": [
+            "....###.....###.....",
+            "...#####...#####....",
+            "...##.##...##.##....",
+            "...##.##...##.##....",
+            "...##.##...##.##....",
+            "...##.##...##.##....",
+            "...#####...#####....",
+            "...#############....",
+            "..###############...",
+            "..###..#####..###...",
+            "..###..#####..###...",
+            "..###############...",
+            "...#####.#.#####....",
+            "....###########.....",
+            "...#############....",
+            "..###############.#.",
+            "..###..#####..##.###",
+            "..###..#####..##.##.",
+            "...##...###...##....",
+            "...................."
+        ]
+    },
+    "frog": {
+        "id": "frog",
+        "name": "Neşeli Kurbağa",
+        "icon": "🐸",
+        "color": "#4ade80",
+        "desc": "Kocaman gözleri ve geniş gülümsemesiyle nilüfer kurbağası.",
+        "grid": [
+            "...####.....####....",
+            "..######...######...",
+            "..##..##...##..##...",
+            "..##..##...##..##...",
+            "..######...######...",
+            ".#################..",
+            "###################.",
+            "###################.",
+            "###################.",
+            "###.............###.",
+            "####...........####.",
+            ".#################..",
+            "..###############...",
+            "...#############....",
+            "..###############...",
+            ".#################..",
+            "###..#########..###.",
+            "###..#########..###.",
+            "###.............###.",
+            "...................."
+        ]
+    },
+    "hamster": {
+        "id": "hamster",
+        "name": "Tombiş Hamster",
+        "icon": "🐹",
+        "color": "#fb923c",
+        "desc": "Tohum saklayan kocaman tombul yanaklı uysal hamster.",
+        "grid": [
+            "...###.......###....",
+            "..#####.....#####...",
+            "..#####.....#####...",
+            "...###.......###....",
+            "...#############....",
+            "..###############...",
+            ".#################..",
+            ".###..#######..###..",
+            ".###..#######..###..",
+            "###################.",
+            "###################.",
+            "###################.",
+            ".#####..###..#####..",
+            "..####..###..####...",
+            "..##############....",
+            "..##############....",
+            "..###..#####..##....",
+            "..###..#####..##....",
+            "...##...###...##....",
+            "...................."
+        ]
+    },
+    "dragon": {
+        "id": "dragon",
+        "name": "Yavru Ejderha",
+        "icon": "🐲",
+        "color": "#a855f7",
+        "desc": "Minik kanatları ve boynuzlarıyla gökyüzü bebek ejderhası.",
+        "grid": [
+            "....#.........#.....",
+            "...###.......###....",
+            "...###.......###....",
+            "....###########.....",
+            "...#############....",
+            "..###############...",
+            "..###..#####..###...",
+            "..###..#####..###...",
+            "..###############...",
+            "..#####..#..#####...",
+            "...#############....",
+            ".#..###########..#..",
+            "###.###########.###.",
+            "###################.",
+            ".#################..",
+            "..##############.#..",
+            "..###..####..##..##.",
+            "..###..####..##...#.",
+            "..##....##....##....",
+            "...................."
+        ]
+    },
+    "robot": {
+        "id": "robot",
+        "name": "Tamabot 8-Bit",
+        "icon": "🤖",
+        "color": "#06b6d4",
+        "desc": "Tepesinde anteni ve dijital ekran gözleri olan retro robot.",
+        "grid": [
+            ".........#..........",
+            ".........#..........",
+            ".......#####........",
+            "......#######.......",
+            ".....#########......",
+            ".#..###########..#..",
+            ".#..#.........#..#..",
+            "####..##...##..####.",
+            "####..##...##..####.",
+            ".#..#.........#..#..",
+            ".#..#..#####..#..#..",
+            "....###########.....",
+            ".....#########......",
+            "....###########.....",
+            "...#############....",
+            "...#..#######..#....",
+            "...#..#######..#....",
+            "...#############....",
+            "....###.....###.....",
+            "....###.....###....."
+        ]
+    },
+    "ghost": {
+        "id": "ghost",
+        "name": "Sevimli Hayalet",
+        "icon": "👻",
+        "color": "#e2e8f0",
+        "desc": "Havada süzülen, etekleri dalgalanan şakacı hayalet.",
+        "grid": [
+            "......########......",
+            "....############....",
+            "...##############...",
+            "..################..",
+            ".##################.",
+            ".###..########..###.",
+            ".###..########..###.",
+            ".##################.",
+            ".######..##..######.",
+            ".######......######.",
+            "####################",
+            "###.############.###",
+            "##..############..##",
+            "....############....",
+            "....############....",
+            "....############....",
+            "....############....",
+            "...##############...",
+            "..##..##..##..##..##",
+            "..#...#...#...#...#."
+        ]
+    },
+    "alien": {
+        "id": "alien",
+        "name": "Piksel Uzaylı",
+        "icon": "👾",
+        "color": "#10b981",
+        "desc": "Çift antenli, klasik arcade uzay fatihi.",
+        "grid": [
+            "..#...........#.....",
+            "...#.........#......",
+            "...###########......",
+            "..#############.....",
+            ".###############....",
+            ".###..#####..###....",
+            ".###..#####..###....",
+            ".###############....",
+            "..#############.....",
+            "...###########......",
+            "....#########.......",
+            "...###########......",
+            "..#############.....",
+            ".###############....",
+            ".#..#########..#....",
+            ".#..#..###..#..#....",
+            "....#..###..#.......",
+            "...##.......##......",
+            "...##.......##......",
+            "...................."
+        ]
+    },
+    "duck": {
+        "id": "duck",
+        "name": "Sarı Ördek",
+        "icon": "🦆",
+        "color": "#facc15",
+        "desc": "Geniş turuncu gagalı, gölde yüzen neşeli ördekçik.",
+        "grid": [
+            ".......#######......",
+            ".....###########....",
+            "....#############...",
+            "....###..########...",
+            "....###..########...",
+            "....#############...",
+            "...##############...",
+            "..################..",
+            "..#######.######....",
+            "...####.............",
+            "....###########.....",
+            "...#############....",
+            "..###############...",
+            ".#################..",
+            "###################.",
+            ".##################.",
+            "..################..",
+            "...##############...",
+            ".....###....###.....",
+            "....#####..#####...."
+        ]
+    },
+    "owl": {
+        "id": "owl",
+        "name": "Bilge Baykuş",
+        "icon": "🦉",
+        "color": "#d97706",
+        "desc": "Kocaman bilge gözleri ve kulak püskülleri olan gece kuşu.",
+        "grid": [
+            "..##.........##.....",
+            ".####.......####....",
+            ".#####.....#####....",
+            "..###############...",
+            ".#################..",
+            ".####..#####..####..",
+            ".####..#####..####..",
+            ".#################..",
+            ".######..#..######..",
+            "..#####.###.#####...",
+            "...#############....",
+            "..###############...",
+            ".###..#######..###..",
+            ".###..#######..###..",
+            ".###..#######..###..",
+            "..##..#######..##...",
+            "...#############....",
+            "....###########.....",
+            ".....###...###......",
+            "....#####.#####....."
+        ]
+    },
+    "bear": {
+        "id": "bear",
+        "name": "Kocaoğlan Ayı",
+        "icon": "🐻",
+        "color": "#b45309",
+        "desc": "Yuvarlak kulaklı, sıcacık sarılmalık sevimli ayı.",
+        "grid": [
+            "..###.......###.....",
+            ".#####.....#####....",
+            ".#####.....#####....",
+            "..###.......###.....",
+            "...###########......",
+            "..#############.....",
+            ".###############....",
+            ".###..#####..###....",
+            ".###..#####..###....",
+            ".###############....",
+            ".######..#..####....",
+            "..#####.###.####....",
+            "...############.....",
+            "..##############....",
+            ".################...",
+            ".################...",
+            ".###..######..##....",
+            ".###..######..##....",
+            "..##...####...##....",
+            "...................."
+        ]
+    },
+    "koala": {
+        "id": "koala",
+        "name": "Uykucu Koala",
+        "icon": "🐨",
+        "color": "#94a3b8",
+        "desc": "Tüylü dev kulakları ve siyah düğme burnu olan okaliptüs aşığı.",
+        "grid": [
+            ".#####.....#####....",
+            "#######...#######...",
+            "#######...#######...",
+            ".#####.....#####....",
+            "...#############....",
+            "..###############...",
+            ".#################..",
+            ".###..#####..###..#.",
+            ".###..#####..###..#.",
+            ".#######.#######....",
+            ".######...######....",
+            "..#####...#####.....",
+            "...###########......",
+            "..#############.....",
+            ".###############....",
+            ".###############....",
+            ".###..#####..###....",
+            ".###..#####..###....",
+            "..##...###...##.....",
+            "...................."
+        ]
+    },
+    "monkey": {
+        "id": "monkey",
+        "name": "Şakacı Maymun",
+        "icon": "🐵",
+        "color": "#ca8a04",
+        "desc": "Geniş kulaklı, kıvrık kuyruklu muz seven sevimli maymun.",
+        "grid": [
+            "......########......",
+            "....############....",
+            "..################..",
+            ".###..########..###.",
+            "####..########..####",
+            "####..########..####",
+            ".###..########..###.",
+            "..################..",
+            "...#####.##.#####...",
+            "....############....",
+            ".....##########.....",
+            "....############....",
+            "...##############.#.",
+            "..##################",
+            "..################.#",
+            "..##############....",
+            "...############.....",
+            "...####....####.....",
+            "..#####....#####....",
+            "...................."
+        ]
+    },
+    "axolotl": {
+        "id": "axolotl",
+        "name": "Tatlı Aksolotl",
+        "icon": "🦎",
+        "color": "#f472b6",
+        "desc": "İki yanında tüylü pembe solungaçları ve daimi gülüşü olan su ejderi.",
+        "grid": [
+            "#...#.......#...#...",
+            "##.###.....###.##...",
+            "#####.......#####...",
+            ".###.........###....",
+            "...###########......",
+            "..#############.....",
+            ".###############....",
+            ".###..#####..###....",
+            ".###..#####..###....",
+            ".###############....",
+            "..#####..#..###.....",
+            "...###########......",
+            "....#########.......",
+            "...###########......",
+            "..#############.....",
+            "..##############.#..",
+            "..###..####..##.##..",
+            "..###..####..##.##..",
+            "...##...##...##..#..",
+            "...................."
+        ]
+    },
+    "pufi": {
+        "id": "pufi",
+        "name": "Klasik Pufi",
+        "icon": "🐾",
+        "color": "#00f0ff",
+        "desc": "Socies'in efsanevi orijinal dijital maskotu ve sadık dostu.",
+        "grid": [
+            "...##.........##....",
+            "..####.......####...",
+            "..####.......####...",
+            "...##.........##....",
+            "....###########.....",
+            "..###############...",
+            ".#################..",
+            ".###..#######..###..",
+            ".###..#######..###..",
+            ".#################..",
+            ".######..#..######..",
+            "..#####.....#####...",
+            "...#############....",
+            "....###########.....",
+            "...#############....",
+            "..###############...",
+            "..###..#####..###...",
+            "..###..#####..###...",
+            "...##...###...##....",
+            "...................."
+        ]
+    }
+}
+
+    function getActiveCharacter() {
+      const charId = (appData.petState && appData.petState.characterId) || 'cat';
+      return characters[charId] || characters['cat'];
+    }
+
+    function setPetCharacter(charId) {
+      if (!characters[charId]) return;
+      if (!appData.petState) appData.petState = {};
+      appData.petState.characterId = charId;
+      const c = characters[charId];
+      if (!appData.petState.nameSetByUser) {
+        appData.petState.nickname = c.name.split(' ')[0];
+      }
+      localStorage.setItem('socies_pet_character_id', charId);
+      saveNeeds();
+      updateNeedsUI();
+      if (typeof updateProfileUI === 'function') updateProfileUI();
+      triggerHaptic('select');
+      beep(920, 0.1);
+      showGlobalToast(`✨ Yeni Karakter: ${c.name} seçildi!`);
+      closeCharacterSelectModal();
+    }
+
+    // 8 DUYGU İFADESİ MOTORU
+    function getPetCurrentExpression() {
+      if (oled.mode === 'SLEEPING' || (appData.petState && appData.petState.isSleeping)) return 'SLEEPING';
+      if (oled.mode === 'EATING') return 'EATING';
+      if (appData.petState && appData.petState.isSick) return 'SICK';
+      if (appData.needs && (appData.needs.hunger < 25 || appData.needs.love < 20)) return 'SAD';
+      if (oled.careProgress && oled.careProgress.active) return 'LOVE';
+      if (appData.needs && appData.needs.fun > 75 && appData.needs.love > 70) return 'HAPPY';
+      if (appData.needs && (appData.needs.toilet < 25 || appData.needs.clean < 25)) return 'ANGRY';
+      return 'IDLE';
+    }
+
 
     // --- 📡 ARKA PLAN TELEMETRİ VE HATA GÖZLEMCİSİ (SOCIES LOGGER) ---
     const SociesLogger = {
@@ -2785,6 +3450,16 @@
     };
 
     // Piksel Kalp Çizici (OLED Sarı Durum Çubuğu İçin)
+        // 5x4 Mikro Kalp Çizimi (OLED Üst Bar)
+    function drawMicroHeart(x, y, filled = true) {
+      oled.ctx.fillStyle = filled ? '#f43f5e' : '#334155';
+      oled.ctx.fillRect(x + 1, y, 1, 1);
+      oled.ctx.fillRect(x + 3, y, 1, 1);
+      oled.ctx.fillRect(x, y + 1, 5, 1);
+      oled.ctx.fillRect(x + 1, y + 2, 3, 1);
+      oled.ctx.fillRect(x + 2, y + 3, 1, 1);
+    }
+
     function drawOledHeart(ctx, x, y, filled = true) {
       const heartMatrix = [
         [0,1,1,0,1,1,0],
@@ -2839,48 +3514,95 @@
         oled.ctx.fillStyle = '#000814';
         oled.ctx.fillRect(0, 0, 128, 64);
 
-        // 1. TOP DİNAMİK SARI DURUM ÇUBUĞU (16px)
-        oled.ctx.fillStyle = '#ffb703';
-        
-        // Can Kalpleri (7 İhtiyacın Gerçek Sağlık Skorundan)
-        const moodDetails = (typeof getPetMoodDetails === 'function') ? getPetMoodDetails() : { healthScore: 88 };
-        const filledHearts = Math.min(4, Math.max(0, Math.ceil((moodDetails.healthScore / 100) * 4)));
-        for(let i=0; i<4; i++) {
-          drawOledHeart(oled.ctx, 3 + i*8, 4, i < filledHearts);
+        // =====================================================================
+        // 1. TELEFON TARZI AKILLI ÜST DURUM ÇUBUĞU (Y: 0-8 px, ASLA ÇAKIŞMAZ)
+        // =====================================================================
+        // 1.1 Gerçek Dijital Saat (Sol: x=2, y=6)
+        const now = new Date();
+        const hrs = String(now.getHours()).padStart(2, '0');
+        const mins = String(now.getMinutes()).padStart(2, '0');
+        oled.ctx.fillStyle = '#94a3b8';
+        oled.ctx.font = 'bold 5.5px "JetBrains Mono", monospace';
+        oled.ctx.fillText(`${hrs}:${mins}`, 2, 7);
+
+        // 1.2 Bağlantı Durumu Sinyali (WiFi / BT: x=21-26, y=2-7)
+        const isOnline = (typeof isServerConnected !== 'undefined' ? isServerConnected : true);
+        oled.ctx.fillStyle = isOnline ? '#22c55e' : (oled.animFrame % 30 < 15 ? '#ef4444' : '#475569');
+        oled.ctx.fillRect(20, 6, 1, 2);
+        oled.ctx.fillRect(22, 4, 1, 4);
+        oled.ctx.fillRect(24, 2, 1, 6);
+
+        // 1.3 Bekleyen Dürtme / Anons Zarfı ✉ (x=28-33, y=2-6)
+        const hasUnread = (appData.pendingBroadcast || (appData.missedPokes && appData.missedPokes.length > 0));
+        if (hasUnread) {
+          oled.ctx.fillStyle = (oled.animFrame % 40 < 20) ? '#fde047' : '#eab308';
+          oled.ctx.fillRect(28, 3, 5, 4);
+          oled.ctx.fillStyle = '#020617';
+          oled.ctx.fillRect(29, 4, 3, 1);
+          oled.ctx.fillRect(30, 5, 1, 1);
         }
 
-        // Evcil Hayvan Adı & Seviyesi (Net, ferah ve çakışmasız)
-        oled.ctx.fillStyle = '#fde047';
-        oled.ctx.font = 'bold 7.5px "JetBrains Mono", monospace';
-        const petNameStr = ((appData.petState && (appData.petState.nickname || appData.petState.name)) || 'PUFI');
-        const petLvl = ((appData.needs && appData.needs.level) || (appData.petState && appData.petState.level) || 1);
-        const petTitle = `${petNameStr.slice(0, 8).toUpperCase()} Lv.${petLvl}`;
-        oled.ctx.fillText(petTitle, 36, 11);
-
-        // Kriz / Acil Durum Mini Uyarısı (Hasta veya Kaka Varsa)
+        // 1.4 Orta Alan: Ferah & Sıkışmasız Durum Belirteci (x=38 to 86, merkez=64)
+        let centerLabel = '';
+        let centerColor = '#64748b';
         if (appData.petState && appData.petState.isSick) {
-          oled.ctx.fillStyle = '#ef4444';
-          oled.ctx.font = 'bold 6.5px "JetBrains Mono", monospace';
-          if (oled.animFrame % 40 < 25) oled.ctx.fillText('!ILAC', 88, 11);
+          centerLabel = '!HASTA';
+          centerColor = '#ef4444';
         } else if (appData.petState && appData.petState.poopCount > 0) {
-          oled.ctx.fillStyle = '#f59e0b';
-          oled.ctx.font = 'bold 6.5px "JetBrains Mono", monospace';
-          if (oled.animFrame % 40 < 25) oled.ctx.fillText('!TUV', 90, 11);
+          centerLabel = '!TUV';
+          centerColor = '#f59e0b';
+        } else if (oled.mode === 'MENU') {
+          centerLabel = 'MENÜ';
+          centerColor = '#38bdf8';
+        } else if (oled.mode === 'SLEEPING') {
+          centerLabel = 'UYKU';
+          centerColor = '#a855f7';
+        } else if (oled.mode !== 'IDLE') {
+          centerLabel = oled.mode;
+          centerColor = '#fde047';
+        } else {
+          const curChar = getActiveCharacter();
+          centerLabel = curChar.name.split(' ')[0].toUpperCase();
+          centerColor = '#475569';
+        }
+        if (centerLabel) {
+          oled.ctx.fillStyle = centerColor;
+          oled.ctx.font = 'bold 5.5px "JetBrains Mono", monospace';
+          const lblW = oled.ctx.measureText(centerLabel).width;
+          oled.ctx.fillText(centerLabel, Math.round(64 - lblW / 2), 7);
         }
 
-        // Minik batarya simgesi (En sağda 114-126)
-        const battPct = appData.batteryPct || 88;
-        oled.ctx.strokeStyle = '#64748b';
-        oled.ctx.strokeRect(114, 4, 10, 7);
-        oled.ctx.fillStyle = '#64748b';
-        oled.ctx.fillRect(124, 6, 1, 3);
-        const bFill = Math.max(1, Math.round(8 * (Math.min(100, Math.max(10, battPct)) / 100)));
-        oled.ctx.fillStyle = battPct < 25 ? '#ef4444' : '#22c55e';
-        oled.ctx.fillRect(115, 5, bFill, 5);
+        // 1.5 Sağ Taraf: Can Kalpleri (3 adet mikro kalp: x=88, 95, 102)
+        const moodDetails = (typeof getPetMoodDetails === 'function') ? getPetMoodDetails() : { healthScore: 88 };
+        const filledHearts = Math.min(3, Math.max(0, Math.ceil((moodDetails.healthScore / 100) * 3)));
+        for (let i = 0; i < 3; i++) {
+          const hx = 88 + i * 7;
+          drawMicroHeart(hx, 3, i < filledHearts);
+        }
 
-        // Divider line
+        // 1.6 Telefon Tarzı Batarya (x=112 to 125, y=2 to 7)
+        const battPct = appData.batteryPct || 85;
+        oled.ctx.strokeStyle = '#475569';
+        oled.ctx.strokeRect(112, 2, 11, 5); // Batarya kasası
+        oled.ctx.fillStyle = '#475569';
+        oled.ctx.fillRect(123, 3, 1, 3);   // Batarya kutup ucu
+
+        // Pil iç dolumu (0-9 px)
+        const bFill = Math.max(1, Math.round(9 * (Math.min(100, Math.max(10, battPct)) / 100)));
+        oled.ctx.fillStyle = battPct <= 20 ? '#ef4444' : (battPct <= 45 ? '#f59e0b' : '#22c55e');
+        oled.ctx.fillRect(113, 3, bFill, 3);
+
+        // Şarj Şimşeği ⚡ (Eğer şarjdaysa veya doluysa)
+        if (appData.isCharging || (oled.animFrame % 60 < 30 && battPct > 80)) {
+          oled.ctx.fillStyle = '#fde047';
+          oled.ctx.fillRect(117, 1, 1, 2);
+          oled.ctx.fillRect(116, 3, 3, 1);
+          oled.ctx.fillRect(117, 4, 1, 2);
+        }
+
+        // 1.7 Ekran Bölücü İnce Çizgi (Y: 9, tam 1px)
         oled.ctx.fillStyle = '#1e293b';
-        oled.ctx.fillRect(0, 15, 128, 1);
+        oled.ctx.fillRect(0, 9, 128, 1);
 
         // 2. BOTTOM MAVİ OYUN & ANİMASYON ALANI (48px)
         oled.ctx.fillStyle = '#00f0ff';
@@ -3305,12 +4027,11 @@
     function renderOledSideThoughtBox(text, icon = '💭', isPrompt = false) {
       if (!text) return;
 
-      // 1. Karakteri kitlemeyen dinamik yan kutu konumu
-      const petIsRight = (oled.petX >= 56);
-      const bx = petIsRight ? 2 : 56;
-      const by = 16;
-      const bw = 70;
-      const bh = 40;
+      // Ferah 128x64 Üst Konuşma Balonu (y: 11-28, karaktere asla çarpmaz)
+      const bx = 6;
+      const by = 11;
+      const bw = 116;
+      const bh = 18;
 
       oled.ctx.save();
       // Arka plan & retro neon çerçeve
@@ -3320,47 +4041,28 @@
       oled.ctx.lineWidth = 1;
       oled.ctx.strokeRect(bx, by, bw, bh);
 
-      // Konuşma balonu kuyruğu (Doğrudan karaktere doğru uzanır)
+      // Konuşma balonu kuyruğu (Aşağıya karaktere doğru bakar)
       oled.ctx.fillStyle = isPrompt ? '#fde047' : '#38bdf8';
-      if (petIsRight) {
-        oled.ctx.fillRect(bx + bw, by + 20, 2, 2);
-        oled.ctx.fillRect(bx + bw + 2, by + 21, 2, 2);
-      } else {
-        oled.ctx.fillRect(bx - 2, by + 20, 2, 2);
-        oled.ctx.fillRect(bx - 4, by + 21, 2, 2);
-      }
+      const petX = Math.round(oled.petX || 54);
+      const tailX = Math.min(bx + bw - 12, Math.max(bx + 12, petX + 10));
+      oled.ctx.fillRect(tailX, by + bh, 3, 1);
+      oled.ctx.fillRect(tailX + 1, by + bh + 1, 1, 1);
 
-      // Başlık & İkon
-      oled.ctx.fillStyle = isPrompt ? '#fde047' : '#38bdf8';
-      oled.ctx.font = 'bold 6px "JetBrains Mono", monospace';
-      oled.ctx.fillText(`${icon} ${isPrompt ? 'DİYALOG [A]' : 'PUFİ'}`, bx + 4, by + 7);
-
-      // İnce ayırıcı çizgi
-      oled.ctx.fillStyle = isPrompt ? 'rgba(253, 224, 71, 0.4)' : 'rgba(56, 189, 248, 0.35)';
-      oled.ctx.fillRect(bx + 4, by + 9, bw - 8, 1);
-
-      // Metin kelime sarma motoru (Uzun Türkçe kelimeleri heceleyerek/bölerek sarar, asla kutudan taşmaz)
-      oled.ctx.fillStyle = '#ffffff';
-      oled.ctx.font = 'bold 5.8px "JetBrains Mono", monospace';
+      // Metin kelime sarma (2 satır)
+      oled.ctx.fillStyle = isPrompt ? '#fde047' : '#ffffff';
+      oled.ctx.font = 'bold 5.5px "JetBrains Mono", monospace';
+      
       const words = String(text).split(/\s+/);
       const lines = [];
       let cur = '';
-      const maxW = bw - 8;
+      const maxW = bw - 12;
       for (const rawW of words) {
         let w = rawW;
-        // Eğer tek bir kelime kutudan daha genişse böl:
         while (oled.ctx.measureText(w).width > maxW) {
-          let part = '';
-          for (let i = 0; i < w.length; i++) {
-            if (oled.ctx.measureText(part + w[i] + '-').width <= maxW) {
-              part += w[i];
-            } else break;
-          }
-          if (part.length === 0) part = w.slice(0, 10);
+          let part = w.slice(0, 14);
           lines.push(part + '-');
-          w = w.slice(part.length);
+          w = w.slice(14);
         }
-
         const test = cur ? (cur + ' ' + w) : w;
         if (oled.ctx.measureText(test).width <= maxW) {
           cur = test;
@@ -3371,20 +4073,19 @@
       }
       if (cur) lines.push(cur);
 
-      // 4 satıra kadar eksiksiz göster, daha uzunsa sayfala
-      if (lines.length <= 4) {
+      if (lines.length <= 2) {
         lines.forEach((l, i) => {
-          oled.ctx.fillText(l, bx + 4, by + 16 + i * 7);
+          oled.ctx.fillText(l, bx + 5, by + 7 + i * 7);
         });
       } else {
-        const totalPages = Math.ceil(lines.length / 3);
-        const curPage = Math.floor(oled.animFrame / 150) % totalPages;
-        const pageLines = lines.slice(curPage * 3, curPage * 3 + 3);
+        const totalPages = Math.ceil(lines.length / 2);
+        const curPage = Math.floor(oled.animFrame / 140) % totalPages;
+        const pageLines = lines.slice(curPage * 2, curPage * 2 + 2);
         pageLines.forEach((l, i) => {
-          oled.ctx.fillText(l, bx + 4, by + 16 + i * 7);
+          oled.ctx.fillText(l, bx + 5, by + 7 + i * 7);
         });
         oled.ctx.fillStyle = isPrompt ? '#fde047' : '#38bdf8';
-        oled.ctx.fillText(`• ${curPage + 1}/${totalPages}`, bx + bw - 18, by + 37);
+        oled.ctx.fillText(`•${curPage + 1}/${totalPages}`, bx + bw - 16, by + 14);
       }
 
       oled.ctx.restore();
@@ -4515,51 +5216,45 @@
     }
 
     function renderOledSleeping() {
-      // GECE UYKU MODU (Ferah Piksel Gece Gökyüzü & Yatak Sahnesi - Sıfır Çakışma)
-      // 1. Üst Başlık (Sol üstte ferah: x: 8, y: 24)
+      // GECE UYKU MODU (Ferah 128x64 Gece Gökyüzü & Yatak Sahnesi - Sıfır Çakışma)
+      // 1. Sol Üst Gökyüzü: Piksel Hilal Ay (x: 12, y: 14)
       oled.ctx.fillStyle = '#fde047';
-      oled.ctx.font = 'bold 7.5px "JetBrains Mono", monospace';
-      oled.ctx.fillText('🌙 UYKU MODU', 8, 24);
-
-      // 2. Sağ Üst Gökyüzü: Piksel Hilal Ay & Yıldızlar (x: 102 - 114, y: 17 - 26)
-      oled.ctx.fillStyle = '#fef08a';
-      oled.ctx.fillRect(106, 18, 5, 8);
-      oled.ctx.fillRect(104, 19, 3, 6);
+      oled.ctx.fillRect(14, 14, 5, 8);
+      oled.ctx.fillRect(12, 15, 3, 6);
       oled.ctx.fillStyle = '#000814'; // Hilal oyuğu
-      oled.ctx.fillRect(107, 17, 5, 10);
+      oled.ctx.fillRect(15, 13, 5, 10);
 
-      // Yanıp sönen tatlı yıldızlar
-      if (oled.animFrame % 60 < 30) {
-        oled.ctx.fillStyle = '#7dd3fc';
-        oled.ctx.fillRect(72, 20, 1, 1);
-        oled.ctx.fillRect(92, 25, 2, 1);
-        oled.ctx.fillRect(84, 18, 1, 2);
-      }
+      // 2. Parıldayan Gece Yıldızları
+      oled.ctx.fillStyle = '#7dd3fc';
+      if (oled.animFrame % 60 < 30) oled.ctx.fillRect(28, 16, 1, 1);
+      if (oled.animFrame % 50 < 25) oled.ctx.fillRect(42, 22, 2, 1);
+      if (oled.animFrame % 70 < 35) oled.ctx.fillRect(94, 16, 1, 2);
+      if (oled.animFrame % 40 < 20) oled.ctx.fillRect(110, 22, 1, 1);
 
-      // 3. Rahat Yatak & Yastık (x: 36 - 80, y: 46 - 52)
+      // 3. Rahat Yatak & Yastık (x: 42 - 86, y: 44 - 52)
       oled.ctx.fillStyle = '#1e293b';
-      oled.ctx.fillRect(38, 48, 44, 5); // Yatak tahtası
+      oled.ctx.fillRect(44, 46, 42, 5); // Yatak tahtası
       oled.ctx.fillStyle = '#475569';
-      oled.ctx.fillRect(36, 45, 9, 6);  // Yumuşak yastık
+      oled.ctx.fillRect(42, 43, 8, 6);  // Yumuşak yastık
       oled.ctx.fillStyle = '#334155';
-      oled.ctx.fillRect(44, 46, 38, 4); // Yatak örtüsü
+      oled.ctx.fillRect(50, 44, 36, 4); // Yatak örtüsü
 
-      // 4. Uyuyan Pufi (px: 46, py: 42 -> Taç en fazla y:26'ya kadar çıkar, başlık x:8'de kalır ve ASLA çakışmaz)
-      drawModularSpriteToOled(46, 42);
+      // 4. Uyuyan Karakter (x: 52, y: 30)
+      drawModularSpriteToOled(52, 30, 'SLEEPING');
 
-      // 5. Yükselen Zzz Efekti (Pufi'nin başından sağ yukarı doğru süzülür: x: 72 -> 86)
+      // 5. Yükselen Zzz Kabarcıkları (Karakterin başından sağ yukarı süzülür)
       const zTick = (oled.animFrame * 0.35) % 18;
       oled.ctx.fillStyle = '#38bdf8';
-      oled.ctx.font = 'bold 6px "JetBrains Mono", monospace';
-      oled.ctx.fillText('z', 72 + zTick * 0.4, 38 - zTick);
-      oled.ctx.font = 'bold 8px "JetBrains Mono", monospace';
-      oled.ctx.fillText('Z', 80 + zTick * 0.5, 32 - zTick);
+      oled.ctx.font = 'bold 5.5px "JetBrains Mono", monospace';
+      oled.ctx.fillText('z', 76 + zTick * 0.4, 30 - zTick);
+      oled.ctx.font = 'bold 7px "JetBrains Mono", monospace';
+      oled.ctx.fillText('Z', 84 + zTick * 0.5, 24 - zTick);
 
-      // 6. Alt Bilgilendirme (y: 61)
+      // 6. Alt Bilgilendirme (y: 60)
       if (oled.animFrame % 60 < 42) {
-        oled.ctx.fillStyle = '#64748b';
-        oled.ctx.font = 'bold 6.5px "JetBrains Mono", monospace';
-        oled.ctx.fillText('[TUŞA BAS: UYANDIR]', 18, 61);
+        oled.ctx.fillStyle = '#38bdf8';
+        oled.ctx.font = 'bold 6px "JetBrains Mono", monospace';
+        oled.ctx.fillText('◄ SEC: UYANDIR ►', 34, 60);
       }
     }
 
@@ -8157,81 +8852,159 @@
       oled.ctx.fillRect(Math.round(flyX), Math.round(flyY), 1, 1);
     }
 
-    function drawModularSpriteToOled(x, y) {
-      const isSick = !!(appData.petState && appData.petState.isSick);
-      const shiver = isSick ? Math.round(Math.sin(oled.animFrame * 0.65) * 1.5) : 0;
-      // 128x64 OLED Yüksek Detay: 1px doğal nefes alma (breathing bob)
-      const breathe = (Math.floor(oled.animFrame / 18) % 2 === 0) ? 0 : 1;
-      const px = x + shiver;
-      const py = y + breathe;
+    function drawModularSpriteToOled(x, y, forcedExpression = null) {
+      const c = getActiveCharacter();
+      const expr = forcedExpression || getPetCurrentExpression();
+      const isSick = (expr === 'SICK');
+      const shiver = isSick ? Math.round(Math.sin(oled.animFrame * 0.8) * 1.5) : 0;
+      
+      // Doğal nefes alma bobbing (1px)
+      const breathe = (expr === 'SLEEPING') ? 1 : ((Math.floor(oled.animFrame / 18) % 2 === 0) ? 0 : 1);
+      
+      // Mutlu / Zıplayan animasyon
+      let bounceY = 0;
+      if (expr === 'HAPPY' || expr === 'LOVE') {
+        bounceY = -Math.round(Math.abs(Math.sin(oled.animFrame * 0.25)) * 3);
+      }
 
-      // Doğal Göz Kırpma (Blinking Her 3.5 Saniyede Bir)
-      const isBlinking = (oled.animFrame % 200 < 9);
+      const px = Math.round(x + shiver);
+      const py = Math.round(y + breathe + bounceY);
 
-      // Karakterin canlı neon cyan gövdesi
-      oled.ctx.fillStyle = '#00f0ff';
-      const m = generateAvatarMatrix();
-      for(let r=0; r<24; r++) {
-        for(let c=0; c<24; c++) {
-          if (m[r][c]) {
-            // Göz kırpma anında göz yuvalarını kapat
-            if (isBlinking && (r >= 9 && r <= 11) && ((c >= 7 && c <= 9) || (c >= 14 && c <= 16))) {
-              // Kırpık göz çizgisi ^^
-              if (r === 10) oled.ctx.fillRect(px + c - 4, py + r - 10, 1, 1);
+      // Doğal Göz Kırpma (3.3 saniyede bir)
+      const isBlinking = (expr === 'IDLE' && (oled.animFrame % 200 < 8));
+
+      // 1. Ana Karakter Gövdesi Çizimi (20x20 Piksel Grid)
+      oled.ctx.fillStyle = c.color || '#38bdf8';
+      const grid = c.grid;
+
+      for (let r = 0; r < 20; r++) {
+        const row = grid[r];
+        for (let col = 0; col < 20; col++) {
+          if (row[col] === '#') {
+            // Göz bölgelerini dinamik ifadelere göre özelleştir
+            const isEyeRow = (r >= 7 && r <= 8);
+            const isLeftEye = (col >= 5 && col <= 6);
+            const isRightEye = (col >= 13 && col <= 14);
+
+            if (isEyeRow && (isLeftEye || isRightEye)) {
+              // Dinamik Göz İfadesi
+              if (expr === 'SLEEPING') {
+                // Kapalı gözler: alt satırda tek çizgi --
+                if (r === 8) {
+                  oled.ctx.fillStyle = '#020617';
+                  oled.ctx.fillRect(px + col, py + r, 1, 1);
+                  oled.ctx.fillStyle = c.color;
+                }
+              } else if (isBlinking) {
+                // Kırpık göz ^^
+                if (r === 7) {
+                  oled.ctx.fillStyle = '#020617';
+                  oled.ctx.fillRect(px + col, py + r, 1, 1);
+                  oled.ctx.fillStyle = c.color;
+                }
+              } else if (expr === 'HAPPY') {
+                // Neşeli kemer gözler ^^
+                if (r === 7) {
+                  oled.ctx.fillStyle = '#fde047';
+                  oled.ctx.fillRect(px + col, py + r, 1, 1);
+                  oled.ctx.fillStyle = c.color;
+                }
+              } else if (expr === 'LOVE') {
+                // Kalp gözler ♥
+                oled.ctx.fillStyle = '#f43f5e';
+                oled.ctx.fillRect(px + col, py + r, 1, 1);
+                oled.ctx.fillStyle = c.color;
+              } else if (expr === 'SAD') {
+                // Ağlayan gözler TT
+                oled.ctx.fillStyle = '#38bdf8';
+                oled.ctx.fillRect(px + col, py + r, 1, 1);
+                oled.ctx.fillStyle = c.color;
+              } else if (expr === 'ANGRY') {
+                // Çatık öfkeli gözler ><
+                oled.ctx.fillStyle = '#ef4444';
+                oled.ctx.fillRect(px + col, py + r, 1, 1);
+                oled.ctx.fillStyle = c.color;
+              } else if (expr === 'SICK') {
+                // Dönen / baygın gözler xx
+                oled.ctx.fillStyle = '#94a3b8';
+                if ((r + col) % 2 === 0) oled.ctx.fillRect(px + col, py + r, 1, 1);
+                oled.ctx.fillStyle = c.color;
+              } else {
+                // Normal göz yuvası (Koyu iris)
+                oled.ctx.fillStyle = '#020617';
+                oled.ctx.fillRect(px + col, py + r, 1, 1);
+                oled.ctx.fillStyle = c.color;
+              }
             } else {
-              oled.ctx.fillRect(px + c - 4, py + r - 10, 1, 1);
+              oled.ctx.fillRect(px + col, py + r, 1, 1);
             }
           }
         }
       }
 
-      // Sevimli Yanak Allıkları (Blushing Cheeks)
+      // 2. Sevimli Yanak Allıkları (Pembe #f43f5e)
       oled.ctx.fillStyle = '#f43f5e';
-      oled.ctx.fillRect(px + 2, py + 3, 2, 1);
-      oled.ctx.fillRect(px + 12, py + 3, 2, 1);
+      oled.ctx.fillRect(px + 3, py + 9, 2, 1);
+      oled.ctx.fillRect(px + 15, py + 9, 2, 1);
 
-      // 1. Kaka & Sinek Çizimi (Kriz Mekaniği)
+      // 3. Özel Duygu Efektleri
+      if (expr === 'LOVE') {
+        // Baş üstünde yükselen minik pembe kalp
+        oled.ctx.fillStyle = '#f43f5e';
+        const heartY = py - 4 - Math.round(Math.abs(Math.sin(oled.animFrame * 0.2)) * 3);
+        oled.ctx.fillRect(px + 9, heartY, 1, 1);
+        oled.ctx.fillRect(px + 11, heartY, 1, 1);
+        oled.ctx.fillRect(px + 8, heartY + 1, 5, 1);
+        oled.ctx.fillRect(px + 9, heartY + 2, 3, 1);
+        oled.ctx.fillRect(px + 10, heartY + 3, 1, 1);
+      } else if (expr === 'SAD') {
+        // Yanaklardan süzülen 1px mavi gözyaşı
+        oled.ctx.fillStyle = '#38bdf8';
+        const tearY = py + 10 + (oled.animFrame % 8);
+        oled.ctx.fillRect(px + 4, tearY, 1, 2);
+        oled.ctx.fillRect(px + 15, tearY, 1, 2);
+      } else if (expr === 'ANGRY') {
+        // Baş üstünde minik öfke sembolü
+        oled.ctx.fillStyle = '#ef4444';
+        if (oled.animFrame % 20 < 14) {
+          oled.ctx.fillRect(px + 16, py - 4, 3, 1);
+          oled.ctx.fillRect(px + 17, py - 5, 1, 3);
+        }
+      } else if (expr === 'HAPPY') {
+        // Yanlarda pırıltılar
+        if (oled.animFrame % 16 < 8) {
+          oled.ctx.fillStyle = '#fde047';
+          oled.ctx.fillRect(px - 3, py + 4, 1, 1);
+          oled.ctx.fillRect(px + 22, py + 4, 1, 1);
+        }
+      } else if (expr === 'EATING') {
+        // Çiğneme kırıntıları
+        if (oled.animFrame % 8 < 4) {
+          oled.ctx.fillStyle = '#fde047';
+          oled.ctx.fillRect(px + 9, py + 12, 2, 1);
+          oled.ctx.fillRect(px + 7, py + 14, 1, 1);
+          oled.ctx.fillRect(px + 13, py + 14, 1, 1);
+        }
+      }
+
+      // 4. Kaka & Sinek Çizimi (Kriz Mekaniği)
       if (appData.petState && appData.petState.poopCount >= 1) drawOledPoop(98, 46);
       if (appData.petState && appData.petState.poopCount >= 2) drawOledPoop(110, 46);
 
-      // 2. Hastalık Ateş / Termometre Göstergesi (Blinking)
+      // 5. Hastalık Termometresi
       if (isSick && Math.floor(oled.animFrame / 10) % 2 === 0) {
         oled.ctx.fillStyle = '#ef4444';
-        oled.ctx.fillRect(px + 17, py - 9, 3, 1);
-        oled.ctx.fillRect(px + 18, py - 10, 1, 3);
+        oled.ctx.fillRect(px + 17, py - 4, 3, 1);
+        oled.ctx.fillRect(px + 18, py - 5, 1, 3);
       }
 
-      // 3. Ağlama Gözyaşı (Açlık < 25 veya Sevgi < 20)
-      if (appData.needs.hunger < 25 || appData.needs.love < 20) {
-        oled.ctx.fillStyle = '#38bdf8';
-        const tearDrop = (oled.animFrame % 14);
-        oled.ctx.fillRect(px + 4, py + 2 + tearDrop, 1, 2);
-        oled.ctx.fillRect(px + 12, py + 2 + tearDrop, 1, 2);
-      }
-
-      // 4. Yetişkin Evre Tacı (Stage 4 - 👑 Kraliyet Tacı)
-      if (appData.petState && appData.petState.stage >= 4) {
-        oled.ctx.fillStyle = '#fde047';
-        oled.ctx.fillRect(px + 3, py - 13, 10, 1);
-        oled.ctx.fillRect(px + 3, py - 15, 2, 2);
-        oled.ctx.fillRect(px + 7, py - 16, 2, 3);
-        oled.ctx.fillRect(px + 11, py - 15, 2, 2);
-      }
-
-      // 5. Mutluluk Pırıltıları (Sağlık > 80 ve Sevgi > 75)
-      if (!isSick && appData.needs.love > 75 && (oled.animFrame % 24 < 12)) {
-        oled.ctx.fillStyle = '#00f0ff';
-        oled.ctx.fillRect(px - 3, py - 5, 2, 2);
-        oled.ctx.fillRect(px + 17, py - 4, 2, 2);
-      }
-
-      // Varsayılan renge geri dön
+      // Varsayılan rengi geri yükle
       oled.ctx.fillStyle = '#00f0ff';
 
-      // 6. KUŞANILAN ŞAPKA ÇİZİMİ (XP MAĞAZASI EŞYASI)
+      // 6. KUŞANILAN ŞAPKA ÇİZİMİ
       const equippedHat = (appData.store && appData.store.equipped && appData.store.equipped.hat);
       if (equippedHat) {
-        drawOledHat(px, py, equippedHat);
+        drawOledHat(px + 2, py - 2, equippedHat);
       }
     }
 
@@ -9119,6 +9892,13 @@
       if (tagAge) {
         tagAge.innerText = `Sanal Dost • Evre ${appData.petState.stage} (${stageLabels[appData.petState.stage] || 'Bebek'}) • ${ageDays} Günlük`;
       }
+
+      // Aktif Karakter Göstergesi
+      const curChar = getActiveCharacter();
+      const iconEl = document.getElementById('txtActiveCharIcon');
+      const nameEl = document.getElementById('txtActiveCharName');
+      if (iconEl) iconEl.innerText = curChar.icon;
+      if (nameEl) nameEl.innerText = curChar.name;
 
       // Uyku butonu durumunu güncelle
       const btnSleep = document.getElementById('btnCareSleep');
@@ -11038,6 +11818,42 @@
     // =========================================================================
     // MODÜL 10: GÜNÜN GÖREVLERİ (DAILY QUESTS ENGINE)
     // =========================================================================
+    // =========================================================================
+    // KARAKTER SEÇİM ARAYÜZÜ KONTROLCÜSÜ
+    // =========================================================================
+    function openCharacterSelectModal() {
+      const modal = document.getElementById('characterSelectModal');
+      const grid = document.getElementById('characterGridList');
+      if (!modal || !grid) return;
+
+      const activeId = (appData.petState && appData.petState.characterId) || 'cat';
+      grid.innerHTML = '';
+
+      for (const key in characters) {
+        const c = characters[key];
+        const isSel = (key === activeId);
+        const card = document.createElement('div');
+        card.style.cssText = `background:${isSel ? '#1e293b' : '#020617'}; border:2px solid ${isSel ? c.color : '#334155'}; border-radius:14px; padding:10px 8px; display:flex; flex-direction:column; align-items:center; gap:6px; cursor:pointer; transition:all 0.2s; position:relative;`;
+        card.onclick = () => setPetCharacter(key);
+
+        card.innerHTML = `
+          <div style="font-size:1.8rem; line-height:1;">${c.icon}</div>
+          <div style="font-weight:900; font-size:0.78rem; color:${isSel ? c.color : '#f8fafc'}; text-align:center;">${c.name.split(' ')[0]}</div>
+          <div style="font-size:0.65rem; color:#64748b; text-align:center;">${c.name.split(' ')[1] || ''}</div>
+          ${isSel ? `<span style="position:absolute; top:4px; right:4px; background:${c.color}; color:#020617; font-size:0.6rem; font-weight:900; border-radius:6px; padding:1px 4px;">AKTİF</span>` : ''}
+        `;
+        grid.appendChild(card);
+      }
+
+      modal.style.display = 'flex';
+      triggerHaptic('select');
+    }
+
+    function closeCharacterSelectModal() {
+      const modal = document.getElementById('characterSelectModal');
+      if (modal) modal.style.display = 'none';
+    }
+
     function initDailyQuests() {
       const today = new Date().toISOString().split('T')[0];
       if (!appData.dailyQuests || appData.dailyQuests.date !== today || !appData.dailyQuests.list) {
@@ -11508,5 +12324,33 @@
       }
     });
   </script>
+<!-- ======================================================================= -->
+  <!-- 🐾 21 GERÇEK PİKSEL KARAKTER SEÇİMİ MODALI -->
+  <!-- ======================================================================= -->
+  <div id="characterSelectModal" class="modal-overlay" style="display:none; position:fixed; inset:0; background:rgba(2,6,23,0.85); z-index:9999; align-items:center; justify-content:center; backdrop-filter:blur(6px); padding:1rem;">
+    <div style="background:#0f172a; border:2px solid #38bdf8; border-radius:20px; width:100%; max-width:440px; max-height:88vh; display:flex; flex-direction:column; box-shadow:0 12px 36px rgba(56,189,248,0.25); overflow:hidden;">
+      <div style="padding:14px 18px; border-bottom:1px solid #1e293b; display:flex; justify-content:space-between; align-items:center; background:#1e293b;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="font-size:1.4rem;">🐾</span>
+          <div>
+            <div style="font-weight:900; font-size:1rem; color:#f8fafc;">Karakterini Seç</div>
+            <div style="font-size:0.75rem; color:#94a3b8;">21 Farklı Retro Piksel Karakter</div>
+          </div>
+        </div>
+        <button onclick="closeCharacterSelectModal()" style="background:none; border:none; color:#94a3b8; font-size:1.2rem; cursor:pointer; padding:4px 8px;">✕</button>
+      </div>
+
+      <!-- Karakter Grid Listesi -->
+      <div id="characterGridList" style="padding:14px; overflow-y:auto; display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; flex:1;">
+        <!-- Javascript ile doldurulur -->
+      </div>
+
+      <div style="padding:12px 18px; border-top:1px solid #1e293b; background:#0f172a; display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-size:0.75rem; color:#64748b;">Seçim anında konsola yansır.</span>
+        <button onclick="closeCharacterSelectModal()" class="btn-micro" style="background:#38bdf8; color:#020617; font-weight:900; padding:8px 16px; border-radius:10px;">Tamam</button>
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>
