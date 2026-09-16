@@ -1157,11 +1157,30 @@
         </div>
 
         <div style="font-size:0.72rem; color:#94A3B8; text-align:center;">
-          Socies v1.0.23 (Build 24) • OTA Güncel
+          Socies v1.0.24 (Build 25) • OTA Güncel
         </div>
       </div>
 
       <button class="btn-update-dismiss" onclick="closeGoogleAuthModal()" style="margin-top:0.6rem;">Kapat</button>
+    </div>
+  </div>
+
+  <!-- KAÇIRILAN DÜRTMELER (MISSED POKES INBOX) MODAL -->
+  <div id="missedPokesModal" class="update-overlay" style="display:none; z-index:12000; background:rgba(15,23,42,0.92); backdrop-filter:blur(8px);">
+    <div class="update-dialog" style="max-width:340px; text-align:center; padding:22px;">
+      <div style="font-size:3rem; margin-bottom:8px; animation: bounce 1s infinite;">💌</div>
+      <div class="update-title" id="txtPokeSenderName" style="color:#00f0ff; font-size:1.1rem; font-weight:900;">Dostun Seni Dürttü!</div>
+      <p style="font-size:0.82rem; color:#94A3B8; margin:8px 0 16px 0; line-height:1.4;" id="txtPokeSenderDesc">
+        Sen yokken arkadaşın sanal bebeğini yalnız bırakmadı ve sana sıcak bir selam gönderdi! Bebeğin sevinçle zıpladı (+15 Sevgi).
+      </p>
+      <div style="display:flex; gap:8px;">
+        <button class="btn-micro" style="flex:1; background:#EF4444; color:#fff; font-weight:900; padding:10px; font-size:0.85rem; border:none; border-radius:12px; cursor:pointer;" onclick="replyPokeBack()">
+          ❤️ Geri Dürt
+        </button>
+        <button class="btn-update-dismiss" style="margin:0; padding:10px 16px; border-radius:12px; cursor:pointer;" onclick="closeMissedPokesModal()">
+          Kapat
+        </button>
+      </div>
     </div>
   </div>
 
@@ -1580,7 +1599,7 @@
           <span id="txtQuestsDoneBadge">0/3</span>
         </div>
 
-        <button type="button" class="btn-micro" onclick="openServerSettingsModal()" title="Sunucu & Ayarlar" style="background:#F1F5F9; color:#475569; border:1px solid #CBD5E1; border-radius:10px; padding:6px 10px; font-size:0.85rem; font-weight:700; display:flex; align-items:center; gap:4px; box-shadow:none;">
+        <button type="button" class="btn-micro" onclick="openServerModal()" title="Sunucu & Ayarlar" style="background:#F1F5F9; color:#475569; border:1px solid #CBD5E1; border-radius:10px; padding:6px 10px; font-size:0.85rem; font-weight:700; display:flex; align-items:center; gap:4px; box-shadow:none;">
           <span>⚙️</span>
         </button>
       </div>
@@ -2054,7 +2073,7 @@
   </nav>
 
   <script>
-    const CURRENT_APP_VERSION = 'v1.0.23';
+    const CURRENT_APP_VERSION = 'v1.0.24';
 
     // --- 📡 ARKA PLAN TELEMETRİ VE HATA GÖZLEMCİSİ (SOCIES LOGGER) ---
     const SociesLogger = {
@@ -2297,11 +2316,46 @@
 
     // --- HAPTIC & TACTILE AUDIO SYNTHESIZER ---
     let aCtx = null;
-    function triggerHaptic(ms = 25) {
+    function triggerHaptic(type = 25) {
       if (typeof appData !== 'undefined' && appData.hapticEnabled === false) return;
-      if (window.navigator && window.navigator.vibrate) {
-        try { window.navigator.vibrate(ms); } catch(e) {}
+      let pattern = [25];
+      if (typeof type === 'number') {
+        pattern = [type];
+      } else if (Array.isArray(type)) {
+        pattern = type;
+      } else if (typeof type === 'string') {
+        const presets = {
+          click: [15],
+          select: [25],
+          back: [20],
+          purr: [35, 30, 45],
+          bomb: [120],
+          explosion: [80, 40, 120],
+          poke: [70, 50, 70],
+          fanfare: [50, 40, 50, 40, 100],
+          gameover: [100, 50, 120],
+          mystery: [40, 30, 40, 30, 80]
+        };
+        pattern = presets[type] || [25];
       }
+
+      // 1. Android Native Bridge Haptic
+      try {
+        if (window.SociesNative && typeof window.SociesNative.vibratePattern === 'function') {
+          window.SociesNative.vibratePattern(pattern.join(','));
+          return;
+        } else if (window.SociesNative && typeof window.SociesNative.vibrate === 'function') {
+          window.SociesNative.vibrate(pattern[0] || 25);
+          return;
+        }
+      } catch(e) {}
+
+      // 2. Web Vibration API
+      try {
+        if (window.navigator && window.navigator.vibrate) {
+          window.navigator.vibrate(pattern);
+        }
+      } catch(e) {}
     }
 
     function beep(f = 520, d = 0.08) {
@@ -2550,10 +2604,10 @@
         '1. MARATON 🏃',
         '2. PİNPON 🏓',
         '3. YILAN 🐍',
-        '4. ELMA YAKALA 🍎',
+        '4. MİCRO RACER 🏎️',
         '5. UZAY İSTİLASI 🚀',
         '6. TUĞLA KIRMA 🧱',
-        '7. PARAŞÜT 🪂',
+        '7. PİXEL STACKER 🏗️',
         '8. UÇAN PUFİ 🛩️',
         '9. KOVBOY 🤠',
         '10. RPS ✂️',
@@ -2575,6 +2629,7 @@
       idleDialogue: { active: false, timer: 0, type: null, data: null },
       currentDialogue: null,
       guessGame: { target: 5, guess: 5, attempts: 3, hint: 'Sayımı tahmin et!', resolved: false },
+      riddle: { q: '', a: '', timer: 300, revealed: false, resultTimer: 0 },
       bcMarqueeX: 128,
       dino: {
         petY: 34,
@@ -2611,6 +2666,32 @@
         score: 0, hiScore: 0,
         isGameOver: false,
         moveTimer: 0
+      },
+
+      // 4. Micro Racer State (Retro Highway 3-Lane)
+      racer: {
+        lane: 1, // 0: Sol (x=38), 1: Orta (x=64), 2: Sağ (x=90)
+        carX: 64,
+        carY: 48,
+        score: 0,
+        speed: 1.15,
+        isGameOver: false,
+        traffic: [], // { lane, y, type: 'car'|'coin'|'oil'|'bomb'|'turbo' }
+        nitroTimer: 0,
+        lives: 3
+      },
+
+      // 7. Pixel Stacker State (15 Floor Tower)
+      stacker: {
+        floor: 0,
+        blocks: [], // [ { y, x, width } ]
+        curX: 18,
+        curDir: 1,
+        curWidth: 32,
+        speed: 1.1,
+        isGameOver: false,
+        combo: 0,
+        score: 0
       },
 
       // 4. Apple Catcher State
@@ -2812,14 +2893,16 @@
           renderOledPong();
         } else if (oled.mode === 'SNAKE') {
           renderOledSnake();
-        } else if (oled.mode === 'CATCHER') {
-          renderOledCatcher();
+        } else if (oled.mode === 'RACER' || oled.mode === 'CATCHER') {
+          renderOledRacer();
         } else if (oled.mode === 'SPACE') {
           renderOledSpace();
         } else if (oled.mode === 'BRICK') {
           renderOledBrick();
-        } else if (oled.mode === 'PARACHUTE') {
-          renderOledParachute();
+        } else if (oled.mode === 'STACKER' || oled.mode === 'PARACHUTE') {
+          renderOledStacker();
+        } else if (oled.mode === 'RIDDLE') {
+          renderOledRiddle();
         } else if (oled.mode === 'FLAPPY') {
           renderOledFlappy();
         } else if (oled.mode === 'COWBOY') {
@@ -3353,6 +3436,416 @@
       }
     }
 
+    // =========================================================================
+    // MODÜL 7.5: 120+ TÜRK & DÜNYA BİLMECELERİ ARENASI (RIDDLES ENGINE)
+    // =========================================================================
+    function startRiddleGame(data) {
+      const pool = (typeof IDLE_RIDDLES_POOL !== 'undefined') ? IDLE_RIDDLES_POOL : [];
+      const r = data || pool[Math.floor(Math.random() * pool.length)] || { q: 'Beni beslersen yasarim?', a: 'Ates 🔥' };
+      oled.riddle = {
+        q: r.q,
+        a: r.a,
+        timer: 300, // 5 saniye (60 FPS)
+        revealed: false,
+        resultTimer: 0
+      };
+      oled.mode = 'RIDDLE';
+      triggerHaptic('purr');
+      beep(880, 0.1);
+    }
+
+    function revealRiddleAnswer() {
+      if (!oled.riddle) return;
+      if (!oled.riddle.revealed) {
+        oled.riddle.revealed = true;
+        oled.riddle.resultTimer = 180; // 3 saniye ekranda kalır
+        triggerHaptic('fanfare');
+        playLevelUpFanfare();
+        addPetXP(15);
+        if (appData.needs) {
+          appData.needs.fun = Math.min(100, (appData.needs.fun || 50) + 20);
+          saveNeeds();
+          updateNeedsUI();
+        }
+        showGlobalToast(`💡 BİLMECE ÇÖZÜLDÜ! +15 XP ve +20 Neşe kazandın!`);
+      } else {
+        oled.mode = 'IDLE';
+      }
+    }
+
+    function renderOledRiddle() {
+      const r = oled.riddle;
+      if (!r) { oled.mode = 'IDLE'; return; }
+
+      // 1. Retro Çift Çerçeve
+      oled.ctx.strokeStyle = '#00f0ff';
+      oled.ctx.lineWidth = 1;
+      oled.ctx.strokeRect(2, 2, 124, 60);
+      oled.ctx.strokeStyle = '#1e293b';
+      oled.ctx.strokeRect(4, 4, 120, 56);
+
+      // 2. Başlık
+      oled.ctx.fillStyle = '#fde047';
+      oled.ctx.font = 'bold 7.5px "JetBrains Mono", monospace';
+      oled.ctx.fillText('★ BİLMECE ZAMANI 🧩 ★', 12, 14);
+
+      // 3. Soru Metni (22 karakterlik satırlara otomatik sarma)
+      oled.ctx.fillStyle = '#ffffff';
+      oled.ctx.font = '6.5px "JetBrains Mono", monospace';
+      const words = r.q.split(' ');
+      const lines = [];
+      let cur = '';
+      for (let w of words) {
+        if ((cur + ' ' + w).trim().length <= 22) {
+          cur = (cur + ' ' + w).trim();
+        } else {
+          lines.push(cur);
+          cur = w;
+        }
+      }
+      if (cur) lines.push(cur);
+
+      lines.slice(0, 3).forEach((line, idx) => {
+        oled.ctx.fillText(line, 8, 26 + idx * 9);
+      });
+
+      // 4. Cevap veya 5 Saniyelik Geri Sayım Barı
+      if (!r.revealed) {
+        r.timer--;
+        const pct = Math.max(0, r.timer / 300);
+        oled.ctx.fillStyle = '#1e293b';
+        oled.ctx.fillRect(8, 52, 112, 4);
+        oled.ctx.fillStyle = '#fde047';
+        oled.ctx.fillRect(8, 52, Math.round(112 * pct), 4);
+
+        const secLeft = Math.ceil(r.timer / 60);
+        oled.ctx.fillStyle = '#38bdf8';
+        oled.ctx.font = 'bold 6.5px "JetBrains Mono", monospace';
+        oled.ctx.fillText(`⏳ ${secLeft}s  ◄ SEC: CEVAP ►`, 14, 48);
+
+        if (r.timer <= 0) {
+          revealRiddleAnswer();
+        }
+      } else {
+        // Cevap Kutusu
+        oled.ctx.fillStyle = '#10b981';
+        oled.ctx.fillRect(6, 40, 116, 19);
+        oled.ctx.fillStyle = '#020617';
+        oled.ctx.font = 'bold 7.5px "JetBrains Mono", monospace';
+        oled.ctx.fillText(`CEVAP: ${r.a}`, 10, 49);
+        oled.ctx.font = 'bold 6px "JetBrains Mono", monospace';
+        oled.ctx.fillText(`✓ +15 XP & +20 NEŞE KAZANILDI!`, 10, 56);
+
+        r.resultTimer--;
+        if (r.resultTimer <= 0) {
+          oled.mode = 'IDLE';
+        }
+      }
+    }
+
+    // =========================================================================
+    // OYUN 4: 🏎️ MİCRO RACER (RETRO 3-ŞERİTLİ OTOBAN YARIŞI)
+    // =========================================================================
+    function resetRacerGame() {
+      oled.racer = {
+        lane: 1,
+        carX: 64,
+        carY: 48,
+        score: 0,
+        speed: 1.15,
+        isGameOver: false,
+        traffic: [],
+        nitroTimer: 0,
+        nitroCount: 1,
+        lives: 3
+      };
+      triggerHaptic('purr');
+      beep(600, 0.08);
+    }
+
+    function renderOledRacer() {
+      const r = oled.racer;
+      if (!r) return;
+
+      // 1. Yol ve Şerit Çizgileri (x=24 to x=104, Genişlik=80)
+      oled.ctx.fillStyle = '#0f172a';
+      oled.ctx.fillRect(24, 0, 80, 64);
+      oled.ctx.fillStyle = '#334155';
+      oled.ctx.fillRect(23, 0, 2, 64);
+      oled.ctx.fillRect(103, 0, 2, 64);
+
+      // Kayan şerit çizgileri
+      const laneOffset = Math.floor(oled.animFrame * (r.nitroTimer > 0 ? 3.5 : 2.0)) % 16;
+      oled.ctx.fillStyle = '#475569';
+      for (let y = -16 + laneOffset; y < 64; y += 16) {
+        oled.ctx.fillRect(50, y, 1, 8);
+        oled.ctx.fillRect(77, y, 1, 8);
+      }
+
+      // Game Over Ekranı
+      if (r.isGameOver) {
+        oled.ctx.fillStyle = '#f43f5e';
+        oled.ctx.font = 'bold 8px "JetBrains Mono", monospace';
+        oled.ctx.fillText('KAZA! OYUN BİTTİ', 22, 28);
+        oled.ctx.fillStyle = '#fde047';
+        oled.ctx.fillText(`SKOR: ${Math.floor(r.score)}`, 40, 39);
+        oled.ctx.fillStyle = '#38bdf8';
+        oled.ctx.font = '6.5px "JetBrains Mono", monospace';
+        oled.ctx.fillText('◄ TEKRAR: SEC ►', 30, 49);
+        return;
+      }
+
+      // 2. Oyuncu Arabası Konumu (Smooth Lane Lerp)
+      const targetX = r.lane === 0 ? 37 : (r.lane === 1 ? 64 : 91);
+      r.carX += (targetX - r.carX) * 0.35;
+
+      // 3. Skor & Hız Artışı
+      const speedMult = r.nitroTimer > 0 ? 2.2 : 1.0;
+      r.score += 0.08 * speedMult;
+      r.speed = 1.15 + Math.min(1.6, (r.score / 120) * 0.4);
+
+      if (r.nitroTimer > 0) {
+        r.nitroTimer--;
+        if (oled.animFrame % 4 === 0) {
+          oled.ctx.fillStyle = '#00f0ff';
+          oled.ctx.fillRect(r.carX - 2 + Math.random() * 4, r.carY + 11, 2, 3);
+        }
+      }
+
+      // 4. Trafik & Ödül / Bomba Üretimi
+      if (oled.animFrame % Math.max(32, Math.floor(55 - r.speed * 8)) === 0) {
+        const lane = Math.floor(Math.random() * 3);
+        const roll = Math.random();
+        let type = 'car';
+        if (roll < 0.25) {
+          type = 'coin'; // Altın para (+25)
+        } else if (roll < 0.33) {
+          type = 'turbo'; // Nitro tüpü
+        } else if (r.score > 50 && roll < 0.50) {
+          type = 'bomb'; // Tehlikeli mayın / bomba (-1 can)
+        } else if (r.score > 40 && roll < 0.62) {
+          type = 'oil'; // Yağ birikintisi
+        }
+        r.traffic.push({ lane, x: lane === 0 ? 37 : (lane === 1 ? 64 : 91), y: -10, type });
+      }
+
+      // 5. Trafik Hareketi & Çarpışma
+      for (let i = r.traffic.length - 1; i >= 0; i--) {
+        const t = r.traffic[i];
+        t.y += r.speed * (t.type === 'car' ? 1.3 : 1.6) * speedMult;
+
+        // Çizim
+        if (t.type === 'car') {
+          oled.ctx.fillStyle = '#f43f5e';
+          oled.ctx.fillRect(t.x - 4, t.y, 8, 10);
+          oled.ctx.fillStyle = '#fde047';
+          oled.ctx.fillRect(t.x - 3, t.y + 1, 2, 2);
+          oled.ctx.fillRect(t.x + 1, t.y + 1, 2, 2);
+        } else if (t.type === 'coin') {
+          oled.ctx.fillStyle = '#fde047';
+          oled.ctx.fillRect(t.x - 2, t.y, 5, 5);
+          oled.ctx.fillStyle = '#ffffff';
+          oled.ctx.fillRect(t.x - 1, t.y + 1, 2, 2);
+        } else if (t.type === 'turbo') {
+          oled.ctx.fillStyle = '#00f0ff';
+          oled.ctx.fillRect(t.x - 2, t.y, 5, 7);
+          oled.ctx.fillStyle = '#ffffff';
+          oled.ctx.fillText('N', t.x - 1, t.y + 5);
+        } else if (t.type === 'bomb') {
+          oled.ctx.fillStyle = '#f43f5e';
+          oled.ctx.fillRect(t.x - 3, t.y, 6, 6);
+          oled.ctx.fillStyle = '#000000';
+          oled.ctx.fillRect(t.x - 1, t.y + 1, 2, 2);
+        } else if (t.type === 'oil') {
+          oled.ctx.fillStyle = '#334155';
+          oled.ctx.fillRect(t.x - 5, t.y, 10, 4);
+        }
+
+        // Çarpışma Kontrolü
+        const dist = Math.abs(t.x - r.carX) < 7 && Math.abs(t.y - r.carY) < 8;
+        if (dist) {
+          if (t.type === 'coin') {
+            r.score += 25;
+            beep(980, 0.06);
+            triggerHaptic('click');
+            r.traffic.splice(i, 1);
+          } else if (t.type === 'turbo') {
+            r.nitroCount = Math.min(3, (r.nitroCount || 0) + 1);
+            r.nitroTimer = 150;
+            beep(1200, 0.12);
+            triggerHaptic('purr');
+            r.traffic.splice(i, 1);
+          } else if (t.type === 'oil') {
+            r.carX += (Math.random() < 0.5 ? -8 : 8);
+            beep(300, 0.08);
+            r.traffic.splice(i, 1);
+          } else if (t.type === 'bomb' || t.type === 'car') {
+            if (r.nitroTimer > 0) {
+              // Nitro ile çarpıp yok eder
+              r.score += 30;
+              beep(800, 0.1);
+              r.traffic.splice(i, 1);
+            } else {
+              r.lives--;
+              triggerHaptic('bomb');
+              beep(220, 0.25);
+              r.traffic.splice(i, 1);
+              if (r.lives <= 0) {
+                r.isGameOver = true;
+                reportGameScore('RACER', Math.floor(r.score));
+              }
+            }
+          }
+        } else if (t.y > 68) {
+          r.traffic.splice(i, 1);
+        }
+      }
+
+      // 6. Oyuncu Arabasını Çiz (Neon Cyan)
+      oled.ctx.fillStyle = r.nitroTimer > 0 ? '#fde047' : '#00f0ff';
+      oled.ctx.fillRect(r.carX - 4, r.carY, 8, 11);
+      oled.ctx.fillStyle = '#020617';
+      oled.ctx.fillRect(r.carX - 3, r.carY + 2, 6, 3); // Ön cam
+      oled.ctx.fillStyle = '#ffffff';
+      oled.ctx.fillRect(r.carX - 3, r.carY, 2, 2); // Farlar
+      oled.ctx.fillRect(r.carX + 1, r.carY, 2, 2);
+
+      // HUD: Skor ve Canlar
+      oled.ctx.fillStyle = '#00f0ff';
+      oled.ctx.font = '6px "JetBrains Mono", monospace';
+      oled.ctx.fillText(`${Math.floor(r.score)}m`, 2, 8);
+      for (let i = 0; i < r.lives; i++) {
+        oled.ctx.fillStyle = '#f43f5e';
+        oled.ctx.fillRect(112 + i * 5, 3, 3, 3);
+      }
+      for (let i = 0; i < (r.nitroCount || 0); i++) {
+        oled.ctx.fillStyle = '#00f0ff';
+        oled.ctx.fillRect(2 + i * 4, 12, 2, 4);
+      }
+    }
+
+// =========================================================================
+    // OYUN 7: 🏗️ PİXEL STACKER (BLOK KULE İSTİFLEYİCİ)
+    // =========================================================================
+    function resetStackerGame() {
+      oled.stacker = {
+        floor: 0,
+        blocks: [{ x: 48, y: 56, width: 32 }],
+        curX: 18,
+        curDir: 1,
+        curWidth: 32,
+        speed: 1.1,
+        isGameOver: false,
+        combo: 0,
+        score: 0
+      };
+      triggerHaptic('purr');
+      beep(700, 0.08);
+    }
+
+    function dropStackerBlock() {
+      const s = oled.stacker;
+      if (!s || s.isGameOver) return;
+
+      const last = s.blocks[s.blocks.length - 1];
+      const curFloorY = 56 - (s.floor + 1) * 4;
+
+      // Üst üste binme (overlap) hesabı
+      const left = Math.max(s.curX, last.x);
+      const right = Math.min(s.curX + s.curWidth, last.x + last.width);
+      const overlap = right - left;
+
+      if (overlap <= 0) {
+        // Tamamen ıskaladı!
+        s.isGameOver = true;
+        triggerHaptic('gameover');
+        beep(220, 0.3);
+        reportGameScore('STACKER', s.score);
+        return;
+      }
+
+      // Kusursuz Hizalama (Perfect Match)
+      if (Math.abs(s.curX - last.x) <= 1.5) {
+        s.combo++;
+        s.curX = last.x;
+        s.score += 25 + s.combo * 5;
+        triggerHaptic('fanfare');
+        beep(1100 + s.combo * 100, 0.08);
+      } else {
+        s.combo = 0;
+        s.curWidth = overlap;
+        s.curX = left;
+        s.score += 15;
+        triggerHaptic('click');
+        beep(880, 0.05);
+      }
+
+      s.blocks.push({ x: s.curX, y: curFloorY, width: s.curWidth });
+      s.floor++;
+
+      // Kule tamamlandı mı? (13 Kat = Zafer!)
+      if (s.floor >= 13) {
+        s.isGameOver = true;
+        s.score += 150;
+        triggerHaptic('fanfare');
+        playLevelUpFanfare();
+        reportGameScore('STACKER', s.score);
+        return;
+      }
+
+      // Yeni kat parametreleri
+      s.curX = Math.random() < 0.5 ? 12 : 90;
+      s.curDir = s.curX < 50 ? 1 : -1;
+      s.speed = 1.1 + s.floor * 0.12;
+    }
+
+    function renderOledStacker() {
+      const s = oled.stacker;
+      if (!s) return;
+
+      // Zemin ve Arka Plan
+      oled.ctx.fillStyle = '#1e293b';
+      oled.ctx.fillRect(0, 60, 128, 4);
+
+      // Sabitlenmiş Blokları Çiz
+      s.blocks.forEach((b, idx) => {
+        oled.ctx.fillStyle = idx === s.blocks.length - 1 ? '#00f0ff' : '#38bdf8';
+        oled.ctx.fillRect(Math.round(b.x), b.y, Math.round(b.width), 3);
+      });
+
+      // Game Over veya Zafer Ekranı
+      if (s.isGameOver) {
+        const isWin = s.floor >= 13;
+        oled.ctx.fillStyle = isWin ? '#10b981' : '#f43f5e';
+        oled.ctx.font = 'bold 8px "JetBrains Mono", monospace';
+        oled.ctx.fillText(isWin ? '🏆 KULE TAMAMLANDI!' : 'YIKILDI! OYUN BİTTİ', 16, 25);
+        oled.ctx.fillStyle = '#fde047';
+        oled.ctx.fillText(`KAT: ${s.floor}/13 • SKOR: ${s.score}`, 20, 36);
+        oled.ctx.fillStyle = '#38bdf8';
+        oled.ctx.font = '6.5px "JetBrains Mono", monospace';
+        oled.ctx.fillText('◄ TEKRAR: SEC ►', 30, 48);
+        return;
+      }
+
+      // Hareket Eden Blok
+      s.curX += s.curDir * s.speed;
+      if (s.curX > 116 - s.curWidth) s.curDir = -1;
+      if (s.curX < 12) s.curDir = 1;
+
+      const curFloorY = 56 - (s.floor + 1) * 4;
+      oled.ctx.fillStyle = '#fde047';
+      oled.ctx.fillRect(Math.round(s.curX), curFloorY, Math.round(s.curWidth), 3);
+
+      // HUD
+      oled.ctx.fillStyle = '#00f0ff';
+      oled.ctx.font = '6.5px "JetBrains Mono", monospace';
+      oled.ctx.fillText(`KAT:${s.floor} SKOR:${s.score}`, 4, 8);
+      if (s.combo > 1) {
+        oled.ctx.fillStyle = '#fde047';
+        oled.ctx.fillText(`KOMBO x${s.combo}!`, 80, 8);
+      }
+    }
+
     function renderOledIdle() {
       // Eğer bebek uyuyorsa direkt SLEEPING moduna geç
       if (appData.petState && appData.petState.isSleeping) {
@@ -3700,8 +4193,8 @@
           const q = IDLE_QUESTIONS_POOL[Math.floor(Math.random() * IDLE_QUESTIONS_POOL.length)];
           oled.idleDialogue = { active: true, timer: 900, type: 'QUESTION', data: q };
         } else if (roll < 0.75) {
-          const j = IDLE_JOKES_POOL[Math.floor(Math.random() * IDLE_JOKES_POOL.length)];
-          oled.idleDialogue = { active: true, timer: 900, type: 'JOKE', data: j };
+          const r = IDLE_RIDDLES_POOL[Math.floor(Math.random() * IDLE_RIDDLES_POOL.length)];
+          oled.idleDialogue = { active: true, timer: 900, type: 'RIDDLE', data: r };
         } else {
           oled.idleDialogue = { active: true, timer: 900, type: 'GUESS_GAME', data: null };
         }
@@ -3717,7 +4210,7 @@
         if (appData.pendingBroadcast) {
           renderOledSideThoughtBox('YENİ ANONS VAR!', '✉️', true);
         } else if (oled.idleDialogue.active) {
-          const label = oled.idleDialogue.type === 'GUESS_GAME' ? 'Sayı Tahmin Oyunu Oynayalım mı?' : (oled.idleDialogue.type === 'JOKE' ? 'Sana bir fıkra anlatayım mı?' : (oled.idleDialogue.data ? oled.idleDialogue.data.q : 'Seninle biraz konuşalım mı?'));
+          const label = oled.idleDialogue.type === 'GUESS_GAME' ? 'Sayı Tahmin Oyunu Oynayalım mı?' : (oled.idleDialogue.type === 'RIDDLE' ? 'Hadi bir bilmece çözelim mi? 🧩' : (oled.idleDialogue.type === 'JOKE' ? 'Sana bir fıkra anlatayım mı?' : (oled.idleDialogue.data ? oled.idleDialogue.data.q : 'Seninle biraz konuşalım mı?')));
           renderOledSideThoughtBox(label, '💬', true);
         } else {
           const isUrgent = (appData.needs.hunger < 35 || (appData.petState && appData.petState.poopCount > 0) || (appData.petState && appData.petState.isSick));
@@ -5145,6 +5638,7 @@
           s.score += 100;
           playLevelUpFanfare();
           showGlobalToast('🚀 Dalga temizlendi! Yeni uzaylılar geliyor (+100 XP)');
+          s.aliens = [];
           for (let r = 0; r < 2; r++) {
             for (let c = 0; c < 6; c++) {
               s.aliens.push({ x: 16 + c * 16, y: 20 + r * 10, w: 8, h: 6, alive: true });
@@ -5928,39 +6422,123 @@
       }
     ];
 
-    const IDLE_JOKES_POOL = [
-      { l1: "Nasreddin Hoca gole", l2: "maya calmis: 'Ya tutarsa'", l3: "demis! Hahaha! :D" },
-      { l1: "Hoca'ya sormuslar:", l2: "'Kazan dogurdu' demis.", l3: "Kazan olunce aglamislar!" },
-      { l1: "Ogrenci: 'Hocam odevimi", l2: "kopegim yedi cunku", l3: "cok begenmis!' XD" },
-      { l1: "Sivrisinekler neden", l2: "vizildar? Sarkinin", l3: "sozlerini unutmuslar! :)" },
-      { l1: "En temiz deniz neresi?", l2: "Deterjan dokulmus", l3: "kopuklu deniz! Hehe" },
-      { l1: "Karinca file demis:", l2: "'Sana bir sir vereyim:", l3: "Sen cok buyuksun!' :D" },
-      { l1: "Baliklar neden susar?", l2: "Agizlari suyla dolu", l3: "da ondan! Glu glu! :)" },
-      { l1: "Kardan adamlar ne yer?", l2: "Buzlu dondurma ve", l3: "soguk sandvic! ⛄" },
-      { l1: "Gozluk takan tavuk:", l2: "'Git git artik her", l3: "seyi net goruyorum!' 👓" },
-      { l1: "Hangi araba gitmez?", l2: "Tabii ki tekerlegi", l3: "patlak araba! :P" },
-      { l1: "Deniz neden tuzludur?", l2: "Baliklar kokmasin", l3: "diye tuzlamislar! 🐟" },
-      { l1: "Ogretmen: '2+2 kac?'", l2: "Ali: 'Hocam alirken", l3: "mi satarken mi?' :D" },
-      { l1: "Gorunmez adam gelmis.", l2: "Doktor: 'Su an sizi", l3: "goremiyorum!' Hahaha" },
-      { l1: "Pufi aynaya bakmis:", l2: "'Bu kadar sevimli", l3: "olmak yasal mi?' 🐱" },
-      { l1: "Hangi biber aci ceker?", l2: "Tabii ki en aci", l3: "olan ACI biber! 🌶️" },
-      { l1: "Yuruyen merdivenler", l2: "neden yorulmaz? Cunku", l3: "adimi onlar atmaz! :)" },
-      { l1: "Timsahlar neden", l2: "disciye gitmez? Kuslar", l3: "disini temizler! 🐊" },
-      { l1: "Ay dede neden gece", l2: "cikar? Cunku gunesten", l3: "utanirmis! 🌙" },
-      { l1: "Kurbaga lokantada:", l2: "'Garson bey corbamda", l3: "sinek YOK!' 🐸" },
-      { l1: "Hoca esege ters binmis:", l2: "'Gozum arkamda olsun", l3: "diye bindim!' :D" },
-      { l1: "Ucakta kutup ayisi", l2: "gorursen ne dersin?", l3: "'Iyi ucuslar bayim!' ✈️" },
-      { l1: "Domates neden kizarir?", l2: "Salatanin sosunu", l3: "gorunce utanmis! 🍅" },
-      { l1: "Bilgisayar hasta olmus!", l2: "Cunku Windows'u", l3: "acik birakmislar! 💻" },
-      { l1: "Tavsanlar neden kosar?", l2: "Havuclarin bacaklari", l3: "yok da ondan! 🥕" },
-      { l1: "Zebra neden cizgili?", l2: "Dama tahtasina", l3: "oturmus da ondan! 🦓" },
-      { l1: "Hangi anahtar acmaz?", l2: "Tabii ki tornavida", l3: "ve INGILIZ anahtari! 🔧" },
-      { l1: "Temel parasutle atlamis.", l2: "Ip kopmus: 'Neyse ki", l3: "yagmur yagiyor!' :D" },
-      { l1: "Koyunlar neden yun", l2: "kazak giymez? Cunku", l3: "zaten yunluler! 🐑" },
-      { l1: "Kirpi balona sarilmis:", l2: "'Gum!' demis. Askin", l3: "gozu kordur! 🎈" },
-      { l1: "Filler neden bilgisayar", l2: "kullanmaz? Farelerden", l3: "cok korkarlar! 🐘" },
-      { l1: "Maymun aynaya bakmis:", l2: "'Iyi ki muz var,", l3: "yoksa cekilmez!' 🍌" },
-      { l1: "Arilar neden vizildar?", l2: "Kornalari bozulmus", l3: "da ondan! Bzzzt! 🐝" }
+    const IDLE_RIDDLES_POOL = [
+      { q: "Uzaktan baktim bir tas, yanina vardim dort ayak bir bas?", a: "Kaplumbaga 🐢" },
+      { q: "Alcacik dalli, yemesi tatli balli?", a: "Cilek 🍓" },
+      { q: "Ben giderim o gider, arkamdan tik tik eder?", a: "Baston 🦯" },
+      { q: "Beni beslersen yasarim, su verirsen olurum?", a: "Ates 🔥" },
+      { q: "Kirilmadan once kullanilamayan sey nedir?", a: "Yumurta 🥚" },
+      { q: "Ne kadar cok alirsan arkanda o kadar cok kalir?", a: "Adim 👣" },
+      { q: "Kolu var bacagi yok, sirti var karni yok?", a: "Sandalye 🪑" },
+      { q: "Iki camli pencere, bakar durur her yere?", a: "Gozluk 👓" },
+      { q: "Gokten yagar kar degil, ses cikarir kus degil?", a: "Dolu 🌨️" },
+      { q: "Disi kazan karasi, ici cennet sarisi?", a: "Kestane 🌰" },
+      { q: "Bir kucucuk kutudur, butun dunya yurdudur?", a: "Televizyon 📺" },
+      { q: "Agzi var dili yok, nefesi var cani yok?", a: "Duduk 🎺" },
+      { q: "Gunduz yatar gece kalkar, feneri yakar etrafa bakar?", a: "Baykus 🦉" },
+      { q: "Deniz altinda yasar, sekiz koluyla tasar?", a: "Ahtapot 🐙" },
+      { q: "Karni tok sirti pek, boynuzlari iki tek?", a: "Salyangoz 🐌" },
+      { q: "Bir agaci oyarlar, icine tohum koyarlar?", a: "Gitar 🎸" },
+      { q: "Benim adim iki hece, ucar gider gunduz gece?", a: "Zaman ⏳" },
+      { q: "Her seyi gorur ama kendini goremez?", a: "Goz 👀" },
+      { q: "Dilsizdir ama konusur, cansizdir ama dolasir?", a: "Kitap 📖" },
+      { q: "Yazin giyinir, kisin soyunur?", a: "Agac 🌳" },
+      { q: "Kanadi var ucamaz, petegi var kacamaz?", a: "Ari kovani 🐝" },
+      { q: "Siyah beyaz cizgili, savanalarin sevimlisi?", a: "Zebra 🦓" },
+      { q: "Suda dogar, karada ziplar, virak virak ses yapar?", a: "Kurbaga 🐸" },
+      { q: "Kuyrugu var at degil, kanadi var kus degil?", a: "Balik 🐟" },
+      { q: "Dunyayi gezer ama hep bir kosede durur?", a: "Posta Pulu ✉️" },
+      { q: "Gozleri vardir ama goremez?", a: "Patates 🥔" },
+      { q: "Disleri vardir ama isiramaz?", a: "Tarak 🪮" },
+      { q: "Boynu vardir ama basi yoktur?", a: "Gomlek / Sise 🍾" },
+      { q: "Dustugunde kirilmaz, suya girince islanmaz?", a: "Golge 👤" },
+      { q: "Buyudukce boyu kisalan sey nedir?", a: "Mum 🕯️" },
+      { q: "Ayaklari olmadan surekli kosan sey nedir?", a: "Nehir 🌊" },
+      { q: "Agzi var yemek yemez, yatagi var uyumaz?", a: "Akarsu 🏞️" },
+      { q: "Geceleri gelir, gunduzleri kaybolur?", a: "Yildizlar ✨" },
+      { q: "Kendisi kucuk, adi buyuk, kapilari acar?", a: "Anahtar 🗝️" },
+      { q: "Ici ates, disi tas, ustunde bin bir bas?", a: "Yanardag 🌋" },
+      { q: "Dokunursan cani yanar, yapraklari hemen kapanir?", a: "Kustumotu 🌿" },
+      { q: "Havada ucar kanadi yok, aglar gozyasi yok?", a: "Bulut ☁️" },
+      { q: "Gunes batinca dogar, yildizlari etrafinda toplar?", a: "Ay Dede 🌙" },
+      { q: "Carsiye vardim bir tane, eve geldim bin tane?", a: "Nar 🍎" },
+      { q: "Kucucuk boyu var, kadife donu var?", a: "Patlican 🍆" },
+      { q: "Sari sari sarkar, dusmekten korkar?", a: "Armut 🍐" },
+      { q: "Uzun uzun uzanir, yildan yila boylanir?", a: "Yol 🛣️" },
+      { q: "Biz onu goruruz, o bizi gormez, konusuruz ses vermez?", a: "Ayna 🪞" },
+      { q: "Bir carsafta bin boncuk, toplanamaz hic bir cocuk?", a: "Gokyuzu 🌌" },
+      { q: "Kuyrugu uzun tepeye cikar, ruzgar olmasa hemen batar?", a: "Ucurtma 🪁" },
+      { q: "Ben giderim o kalir, ayak izim can alir?", a: "Ayak Izi 👣" },
+      { q: "Sabah dort ayakli, oglen iki ayakli, aksam uc ayakli?", a: "Insanoglu 🚶" },
+      { q: "Bir sapka alti delik, icinde leziz kemik?", a: "Ceviz 🥜" },
+      { q: "Yesil dogar, kirmizi olur, agizda ates gibi yanar?", a: "Biber 🌶️" },
+      { q: "Karda yurur izi kalmaz, ucsuz bucaksiz yol almaz?", a: "Ruzgar 💨" },
+      { q: "Her gun tras olur ama sakali hic bitmez?", a: "Berber 💈" },
+      { q: "Biri iceri girince, herkes ayaga kalkar?", a: "Hakem ⚖️" },
+      { q: "Kafasini vurunca calisir, atesi gorunce parlar?", a: "Kibrit 🪵" },
+      { q: "Cok kaldirirsan hafifler, yere koyarsan agirlasir?", a: "Nefes 🫁" },
+      { q: "Kelimeleri vardir ama dili yoktur?", a: "Sozluk 📚" },
+      { q: "Her seyi deler gecer ama arkasinda ip birakir?", a: "Igne 🪡" },
+      { q: "Ne kadar kurularsa o kadar cok islanir?", a: "Havlu 🧖" },
+      { q: "Kendi basina ayakta duramaz, iki tekeri vardir?", a: "Bisiklet 🚲" },
+      { q: "Yagmur yagarken acilir, gunes acinca kapanir?", a: "Semsiye ☂️" },
+      { q: "Sen uyurken nobet tutar, sabah olunca seni uyandirir?", a: "Calar Saat ⏰" },
+      { q: "Icinde su vardir ama icilmez, baliklar icinde gezer?", a: "Akvaryum 🐠" },
+      { q: "Bir kutu icinde sayilar gezer, basinca hesabi cozer?", a: "Hesap Makinesi 📱" },
+      { q: "Basina basinca boyu kisalir, kagida dokununca renk sacir?", a: "Boya Kalemi ✏️" },
+      { q: "Iki ucu sivri demir, kumaslari hemen keser?", a: "Makas ✂️" },
+      { q: "Yemeksiz yasar ama havasi bitince hemen soner?", a: "Balon 🎈" },
+      { q: "Yurumek icin tekerlegi, ucabilmek icin pervanesi var?", a: "Helikopter 🚁" },
+      { q: "Yere duserse ziplar, fileye girerse gol olur?", a: "Futbol Topu ⚽" },
+      { q: "Sogukta katilasir, sicakta erir, lezzeti tatlidir?", a: "Cikolata 🍫" },
+      { q: "Yuzunde 12 sayi, iki tane hareketli kolu vardir?", a: "Duvar Saati 🕰️" },
+      { q: "Buzdan sarayi var, kisin her yere beyaz ortu serer?", a: "Kar ❄️" },
+      { q: "Yedi rengi gokyuzune cizer, yagmurdan sonra cikar?", a: "Gokkusagi 🌈" },
+      { q: "Basi tokmak, sirti bagli, calinca sesi dagli?", a: "Davul 🥁" },
+      { q: "Tek bacagiyla doner durur, dans edince neselenir?", a: "Topac 🪀" },
+      { q: "Iki ucunda demir teker, dumanini ufler gider?", a: "Tren 🚂" },
+      { q: "Denizlerde yuzen dev sehir, liman liman gezer?", a: "Gemi 🚢" },
+      { q: "Kulagina fisildar, sarkilari sana dinletir?", a: "Kulaklik 🎧" },
+      { q: "Gokyuzunde cakar, simsekle arkadaslik yapar?", a: "Gok Gurultusu ⚡" },
+      { q: "Daldan dala ucar, findik fistik toplar?", a: "Sincap 🐿️" },
+      { q: "Dev gibi burnu var, hortumuyla su atar?", a: "Fil 🐘" },
+      { q: "Boynu uzun goklere benzer, yapraklari yuksekten yer?", a: "Zurafa 🦒" },
+      { q: "Iki horguclu col gemisi, susuzluga dayanir?", a: "Deve 🐪" },
+      { q: "Gece parlar gunduz soner, ormanda ucarken isik sacir?", a: "Ates Bocegi 🪲" },
+      { q: "Sirtinda tasiyabilir evini, agir agir gezer?", a: "Tosbaga 🐢" },
+      { q: "Ici yumusak disi sert, kahvaltilarin dostudur?", a: "Ekmek 🍞" },
+      { q: "Sari renklidir, maymunlar ona bayilir?", a: "Muz 🍌" },
+      { q: "Turuncu renklidir, tavsanlar cok sever?", a: "Havuc 🥕" },
+      { q: "Yere ekersin bir tane, yazin alirsin yuz tane?", a: "Misir 🌽" },
+      { q: "Disi dikenli ici tatli, tropik bir meyve?", a: "Ananas 🍍" },
+      { q: "Deniz kiyisinda parlar, icinde inci saklar?", a: "Istiridye 🦪" },
+      { q: "Kirmizi giysili benekli bocek, ucarak sans getirir?", a: "Ugur Bocegi 🐞" },
+      { q: "Kanatlari tozlu ipek, cicek cicek gezer?", a: "Kelebek 🦋" },
+      { q: "Sabah erkenden oter, kumesin krali benim der?", a: "Horoz 🐓" },
+      { q: "Karda kayar tahtasi, kis tatilinin eglencesi?", a: "Kayak ⛷️" },
+      { q: "Ipi cekince havalanir, gokyuzunde suzulur?", a: "Parasut 🪂" },
+      { q: "Yagmurdan sonra cikar, sapkasi vardir basi yok?", a: "Mantar 🍄" },
+      { q: "Kucucuk boyu var, dunyaya tat verir?", a: "Seker 🍬" },
+      { q: "Sirtinda minik dikenler, tehlike gorunce top olur?", a: "Kirpi 🦔" },
+      { q: "Agaclarin doktoru, tik tik vurur gagasi?", a: "Agackakan 🪵" },
+      { q: "Yaz kis yesil kalir, kozalaklar tasir?", a: "Cam Agaci 🌲" },
+      { q: "Karninda cebi var, yavrusunu orda saklar?", a: "Kanguru 🦘" },
+      { q: "Kutup sogugunda yasar, smokin giymis gibi paytak yurur?", a: "Penguen 🐧" },
+      { q: "Denizin en buyuk devi, sirtindan su fiskirtir?", a: "Mavi Balina 🐋" },
+      { q: "Denizde ters yuzer, seffaf bir semsiyeye benzer?", a: "Denizanasi 🪼" },
+      { q: "Koku alir fersah fersah, sadik dostun ta kendisi?", a: "Kopek 🐕" },
+      { q: "Miyav der sevilmek ister, sutu gorunce neselenir?", a: "Kedi 🐈" },
+      { q: "Yuvarlak peyniri cok sever, deliklerden hizla kacar?", a: "Fare 🐁" },
+      { q: "Rengarenk tuyleri var, soyledigin sozu tekrar eder?", a: "Papagan 🦜" },
+      { q: "Kucuk bir fisilti duysa, uzun kulaklarini diker?", a: "Tavsan 🐇" },
+      { q: "Kafesi var teli var, icinde sarisiz guzel oter?", a: "Kanarya 🐤" },
+      { q: "Suda yuzer ordek gibi, gagasi var kurek gibi?", a: "Kugular 🦢" },
+      { q: "Dort nala kosar, ruzgar gibi ucar?", a: "At 🐎" },
+      { q: "Yesil yaprak yer, sut verir beyaz beyaz?", a: "Inek 🐄" },
+      { q: "Me me diye seslenir, daglarda otlar?", a: "Keci 🐐" },
+      { q: "Yunu kalin yumusak, meleyerek suruyu toplar?", a: "Koyun 🐑" },
+      { q: "Colde yurur batmaz, ayaklari genis taban?", a: "Horguclu Deve 🐪" },
+      { q: "Kocaman kulakli, minik kuyruklu gulumser dost?", a: "Pufi 🐾" }
     ];
 
     function startDialogueFromIdle() {
@@ -5976,6 +6554,8 @@
           ...oled.idleDialogue.data
         };
         beep(750, 0.08);
+      } else if (t === 'RIDDLE') {
+        startRiddleGame(oled.idleDialogue.data);
       } else if (t === 'JOKE') {
         oled.mode = 'DIALOGUE';
         oled.currentDialogue = {
@@ -6359,6 +6939,20 @@
         return;
       }
 
+      // 0.4 BİLMECE KONTROLLERİ
+      if (oled.mode === 'RIDDLE') {
+        if (!oled.riddle) { oled.mode = 'IDLE'; return; }
+        if (btn === 'SELECT' || btn === 'LEFT' || btn === 'RIGHT') {
+          if (!oled.riddle.revealed) {
+            revealRiddleAnswer();
+          } else {
+            oled.mode = 'IDLE';
+          }
+        }
+        if (btn === 'BACK') oled.mode = 'IDLE';
+        return;
+      }
+
       // 1. DİNO KOŞUCUSU KONTROLLERİ
       if (oled.mode === 'DINO') {
         if (oled.dino.isGameOver) {
@@ -6410,13 +7004,22 @@
         return;
       }
 
-      // 4. ELMA YAKALAMA KONTROLLERİ
-      if (oled.mode === 'CATCHER') {
-        if (oled.catcher.isGameOver) {
-          if (btn === 'SELECT' || btn === 'LEFT' || btn === 'RIGHT') resetCatcherGame();
+      // 4. MICRO RACER KONTROLLERİ
+      if (oled.mode === 'RACER' || oled.mode === 'CATCHER') {
+        if (!oled.racer) resetRacerGame();
+        if (oled.racer.isGameOver) {
+          if (btn === 'SELECT' || btn === 'LEFT' || btn === 'RIGHT') resetRacerGame();
         } else {
-          if (btn === 'LEFT') oled.catcher.petX = Math.max(4, oled.catcher.petX - (isRepeat ? 6 : 9));
-          if (btn === 'RIGHT') oled.catcher.petX = Math.min(108, oled.catcher.petX + (isRepeat ? 6 : 9));
+          if (btn === 'LEFT') { oled.racer.lane = Math.max(0, oled.racer.lane - 1); triggerHaptic('click'); }
+          if (btn === 'RIGHT') { oled.racer.lane = Math.min(2, oled.racer.lane + 1); triggerHaptic('click'); }
+          if (btn === 'SELECT') {
+            if (oled.racer.nitroTimer <= 0 && (oled.racer.nitroCount || 0) > 0) {
+              oled.racer.nitroCount--;
+              oled.racer.nitroTimer = 150;
+              triggerHaptic('purr');
+              beep(1200, 0.1);
+            }
+          }
         }
         if (btn === 'BACK') oled.mode = 'IDLE';
         return;
@@ -6459,13 +7062,13 @@
         return;
       }
 
-      // 7. PARAŞÜT KURTARMA KONTROLLERİ
-      if (oled.mode === 'PARACHUTE') {
-        if (oled.parachute.isGameOver) {
-          if (btn === 'SELECT' || btn === 'LEFT' || btn === 'RIGHT') resetParachuteGame();
+      // 7. PIXEL STACKER & PARAŞÜT KONTROLLERİ
+      if (oled.mode === 'STACKER' || oled.mode === 'PARACHUTE') {
+        if (!oled.stacker) resetStackerGame();
+        if (oled.stacker.isGameOver) {
+          if (btn === 'SELECT' || btn === 'LEFT' || btn === 'RIGHT') resetStackerGame();
         } else {
-          if (btn === 'LEFT') oled.parachute.boatCol = Math.max(0, oled.parachute.boatCol - 1);
-          if (btn === 'RIGHT') oled.parachute.boatCol = Math.min(2, oled.parachute.boatCol + 1);
+          if (btn === 'SELECT' || btn === 'LEFT' || btn === 'RIGHT') dropStackerBlock();
         }
         if (btn === 'BACK') oled.mode = 'IDLE';
         return;
@@ -6588,10 +7191,10 @@
             if (oled.gameIdx === 0) { resetDinoGame(); oled.mode = 'DINO'; }
             else if (oled.gameIdx === 1) { resetPongGame(); oled.mode = 'PONG'; }
             else if (oled.gameIdx === 2) { resetSnakeGame(); oled.mode = 'SNAKE'; }
-            else if (oled.gameIdx === 3) { resetCatcherGame(); oled.mode = 'CATCHER'; }
+            else if (oled.gameIdx === 3) { resetRacerGame(); oled.mode = 'RACER'; }
             else if (oled.gameIdx === 4) { resetSpaceGame(); oled.mode = 'SPACE'; }
             else if (oled.gameIdx === 5) { resetBrickGame(); oled.mode = 'BRICK'; }
-            else if (oled.gameIdx === 6) { resetParachuteGame(); oled.mode = 'PARACHUTE'; }
+            else if (oled.gameIdx === 6) { resetStackerGame(); oled.mode = 'STACKER'; }
             else if (oled.gameIdx === 7) { resetFlappyGame(); oled.mode = 'FLAPPY'; }
             else if (oled.gameIdx === 8) { resetCowboyGame(); oled.mode = 'COWBOY'; }
             else if (oled.gameIdx === 9) { oled.rps.resolved = false; oled.mode = 'RPS'; }
@@ -7557,17 +8160,35 @@
     function drawModularSpriteToOled(x, y) {
       const isSick = !!(appData.petState && appData.petState.isSick);
       const shiver = isSick ? Math.round(Math.sin(oled.animFrame * 0.65) * 1.5) : 0;
+      // 128x64 OLED Yüksek Detay: 1px doğal nefes alma (breathing bob)
+      const breathe = (Math.floor(oled.animFrame / 18) % 2 === 0) ? 0 : 1;
       const px = x + shiver;
-      const py = y;
+      const py = y + breathe;
 
-      // Karakterin asla soluk/gri kalmaması için canlı neon cyan rengi
+      // Doğal Göz Kırpma (Blinking Her 3.5 Saniyede Bir)
+      const isBlinking = (oled.animFrame % 200 < 9);
+
+      // Karakterin canlı neon cyan gövdesi
       oled.ctx.fillStyle = '#00f0ff';
       const m = generateAvatarMatrix();
       for(let r=0; r<24; r++) {
         for(let c=0; c<24; c++) {
-          if (m[r][c]) oled.ctx.fillRect(px + c - 4, py + r - 10, 1, 1);
+          if (m[r][c]) {
+            // Göz kırpma anında göz yuvalarını kapat
+            if (isBlinking && (r >= 9 && r <= 11) && ((c >= 7 && c <= 9) || (c >= 14 && c <= 16))) {
+              // Kırpık göz çizgisi ^^
+              if (r === 10) oled.ctx.fillRect(px + c - 4, py + r - 10, 1, 1);
+            } else {
+              oled.ctx.fillRect(px + c - 4, py + r - 10, 1, 1);
+            }
+          }
         }
       }
+
+      // Sevimli Yanak Allıkları (Blushing Cheeks)
+      oled.ctx.fillStyle = '#f43f5e';
+      oled.ctx.fillRect(px + 2, py + 3, 2, 1);
+      oled.ctx.fillRect(px + 12, py + 3, 2, 1);
 
       // 1. Kaka & Sinek Çizimi (Kriz Mekaniği)
       if (appData.petState && appData.petState.poopCount >= 1) drawOledPoop(98, 46);
@@ -7575,12 +8196,14 @@
 
       // 2. Hastalık Ateş / Termometre Göstergesi (Blinking)
       if (isSick && Math.floor(oled.animFrame / 10) % 2 === 0) {
+        oled.ctx.fillStyle = '#ef4444';
         oled.ctx.fillRect(px + 17, py - 9, 3, 1);
         oled.ctx.fillRect(px + 18, py - 10, 1, 3);
       }
 
       // 3. Ağlama Gözyaşı (Açlık < 25 veya Sevgi < 20)
       if (appData.needs.hunger < 25 || appData.needs.love < 20) {
+        oled.ctx.fillStyle = '#38bdf8';
         const tearDrop = (oled.animFrame % 14);
         oled.ctx.fillRect(px + 4, py + 2 + tearDrop, 1, 2);
         oled.ctx.fillRect(px + 12, py + 2 + tearDrop, 1, 2);
@@ -7588,6 +8211,7 @@
 
       // 4. Yetişkin Evre Tacı (Stage 4 - 👑 Kraliyet Tacı)
       if (appData.petState && appData.petState.stage >= 4) {
+        oled.ctx.fillStyle = '#fde047';
         oled.ctx.fillRect(px + 3, py - 13, 10, 1);
         oled.ctx.fillRect(px + 3, py - 15, 2, 2);
         oled.ctx.fillRect(px + 7, py - 16, 2, 3);
@@ -7596,9 +8220,13 @@
 
       // 5. Mutluluk Pırıltıları (Sağlık > 80 ve Sevgi > 75)
       if (!isSick && appData.needs.love > 75 && (oled.animFrame % 24 < 12)) {
+        oled.ctx.fillStyle = '#00f0ff';
         oled.ctx.fillRect(px - 3, py - 5, 2, 2);
         oled.ctx.fillRect(px + 17, py - 4, 2, 2);
       }
+
+      // Varsayılan renge geri dön
+      oled.ctx.fillStyle = '#00f0ff';
 
       // 6. KUŞANILAN ŞAPKA ÇİZİMİ (XP MAĞAZASI EŞYASI)
       const equippedHat = (appData.store && appData.store.equipped && appData.store.equipped.hat);
@@ -8690,6 +9318,21 @@
         return;
       }
 
+      // 🪙 EKONOMİ DÖNGÜSÜ: Yemekler XP ile satın alınır (Oyna-Kazan-Besle)
+      const foodCosts = [15, 35, 50, 5, 40]; // 0: Elma (15 XP), 1: Mama (35 XP), 2: Pasta (50 XP), 3: Su (5 XP), 4: Kahve (40 XP)
+      const cost = foodCosts[idx] || 15;
+      const curPlayerXp = (appData.needs && appData.needs.xp) || 0;
+      if (curPlayerXp < cost) {
+        playWhineSound();
+        triggerHaptic('bomb');
+        showGlobalToast(`⚠️ Yetersiz XP! Beslenme için ${cost} XP gerekiyor (Mevcut: ${curPlayerXp} XP). Mini oyun oyna veya görev tamamla! 🎮`);
+        return;
+      }
+      appData.needs.xp -= cost;
+      saveNeeds();
+      updateNeedsUI();
+      if (typeof updateProfileUI === 'function') updateProfileUI();
+
       // Hasta ve karın ağrısı varsa tatlı yiyemez
       if (idx === 2 && appData.petState && appData.petState.isSick && appData.petState.sicknessReason === 'STOMACH_ACHE') {
         playWhineSound();
@@ -8703,8 +9346,9 @@
       let foodLabel = 'MAMA';
       let finishMsg = '🍗 Doyurucu ana öğün yendi! (+80 Açlık, sindirim hızlandı)';
 
-      // Yemek yerken tuvalet ihtiyacı %50 hızlanır (Sindirim metabolizması aktif)
-      appData.needs.digestBoostUntil = Date.now() + 90000;
+      // 🧠 BAĞIL İHTİYAÇLAR: Sindirim metabolizması aktifleşir & tokluk ağırlığı (rehavet)
+      appData.needs.digestBoostUntil = Date.now() + 180000; // 3 dakika tuvalet %50 hızlı tükenir
+      appData.needs.sleep = Math.max(0, (appData.needs.sleep || 50) - 5); // Hafif rehavet
 
       if (idx === 0) {
         // ELMA 🍏 (Atıştırmalık / Meyve - %25)
@@ -8736,6 +9380,7 @@
         finishMsg = '🍰 Nefis pasta yendi! Mutluluk tavan yaptı (+25 Açlık, +30 Sevgi)';
         appData.needs.love = Math.min(100, appData.needs.love + 30);
         appData.needs.fun = Math.min(100, appData.needs.fun + 20);
+        appData.needs.clean = Math.max(0, (appData.needs.clean || 50) - 10); // Şekerli yapış yapış: Temizlik -10
         if (appData.petState) {
           appData.petState.junkFoodCount = (appData.petState.junkFoodCount || 0) + 1;
           if (appData.petState.junkFoodCount >= 3) {
@@ -8788,7 +9433,6 @@
       };
 
       playEatCrunchSound();
-      addPetXP(15);
       oled.mode = 'EATING';
 
       if (appData.evolution) {
@@ -9338,6 +9982,43 @@
     // =========================================================================
     // INCOMING POKE, PAGER & EVENT POLLING (FAZ 3 & FAZ 4)
     // =========================================================================
+    let lastMissedPokeSender = null;
+    function showMissedPokesModal(senderNick, senderDev) {
+      lastMissedPokeSender = { nick: senderNick, dev: senderDev };
+      const titleEl = document.getElementById('txtPokeSenderName');
+      const descEl = document.getElementById('txtPokeSenderDesc');
+      if (titleEl) titleEl.innerText = `${senderNick} Seni Dürttü! 💌`;
+      if (descEl) descEl.innerText = `${senderNick} sanal bebeğini yalnız bırakmadı ve sana selam gönderdi! Bebeğin sevinçle zıpladı (+15 Sevgi).`;
+      appData.needs.love = Math.min(100, (appData.needs.love || 50) + 15);
+      if (typeof updateNeedsUI === 'function') updateNeedsUI();
+      document.getElementById('missedPokesModal').style.display = 'flex';
+      triggerHaptic('poke');
+      beep(880, 0.2);
+    }
+
+    function closeMissedPokesModal() {
+      document.getElementById('missedPokesModal').style.display = 'none';
+    }
+
+    async function replyPokeBack() {
+      if (!lastMissedPokeSender) { closeMissedPokesModal(); return; }
+      try {
+        await fetch(`${appData.serverUrl}/api/v1/pokes/send`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            fromDev: appData.deviceId,
+            fromNick: appData.nickname,
+            targetDev: lastMissedPokeSender.dev,
+            pokeType: 'POKE'
+          })
+        });
+        showGlobalToast(`❤️ ${lastMissedPokeSender.nick} başarıyla geri dürtüldü!`);
+        triggerHaptic('purr');
+      } catch(e) {}
+      closeMissedPokesModal();
+    }
+
     async function pollIncomingEvents() {
       if (!appData.serverUrl) return;
       // 1. Pokes / Düello / Hediyeler
@@ -9348,7 +10029,7 @@
           if (data.pokes && data.pokes.length > 0) {
             data.pokes.forEach(p => {
               beep(920, 0.25);
-              if (navigator.vibrate) navigator.vibrate([150, 80, 150]);
+              triggerHaptic('poke');
               if (p.poke_type === 'DUEL') {
                 showGlobalToast(`⚔️ [${p.from_nick}] seni Kovboy Düellosuna çağırdı!`);
                 oled.mode = 'COWBOY';
@@ -9359,7 +10040,8 @@
                 saveNeeds();
                 updateNeedsUI();
               } else {
-                showGlobalToast(`👉 [${p.from_nick}] seni dürttü! Konsolun titriyor!`);
+                showMissedPokesModal(p.from_nick, p.from_dev);
+                saveNeeds();
               }
             });
           }
@@ -9398,6 +10080,12 @@
         const prevFun = appData.needs.fun || 50;
         appData.needs.fun = Math.min(100, prevFun + funGain);
         appData.needs.love = Math.min(100, (appData.needs.love || 50) + 10);
+
+        // 🧠 BAĞIL İHTİYAÇLAR: Oyun oynarken enerji harcanır (-15), acıkma hızlanır (-15), terlenir (-10)
+        appData.needs.sleep = Math.max(5, (appData.needs.sleep || 50) - 15);
+        appData.needs.hunger = Math.max(5, (appData.needs.hunger || 50) - 15);
+        appData.needs.clean = Math.max(5, (appData.needs.clean || 50) - 10);
+
         saveNeeds();
         updateNeedsUI();
       }
@@ -9413,7 +10101,9 @@
       }
 
       if (score > 0) {
-        addPetXP(score); // SEVİYE, EVRİM (STAGE 1-4) VE ÖDÜL MOTORUNU TETİKLER!
+        // 🪙 DENGELİ EKONOMİ: 100 oyun skoru = ~25 XP verir (hızlı zenginleşme önlendi)
+        const earnedXp = Math.max(5, Math.round((score || 0) * 0.25));
+        addPetXP(earnedXp);
         submitGameScore(game, score);
 
         // Kişisel Rekor Kontrolü & Akış Paylaşımı
@@ -9455,10 +10145,10 @@
       if (game === 'DINO') resetDinoGame();
       else if (game === 'PONG') resetPongGame();
       else if (game === 'SNAKE') resetSnakeGame();
-      else if (game === 'CATCHER') resetCatcherGame();
+      else if (game === 'RACER' || game === 'CATCHER') resetRacerGame();
       else if (game === 'SPACE') resetSpaceGame();
       else if (game === 'BRICK') resetBrickGame();
-      else if (game === 'PARACHUTE') resetParachuteGame();
+      else if (game === 'STACKER' || game === 'PARACHUTE') resetStackerGame();
       else if (game === 'FLAPPY') resetFlappyGame();
       else if (game === 'COWBOY') resetCowboyGame();
       else if (game === 'MOLE') resetMoleGame();
@@ -10017,16 +10707,16 @@
     // =========================================================================
     const STORE_CATALOG = {
       hats: [
-        { id: 'hat_baseball', name: 'Beyzbol Şapkası', icon: '🧢', minLevel: 1, price: 100, desc: 'Enerjik ve havalı kırmızı spor şapkası.' },
-        { id: 'hat_party', name: 'Parti Külahı', icon: '🥳', minLevel: 1, price: 150, desc: 'Neşeli kutlamalar için renkli külah.' },
-        { id: 'hat_detective', name: 'Dedektif Fötr', icon: '🕵️‍♂️', minLevel: 2, price: 250, desc: 'Gizemleri çözen bilge fötr şapka.' },
-        { id: 'hat_chef', name: 'Master Şef Şapkası', icon: '👨‍🍳', minLevel: 3, price: 350, desc: 'Leziz yemeklerin ustası aşçı şapkası.' },
-        { id: 'hat_cowboy', name: 'Kovboy Şapkası', icon: '🤠', minLevel: 4, price: 500, desc: 'Vahşi batının efsanevi geniş kenarlı şapkası.' },
-        { id: 'hat_wizard', name: 'Sihirbaz Külahı', icon: '🧙‍♂️', minLevel: 5, price: 650, desc: 'Yıldız tozuyla parlayan büyücü başlığı.' },
-        { id: 'hat_crown', name: 'Kraliyet Tacı', icon: '👑', minLevel: 6, price: 800, desc: 'Saf altından görkemli hükümdar tacı.' },
-        { id: 'hat_viking', name: 'Viking Miğferi', icon: '⚔️', minLevel: 7, price: 1000, desc: 'Boynuzlu cesur savaşçı miğferi.' },
-        { id: 'hat_astronaut', name: 'Uzay Kaskı', icon: '🧑‍🚀', minLevel: 8, price: 1250, desc: 'Yıldızlararası yolculuk cam kaskı.' },
-        { id: 'hat_dragon', name: 'Ejderha Miğferi', icon: '🐉', minLevel: 10, price: 1500, desc: 'Efsanevi ejderha pulları ve boynuzları.' }
+        { id: 'hat_baseball', name: 'Beyzbol Şapkası', icon: '🧢', minLevel: 1, price: 250, desc: 'Enerjik ve havalı kırmızı spor şapkası.' },
+        { id: 'hat_party', name: 'Parti Külahı', icon: '🥳', minLevel: 1, price: 350, desc: 'Neşeli kutlamalar için renkli külah.' },
+        { id: 'hat_detective', name: 'Dedektif Fötr', icon: '🕵️‍♂️', minLevel: 2, price: 600, desc: 'Gizemleri çözen bilge fötr şapka.' },
+        { id: 'hat_chef', name: 'Master Şef Şapkası', icon: '👨‍🍳', minLevel: 3, price: 900, desc: 'Leziz yemeklerin ustası aşçı şapkası.' },
+        { id: 'hat_cowboy', name: 'Kovboy Şapkası', icon: '🤠', minLevel: 4, price: 1300, desc: 'Vahşi batının efsanevi geniş kenarlı şapkası.' },
+        { id: 'hat_wizard', name: 'Sihirbaz Külahı', icon: '🧙‍♂️', minLevel: 5, price: 1800, desc: 'Yıldız tozuyla parlayan büyücü başlığı.' },
+        { id: 'hat_crown', name: 'Kraliyet Tacı', icon: '👑', minLevel: 6, price: 2400, desc: 'Saf altından görkemli hükümdar tacı.' },
+        { id: 'hat_viking', name: 'Viking Miğferi', icon: '⚔️', minLevel: 7, price: 3000, desc: 'Boynuzlu cesur savaşçı miğferi.' },
+        { id: 'hat_astronaut', name: 'Uzay Kaskı', icon: '🧑‍🚀', minLevel: 8, price: 3800, desc: 'Yıldızlararası yolculuk cam kaskı.' },
+        { id: 'hat_dragon', name: 'Ejderha Miğferi', icon: '🐉', minLevel: 10, price: 5000, desc: 'Efsanevi ejderha pulları ve boynuzları.' }
       ],
       outfits: [
         { id: 'outfit_hoodie', name: 'Sokak Kapüşonlusu', icon: '🧥', minLevel: 2, price: 300, desc: 'Retro neon kapüşonlu spor ceket.' },

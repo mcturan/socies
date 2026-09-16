@@ -18,6 +18,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.PowerManager;
 import android.os.StrictMode;
+import android.os.Vibrator;
+import android.os.VibrationEffect;
 import android.provider.Settings;
 import android.view.View;
 import android.webkit.DownloadListener;
@@ -278,8 +280,43 @@ public class MainActivity extends Activity {
             try {
                 return getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
             } catch (Exception e) {
-                return "1.0.23";
+                return "1.0.24";
             }
+        }
+
+        @JavascriptInterface
+        public void vibrate(final long milliseconds) {
+            try {
+                Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                if (v != null && v.hasVibrator()) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        v.vibrate(VibrationEffect.createOneShot(milliseconds, VibrationEffect.DEFAULT_AMPLITUDE));
+                    } else {
+                        v.vibrate(milliseconds);
+                    }
+                }
+            } catch (Exception e) {}
+        }
+
+        @JavascriptInterface
+        public void vibratePattern(final String patternStr) {
+            try {
+                Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                if (v != null && v.hasVibrator() && patternStr != null) {
+                    String[] parts = patternStr.split(",");
+                    // Android waveform: index 0 is initial wait/delay, followed by vibrate, wait, vibrate...
+                    long[] pattern = new long[parts.length + 1];
+                    pattern[0] = 0; // 0ms initial delay
+                    for (int i = 0; i < parts.length; i++) {
+                        pattern[i + 1] = Long.parseLong(parts[i].trim());
+                    }
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        v.vibrate(VibrationEffect.createWaveform(pattern, -1));
+                    } else {
+                        v.vibrate(pattern, -1);
+                    }
+                }
+            } catch (Exception e) {}
         }
     }
 
