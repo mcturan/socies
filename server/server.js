@@ -1597,19 +1597,19 @@ const server = http.createServer((req, res) => {
   if (path === '/api/v1/version/check' && method === 'GET') {
     const host = req.headers.host || '192.168.1.118:3000';
     return sendJSON(res, 200, {
-      latestVersion: 'v1.0.26',
+      latestVersion: 'v1.0.27',
       semver: {
         major: 1,
         minor: 0,
-        patch: 26,
-        build: 27
+        patch: 27,
+        build: 28
       },
-      versionCode: 27,
-      latestCommitHash: 'socies-v1.0.26',
+      versionCode: 28,
+      latestCommitHash: 'socies-v1.0.27',
       mandatoryUpdate: false,
-      releaseNotes: 'v1.0.26: 10 Yeni Piiixl Tarzı 1-Bit RPG & Zindan Kahramanı (Şövalye, Büyücü, Hırsız, Paladin, Goblin, Okçu, Ejderha, İskelet, Kral, Kedigil Savaşçı), Piksel Stüdyosu Şablon Yükleme Rehberi, 50 Karakterlik Zengin Havuz.',
+      releaseNotes: 'v1.0.27: Çocuk Dostu Akıcı Onboarding, İsim Zarı (🎲), 3-Kademeli İnteraktif Yumurta Çatlatma Töreni, Başlangıç Karakteri Seçimi, Kamera İzni Temizliği ve Çevrimdışı Güvenlik Ağı.',
       apkDownloadUrl: `http://${host}/download/socies-app.apk`,
-      githubApkUrl: 'https://github.com/mcturan/socies/releases/download/v1.0.26/socies-app.apk'
+      githubApkUrl: 'https://github.com/mcturan/socies/releases/download/v1.0.27/socies-app.apk'
     });
   }
 

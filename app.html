@@ -1157,7 +1157,7 @@
         </div>
 
         <div style="font-size:0.72rem; color:#94A3B8; text-align:center;">
-          Socies v1.0.26 (Build 27) • OTA Güncel
+          Socies v1.0.27 (Build 28) • OTA Güncel
         </div>
       </div>
 
@@ -1257,43 +1257,29 @@
 
   <!-- FIRST-RUN ONBOARDING & EGG HATCH WIZARD -->
   <div id="onboardingModal" class="update-overlay" style="display:none; z-index:10000; background:rgba(15,23,42,0.85); backdrop-filter:blur(8px);">
-    <div class="update-dialog" style="max-width:380px; width:92%;">
+    <div class="update-dialog" style="max-width:390px; width:92%;">
       <!-- STEP 1: GİRİŞ & PROFİL -->
       <div id="onboardStep1" style="width:100%;">
         <div class="update-icon-badge" style="background:linear-gradient(135deg, #4F46E5, #9333EA);">👋</div>
         <div class="update-title" style="margin-top:0.4rem;">Socies Dünyasına Hoş Geldin!</div>
         <p style="font-size:0.8rem; color:var(--text-muted); text-align:center; margin:0.3rem 0 0.8rem;">
-          Sanal evcil hayvanını büyütmek ve arkadaşlarınla buluşmak için profilini oluştur.
+          Sanal dostunu büyütmek ve bu retro dünyaya adım atmak için profilini belirle.
         </p>
 
-        <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:0.85rem; margin-bottom:0.85rem;">
-          <div style="text-align:left; margin-bottom:0.6rem;">
-            <label style="font-size:0.75rem; font-weight:800; color:var(--text-muted); display:flex; justify-content:space-between;">
-              <span>GOOGLE E-POSTA HESABIN</span>
-              <span style="color:#4F46E5; font-weight:700;">Bulut & Güvenlik</span>
-            </label>
-            <input type="email" id="onboardEmail" class="search-friend-input" style="width:100%; font-size:0.92rem; padding:0.65rem; margin-top:4px; font-weight:700;" placeholder="ornek@gmail.com">
+        <!-- OYUNCU LAKABI & İSİM ZARI -->
+        <div style="text-align:left; margin-bottom:0.75rem;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <label style="font-size:0.75rem; font-weight:800; color:var(--text-muted);">OYUNCU ADIN</label>
+            <button type="button" onclick="rollRandomNickname()" style="background:#EEF2FF; border:1px solid #C7D2FE; border-radius:8px; padding:3px 10px; font-size:0.75rem; font-weight:800; color:#4338CA; cursor:pointer; display:flex; align-items:center; gap:4px; transition:transform 0.1s;">
+              <span>🎲</span> <span>İsim Zarı</span>
+            </button>
           </div>
-
-          <!-- GOOGLE İLE HIZLI GİRİŞ DÜĞMESİ -->
-          <button type="button" class="btn-google-sign" onclick="startGoogleAuthFlow('onboardEmail')" style="margin-bottom:0.4rem; width:100%;">
-            <svg width="22" height="22" viewBox="0 0 48 48">
-              <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
-              <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
-              <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
-              <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
-            </svg>
-            <span style="font-weight:800; font-size:0.92rem;">Google ile Giriş Yap & Kaydet</span>
-          </button>
+          <input type="text" id="onboardNick" class="search-friend-input" style="width:100%; font-size:1rem; font-weight:800; padding:0.65rem; border-radius:12px;" placeholder="Örn: Prenses, Pamuk, Zıpır...">
         </div>
 
-        <div style="text-align:left; margin-bottom:0.55rem;">
-          <label style="font-size:0.75rem; font-weight:800; color:var(--text-muted);">OYUNCU LAKABIN (İSTEDİĞİNDE DEĞİŞTİRİLİR)</label>
-          <input type="text" id="onboardNick" class="search-friend-input" style="width:100%; font-size:0.88rem; padding:0.6rem; margin-top:3px;" placeholder="Örn: Turan, Prenses, Kaptan...">
-        </div>
-
-        <div style="text-align:left; margin-bottom:0.8rem;">
-          <label style="font-size:0.75rem; font-weight:800; color:var(--text-muted);">PROFİL AVATARIN</label>
+        <!-- PROFİL AVATARI -->
+        <div style="text-align:left; margin-bottom:0.85rem;">
+          <label style="font-size:0.75rem; font-weight:800; color:var(--text-muted);">PROFİL ROZETİN</label>
           <div style="display:flex; justify-content:space-between; margin-top:4px;" id="onboardAvatarList">
             <button type="button" class="avatar-opt active" onclick="selectOnboardAvatar('👑', this)">👑</button>
             <button type="button" class="avatar-opt" onclick="selectOnboardAvatar('🐱', this)">🐱</button>
@@ -1301,12 +1287,31 @@
             <button type="button" class="avatar-opt" onclick="selectOnboardAvatar('🦄', this)">🦄</button>
             <button type="button" class="avatar-opt" onclick="selectOnboardAvatar('🚀', this)">🚀</button>
             <button type="button" class="avatar-opt" onclick="selectOnboardAvatar('🐼', this)">🐼</button>
+            <button type="button" class="avatar-opt" onclick="selectOnboardAvatar('🌸', this)">🌸</button>
           </div>
         </div>
 
-        <div style="display:flex; gap:8px;">
-          <button type="button" class="btn-update-dismiss" style="flex:1; margin-top:0;" onclick="dismissOnboardingModal()">Misafir Olarak Keşfet</button>
-          <button type="button" class="btn-update-action" style="flex:1.4;" onclick="goToOnboardStep(2)">İleri: Yumurtanı Seç ➔</button>
+        <!-- 1. BİRİNCİL BUTON: HEMEN OYUNA BAŞLA (HIZLI GİRİŞ) -->
+        <button type="button" class="btn-update-action" style="width:100%; padding:0.85rem; font-size:1rem; font-weight:900; background:linear-gradient(135deg, #4F46E5, #7C3AED); box-shadow:0 6px 20px rgba(79,70,229,0.35); border-radius:14px;" onclick="goToOnboardStep(2)">
+          🚀 Maceraya Başla: Yumurtanı Seç ➔
+        </button>
+
+        <!-- GOOGLE İLE BULUTA BAĞLAN (KOLAY & İSTEĞE BAĞLI) -->
+        <div style="margin-top:0.85rem; padding:0.75rem; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; text-align:center;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <span style="font-size:0.72rem; font-weight:800; color:#64748B;">GOOGLE HESABI (İSTEĞE BAĞLI)</span>
+            <span style="font-size:0.7rem; color:#4F46E5; font-weight:700;">☁️ Bulut Kaydı</span>
+          </div>
+          <button type="button" class="btn-google-sign" onclick="startGoogleAuthFlow('onboardEmail')" style="width:100%; margin-bottom:0;">
+            <svg width="20" height="20" viewBox="0 0 48 48">
+              <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+              <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+              <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+              <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+            </svg>
+            <span style="font-weight:800; font-size:0.88rem;">Google ile Bağlan & Yedekle</span>
+          </button>
+          <input type="email" id="onboardEmail" class="search-friend-input" style="width:100%; font-size:0.82rem; padding:0.45rem; margin-top:6px; display:none;" placeholder="e-posta (isteğe bağlı)">
         </div>
       </div>
 
@@ -1315,58 +1320,81 @@
         <div class="update-icon-badge" style="background:linear-gradient(135deg, #F59E0B, #EF4444);">🥚</div>
         <div class="update-title" style="margin-top:0.4rem;">Gizemli Yumurtanı Seç!</div>
         <p style="font-size:0.8rem; color:var(--text-muted); text-align:center; margin:0.3rem 0 0.8rem;">
-          Her yumurta farklı bir enerji ve dostluk bağı taşır. Hangisi kalbine dokunuyor?
+          Her yumurta farklı bir enerji taşır. Hangisi kalbine dokunuyor?
         </p>
 
         <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:1rem;">
           <div class="egg-card selected" id="eggRainbow" onclick="selectEggChoice('rainbow', this)" style="border:2px solid #4F46E5; background:#EEF2FF; border-radius:12px; padding:10px; display:flex; align-items:center; gap:12px; cursor:pointer;">
-            <span style="font-size:2rem;">🥚</span>
+            <span style="font-size:2.2rem;">🥚</span>
             <div style="text-align:left;">
-              <div style="font-weight:900; font-size:0.88rem; color:#4338CA;">Gökkuşağı Yumurtası</div>
-              <div style="font-size:0.75rem; color:#6366F1;">Sevimli, neşeli ve hızlı bağ kuran dost.</div>
+              <div style="font-weight:900; font-size:0.9rem; color:#4338CA;">Gökkuşağı Yumurtası</div>
+              <div style="font-size:0.75rem; color:#6366F1;">Sevimli, neşeli ve hızlı bağ kuran yoldaş.</div>
             </div>
           </div>
           <div class="egg-card" id="eggSun" onclick="selectEggChoice('sun', this)" style="border:1px solid #CBD5E1; background:#FFFFFF; border-radius:12px; padding:10px; display:flex; align-items:center; gap:12px; cursor:pointer;">
-            <span style="font-size:2rem;">🌟</span>
+            <span style="font-size:2.2rem;">🌟</span>
             <div style="text-align:left;">
-              <div style="font-weight:900; font-size:0.88rem; color:#B45309;">Güneş Işıltısı Yumurtası</div>
+              <div style="font-weight:900; font-size:0.9rem; color:#B45309;">Güneş Işıltısı Yumurtası</div>
               <div style="font-size:0.75rem; color:#D97706;">Enerjik, meraklı ve mini oyunlarda ekstra puan.</div>
             </div>
           </div>
           <div class="egg-card" id="eggCosmic" onclick="selectEggChoice('cosmic', this)" style="border:1px solid #CBD5E1; background:#FFFFFF; border-radius:12px; padding:10px; display:flex; align-items:center; gap:12px; cursor:pointer;">
-            <span style="font-size:2rem;">🌌</span>
+            <span style="font-size:2.2rem;">🌌</span>
             <div style="text-align:left;">
-              <div style="font-weight:900; font-size:0.88rem; color:#6D28D9;">Kozmik Gece Yumurtası</div>
+              <div style="font-weight:900; font-size:0.9rem; color:#6D28D9;">Kozmik Gece Yumurtası</div>
               <div style="font-size:0.75rem; color:#7C3AED;">Sakin, bilge ve daha az acıkan sadık yoldaş.</div>
             </div>
           </div>
         </div>
 
         <div style="display:flex; gap:8px;">
-          <button class="btn-update-dismiss" style="flex:1;" onclick="goToOnboardStep(1)">Geri</button>
-          <button class="btn-update-action" style="flex:2;" onclick="goToOnboardStep(3)">İleri: İsim Ver ➔</button>
+          <button type="button" class="btn-update-dismiss" style="flex:1;" onclick="goToOnboardStep(1)">Geri</button>
+          <button type="button" class="btn-update-action" style="flex:2;" onclick="goToOnboardStep(3)">İleri: İsim Ver ➔</button>
         </div>
       </div>
 
-      <!-- STEP 3: İSİM VERME & ÇATLATMA -->
+      <!-- STEP 3: İSİM VERME & İNTERAKTİF ÇATLATMA TÖRENİ -->
       <div id="onboardStep3" style="display:none; width:100%;">
-        <div class="update-icon-badge" id="icoEggHatchBadge" style="background:linear-gradient(135deg, #10B981, #059669); font-size:2.4rem;">🥚</div>
-        <div class="update-title" style="margin-top:0.4rem;">Bebeğine Bir İsim Ver</div>
-        <p style="font-size:0.8rem; color:var(--text-muted); text-align:center; margin:0.3rem 0 0.8rem;">
-          Bu isim onun kimliği olacak. Hazır olduğunda yumurtayı çatlatıp dünyaya getir!
+        <div class="update-icon-badge" id="icoEggHatchBadge" onclick="tapEggToHatch()" style="background:linear-gradient(135deg, #10B981, #059669); font-size:2.8rem; cursor:pointer; user-select:none; transition:transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);">🥚</div>
+        <div class="update-title" style="margin-top:0.4rem;">Bebeğine Bir İsim Ver!</div>
+        <p id="eggHatchDesc" style="font-size:0.8rem; color:var(--text-muted); text-align:center; margin:0.3rem 0 0.8rem;">
+          Yumurtaya dokunarak veya butona basarak çatlat!
         </p>
 
-        <div style="text-align:left; margin-bottom:1.1rem;">
-          <label style="font-size:0.75rem; font-weight:800; color:var(--text-muted);">BEBEĞİN ADI</label>
-          <input type="text" id="onboardPetName" maxlength="16" class="search-friend-input" style="width:100%; font-size:1.1rem; font-weight:900; text-align:center; padding:0.7rem; margin-top:4px;" value="Pufi" placeholder="Örn: Pufi, Minnoş, Pamuk...">
+        <!-- BEBEK ADI & İSİM ZARI -->
+        <div style="text-align:left; margin-bottom:1rem;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <label style="font-size:0.75rem; font-weight:800; color:var(--text-muted);">BEBEĞİN ADI</label>
+            <button type="button" onclick="rollRandomPetName()" style="background:#ECFDF5; border:1px solid #A7F3D0; border-radius:8px; padding:3px 10px; font-size:0.75rem; font-weight:800; color:#065F46; cursor:pointer; display:flex; align-items:center; gap:4px;">
+              <span>🎲</span> <span>İsim Zarı</span>
+            </button>
+          </div>
+          <input type="text" id="onboardPetName" maxlength="16" class="search-friend-input" style="width:100%; font-size:1.1rem; font-weight:900; text-align:center; padding:0.65rem; border-radius:12px;" value="Pufi" placeholder="Örn: Pufi, Minnoş, Pamuk...">
         </div>
 
         <div style="display:flex; gap:8px;">
-          <button class="btn-update-dismiss" style="flex:1;" onclick="goToOnboardStep(2)">Geri</button>
-          <button class="btn-update-action" style="flex:2; background:linear-gradient(135deg, #10B981, #047857);" onclick="finishOnboardingAndHatch()">
+          <button type="button" class="btn-update-dismiss" style="flex:1;" onclick="goToOnboardStep(2)">Geri</button>
+          <button type="button" id="btnDoHatch" class="btn-update-action" style="flex:2; background:linear-gradient(135deg, #10B981, #047857);" onclick="tapEggToHatch()">
             🐣 Yumurtayı Çatlat!
           </button>
         </div>
+      </div>
+
+      <!-- STEP 4: GÖRÜNÜŞ SEÇİMİ (STARTER COMPANION) -->
+      <div id="onboardStep4" style="display:none; width:100%;">
+        <div class="update-icon-badge" style="background:linear-gradient(135deg, #38BDF8, #2563EB); font-size:2.4rem;">🐾</div>
+        <div class="update-title" style="margin-top:0.4rem;">Dostunun Görünüşünü Seç!</div>
+        <p style="font-size:0.8rem; color:var(--text-muted); text-align:center; margin:0.3rem 0 0.8rem;">
+          Bebeğin dünyaya gözlerini açtı! İlk görünüşünü seç (Atölyeden dilediğinde değiştirebilirsin).
+        </p>
+
+        <div id="starterCompanionList" style="display:grid; grid-template-columns:repeat(4, 1fr); gap:8px; margin-bottom:1rem;">
+          <!-- JS ile doldurulur -->
+        </div>
+
+        <button type="button" class="btn-update-action" style="width:100%; padding:0.85rem; font-size:1rem; font-weight:900; background:linear-gradient(135deg, #10B981, #059669); border-radius:14px; box-shadow:0 6px 20px rgba(16,185,129,0.35);" onclick="finalizeCompanionAndOpenPassport()">
+          ✨ Maceraya Başla & Pasaportunu Al ➔
+        </button>
       </div>
     </div>
   </div>
@@ -2048,7 +2076,7 @@
   </nav>
 
   <script>
-    const CURRENT_APP_VERSION = 'v1.0.26';
+    const CURRENT_APP_VERSION = 'v1.0.27';
 
 // =========================================================================
     // MODÜL 7.8: 21 GERÇEK PİKSEL KARAKTER & 8 DUYGU İFADE MOTORU (128x64 OLED)
@@ -15584,14 +15612,79 @@
     }
 
     // =========================================================================
-    // MODÜL 7: FIRST-RUN ONBOARDING & EGG HATCHING ENGINE
+    // MODÜL 7: FIRST-RUN ONBOARDING & EGG HATCHING ENGINE (ÇOCUK DOSTU AKIŞ)
     // =========================================================================
     let selectedEggChoice = 'rainbow';
     let selectedOnboardAvatar = '👑';
+    let eggCrackClicksRemaining = 3;
+    let selectedStarterCompanionId = 'cat';
+
+    const CUTE_NICKNAMES = ['Prenses', 'Pamuk', 'Maviş', 'Zıpır', 'Yıldız', 'Limon', 'Gofret', 'Bulut', 'Pika', 'Fıstık', 'Boncuk', 'Şeker', 'Çilek', 'Bal', 'Kartopu', 'Dost', 'Minnoş', 'Pati', 'Rüzgar', 'Güneş'];
+    const CUTE_PET_NAMES = ['Pufi', 'Minnoş', 'Pamuk', 'Karamel', 'Maviş', 'Fındık', 'Zıpzıp', 'Piksel', 'Limon', 'Bıcırık', 'Yumak', 'Gofret', 'Şeker', 'Fıstık', 'Duman', 'Tarçın', 'Ponçik'];
+
+    const STARTER_COMPANIONS = [
+      { id: 'cat', name: 'Kedi', emoji: '🐱', color: '#38bdf8' },
+      { id: 'dog', name: 'Köpek', emoji: '🐶', color: '#f59e0b' },
+      { id: 'bunny', name: 'Tavşan', emoji: '🐰', color: '#fb7185' },
+      { id: 'panda', name: 'Panda', emoji: '🐼', color: '#e2e8f0' },
+      { id: 'fox', name: 'Tilki', emoji: '🦊', color: '#f97316' },
+      { id: 'koala', name: 'Koala', emoji: '🐨', color: '#94a3b8' },
+      { id: 'frog', name: 'Kurbağa', emoji: '🐸', color: '#22c55e' },
+      { id: 'pufi', name: 'Pufi', emoji: '✨', color: '#00f0ff' }
+    ];
+
+    function rollRandomNickname() {
+      const chosen = CUTE_NICKNAMES[Math.floor(Math.random() * CUTE_NICKNAMES.length)];
+      const input = document.getElementById('onboardNick');
+      if (input) {
+        input.value = chosen;
+        input.style.transform = 'scale(1.04)';
+        setTimeout(() => { input.style.transform = 'scale(1)'; }, 140);
+      }
+      playTactileClick('click');
+      triggerHaptic('select');
+      return chosen;
+    }
+
+    function rollRandomPetName() {
+      const chosen = CUTE_PET_NAMES[Math.floor(Math.random() * CUTE_PET_NAMES.length)];
+      const input = document.getElementById('onboardPetName');
+      if (input) {
+        input.value = chosen;
+        input.style.transform = 'scale(1.04)';
+        setTimeout(() => { input.style.transform = 'scale(1)'; }, 140);
+      }
+      playTactileClick('click');
+      triggerHaptic('select');
+      return chosen;
+    }
 
     function openOnboardingWizard() {
-      document.getElementById('onboardEmail').value = appData.userEmail || '';
-      document.getElementById('onboardNick').value = appData.nickname.startsWith('Oyuncu_') ? '' : appData.nickname;
+      const nickInput = document.getElementById('onboardNick');
+      if (nickInput) {
+        if (!nickInput.value || nickInput.value.startsWith('Oyuncu_') || nickInput.value === 'Oyuncu') {
+          nickInput.value = rollRandomNickname();
+        }
+      }
+      const petNameInput = document.getElementById('onboardPetName');
+      if (petNameInput && (!petNameInput.value || petNameInput.value === 'Pufi')) {
+        petNameInput.value = rollRandomPetName();
+      }
+
+      eggCrackClicksRemaining = 3;
+      const elBadge = document.getElementById('icoEggHatchBadge');
+      if (elBadge) {
+        elBadge.innerText = '🥚';
+        elBadge.style.transform = 'scale(1)';
+      }
+      const crackDesc = document.getElementById('eggHatchDesc');
+      if (crackDesc) crackDesc.innerText = 'Yumurtaya dokunarak veya butona basarak çatlat!';
+      const btn = document.getElementById('btnDoHatch');
+      if (btn) {
+        btn.innerText = '🐣 Yumurtayı Çatlat!';
+        btn.style.background = 'linear-gradient(135deg, #10B981, #047857)';
+      }
+
       goToOnboardStep(1);
       document.getElementById('onboardingModal').style.display = 'flex';
     }
@@ -15599,20 +15692,19 @@
     async function startGoogleAuthFlow(targetInputId = 'onboardEmail') {
       const emailInput = document.getElementById(targetInputId);
       let email = emailInput ? emailInput.value.trim() : '';
+      
+      // Eğer kutu boşsa veya gizliyse, kullanıcıya dostça bir e-posta giriş penceresi sun
       if (!email) {
-        if (emailInput) {
-          emailInput.focus();
-          emailInput.style.borderColor = '#4F46E5';
-          emailInput.style.boxShadow = '0 0 0 3px rgba(79, 70, 229, 0.2)';
+        const userPromptEmail = prompt('☁️ Google Hesabınızla Giriş Yapın:\n\nLütfen Google/Gmail e-posta adresinizi girin:', '');
+        if (userPromptEmail && userPromptEmail.trim().includes('@')) {
+          email = userPromptEmail.trim();
+          if (emailInput) emailInput.value = email;
+        } else {
+          if (userPromptEmail !== null) {
+            showGlobalToast('⚠️ Lütfen geçerli bir e-posta adresi girin.');
+          }
+          return;
         }
-        showGlobalToast('ℹ️ Lütfen Google Gmail adresinizi kutucuğa yazın.');
-        return;
-      }
-
-      if (!email.includes('@')) {
-        showGlobalToast('⚠️ Lütfen geçerli bir e-posta adresi girin.');
-        if (emailInput) emailInput.focus();
-        return;
       }
 
       const derivedNick = email.split('@')[0].replace(/[^a-zA-Z0-9_]/g, '');
@@ -15678,7 +15770,8 @@
           showGlobalToast(`✅ Google ile bağlandı: ${email}`);
           goToOnboardStep(2);
         } else {
-          alert('Giriş başarısız: ' + (data.error || 'Bilinmeyen hata'));
+          showGlobalToast('Giriş yerel moda alındı: ' + (data.error || ''));
+          goToOnboardStep(2);
         }
       } catch (err) {
         appData.userEmail = email;
@@ -15693,39 +15786,27 @@
       }
     }
 
-    function startGuestFlow() {
-      const defNick = 'Oyuncu_' + appData.deviceId.slice(-4);
-      const nickInput = document.getElementById('onboardNick');
-      if (nickInput && !nickInput.value) nickInput.value = defNick;
-      goToOnboardStep(2);
-    }
-
     function goToOnboardStep(step) {
       beep(700, 0.08);
       if (step === 2) {
-        const nick = document.getElementById('onboardNick').value.trim();
-        const email = document.getElementById('onboardEmail').value.trim();
+        const nickInput = document.getElementById('onboardNick');
+        let nick = nickInput ? nickInput.value.trim() : '';
         if (!nick) {
-          showGlobalToast('⚠️ Lütfen bir oyuncu adı veya lakap girin.');
-          return;
+          nick = rollRandomNickname();
         }
         appData.nickname = nick;
         localStorage.setItem('socies_nickname', nick);
-        if (email) {
-          appData.userEmail = email;
-          localStorage.setItem('socies_user_email', email);
-          if (checkIsProUser(email)) {
-            appData.isPro = true;
-            localStorage.setItem('socies_pro_mode', '1');
-            showGlobalToast('⭐ Onaylı PRO e-posta tespit edildi! PRO Mod etkin.');
-          }
-        }
         updateProfileUI();
+      }
+
+      if (step === 4) {
+        renderStarterCompanionsUI();
       }
 
       document.getElementById('onboardStep1').style.display = (step === 1) ? 'block' : 'none';
       document.getElementById('onboardStep2').style.display = (step === 2) ? 'block' : 'none';
       document.getElementById('onboardStep3').style.display = (step === 3) ? 'block' : 'none';
+      document.getElementById('onboardStep4').style.display = (step === 4) ? 'block' : 'none';
     }
 
     function selectOnboardAvatar(av, btn) {
@@ -15747,35 +15828,115 @@
       if (elBadge) elBadge.innerText = eggBadges[egg] || '🥚';
     }
 
-    function finishOnboardingAndHatch() {
-      const petName = document.getElementById('onboardPetName').value.trim() || 'Pufi';
-      appData.petState.name = petName;
-      if (!appData.petState.hatched || !appData.petState.stage) {
-        appData.petState.stage = 1; // Stage 1 (Bebek 🍼)
-        appData.petState.birthTime = Date.now();
-        appData.petState.ageDays = 1;
+    // 🐣 İNTERAKTİF YUMURTA ÇATLATMA DÖNGÜSÜ (3 TIKLA SALLANMA & ÇATLAMA)
+    function tapEggToHatch() {
+      const eggBadge = document.getElementById('icoEggHatchBadge');
+      const crackDesc = document.getElementById('eggHatchDesc');
+      const btn = document.getElementById('btnDoHatch');
+
+      if (eggCrackClicksRemaining === 3) {
+        eggCrackClicksRemaining--;
+        beep(800, 0.06);
+        triggerHaptic('bounce');
+        if (eggBadge) {
+          eggBadge.style.transform = 'rotate(-14deg) scale(1.15)';
+          setTimeout(() => { eggBadge.style.transform = 'rotate(0deg) scale(1)'; }, 180);
+        }
+        if (crackDesc) crackDesc.innerHTML = '⚡ <i>Çıt! Yumurtada ilk çatlak belirdi! (2 tık kaldı)</i>';
+        if (btn) btn.innerText = '🥚 Dokunmaya Devam Et (2 tık)';
+      } else if (eggCrackClicksRemaining === 2) {
+        eggCrackClicksRemaining--;
+        beep(960, 0.08);
+        triggerHaptic('bounce');
+        if (eggBadge) {
+          eggBadge.style.transform = 'rotate(16deg) scale(1.22)';
+          setTimeout(() => { eggBadge.style.transform = 'rotate(0deg) scale(1)'; }, 180);
+        }
+        if (crackDesc) crackDesc.innerHTML = '⚡⚡ <i>Çıt-çıt! Kabuk kırılıyor, içeriden sesler geliyor! (1 tık kaldı)</i>';
+        if (btn) btn.innerText = '💥 Son Dokunuş! (1 tık)';
+      } else {
+        // ÇATLAMA TÖRENİ!
+        eggCrackClicksRemaining = 0;
+        playLevelUpFanfare();
+        triggerHaptic('celebration');
+        if (eggBadge) {
+          eggBadge.innerText = '🐣';
+          eggBadge.style.transform = 'scale(1.4)';
+          setTimeout(() => { eggBadge.style.transform = 'scale(1)'; }, 300);
+        }
+        if (crackDesc) crackDesc.innerHTML = '🎉 <b>HARİKA! Yumurta çatladı ve dünyaya merhaba dedi!</b>';
+        if (btn) {
+          btn.innerText = '✨ Karakterini Seç ➔';
+          btn.style.background = 'linear-gradient(135deg, #38BDF8, #2563EB)';
+        }
+        showGlobalToast('🐣 Tebrikler! Yumurtan başarıyla çatladı!');
+        setTimeout(() => goToOnboardStep(4), 500);
       }
+    }
+
+    function renderStarterCompanionsUI() {
+      const container = document.getElementById('starterCompanionList');
+      if (!container) return;
+      container.innerHTML = '';
+
+      STARTER_COMPANIONS.forEach((c) => {
+        const isSelected = (c.id === selectedStarterCompanionId);
+        const card = document.createElement('div');
+        card.style.cssText = `
+          border: 2px solid ${isSelected ? '#38bdf8' : '#e2e8f0'};
+          background: ${isSelected ? '#f0f9ff' : '#ffffff'};
+          border-radius: 12px;
+          padding: 8px 4px;
+          text-align: center;
+          cursor: pointer;
+          transition: all 0.15s;
+          box-shadow: ${isSelected ? '0 4px 12px rgba(56,189,248,0.25)' : 'none'};
+        `;
+        card.innerHTML = `
+          <div style="font-size: 1.8rem; line-height: 1.2;">${c.emoji}</div>
+          <div style="font-size: 0.75rem; font-weight: 800; color: #1e293b; margin-top: 4px;">${c.name}</div>
+        `;
+        card.onclick = () => {
+          selectedStarterCompanionId = c.id;
+          playTactileClick('click');
+          triggerHaptic('select');
+          renderStarterCompanionsUI();
+        };
+        container.appendChild(card);
+      });
+    }
+
+    function finalizeCompanionAndOpenPassport() {
+      const petNameInput = document.getElementById('onboardPetName');
+      const petName = (petNameInput && petNameInput.value.trim()) || 'Pufi';
+
+      appData.petState.name = petName;
+      appData.petState.stage = 1; // Stage 1 (Bebek 🍼)
+      appData.petState.birthTime = Date.now();
+      appData.petState.ageDays = 1;
       appData.petState.eggType = selectedEggChoice;
       appData.petState.hatched = true;
       appData.eggType = selectedEggChoice;
       appData.onboardingCompleted = true;
+
+      // Seçilen karakteri aktifleştir
+      setPetCharacter(selectedStarterCompanionId);
+
       localStorage.setItem('socies_pet_name', petName);
       localStorage.setItem('socies_egg_type', selectedEggChoice);
       localStorage.setItem('socies_onboarding_completed', '1');
 
       playLevelUpFanfare();
-      const elBadge = document.getElementById('icoEggHatchBadge');
-      if (elBadge) elBadge.innerText = '🐣';
+      triggerHaptic('celebration');
 
-      setTimeout(() => {
-        document.getElementById('onboardingModal').style.display = 'none';
-        showGlobalToast(`🎉 Tebrikler! ${petName} yumurtadan çıktı ve dünyaya merhaba dedi!`);
-        savePetState();
-        updateNeedsUI();
-        updateFeatureLocksUI();
-        syncDeviceRegistration();
-        setTimeout(() => openPassportModal(), 400);
-      }, 700);
+      document.getElementById('onboardingModal').style.display = 'none';
+      showGlobalToast(`🎉 ${petName} (${characters[selectedStarterCompanionId]?.name || 'Dost'}) ile serüven başladı!`);
+
+      savePetState();
+      updateNeedsUI();
+      updateFeatureLocksUI();
+      syncDeviceRegistration();
+      setTimeout(() => openPassportModal(), 350);
     }
 
     function dismissOnboardingModal() {
@@ -15784,7 +15945,7 @@
       localStorage.setItem('socies_onboarding_completed', '1');
       appData.onboardingCompleted = true;
       beep(450, 0.06);
-      showGlobalToast('✨ Misafir modunda devam ediliyor. Profil sekmesinden dilediğin zaman Google ile bağlanabilirsin!');
+      showGlobalToast('✨ Misafir modunda devam ediliyor. Dilediğinde profil sekmesinden hesabını güncelleyebilirsin!');
     }
 
     // =========================================================================

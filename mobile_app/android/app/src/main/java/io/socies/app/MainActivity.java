@@ -59,13 +59,6 @@ public class MainActivity extends Activity {
             } catch (Exception ignored) {}
         }
 
-        // Kamera iznini otomatik kontrol et ve talep et (Android 6.0+)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.CAMERA}, 2001);
-            }
-        }
-
         webView = new WebView(this);
         setContentView(webView);
 
@@ -280,7 +273,7 @@ public class MainActivity extends Activity {
             try {
                 return getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
             } catch (Exception e) {
-                return "1.0.26";
+                return "1.0.27";
             }
         }
 
