@@ -1597,19 +1597,19 @@ const server = http.createServer((req, res) => {
   if (path === '/api/v1/version/check' && method === 'GET') {
     const host = req.headers.host || '192.168.1.118:3000';
     return sendJSON(res, 200, {
-      latestVersion: 'v1.0.27',
+      latestVersion: 'v1.0.28',
       semver: {
         major: 1,
         minor: 0,
-        patch: 27,
-        build: 28
+        patch: 28,
+        build: 29
       },
-      versionCode: 28,
-      latestCommitHash: 'socies-v1.0.27',
+      versionCode: 29,
+      latestCommitHash: 'socies-v1.0.28',
       mandatoryUpdate: false,
-      releaseNotes: 'v1.0.27: Çocuk Dostu Akıcı Onboarding, İsim Zarı (🎲), 3-Kademeli İnteraktif Yumurta Çatlatma Töreni, Başlangıç Karakteri Seçimi, Kamera İzni Temizliği ve Çevrimdışı Güvenlik Ağı.',
+      releaseNotes: 'v1.0.28: 200 Karakterlik dev kütüphane entegrasyonu, titremesiz sabit monokrom OLED fizik motoru, kusursuz ip atlama ve akrobasi koordinatları, OLED dokunma/sevme (Petting) uçan kalp efektleri, kaka & sinek temizleme, temiz fabrika ayarlarına sıfırlama.',
       apkDownloadUrl: `http://${host}/download/socies-app.apk`,
-      githubApkUrl: 'https://github.com/mcturan/socies/releases/download/v1.0.27/socies-app.apk'
+      githubApkUrl: 'https://github.com/mcturan/socies/releases/download/v1.0.28/socies-app.apk'
     });
   }
 
