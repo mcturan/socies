@@ -484,7 +484,7 @@ const server = http.createServer((req, res) => {
     if (fs.existsSync(apkFile)) {
       res.writeHead(200, {
         'Content-Type': 'application/vnd.android.package-archive',
-        'Content-Disposition': 'attachment; filename="socies-v1.0.25.apk"',
+        'Content-Disposition': 'attachment; filename="socies-v1.0.26.apk"',
         'Access-Control-Allow-Origin': '*'
       });
       return fs.createReadStream(apkFile).pipe(res);
@@ -1597,19 +1597,19 @@ const server = http.createServer((req, res) => {
   if (path === '/api/v1/version/check' && method === 'GET') {
     const host = req.headers.host || '192.168.1.118:3000';
     return sendJSON(res, 200, {
-      latestVersion: 'v1.0.25',
+      latestVersion: 'v1.0.26',
       semver: {
         major: 1,
         minor: 0,
-        patch: 25,
-        build: 26
+        patch: 26,
+        build: 27
       },
-      versionCode: 26,
-      latestCommitHash: 'socies-v1.0.25',
+      versionCode: 27,
+      latestCommitHash: 'socies-v1.0.26',
       mandatoryUpdate: false,
-      releaseNotes: 'v1.0.25: 32x32 Tam Retro Piksel Mimarisi (1024 piksel), 7 Kategoride 40 Karakter Havuzu, Karakter Altı Gölge İptali, Y=61 Zemin Çizgisi, Gelişmiş 32x32 Piksel Stüdyosu (Boya Kovası, Geri Al, 1:1 Canlı OLED Konsol Önizlemesi).',
+      releaseNotes: 'v1.0.26: 10 Yeni Piiixl Tarzı 1-Bit RPG & Zindan Kahramanı (Şövalye, Büyücü, Hırsız, Paladin, Goblin, Okçu, Ejderha, İskelet, Kral, Kedigil Savaşçı), Piksel Stüdyosu Şablon Yükleme Rehberi, 50 Karakterlik Zengin Havuz.',
       apkDownloadUrl: `http://${host}/download/socies-app.apk`,
-      githubApkUrl: 'https://github.com/mcturan/socies/releases/download/v1.0.25/socies-app.apk'
+      githubApkUrl: 'https://github.com/mcturan/socies/releases/download/v1.0.26/socies-app.apk'
     });
   }
 
@@ -1724,7 +1724,7 @@ function serveSociesNetworkPage(res) {
       <div class="nav-links">
         <a href="/dashboard" class="nav-btn">📊 Sunucu Paneli</a>
         <a href="/" class="nav-btn">🎮 Web Emülatörü</a>
-        <a href="/download/socies-app.apk" class="dl-btn">📥 APK İndir (v1.0.25)</a>
+        <a href="/download/socies-app.apk" class="dl-btn">📥 APK İndir (v1.0.26)</a>
       </div>
     </div>
 
@@ -1742,7 +1742,7 @@ function serveSociesNetworkPage(res) {
         <div class="kpi-lbl">${countries.join(', ')}</div>
       </div>
       <div class="kpi-card">
-        <div class="kpi-val" style="color:#ffe600;">v1.0.25</div>
+        <div class="kpi-val" style="color:#ffe600;">v1.0.26</div>
         <div class="kpi-lbl">Ağ Sürümü (SemVer 2.0.0)</div>
       </div>
     </div>
