@@ -1157,7 +1157,7 @@
         </div>
 
         <div style="font-size:0.72rem; color:#94A3B8; text-align:center;">
-          Socies v1.0.24 (Build 25) • OTA Güncel
+          Socies v1.0.25 (Build 26) • OTA Güncel
         </div>
       </div>
 
@@ -2028,7 +2028,7 @@
   </nav>
 
   <script>
-    const CURRENT_APP_VERSION = 'v1.0.24';
+    const CURRENT_APP_VERSION = 'v1.0.25';
 
 // =========================================================================
     // MODÜL 7.8: 21 GERÇEK PİKSEL KARAKTER & 8 DUYGU İFADE MOTORU (128x64 OLED)
@@ -8004,9 +8004,9 @@
     function renderOledSideThoughtBox(text, icon = '💭', isPrompt = false) {
       if (!text) return;
 
-      // Ferah 128x64 Üst Konuşma Balonu (y: 11-26, karaktere asla çarpmaz)
+      // Ferah 128x64 Tavan Konuşma Balonu (Y: 10-25, karaktere asla çarpmaz)
       const bx = 6;
-      const by = 11;
+      const by = 10;
       const bw = 116;
       const bh = 15;
 
@@ -12830,8 +12830,11 @@
       console.log('[NET] Sunucu bağlantısı taranıyor...');
       const candidates = [];
       const saved = localStorage.getItem('socies_server_url');
-      if (saved && saved !== 'http://192.168.1.118:3000') {
+      if (saved) {
         candidates.push(saved);
+      }
+      if (!candidates.includes('http://192.168.1.118:3000')) {
+        candidates.push('http://192.168.1.118:3000');
       }
       if (!candidates.includes('http://46.1.173.159:3000')) {
         candidates.push('http://46.1.173.159:3000');
@@ -12839,7 +12842,6 @@
       if (window.location.origin && window.location.origin.startsWith('http') && !candidates.includes(window.location.origin)) {
         candidates.push(window.location.origin);
       }
-      candidates.push('http://192.168.1.118:3000');
       candidates.push('http://192.168.1.2:3000');
       candidates.push('http://localhost:3000');
 
@@ -14784,10 +14786,10 @@
       // 1. Olası sunucu adreslerini tara (WebView dosya sistemi için mutlak URL zorunlu)
       const checkUrls = [];
       if (appData.serverUrl) checkUrls.push(appData.serverUrl);
-      checkUrls.push('http://46.1.173.159:3000');
-      checkUrls.push('http://192.168.1.118:3000');
-      checkUrls.push('http://192.168.1.2:3000');
-      if (window.location.origin && window.location.origin.startsWith('http')) {
+      if (!checkUrls.includes('http://192.168.1.118:3000')) checkUrls.push('http://192.168.1.118:3000');
+      if (!checkUrls.includes('http://46.1.173.159:3000')) checkUrls.push('http://46.1.173.159:3000');
+      if (!checkUrls.includes('http://192.168.1.2:3000')) checkUrls.push('http://192.168.1.2:3000');
+      if (window.location.origin && window.location.origin.startsWith('http') && !checkUrls.includes(window.location.origin)) {
         checkUrls.push(window.location.origin);
       }
 

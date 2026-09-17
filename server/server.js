@@ -484,7 +484,7 @@ const server = http.createServer((req, res) => {
     if (fs.existsSync(apkFile)) {
       res.writeHead(200, {
         'Content-Type': 'application/vnd.android.package-archive',
-        'Content-Disposition': 'attachment; filename="socies-v1.0.24.apk"',
+        'Content-Disposition': 'attachment; filename="socies-v1.0.25.apk"',
         'Access-Control-Allow-Origin': '*'
       });
       return fs.createReadStream(apkFile).pipe(res);
@@ -1595,21 +1595,21 @@ const server = http.createServer((req, res) => {
 
   // 8. GITHUB SÜRÜM / OTA KONTROLÜ (SemVer 2.0.0 v1.0.20)
   if (path === '/api/v1/version/check' && method === 'GET') {
-    const host = req.headers.host || '46.1.173.159:3000';
+    const host = req.headers.host || '192.168.1.118:3000';
     return sendJSON(res, 200, {
-      latestVersion: 'v1.0.24',
+      latestVersion: 'v1.0.25',
       semver: {
         major: 1,
         minor: 0,
-        patch: 24,
-        build: 25
+        patch: 25,
+        build: 26
       },
-      versionCode: 25,
-      latestCommitHash: 'socies-v1.0.24',
+      versionCode: 26,
+      latestCommitHash: 'socies-v1.0.25',
       mandatoryUpdate: false,
-      releaseNotes: 'v1.0.24: Bağıl İhtiyaçlar (yemek yerken tuvalet ve uyku etkisi, oyun oynarken enerji ve acıkma), 2 Yeni Retro Oyun (Micro Racer & Pixel Stacker), Tüm Oyunlarda İlerleyen Bombalar & Ek Ödüller, 120+ Türk ve Dünya Bilmeceleri Sistemi, Haptik Titreşim Motoru (Web & Native), Kaçırılan Dürtmeler Posta Kutusu, Zorlaşan Ekonomi & Yemek için XP Harcama, Günlük Gizemli Sandık ve Gece Rüyaları.',
+      releaseNotes: 'v1.0.25: 32x32 Tam Retro Piksel Mimarisi (1024 piksel), 7 Kategoride 40 Karakter Havuzu, Karakter Altı Gölge İptali, Y=61 Zemin Çizgisi, Gelişmiş 32x32 Piksel Stüdyosu (Boya Kovası, Geri Al, 1:1 Canlı OLED Konsol Önizlemesi).',
       apkDownloadUrl: `http://${host}/download/socies-app.apk`,
-      githubApkUrl: 'https://github.com/mcturan/socies/releases/download/v1.0.24/socies-app.apk'
+      githubApkUrl: 'https://github.com/mcturan/socies/releases/download/v1.0.25/socies-app.apk'
     });
   }
 
@@ -1724,7 +1724,7 @@ function serveSociesNetworkPage(res) {
       <div class="nav-links">
         <a href="/dashboard" class="nav-btn">📊 Sunucu Paneli</a>
         <a href="/" class="nav-btn">🎮 Web Emülatörü</a>
-        <a href="/download/socies-app.apk" class="dl-btn">📥 APK İndir (v1.0.24)</a>
+        <a href="/download/socies-app.apk" class="dl-btn">📥 APK İndir (v1.0.25)</a>
       </div>
     </div>
 
@@ -1742,7 +1742,7 @@ function serveSociesNetworkPage(res) {
         <div class="kpi-lbl">${countries.join(', ')}</div>
       </div>
       <div class="kpi-card">
-        <div class="kpi-val" style="color:#ffe600;">v1.0.24</div>
+        <div class="kpi-val" style="color:#ffe600;">v1.0.25</div>
         <div class="kpi-lbl">Ağ Sürümü (SemVer 2.0.0)</div>
       </div>
     </div>
