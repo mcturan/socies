@@ -698,6 +698,55 @@ const server = http.createServer((req, res) => {
     });
   }
 
+  // LIVEOPS CMS: RESİMLER KLASÖRÜNDEKİ KAYNAK KIRPIMLARI OTOMATİK İÇE AKTAR
+  if (path === '/api/v1/characters/import-source-crops' && method === 'POST') {
+    try {
+      const exactJsonPath = pathModule.join(__dirname, 'exact_source_characters.json');
+      if (!fs.existsSync(exactJsonPath)) {
+        return sendJSON(res, 404, { error: 'exact_source_characters.json bulunamadı' });
+      }
+      const data = JSON.parse(fs.readFileSync(exactJsonPath, 'utf8'));
+      const insertCharStmt = db.prepare(`
+        INSERT INTO custom_characters (id, name, category, icon, color, desc, frame0_json, frame1_json, created_at, updated_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ON CONFLICT(id) DO UPDATE SET
+          name = excluded.name,
+          category = excluded.category,
+          icon = excluded.icon,
+          color = excluded.color,
+          desc = excluded.desc,
+          frame0_json = excluded.frame0_json,
+          frame1_json = excluded.frame1_json,
+          updated_at = excluded.updated_at
+      `);
+      const now = Date.now();
+      let importedCount = 0;
+      for (const [id, c] of Object.entries(data)) {
+        insertCharStmt.run(
+          id,
+          c.name || id,
+          c.category || 'animals',
+          c.icon || '🐾',
+          c.color || '#38bdf8',
+          c.desc || '',
+          JSON.stringify(c.frame0 || []),
+          JSON.stringify(c.frame1 || c.frame0 || []),
+          now,
+          now
+        );
+        importedCount++;
+      }
+      console.log(`[LIVEOPS CMS] ${importedCount} kaynak karakter başarıyla içe aktarıldı.`);
+      return sendJSON(res, 200, {
+        success: true,
+        message: `${importedCount} adet gerçek kaynak karakter (Kedi, Köpek, Tavşan, Panda, Penguen) başarıyla içe aktarıldı ve yayınlandı!`,
+        count: importedCount
+      });
+    } catch (e) {
+      return sendJSON(res, 500, { error: 'İçe aktarma hatası: ' + e.message });
+    }
+  }
+
   // KARAKTER SİLME
   if (path.startsWith('/api/v1/characters/') && method === 'DELETE') {
     const charId = path.split('/')[4];

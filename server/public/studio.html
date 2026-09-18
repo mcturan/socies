@@ -13,6 +13,7 @@
       --primary: #38bdf8;
       --primary-hover: #0ea5e9;
       --accent: #10b981;
+      --accent-hover: #059669;
       --danger: #ef4444;
       --text: #f8fafc;
       --text-muted: #94a3b8;
@@ -22,25 +23,25 @@
     .container { max-width: 1440px; margin: 0 auto; }
     
     /* HEADER */
-    .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--card-border); padding-bottom: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+    .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--card-border); padding-bottom: 1.2rem; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
     .logo-box { display: flex; align-items: center; gap: 12px; }
-    .logo-badge { font-size: 2rem; background: #1e293b; border: 1px solid #334155; border-radius: 12px; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; }
+    .logo-badge { font-size: 2rem; background: #1e293b; border: 1px solid #334155; border-radius: 12px; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; }
     .title { font-size: 1.4rem; font-weight: 900; letter-spacing: -0.5px; background: linear-gradient(90deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .sub { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; }
-    .nav-btns { display: flex; gap: 8px; }
-    .btn { padding: 8px 16px; border-radius: 10px; font-weight: 800; font-size: 0.85rem; border: none; cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 6px; }
+    .sub { font-size: 0.76rem; color: var(--text-muted); font-weight: 600; margin-top: 2px; }
+    .nav-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+    .btn { padding: 9px 16px; border-radius: 10px; font-weight: 800; font-size: 0.85rem; border: none; cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 6px; }
     .btn-primary { background: var(--primary); color: #020617; }
     .btn-primary:hover { background: var(--primary-hover); transform: translateY(-1px); }
     .btn-accent { background: var(--accent); color: #020617; font-weight: 900; }
-    .btn-accent:hover { background: #059669; }
+    .btn-accent:hover { background: var(--accent-hover); transform: translateY(-1px); }
     .btn-secondary { background: #1e293b; color: #f8fafc; border: 1px solid #334155; }
     .btn-secondary:hover { background: #334155; }
     .btn-danger { background: #ef4444; color: #fff; }
     .btn-danger:hover { background: #dc2626; }
 
     /* LAYOUT */
-    .main-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 1.5rem; align-items: start; }
-    @media (max-width: 992px) { .main-grid { grid-template-columns: 1fr; } }
+    .main-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 1.5rem; align-items: start; }
+    @media (max-width: 1040px) { .main-grid { grid-template-columns: 1fr; } }
 
     /* CARDS */
     .card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; padding: 1.25rem; box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
@@ -55,8 +56,9 @@
 
     /* CHARACTERS GRID */
     .char-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; max-height: 580px; overflow-y: auto; padding-right: 4px; }
-    .char-card { background: #070a13; border: 1px solid #1e293b; border-radius: 12px; padding: 10px; display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; transition: all 0.15s; }
+    .char-card { background: #070a13; border: 1px solid #1e293b; border-radius: 12px; padding: 10px; display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; transition: all 0.15s; cursor: pointer; }
     .char-card:hover { border-color: var(--primary); transform: translateY(-2px); box-shadow: 0 4px 16px rgba(56,189,248,0.2); }
+    .char-card.selected { border-color: #10b981; background: #0f2420; }
     .char-card canvas { width: 64px; height: 64px; image-rendering: pixelated; background: #020617; border: 1px solid #1e293b; border-radius: 8px; margin-bottom: 6px; }
     .char-name { font-size: 0.82rem; font-weight: 800; color: #f8fafc; margin-bottom: 2px; }
     .char-cat { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; }
@@ -64,7 +66,7 @@
     .char-del-btn:hover { opacity: 1; background: #ef4444; color: #fff; }
 
     /* UPLOAD & SIMULATOR (RIGHT PANEL) */
-    .sim-panel { display: flex; flex-direction: column; gap: 1rem; }
+    .sim-panel { display: flex; flex-direction: column; gap: 1.25rem; }
     .oled-box { background: #020617; border: 3px solid #1e293b; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; align-items: center; box-shadow: inset 0 0 20px rgba(0,0,0,0.8), 0 8px 30px rgba(0,0,0,0.5); }
     .oled-header { width: 100%; display: flex; justify-content: space-between; font-size: 0.72rem; color: #64748b; font-weight: 800; margin-bottom: 8px; font-family: 'JetBrains Mono', monospace; }
     #simOledCanvas { image-rendering: pixelated; width: 100%; max-width: 384px; aspect-ratio: 2/1; background: #020617; border: 2px solid #00f0ff33; border-radius: 8px; box-shadow: 0 0 15px rgba(0,240,255,0.15); }
@@ -75,13 +77,25 @@
     .swatch { width: 22px; height: 22px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: transform 0.1s; }
     .swatch.active { border-color: #fff; transform: scale(1.2); }
 
-    /* UPLOAD DROP ZONE */
-    .drop-zone { border: 2px dashed #334155; border-radius: 14px; padding: 1.5rem 1rem; text-align: center; background: rgba(30,41,59,0.3); cursor: pointer; transition: all 0.2s; position: relative; }
-    .drop-zone:hover, .drop-zone.dragover { border-color: var(--primary); background: rgba(56,189,248,0.08); }
-    .drop-zone input { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
-    .drop-icon { font-size: 2.2rem; margin-bottom: 6px; }
-    .drop-text { font-size: 0.85rem; font-weight: 800; color: #f8fafc; }
-    .drop-hint { font-size: 0.72rem; color: var(--text-muted); margin-top: 4px; }
+    /* DUAL FRAME UPLOAD */
+    .dual-upload-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 10px; }
+    .frame-box { background: #070a13; border: 2px dashed #334155; border-radius: 12px; padding: 12px; display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; transition: all 0.2s; cursor: pointer; }
+    .frame-box:hover, .frame-box.dragover { border-color: var(--primary); background: rgba(56,189,248,0.06); }
+    .frame-box input[type="file"] { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+    .frame-badge { font-size: 0.7rem; font-weight: 900; background: #1e293b; color: var(--primary); padding: 2px 8px; border-radius: 6px; margin-bottom: 6px; }
+    .frame-canvas { width: 64px; height: 64px; image-rendering: pixelated; background: #020617; border: 1px solid #1e293b; border-radius: 8px; margin-bottom: 6px; }
+    .frame-status { font-size: 0.72rem; color: var(--text-muted); font-weight: 700; }
+
+    /* MASTER DROP ZONE */
+    .master-drop-zone { border: 2px dashed #475569; border-radius: 12px; padding: 12px; text-align: center; background: rgba(30,41,59,0.3); cursor: pointer; transition: all 0.2s; position: relative; margin-bottom: 12px; }
+    .master-drop-zone:hover, .master-drop-zone.dragover { border-color: var(--accent); background: rgba(16,185,129,0.08); }
+    .master-drop-zone input { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+    .master-drop-text { font-size: 0.8rem; font-weight: 800; color: #f8fafc; }
+    .master-drop-hint { font-size: 0.7rem; color: var(--text-muted); margin-top: 2px; }
+
+    /* SETTINGS BAR */
+    .settings-bar { background: #070a13; border: 1px solid #1e293b; border-radius: 10px; padding: 10px 12px; display: flex; gap: 14px; align-items: center; justify-content: space-between; flex-wrap: wrap; margin-bottom: 12px; }
+    .toggle-label { display: flex; align-items: center; gap: 6px; font-size: 0.75rem; font-weight: 800; color: #cbd5e1; cursor: pointer; }
 
     /* INPUTS */
     .form-group { margin-bottom: 0.85rem; text-align: left; }
@@ -107,10 +121,13 @@
         <div class="logo-badge">🎨</div>
         <div>
           <h1 class="title">SOCIES KARAKTER STÜDYOSU</h1>
-          <div class="sub">Canlı Varlık Yönetimi (LiveOps CMS) • APK Güncellemeden Anında Canlıya Alma</div>
+          <div class="sub">Canlı Varlık Yönetimi (LiveOps CMS) • İkili Kare Yükleme & APK'sız Anında OTA Yayın</div>
         </div>
       </div>
       <div class="nav-btns">
+        <button class="btn btn-primary" onclick="importExactSourceCrops()" title="Resimler/pixel_characters_exact_source_crops klasöründeki 5 karakteri içe aktar">
+          📥 Kaynak Klasörden İçe Aktar
+        </button>
         <a href="/app" target="_blank" class="btn btn-secondary">📱 Oyunu Aç</a>
         <a href="/dashboard" class="btn btn-secondary">📊 Sunucu Paneli</a>
         <button class="btn btn-accent" onclick="syncAllDevices()">🚀 Cihazlara Yayınla</button>
@@ -123,7 +140,7 @@
         <div class="card-header">
           <div class="card-title">
             <span>🐾 Karakter Kütüphanesi</span>
-            <span id="charCountBadge" style="font-size:0.75rem; background:#1e293b; color:var(--primary); padding:2px 8px; border-radius:10px; font-weight:800;">Yükleniyor...</span>
+            <span id="charCountBadge" style="font-size:0.75rem; background:#1e293b; color:var(--primary); padding:2px 8px; border-radius:10px; font-weight:800;">0 Karakter</span>
           </div>
           <button class="btn btn-secondary" style="padding:6px 12px; font-size:0.75rem;" onclick="openAddCategoryModal()">
             ➕ Yeni Kategori
@@ -148,7 +165,7 @@
         <div class="oled-box">
           <div class="oled-header">
             <span>📺 128x64 CANLI OLED SİMÜLATÖRÜ</span>
-            <span id="simFpsBadge" style="color:var(--primary);">60 FPS</span>
+            <span id="simAnimBadge" style="color:var(--primary);">KARE 0</span>
           </div>
           <canvas id="simOledCanvas" width="128" height="64"></canvas>
           
@@ -174,22 +191,57 @@
         <!-- KARAKTER YÜKLEME VE YAYIN FORMU -->
         <div class="card">
           <div class="card-header">
-            <div class="card-title">📤 Yeni Karakter Yükle & Yayınla</div>
-            <span style="font-size:0.7rem; color:var(--text-muted);">PNG Spritesheet (64x32)</span>
+            <div class="card-title">📤 Karakter Yükle (2 Kareli Animasyon)</div>
+            <span style="font-size:0.7rem; color:var(--text-muted);">Her Boyutta PNG Destekli</span>
           </div>
 
-          <!-- SÜRÜKLE BIRAK YÜKLEME ALANI -->
-          <div class="drop-zone" id="dropZone">
-            <input type="file" id="fileInput" accept="image/png,image/gif" onchange="handleFileSelect(event)">
-            <div class="drop-icon">🖼️</div>
-            <div class="drop-text" id="dropText">PNG Spritesheet veya Görseli Buraya Sürükleyin</div>
-            <div class="drop-hint">64x32 px (Sol: Frame 0, Sağ: Frame 1) veya 32x32 px PNG</div>
+          <!-- MASTER DROP ZONE (İKİ DOSYAYI BİRDEN VEYA SPRITESHEET ATMAK İÇİN) -->
+          <div class="master-drop-zone" id="masterDropZone">
+            <input type="file" multiple accept="image/png,image/gif" onchange="handleMasterFiles(event.target.files)">
+            <div class="master-drop-text">📂 Her İki Dosyayı Birden Buraya Sürükleyin (Örn: cat_frame0 + cat_frame1)</div>
+            <div class="master-drop-hint">Veya tek bir 64x32 Spritesheet bırakın. Otomatik Kare 0 ve Kare 1 olarak dağıtılır.</div>
           </div>
 
-          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:12px;">
+          <!-- İKİLİ KARE AYRI YÜKLEME KUTULARI -->
+          <div class="dual-upload-grid">
+            <!-- KARE 0 -->
+            <div class="frame-box" id="frameBox0">
+              <input type="file" accept="image/png,image/gif" onchange="handleSingleFrameFile(event.target.files[0], 0)">
+              <div class="frame-badge">KARE 0 (1. ADIM / DURUŞ)</div>
+              <canvas id="canvasF0" class="frame-canvas" width="32" height="32"></canvas>
+              <div class="frame-status" id="statusF0">PNG Seç / Bırak</div>
+            </div>
+
+            <!-- KARE 1 -->
+            <div class="frame-box" id="frameBox1">
+              <input type="file" accept="image/png,image/gif" onchange="handleSingleFrameFile(event.target.files[0], 1)">
+              <div class="frame-badge">KARE 1 (2. ADIM / YÜRÜYÜŞ)</div>
+              <canvas id="canvasF1" class="frame-canvas" width="32" height="32"></canvas>
+              <div class="frame-status" id="statusF1">PNG Seç / Bırak</div>
+            </div>
+          </div>
+
+          <!-- YARDIMCI BUTONLAR & AYARLAR -->
+          <div class="settings-bar">
+            <label class="toggle-label" title="Şeffaf arka planlı çizimlerde gövdeyi otomatik doldurur">
+              <input type="checkbox" id="chkAutoFill" checked onchange="reprocessCurrentFrames()">
+              <span>✨ Gövdeyi Otomatik Doldur</span>
+            </label>
+            <div style="display:flex; gap:6px;">
+              <button class="btn btn-secondary" style="padding:4px 8px; font-size:0.72rem;" onclick="copyFrame0ToFrame1()" title="Kare 0'ı Kare 1'e Kopyala">
+                📋 K0 ➔ K1
+              </button>
+              <button class="btn btn-secondary" style="padding:4px 8px; font-size:0.72rem;" onclick="swapFrames()" title="Kareleri Değiş-Tokuş Et">
+                🔄 Değiş
+              </button>
+            </div>
+          </div>
+
+          <!-- METADATA FORMU -->
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
             <div class="form-group">
               <label class="form-label">Karakter Adı</label>
-              <input type="text" id="inputCharName" class="form-input" placeholder="Örn: Karamel Kedi">
+              <input type="text" id="inputCharName" class="form-input" placeholder="Örn: Tekir Kedi">
             </div>
             <div class="form-group">
               <label class="form-label">Kategori</label>
@@ -252,31 +304,438 @@
     let categories = [
       { id: 'all', name: 'Tümü', icon: '🌟' },
       { id: 'animals', name: 'Hayvanlar', icon: '🐾' },
+      { id: 'cute', name: 'Sevimliler', icon: '✨' },
       { id: 'spooky', name: 'Canavarlar', icon: '🎃' },
       { id: 'aliens', name: 'Uzaylılar', icon: '🛸' },
       { id: 'robots', name: 'Robotlar', icon: '🤖' },
-      { id: 'cute', name: 'Sevimliler', icon: '✨' },
-      { id: 'emojis', name: 'Emojiler', icon: '😀' },
-      { id: 'retro', name: 'Retro Oyunlar', icon: '👾' },
-      { id: 'rpg', name: 'RPG', icon: '⚔️' },
-      { id: 'nature', name: 'Doğa', icon: '🌿' },
-      { id: 'jobs', name: 'Meslekler', icon: '👨‍🚀' }
+      { id: 'retro', name: 'Retro Efsaneler', icon: '👾' },
+      { id: 'rpg', name: 'RPG & Zindan', icon: '⚔️' }
     ];
 
     let currentFilter = 'all';
-    let simColor = '#38bdf8';
     let simAction = 'WALK';
+    let simColor = '#38bdf8';
     let simFrame = 0;
-    let activeCharSprite = null; // { frame0: [...], frame1: [...] }
+
+    let rawImage0 = null;
+    let rawImage1 = null;
+    let activeCharSprite = null;
 
     const oledCanvas = document.getElementById('simOledCanvas');
     const oledCtx = oledCanvas.getContext('2d');
+    const cvsF0 = document.getElementById('canvasF0');
+    const ctxF0 = cvsF0.getContext('2d');
+    const cvsF1 = document.getElementById('canvasF1');
+    const ctxF1 = cvsF1.getContext('2d');
 
     window.addEventListener('DOMContentLoaded', () => {
       fetchCategories();
       fetchCatalog();
       startOledSimLoop();
+      setupDragAndDrop();
     });
+
+    function setupDragAndDrop() {
+      const setupZone = (el, onFiles) => {
+        el.addEventListener('dragover', (e) => { e.preventDefault(); el.classList.add('dragover'); });
+        el.addEventListener('dragleave', () => el.classList.remove('dragover'));
+        el.addEventListener('drop', (e) => {
+          e.preventDefault();
+          el.classList.remove('dragover');
+          if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+            onFiles(e.dataTransfer.files);
+          }
+        });
+      };
+
+      setupZone(document.getElementById('masterDropZone'), handleMasterFiles);
+      setupZone(document.getElementById('frameBox0'), (files) => handleSingleFrameFile(files[0], 0));
+      setupZone(document.getElementById('frameBox1'), (files) => handleSingleFrameFile(files[0], 1));
+    }
+
+    function handleMasterFiles(files) {
+      if (!files || files.length === 0) return;
+
+      if (files.length === 1) {
+        const file = files[0];
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = new Image();
+          img.onload = () => {
+            if (img.width >= img.height * 1.6) {
+              splitSpritesheetIntoFrames(img, file.name);
+            } else {
+              rawImage0 = img;
+              rawImage1 = img;
+              const cleanName = cleanFilenameToTitle(file.name);
+              document.getElementById('inputCharName').value = cleanName;
+              reprocessCurrentFrames();
+              document.getElementById('statusF0').innerText = `✅ ${file.name}`;
+              document.getElementById('statusF1').innerText = `(Kare 0'dan Kopyalandı)`;
+              showToast(`✨ ${file.name} yüklendi!`);
+            }
+          };
+          img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      } else if (files.length >= 2) {
+        let file0 = null;
+        let file1 = null;
+
+        for (let i = 0; i < files.length; i++) {
+          const fn = files[i].name.toLowerCase();
+          if (fn.includes('frame0') || fn.includes('_0.') || fn.includes('0.')) {
+            file0 = files[i];
+          } else if (fn.includes('frame1') || fn.includes('_1.') || fn.includes('1.')) {
+            file1 = files[i];
+          }
+        }
+
+        if (!file0 || !file1) {
+          file0 = files[0];
+          file1 = files[1];
+        }
+
+        loadBothFilesTogether(file0, file1);
+      }
+    }
+
+    function loadBothFilesTogether(f0, f1) {
+      const reader0 = new FileReader();
+      reader0.onload = (e0) => {
+        const img0 = new Image();
+        img0.onload = () => {
+          rawImage0 = img0;
+          document.getElementById('statusF0').innerText = `✅ ${f0.name}`;
+
+          const reader1 = new FileReader();
+          reader1.onload = (e1) => {
+            const img1 = new Image();
+            img1.onload = () => {
+              rawImage1 = img1;
+              document.getElementById('statusF1').innerText = `✅ ${f1.name}`;
+              const cleanName = cleanFilenameToTitle(f0.name.replace(/_frame0|_0|frame0/gi, ''));
+              document.getElementById('inputCharName').value = cleanName;
+              reprocessCurrentFrames();
+              showToast(`🎉 Her iki kare de yüklendi (${cleanName})!`);
+            };
+            img1.src = e1.target.result;
+          };
+          reader1.readAsDataURL(f1);
+        };
+        img0.src = e0.target.result;
+      };
+      reader0.readAsDataURL(f0);
+    }
+
+    function handleSingleFrameFile(file, frameIndex) {
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          if (frameIndex === 0) {
+            rawImage0 = img;
+            document.getElementById('statusF0').innerText = `✅ ${file.name}`;
+            if (!rawImage1) {
+              rawImage1 = img;
+              document.getElementById('statusF1').innerText = `(Kare 0'dan Kopyalandı)`;
+            }
+            if (!document.getElementById('inputCharName').value) {
+              document.getElementById('inputCharName').value = cleanFilenameToTitle(file.name.replace(/_frame0|_0|frame0/gi, ''));
+            }
+          } else {
+            rawImage1 = img;
+            document.getElementById('statusF1').innerText = `✅ ${file.name}`;
+          }
+          reprocessCurrentFrames();
+          showToast(`Kare ${frameIndex} yüklendi (${img.width}x${img.height} px)`);
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function splitSpritesheetIntoFrames(sheetImg, filename) {
+      const halfW = Math.floor(sheetImg.width / 2);
+      const h = sheetImg.height;
+
+      const c0 = document.createElement('canvas');
+      c0.width = halfW; c0.height = h;
+      c0.getContext('2d').drawImage(sheetImg, 0, 0, halfW, h, 0, 0, halfW, h);
+      const img0 = new Image();
+      img0.onload = () => {
+        rawImage0 = img0;
+        document.getElementById('statusF0').innerText = `✅ Sol Yarısı (${halfW}x${h})`;
+
+        const c1 = document.createElement('canvas');
+        c1.width = halfW; c1.height = h;
+        c1.getContext('2d').drawImage(sheetImg, halfW, 0, halfW, h, 0, 0, halfW, h);
+        const img1 = new Image();
+        img1.onload = () => {
+          rawImage1 = img1;
+          document.getElementById('statusF1').innerText = `✅ Sağ Yarısı (${halfW}x${h})`;
+          document.getElementById('inputCharName').value = cleanFilenameToTitle(filename);
+          reprocessCurrentFrames();
+          showToast(`✨ Spritesheet 2 kareye bölündü!`);
+        };
+        img1.src = c1.toDataURL();
+      };
+      img0.src = c0.toDataURL();
+    }
+
+    function copyFrame0ToFrame1() {
+      if (!rawImage0) {
+        showToast('⚠️ Önce Kare 0 yükleyin!', '#ef4444');
+        return;
+      }
+      rawImage1 = rawImage0;
+      document.getElementById('statusF1').innerText = `(Kare 0'dan Kopyalandı)`;
+      reprocessCurrentFrames();
+      showToast('Kare 0, Kare 1 olarak kopyalandı.');
+    }
+
+    function swapFrames() {
+      if (!rawImage0 && !rawImage1) return;
+      const tmp = rawImage0;
+      rawImage0 = rawImage1;
+      rawImage1 = tmp;
+      reprocessCurrentFrames();
+      showToast('Kare 0 ve Kare 1 yer değiştirdi.');
+    }
+
+    function cleanFilenameToTitle(filename) {
+      const clean = filename.replace(/\.[^/.]+$/, "").replace(/[-_]/g, ' ');
+      return clean.charAt(0).toUpperCase() + clean.slice(1);
+    }
+
+    function reprocessCurrentFrames() {
+      const autoFill = document.getElementById('chkAutoFill').checked;
+
+      let m0 = null;
+      let m1 = null;
+
+      if (rawImage0) {
+        m0 = convertImageToPixelMatrix(rawImage0, autoFill);
+        renderMatrixToContext(ctxF0, m0, 0, 0, simColor);
+      }
+      if (rawImage1) {
+        m1 = convertImageToPixelMatrix(rawImage1, autoFill);
+        renderMatrixToContext(ctxF1, m1, 0, 0, simColor);
+      }
+
+      if (m0) {
+        activeCharSprite = {
+          name: document.getElementById('inputCharName').value.trim() || 'Yeni Karakter',
+          category: document.getElementById('selectCharCategory').value || 'animals',
+          icon: document.getElementById('inputCharIcon').value.trim() || '🐾',
+          color: simColor,
+          desc: document.getElementById('inputCharDesc').value.trim() || '',
+          frame0: m0,
+          frame1: m1 || m0
+        };
+      }
+    }
+
+    function convertImageToPixelMatrix(img, autoFill = true) {
+      const targetMax = (img.width <= 32 && img.height <= 32) ? Math.max(img.width, img.height) : 28;
+      const scale = Math.min(targetMax / img.width, targetMax / img.height);
+      const nw = Math.max(1, Math.round(img.width * scale));
+      const nh = Math.max(1, Math.round(img.height * scale));
+      const ox = Math.floor((32 - nw) / 2);
+      const oy = Math.floor((32 - nh) / 2);
+
+      const canvas = document.createElement('canvas');
+      canvas.width = 32;
+      canvas.height = 32;
+      const ctx = canvas.getContext('2d', { willReadFrequently: true });
+      ctx.imageSmoothingEnabled = (img.width > 40 || img.height > 40);
+      ctx.drawImage(img, ox, oy, nw, nh);
+
+      const imgData = ctx.getImageData(0, 0, 32, 32);
+      const data = imgData.data;
+
+      const outline = Array(32).fill(null).map(() => Array(32).fill(false));
+      const preFilled = Array(32).fill(null).map(() => Array(32).fill(false));
+
+      for (let y = 0; y < 32; y++) {
+        for (let x = 0; x < 32; x++) {
+          const idx = (y * 32 + x) * 4;
+          const r = data[idx];
+          const g = data[idx + 1];
+          const b = data[idx + 2];
+          const a = data[idx + 3];
+          const brightness = (r * 0.299 + g * 0.587 + b * 0.114);
+
+          if (a > 75) {
+            if (brightness < 125) {
+              outline[y][x] = true;
+            } else {
+              preFilled[y][x] = true;
+            }
+          }
+        }
+      }
+
+      const outside = Array(32).fill(null).map(() => Array(32).fill(false));
+      const queue = [];
+
+      for (let r = 0; r < 32; r++) {
+        for (const c of [0, 31]) {
+          if (!outline[r][c] && !outside[r][c]) {
+            outside[r][c] = true;
+            queue.push([r, c]);
+          }
+        }
+      }
+      for (let c = 0; c < 32; c++) {
+        for (const r of [0, 31]) {
+          if (!outline[r][c] && !outside[r][c]) {
+            outside[r][c] = true;
+            queue.push([r, c]);
+          }
+        }
+      }
+
+      while (queue.length > 0) {
+        const [cr, cc] = queue.shift();
+        const neighbors = [[cr - 1, cc], [cr + 1, cc], [cr, cc - 1], [cr, cc + 1]];
+        for (const [nr, nc] of neighbors) {
+          if (nr >= 0 && nr < 32 && nc >= 0 && nc < 32) {
+            if (!outline[nr][nc] && !outside[nr][nc]) {
+              outside[nr][nc] = true;
+              queue.push([nr, nc]);
+            }
+          }
+        }
+      }
+
+      const matrix = [];
+      for (let y = 0; y < 32; y++) {
+        let row = '';
+        for (let x = 0; x < 32; x++) {
+          if (outline[y][x]) {
+            row += 'x';
+          } else if (outside[y][x]) {
+            row += '.';
+          } else {
+            row += (autoFill || preFilled[y][x]) ? '#' : '.';
+          }
+        }
+        matrix.push(row);
+      }
+      return matrix;
+    }
+
+    function renderMatrixToContext(ctx, grid, px, py, bodyColor) {
+      if (!ctx || !grid) return;
+      ctx.fillStyle = '#020617';
+      ctx.fillRect(px, py, 32, 32);
+
+      for (let r = 0; r < 32; r++) {
+        const row = grid[r];
+        if (!row) continue;
+        for (let c = 0; c < 32; c++) {
+          const ch = row[c];
+          if (ch === '#') {
+            ctx.fillStyle = bodyColor;
+            ctx.fillRect(px + c, py + r, 1, 1);
+          } else if (ch === 'x' || ch === '1') {
+            ctx.fillStyle = '#020617';
+            ctx.fillRect(px + c, py + r, 1, 1);
+          }
+        }
+      }
+    }
+
+    function startOledSimLoop() {
+      function loop() {
+        simFrame++;
+        renderSimOledFrame();
+        requestAnimationFrame(loop);
+      }
+      requestAnimationFrame(loop);
+    }
+
+    function renderSimOledFrame() {
+      oledCtx.fillStyle = '#020617';
+      oledCtx.fillRect(0, 0, 128, 64);
+
+      oledCtx.fillStyle = '#1e293b';
+      oledCtx.fillRect(0, 56, 128, 1);
+      oledCtx.fillStyle = '#0f172a';
+      oledCtx.fillRect(0, 57, 128, 7);
+
+      oledCtx.fillStyle = '#334155';
+      oledCtx.font = '6px "JetBrains Mono", monospace';
+      oledCtx.fillText('SOCIES RETRO OLED 128x64', 6, 8);
+      oledCtx.fillStyle = '#10b981';
+      oledCtx.fillText('CANLI CMS', 92, 8);
+
+      if (!activeCharSprite) return;
+
+      const isFrame1 = (Math.floor(simFrame / 22) % 2 === 1);
+      const grid = (isFrame1 && activeCharSprite.frame1) ? activeCharSprite.frame1 : activeCharSprite.frame0;
+
+      const badge = document.getElementById('simAnimBadge');
+      if (badge) badge.innerText = isFrame1 ? 'KARE 1 (ADIM)' : 'KARE 0 (DURUŞ)';
+
+      let px = 48;
+      let py = 24;
+
+      if (simAction === 'WALK') {
+        px = Math.round(48 + Math.sin(simFrame * 0.05) * 20);
+      } else if (simAction === 'JUMP') {
+        py = Math.round(24 - Math.abs(Math.sin(simFrame * 0.15)) * 14);
+      } else if (simAction === 'HAPPY') {
+        py = Math.round(24 - Math.abs(Math.sin(simFrame * 0.25)) * 5);
+        oledCtx.fillStyle = '#f43f5e';
+        const hy = py - 4 - (simFrame % 20);
+        oledCtx.fillRect(px + 14, hy, 4, 3);
+      } else if (simAction === 'ROPE') {
+        const ropePhase = (simFrame % 36) / 36;
+        const isJump = (ropePhase > 0.4 && ropePhase < 0.75);
+        py = isJump ? 17 : 24;
+        oledCtx.strokeStyle = '#fde047';
+        oledCtx.lineWidth = 1;
+        oledCtx.beginPath();
+        if (isJump) oledCtx.arc(px + 16, 40, 18, 0, Math.PI);
+        else oledCtx.arc(px + 16, 25, 18, Math.PI, 0);
+        oledCtx.stroke();
+      }
+
+      renderSpriteToContext(oledCtx, grid, px, py, activeCharSprite.color || simColor);
+    }
+
+    function renderSpriteToContext(ctx, grid, px, py, bodyColor) {
+      if (!grid) return;
+      for (let r = 0; r < 32; r++) {
+        const row = grid[r];
+        if (!row) continue;
+        for (let c = 0; c < 32; c++) {
+          const ch = row[c];
+          if (ch === '#') {
+            ctx.fillStyle = bodyColor;
+            ctx.fillRect(px + c, py + r, 1, 1);
+          } else if (ch === 'x' || ch === '1') {
+            ctx.fillStyle = '#020617';
+            ctx.fillRect(px + c, py + r, 1, 1);
+          }
+        }
+      }
+    }
+
+    function setSimAction(action) {
+      simAction = action;
+    }
+
+    function setSimColor(col, el) {
+      simColor = col;
+      if (activeCharSprite) activeCharSprite.color = col;
+      document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
+      if (el) el.classList.add('active');
+      reprocessCurrentFrames();
+    }
 
     async function fetchCategories() {
       try {
@@ -300,9 +759,9 @@
           catalog = data.characters || {};
           renderCharacterGrid();
           document.getElementById('charCountBadge').innerText = Object.keys(catalog).length + ' Karakter';
-          
+
           if (!activeCharSprite && catalog['cat']) {
-            activeCharSprite = catalog['cat'];
+            loadIntoSimulator(catalog['cat']);
           }
         }
       } catch (e) {
@@ -358,28 +817,24 @@
       filtered.forEach(k => {
         const c = catalog[k];
         const card = document.createElement('div');
-        card.className = 'char-card';
+        const isSel = activeCharSprite && activeCharSprite.id === k;
+        card.className = 'char-card' + (isSel ? ' selected' : '');
         const cvsId = 'cvs_thumb_' + k.replace(/[^a-zA-Z0-9]/g, '_');
 
         card.innerHTML = `
-          <button class="char-del-btn" onclick="deleteCharacter('${k}')" title="Karakteri Sil">✕</button>
+          <button class="char-del-btn" onclick="event.stopPropagation(); deleteCharacter('${k}')" title="Karakteri Sil">✕</button>
           <canvas id="${cvsId}" width="32" height="32"></canvas>
           <div class="char-name">${c.name}</div>
           <div class="char-cat">${c.category}</div>
         `;
-        card.onclick = (e) => {
-          if (e.target.classList.contains('char-del-btn')) return;
-          loadIntoSimulator(c);
-        };
+        card.onclick = () => loadIntoSimulator(c);
         grid.appendChild(card);
 
         setTimeout(() => {
           const tCvs = document.getElementById(cvsId);
           if (tCvs) {
             const ctx = tCvs.getContext('2d');
-            ctx.fillStyle = '#020617';
-            ctx.fillRect(0, 0, 32, 32);
-            renderSpriteToContext(ctx, c.frame0 || c.grid, 0, 0, c.color || '#38bdf8');
+            renderMatrixToContext(ctx, c.frame0 || c.grid, 0, 0, c.color || '#38bdf8');
           }
         }, 10);
       });
@@ -392,192 +847,28 @@
       document.getElementById('selectCharCategory').value = charData.category || 'animals';
       document.getElementById('inputCharIcon').value = charData.icon || '🐾';
       document.getElementById('inputCharDesc').value = charData.desc || '';
+
+      if (charData.frame0) {
+        renderMatrixToContext(ctxF0, charData.frame0, 0, 0, simColor);
+        document.getElementById('statusF0').innerText = '✅ Kataloğa Yüklü';
+      }
+      if (charData.frame1) {
+        renderMatrixToContext(ctxF1, charData.frame1, 0, 0, simColor);
+        document.getElementById('statusF1').innerText = '✅ Kataloğa Yüklü';
+      }
+
+      document.querySelectorAll('.swatch').forEach(s => {
+        if (s.style.background === simColor) s.classList.add('active');
+        else s.classList.remove('active');
+      });
+
+      renderCharacterGrid();
       showToast(`🔍 ${charData.name} OLED simülatörüne yüklendi.`);
-    }
-
-    function startOledSimLoop() {
-      function loop() {
-        simFrame++;
-        renderSimOledFrame();
-        requestAnimationFrame(loop);
-      }
-      requestAnimationFrame(loop);
-    }
-
-    function renderSimOledFrame() {
-      oledCtx.fillStyle = '#020617';
-      oledCtx.fillRect(0, 0, 128, 64);
-
-      oledCtx.fillStyle = '#1e293b';
-      oledCtx.fillRect(0, 56, 128, 1);
-      oledCtx.fillStyle = '#0f172a';
-      oledCtx.fillRect(0, 57, 128, 7);
-
-      oledCtx.fillStyle = '#334155';
-      oledCtx.font = '6px "JetBrains Mono", monospace';
-      oledCtx.fillText('SOCIES RETRO OLED 128x64', 6, 8);
-      oledCtx.fillStyle = '#10b981';
-      oledCtx.fillText('CANLI CMS', 92, 8);
-
-      if (!activeCharSprite) return;
-
-      const walkFrame = (Math.floor(simFrame / 20) % 2);
-      const grid = (walkFrame === 1 && activeCharSprite.frame1) ? activeCharSprite.frame1 : (activeCharSprite.frame0 || activeCharSprite.grid);
-
-      let px = 48;
-      let py = 24;
-
-      if (simAction === 'WALK') {
-        px = Math.round(48 + Math.sin(simFrame * 0.05) * 20);
-      } else if (simAction === 'JUMP') {
-        py = Math.round(24 - Math.abs(Math.sin(simFrame * 0.15)) * 14);
-      } else if (simAction === 'HAPPY') {
-        py = Math.round(24 - Math.abs(Math.sin(simFrame * 0.25)) * 5);
-        oledCtx.fillStyle = '#f43f5e';
-        const hy = py - 4 - (simFrame % 20);
-        oledCtx.fillRect(px + 14, hy, 4, 3);
-      } else if (simAction === 'ROPE') {
-        const ropePhase = (simFrame % 36) / 36;
-        const isJump = (ropePhase > 0.4 && ropePhase < 0.75);
-        py = isJump ? 17 : 24;
-        oledCtx.strokeStyle = '#fde047';
-        oledCtx.lineWidth = 1;
-        oledCtx.beginPath();
-        if (isJump) oledCtx.arc(px + 16, 40, 18, 0, Math.PI);
-        else oledCtx.arc(px + 16, 25, 18, Math.PI, 0);
-        oledCtx.stroke();
-      }
-
-      renderSpriteToContext(oledCtx, grid, px, py, simColor);
-    }
-
-    function renderSpriteToContext(ctx, grid, px, py, bodyColor) {
-      if (!grid) return;
-      const gH = grid.length;
-      const gW = grid[0] ? grid[0].length : 32;
-
-      for (let r = 0; r < gH; r++) {
-        const row = grid[r];
-        for (let col = 0; col < gW; col++) {
-          const ch = row[col];
-          if (ch === '#') {
-            ctx.fillStyle = bodyColor;
-            ctx.fillRect(px + col, py + r, 1, 1);
-          } else if (ch === 'x' || ch === '1') {
-            ctx.fillStyle = '#020617';
-            ctx.fillRect(px + col, py + r, 1, 1);
-          }
-        }
-      }
-    }
-
-    function setSimAction(action) {
-      simAction = action;
-    }
-
-    function setSimColor(col, el) {
-      simColor = col;
-      document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
-      el.classList.add('active');
-    }
-
-    const dropZone = document.getElementById('dropZone');
-    dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
-    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
-    dropZone.addEventListener('drop', (e) => {
-      e.preventDefault();
-      dropZone.classList.remove('dragover');
-      if (e.dataTransfer.files.length > 0) {
-        processUploadedFile(e.dataTransfer.files[0]);
-      }
-    });
-
-    function handleFileSelect(event) {
-      if (event.target.files.length > 0) {
-        processUploadedFile(event.target.files[0]);
-      }
-    }
-
-    function processUploadedFile(file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const img = new Image();
-        img.onload = () => {
-          convertImageToSpriteMatrices(img, file.name);
-        };
-        img.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function convertImageToSpriteMatrices(img, filename) {
-      const canvas = document.createElement('canvas');
-      const w = img.width;
-      const h = img.height;
-      canvas.width = w;
-      canvas.height = h;
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(img, 0, 0);
-
-      const imgData = ctx.getImageData(0, 0, w, h);
-      const data = imgData.data;
-
-      let isSheet = (w >= 60 && w <= 70 && h >= 30 && h <= 34);
-      let f0 = Array(32).fill('').map(() => Array(32).fill('.'));
-      let f1 = Array(32).fill('').map(() => Array(32).fill('.'));
-
-      for (let y = 0; y < 32; y++) {
-        for (let x = 0; x < 32; x++) {
-          const idx0 = (y * w + x) * 4;
-          const a0 = data[idx0 + 3];
-          const r0 = data[idx0];
-          const g0 = data[idx0 + 1];
-          const b0 = data[idx0 + 2];
-
-          if (a0 > 60) {
-            const brightness = (r0 * 0.299 + g0 * 0.587 + b0 * 0.114);
-            f0[y][x] = (brightness < 90) ? 'x' : '#';
-          }
-
-          if (isSheet) {
-            const x2 = x + 32;
-            const idx1 = (y * w + x2) * 4;
-            const a1 = data[idx1 + 3];
-            const r1 = data[idx1];
-            const g1 = data[idx1 + 1];
-            const b1 = data[idx1 + 2];
-            if (a1 > 60) {
-              const b1_val = (r1 * 0.299 + g1 * 0.587 + b1 * 0.114);
-              f1[y][x] = (b1_val < 90) ? 'x' : '#';
-            }
-          } else {
-            f1[y][x] = f0[y][x];
-          }
-        }
-      }
-
-      const f0_strings = f0.map(r => r.join(''));
-      const f1_strings = f1.map(r => r.join(''));
-
-      const cleanName = filename.replace(/\.[^/.]+$/, "").replace(/[-_]/g, ' ');
-      const titleName = cleanName.charAt(0).toUpperCase() + cleanName.slice(1);
-
-      activeCharSprite = {
-        name: titleName,
-        category: document.getElementById('selectCharCategory').value || 'animals',
-        color: simColor,
-        frame0: f0_strings,
-        frame1: f1_strings
-      };
-
-      document.getElementById('inputCharName').value = titleName;
-      document.getElementById('dropText').innerText = `✅ ${filename} yüklendi (${w}x${h} px)!`;
-      showToast(`✨ ${filename} 1-Bit matrisine dönüştürüldü!`);
     }
 
     async function saveAndPublishCharacter() {
       if (!activeCharSprite || !activeCharSprite.frame0) {
-        showToast('⚠️ Lütfen önce bir PNG dosyası yükleyin!', '#ef4444');
+        showToast('⚠️ Lütfen önce bir resim yükleyin!', '#ef4444');
         return;
       }
 
@@ -590,7 +881,7 @@
       const category = document.getElementById('selectCharCategory').value;
       const icon = document.getElementById('inputCharIcon').value.trim() || '🐾';
       const desc = document.getElementById('inputCharDesc').value.trim() || `${name} - 1-Bit Retro Sanal Bebek`;
-      const id = name.toLowerCase().replace(/[^a-z0-9]/g, '_') + '_' + Date.now().toString().slice(-4);
+      const id = activeCharSprite.id || (name.toLowerCase().replace(/[^a-z0-9]/g, '_') + '_' + Date.now().toString().slice(-4));
 
       const payload = {
         id,
@@ -600,7 +891,7 @@
         color: simColor,
         desc,
         frame0: activeCharSprite.frame0,
-        frame1: activeCharSprite.frame1
+        frame1: activeCharSprite.frame1 || activeCharSprite.frame0
       };
 
       try {
@@ -636,6 +927,22 @@
         }
       } catch (e) {
         showToast('Hata: ' + e.message, '#ef4444');
+      }
+    }
+
+    async function importExactSourceCrops() {
+      showToast('⏳ Resimler klasöründeki karakterler aktarılıyor...');
+      try {
+        const res = await fetch('/api/v1/characters/import-source-crops', { method: 'POST' });
+        const data = await res.json();
+        if (data.success) {
+          showToast(`🎉 ${data.message}`);
+          fetchCatalog();
+        } else {
+          showToast('Hata: ' + data.error, '#ef4444');
+        }
+      } catch (e) {
+        showToast('Bağlantı hatası: ' + e.message, '#ef4444');
       }
     }
 
