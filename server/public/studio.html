@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>SOCIES - Karakter Stüdyosu & Canlı Yayın Masası</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #070a13;
+      --card-bg: #0f172a;
+      --card-border: #1e293b;
+      --primary: #38bdf8;
+      --primary-hover: #0ea5e9;
+      --accent: #10b981;
+      --danger: #ef4444;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+    body { background: var(--bg); color: var(--text); padding: 1.5rem; min-height: 100vh; }
+    .container { max-width: 1440px; margin: 0 auto; }
+    
+    /* HEADER */
+    .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--card-border); padding-bottom: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+    .logo-box { display: flex; align-items: center; gap: 12px; }
+    .logo-badge { font-size: 2rem; background: #1e293b; border: 1px solid #334155; border-radius: 12px; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; }
+    .title { font-size: 1.4rem; font-weight: 900; letter-spacing: -0.5px; background: linear-gradient(90deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .sub { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; }
+    .nav-btns { display: flex; gap: 8px; }
+    .btn { padding: 8px 16px; border-radius: 10px; font-weight: 800; font-size: 0.85rem; border: none; cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 6px; }
+    .btn-primary { background: var(--primary); color: #020617; }
+    .btn-primary:hover { background: var(--primary-hover); transform: translateY(-1px); }
+    .btn-accent { background: var(--accent); color: #020617; font-weight: 900; }
+    .btn-accent:hover { background: #059669; }
+    .btn-secondary { background: #1e293b; color: #f8fafc; border: 1px solid #334155; }
+    .btn-secondary:hover { background: #334155; }
+    .btn-danger { background: #ef4444; color: #fff; }
+    .btn-danger:hover { background: #dc2626; }
+
+    /* LAYOUT */
+    .main-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 1.5rem; align-items: start; }
+    @media (max-width: 992px) { .main-grid { grid-template-columns: 1fr; } }
+
+    /* CARDS */
+    .card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; padding: 1.25rem; box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid #1e293b; padding-bottom: 0.75rem; }
+    .card-title { font-size: 1rem; font-weight: 800; color: #f8fafc; display: flex; align-items: center; gap: 8px; }
+    
+    /* CATEGORIES PILLS */
+    .cat-bar { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 1rem; }
+    .cat-pill { padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 800; cursor: pointer; background: #1e293b; color: var(--text-muted); border: 1px solid #334155; white-space: nowrap; transition: all 0.15s; }
+    .cat-pill.active { background: var(--primary); color: #020617; border-color: var(--primary); }
+    .cat-pill:hover:not(.active) { background: #334155; color: #fff; }
+
+    /* CHARACTERS GRID */
+    .char-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; max-height: 580px; overflow-y: auto; padding-right: 4px; }
+    .char-card { background: #070a13; border: 1px solid #1e293b; border-radius: 12px; padding: 10px; display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; transition: all 0.15s; }
+    .char-card:hover { border-color: var(--primary); transform: translateY(-2px); box-shadow: 0 4px 16px rgba(56,189,248,0.2); }
+    .char-card canvas { width: 64px; height: 64px; image-rendering: pixelated; background: #020617; border: 1px solid #1e293b; border-radius: 8px; margin-bottom: 6px; }
+    .char-name { font-size: 0.82rem; font-weight: 800; color: #f8fafc; margin-bottom: 2px; }
+    .char-cat { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; }
+    .char-del-btn { position: absolute; top: 4px; right: 4px; background: rgba(239,68,68,0.2); color: #ef4444; border: none; border-radius: 6px; width: 22px; height: 22px; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; justify-content: center; opacity: 0.7; transition: opacity 0.15s; }
+    .char-del-btn:hover { opacity: 1; background: #ef4444; color: #fff; }
+
+    /* UPLOAD & SIMULATOR (RIGHT PANEL) */
+    .sim-panel { display: flex; flex-direction: column; gap: 1rem; }
+    .oled-box { background: #020617; border: 3px solid #1e293b; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; align-items: center; box-shadow: inset 0 0 20px rgba(0,0,0,0.8), 0 8px 30px rgba(0,0,0,0.5); }
+    .oled-header { width: 100%; display: flex; justify-content: space-between; font-size: 0.72rem; color: #64748b; font-weight: 800; margin-bottom: 8px; font-family: 'JetBrains Mono', monospace; }
+    #simOledCanvas { image-rendering: pixelated; width: 100%; max-width: 384px; aspect-ratio: 2/1; background: #020617; border: 2px solid #00f0ff33; border-radius: 8px; box-shadow: 0 0 15px rgba(0,240,255,0.15); }
+    .sim-controls { display: flex; gap: 6px; margin-top: 10px; width: 100%; justify-content: center; }
+    
+    /* PALETTE SELECTOR */
+    .palette-box { display: flex; gap: 8px; align-items: center; justify-content: center; margin-top: 6px; }
+    .swatch { width: 22px; height: 22px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: transform 0.1s; }
+    .swatch.active { border-color: #fff; transform: scale(1.2); }
+
+    /* UPLOAD DROP ZONE */
+    .drop-zone { border: 2px dashed #334155; border-radius: 14px; padding: 1.5rem 1rem; text-align: center; background: rgba(30,41,59,0.3); cursor: pointer; transition: all 0.2s; position: relative; }
+    .drop-zone:hover, .drop-zone.dragover { border-color: var(--primary); background: rgba(56,189,248,0.08); }
+    .drop-zone input { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+    .drop-icon { font-size: 2.2rem; margin-bottom: 6px; }
+    .drop-text { font-size: 0.85rem; font-weight: 800; color: #f8fafc; }
+    .drop-hint { font-size: 0.72rem; color: var(--text-muted); margin-top: 4px; }
+
+    /* INPUTS */
+    .form-group { margin-bottom: 0.85rem; text-align: left; }
+    .form-label { font-size: 0.75rem; font-weight: 800; color: var(--text-muted); margin-bottom: 4px; display: block; text-transform: uppercase; }
+    .form-input, .form-select { width: 100%; padding: 10px 12px; background: #070a13; border: 1px solid #334155; border-radius: 10px; color: #f8fafc; font-size: 0.88rem; font-weight: 700; outline: none; transition: border-color 0.15s; }
+    .form-input:focus, .form-select:focus { border-color: var(--primary); }
+
+    /* MODAL */
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center; z-index: 999; }
+    .modal-dialog { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 18px; padding: 1.5rem; max-width: 420px; width: 90%; box-shadow: 0 12px 40px rgba(0,0,0,0.6); }
+
+    /* TOAST */
+    #toast { position: fixed; bottom: 20px; right: 20px; background: #10b981; color: #020617; padding: 12px 20px; border-radius: 12px; font-weight: 900; font-size: 0.88rem; box-shadow: 0 8px 24px rgba(0,0,0,0.4); display: none; z-index: 1000; animation: slideUp 0.2s ease-out; }
+    @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- HEADER -->
+    <header class="header">
+      <div class="logo-box">
+        <div class="logo-badge">🎨</div>
+        <div>
+          <h1 class="title">SOCIES KARAKTER STÜDYOSU</h1>
+          <div class="sub">Canlı Varlık Yönetimi (LiveOps CMS) • APK Güncellemeden Anında Canlıya Alma</div>
+        </div>
+      </div>
+      <div class="nav-btns">
+        <a href="/app" target="_blank" class="btn btn-secondary">📱 Oyunu Aç</a>
+        <a href="/dashboard" class="btn btn-secondary">📊 Sunucu Paneli</a>
+        <button class="btn btn-accent" onclick="syncAllDevices()">🚀 Cihazlara Yayınla</button>
+      </div>
+    </header>
+
+    <div class="main-grid">
+      <!-- LEFT COLUMN: KARAKTER KÜTÜPHANESİ & KATEGORİLER -->
+      <section class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span>🐾 Karakter Kütüphanesi</span>
+            <span id="charCountBadge" style="font-size:0.75rem; background:#1e293b; color:var(--primary); padding:2px 8px; border-radius:10px; font-weight:800;">Yükleniyor...</span>
+          </div>
+          <button class="btn btn-secondary" style="padding:6px 12px; font-size:0.75rem;" onclick="openAddCategoryModal()">
+            ➕ Yeni Kategori
+          </button>
+        </div>
+
+        <!-- KATEGORİ SEKMELERİ -->
+        <div class="cat-bar" id="categoryPills">
+          <button class="cat-pill active" onclick="filterCategory('all')">🌟 Tümü</button>
+        </div>
+
+        <!-- KARAKTERLER GRID -->
+        <div class="char-grid" id="charactersList">
+          <!-- JS ile doldurulur -->
+        </div>
+      </section>
+
+      <!-- RIGHT COLUMN: YENİ KARAKTER YÜKLEME & CANLI OLED SİMÜLATÖRÜ -->
+      <section class="sim-panel">
+        
+        <!-- CANLI 128x64 RETRO OLED MONİTÖR -->
+        <div class="oled-box">
+          <div class="oled-header">
+            <span>📺 128x64 CANLI OLED SİMÜLATÖRÜ</span>
+            <span id="simFpsBadge" style="color:var(--primary);">60 FPS</span>
+          </div>
+          <canvas id="simOledCanvas" width="128" height="64"></canvas>
+          
+          <div class="sim-controls">
+            <button class="btn btn-secondary" style="padding:4px 10px; font-size:0.75rem;" onclick="setSimAction('WALK')">🚶 Yürü</button>
+            <button class="btn btn-secondary" style="padding:4px 10px; font-size:0.75rem;" onclick="setSimAction('HAPPY')">💖 Mutlu</button>
+            <button class="btn btn-secondary" style="padding:4px 10px; font-size:0.75rem;" onclick="setSimAction('JUMP')">⬆️ Zıpla</button>
+            <button class="btn btn-secondary" style="padding:4px 10px; font-size:0.75rem;" onclick="setSimAction('ROPE')">🪢 İp</button>
+          </div>
+
+          <!-- RENK PALETİ DEĞİŞTİRİCİ -->
+          <div class="palette-box">
+            <span style="font-size:0.7rem; color:var(--text-muted); font-weight:800; margin-right:4px;">RENK:</span>
+            <div class="swatch active" style="background:#38bdf8;" onclick="setSimColor('#38bdf8', this)" title="Gökyüzü Mavisi"></div>
+            <div class="swatch" style="background:#f472b6;" onclick="setSimColor('#f472b6', this)" title="Şeker Pembe"></div>
+            <div class="swatch" style="background:#fde047;" onclick="setSimColor('#fde047', this)" title="Güneş Sarısı"></div>
+            <div class="swatch" style="background:#4ade80;" onclick="setSimColor('#4ade80', this)" title="Zümrüt Yeşil"></div>
+            <div class="swatch" style="background:#fb923c;" onclick="setSimColor('#fb923c', this)" title="Piksel Turuncu"></div>
+            <div class="swatch" style="background:#c084fc;" onclick="setSimColor('#c084fc', this)" title="Sihirli Mor"></div>
+          </div>
+        </div>
+
+        <!-- KARAKTER YÜKLEME VE YAYIN FORMU -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">📤 Yeni Karakter Yükle & Yayınla</div>
+            <span style="font-size:0.7rem; color:var(--text-muted);">PNG Spritesheet (64x32)</span>
+          </div>
+
+          <!-- SÜRÜKLE BIRAK YÜKLEME ALANI -->
+          <div class="drop-zone" id="dropZone">
+            <input type="file" id="fileInput" accept="image/png,image/gif" onchange="handleFileSelect(event)">
+            <div class="drop-icon">🖼️</div>
+            <div class="drop-text" id="dropText">PNG Spritesheet veya Görseli Buraya Sürükleyin</div>
+            <div class="drop-hint">64x32 px (Sol: Frame 0, Sağ: Frame 1) veya 32x32 px PNG</div>
+          </div>
+
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:12px;">
+            <div class="form-group">
+              <label class="form-label">Karakter Adı</label>
+              <input type="text" id="inputCharName" class="form-input" placeholder="Örn: Karamel Kedi">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Kategori</label>
+              <select id="selectCharCategory" class="form-select">
+                <!-- JS ile doldurulur -->
+              </select>
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+            <div class="form-group">
+              <label class="form-label">Emojisi / Simgesi</label>
+              <input type="text" id="inputCharIcon" class="form-input" placeholder="🐱" value="🐱">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Açıklama</label>
+              <input type="text" id="inputCharDesc" class="form-input" placeholder="1-Bit Retro Sanal Bebek">
+            </div>
+          </div>
+
+          <button class="btn btn-accent" style="width:100%; padding:12px; font-size:0.95rem; justify-content:center; margin-top:4px;" onclick="saveAndPublishCharacter()">
+            🚀 Onayla & Cihazlara Yayınla
+          </button>
+        </div>
+
+      </section>
+    </div>
+  </div>
+
+  <!-- YENİ KATEGORİ MODALI -->
+  <div id="categoryModal" class="modal-overlay" style="display:none;">
+    <div class="modal-dialog">
+      <h3 style="font-weight:900; margin-bottom:12px; color:#f8fafc;">➕ Yeni Kategori Oluştur</h3>
+      <div class="form-group">
+        <label class="form-label">Kategori Adı</label>
+        <input type="text" id="modalCatName" class="form-input" placeholder="Örn: Efsaneler, Canavarlar">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Kategori Simgesi (Emoji)</label>
+        <input type="text" id="modalCatIcon" class="form-input" placeholder="🐉" value="✨">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Kategori Kimliği (ID)</label>
+        <input type="text" id="modalCatId" class="form-input" placeholder="legends">
+      </div>
+      <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:1rem;">
+        <button class="btn btn-secondary" onclick="closeAddCategoryModal()">İptal</button>
+        <button class="btn btn-accent" onclick="submitCreateCategory()">Kaydet</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+
+  <script>
+    // =========================================================================
+    // STUDIO ENGINE & LIVE OLED SIMULATOR
+    // =========================================================================
+    let catalog = {};
+    let categories = [
+      { id: 'all', name: 'Tümü', icon: '🌟' },
+      { id: 'animals', name: 'Hayvanlar', icon: '🐾' },
+      { id: 'spooky', name: 'Canavarlar', icon: '🎃' },
+      { id: 'aliens', name: 'Uzaylılar', icon: '🛸' },
+      { id: 'robots', name: 'Robotlar', icon: '🤖' },
+      { id: 'cute', name: 'Sevimliler', icon: '✨' },
+      { id: 'emojis', name: 'Emojiler', icon: '😀' },
+      { id: 'retro', name: 'Retro Oyunlar', icon: '👾' },
+      { id: 'rpg', name: 'RPG', icon: '⚔️' },
+      { id: 'nature', name: 'Doğa', icon: '🌿' },
+      { id: 'jobs', name: 'Meslekler', icon: '👨‍🚀' }
+    ];
+
+    let currentFilter = 'all';
+    let simColor = '#38bdf8';
+    let simAction = 'WALK';
+    let simFrame = 0;
+    let activeCharSprite = null; // { frame0: [...], frame1: [...] }
+
+    const oledCanvas = document.getElementById('simOledCanvas');
+    const oledCtx = oledCanvas.getContext('2d');
+
+    window.addEventListener('DOMContentLoaded', () => {
+      fetchCategories();
+      fetchCatalog();
+      startOledSimLoop();
+    });
+
+    async function fetchCategories() {
+      try {
+        const res = await fetch('/api/v1/categories/list');
+        if (res.ok) {
+          const data = await res.json();
+          if (data.categories && data.categories.length > 0) {
+            categories = [{ id: 'all', name: 'Tümü', icon: '🌟' }, ...data.categories];
+          }
+        }
+      } catch (e) {}
+      renderCategoryPills();
+      updateCategorySelect();
+    }
+
+    async function fetchCatalog() {
+      try {
+        const res = await fetch('/api/v1/characters/catalog');
+        if (res.ok) {
+          const data = await res.json();
+          catalog = data.characters || {};
+          renderCharacterGrid();
+          document.getElementById('charCountBadge').innerText = Object.keys(catalog).length + ' Karakter';
+          
+          if (!activeCharSprite && catalog['cat']) {
+            activeCharSprite = catalog['cat'];
+          }
+        }
+      } catch (e) {
+        showToast('Katalog yüklenemedi: ' + e.message, '#ef4444');
+      }
+    }
+
+    function renderCategoryPills() {
+      const bar = document.getElementById('categoryPills');
+      bar.innerHTML = '';
+      categories.forEach(cat => {
+        const btn = document.createElement('button');
+        btn.className = 'cat-pill' + (cat.id === currentFilter ? ' active' : '');
+        btn.innerHTML = `${cat.icon} ${cat.name}`;
+        btn.onclick = () => {
+          currentFilter = cat.id;
+          renderCategoryPills();
+          renderCharacterGrid();
+        };
+        bar.appendChild(btn);
+      });
+    }
+
+    function updateCategorySelect() {
+      const sel = document.getElementById('selectCharCategory');
+      sel.innerHTML = '';
+      categories.filter(c => c.id !== 'all').forEach(cat => {
+        const opt = document.createElement('option');
+        opt.value = cat.id;
+        opt.innerText = `${cat.icon} ${cat.name}`;
+        sel.appendChild(opt);
+      });
+    }
+
+    function filterCategory(catId) {
+      currentFilter = catId;
+      renderCategoryPills();
+      renderCharacterGrid();
+    }
+
+    function renderCharacterGrid() {
+      const grid = document.getElementById('charactersList');
+      grid.innerHTML = '';
+
+      const keys = Object.keys(catalog);
+      const filtered = keys.filter(k => currentFilter === 'all' || catalog[k].category === currentFilter);
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:2rem; color:#64748b;">Bu kategoride henüz karakter yok.</div>';
+        return;
+      }
+
+      filtered.forEach(k => {
+        const c = catalog[k];
+        const card = document.createElement('div');
+        card.className = 'char-card';
+        const cvsId = 'cvs_thumb_' + k.replace(/[^a-zA-Z0-9]/g, '_');
+
+        card.innerHTML = `
+          <button class="char-del-btn" onclick="deleteCharacter('${k}')" title="Karakteri Sil">✕</button>
+          <canvas id="${cvsId}" width="32" height="32"></canvas>
+          <div class="char-name">${c.name}</div>
+          <div class="char-cat">${c.category}</div>
+        `;
+        card.onclick = (e) => {
+          if (e.target.classList.contains('char-del-btn')) return;
+          loadIntoSimulator(c);
+        };
+        grid.appendChild(card);
+
+        setTimeout(() => {
+          const tCvs = document.getElementById(cvsId);
+          if (tCvs) {
+            const ctx = tCvs.getContext('2d');
+            ctx.fillStyle = '#020617';
+            ctx.fillRect(0, 0, 32, 32);
+            renderSpriteToContext(ctx, c.frame0 || c.grid, 0, 0, c.color || '#38bdf8');
+          }
+        }, 10);
+      });
+    }
+
+    function loadIntoSimulator(charData) {
+      activeCharSprite = charData;
+      simColor = charData.color || '#38bdf8';
+      document.getElementById('inputCharName').value = charData.name;
+      document.getElementById('selectCharCategory').value = charData.category || 'animals';
+      document.getElementById('inputCharIcon').value = charData.icon || '🐾';
+      document.getElementById('inputCharDesc').value = charData.desc || '';
+      showToast(`🔍 ${charData.name} OLED simülatörüne yüklendi.`);
+    }
+
+    function startOledSimLoop() {
+      function loop() {
+        simFrame++;
+        renderSimOledFrame();
+        requestAnimationFrame(loop);
+      }
+      requestAnimationFrame(loop);
+    }
+
+    function renderSimOledFrame() {
+      oledCtx.fillStyle = '#020617';
+      oledCtx.fillRect(0, 0, 128, 64);
+
+      oledCtx.fillStyle = '#1e293b';
+      oledCtx.fillRect(0, 56, 128, 1);
+      oledCtx.fillStyle = '#0f172a';
+      oledCtx.fillRect(0, 57, 128, 7);
+
+      oledCtx.fillStyle = '#334155';
+      oledCtx.font = '6px "JetBrains Mono", monospace';
+      oledCtx.fillText('SOCIES RETRO OLED 128x64', 6, 8);
+      oledCtx.fillStyle = '#10b981';
+      oledCtx.fillText('CANLI CMS', 92, 8);
+
+      if (!activeCharSprite) return;
+
+      const walkFrame = (Math.floor(simFrame / 20) % 2);
+      const grid = (walkFrame === 1 && activeCharSprite.frame1) ? activeCharSprite.frame1 : (activeCharSprite.frame0 || activeCharSprite.grid);
+
+      let px = 48;
+      let py = 24;
+
+      if (simAction === 'WALK') {
+        px = Math.round(48 + Math.sin(simFrame * 0.05) * 20);
+      } else if (simAction === 'JUMP') {
+        py = Math.round(24 - Math.abs(Math.sin(simFrame * 0.15)) * 14);
+      } else if (simAction === 'HAPPY') {
+        py = Math.round(24 - Math.abs(Math.sin(simFrame * 0.25)) * 5);
+        oledCtx.fillStyle = '#f43f5e';
+        const hy = py - 4 - (simFrame % 20);
+        oledCtx.fillRect(px + 14, hy, 4, 3);
+      } else if (simAction === 'ROPE') {
+        const ropePhase = (simFrame % 36) / 36;
+        const isJump = (ropePhase > 0.4 && ropePhase < 0.75);
+        py = isJump ? 17 : 24;
+        oledCtx.strokeStyle = '#fde047';
+        oledCtx.lineWidth = 1;
+        oledCtx.beginPath();
+        if (isJump) oledCtx.arc(px + 16, 40, 18, 0, Math.PI);
+        else oledCtx.arc(px + 16, 25, 18, Math.PI, 0);
+        oledCtx.stroke();
+      }
+
+      renderSpriteToContext(oledCtx, grid, px, py, simColor);
+    }
+
+    function renderSpriteToContext(ctx, grid, px, py, bodyColor) {
+      if (!grid) return;
+      const gH = grid.length;
+      const gW = grid[0] ? grid[0].length : 32;
+
+      for (let r = 0; r < gH; r++) {
+        const row = grid[r];
+        for (let col = 0; col < gW; col++) {
+          const ch = row[col];
+          if (ch === '#') {
+            ctx.fillStyle = bodyColor;
+            ctx.fillRect(px + col, py + r, 1, 1);
+          } else if (ch === 'x' || ch === '1') {
+            ctx.fillStyle = '#020617';
+            ctx.fillRect(px + col, py + r, 1, 1);
+          }
+        }
+      }
+    }
+
+    function setSimAction(action) {
+      simAction = action;
+    }
+
+    function setSimColor(col, el) {
+      simColor = col;
+      document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
+      el.classList.add('active');
+    }
+
+    const dropZone = document.getElementById('dropZone');
+    dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('dragover');
+      if (e.dataTransfer.files.length > 0) {
+        processUploadedFile(e.dataTransfer.files[0]);
+      }
+    });
+
+    function handleFileSelect(event) {
+      if (event.target.files.length > 0) {
+        processUploadedFile(event.target.files[0]);
+      }
+    }
+
+    function processUploadedFile(file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          convertImageToSpriteMatrices(img, file.name);
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function convertImageToSpriteMatrices(img, filename) {
+      const canvas = document.createElement('canvas');
+      const w = img.width;
+      const h = img.height;
+      canvas.width = w;
+      canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0);
+
+      const imgData = ctx.getImageData(0, 0, w, h);
+      const data = imgData.data;
+
+      let isSheet = (w >= 60 && w <= 70 && h >= 30 && h <= 34);
+      let f0 = Array(32).fill('').map(() => Array(32).fill('.'));
+      let f1 = Array(32).fill('').map(() => Array(32).fill('.'));
+
+      for (let y = 0; y < 32; y++) {
+        for (let x = 0; x < 32; x++) {
+          const idx0 = (y * w + x) * 4;
+          const a0 = data[idx0 + 3];
+          const r0 = data[idx0];
+          const g0 = data[idx0 + 1];
+          const b0 = data[idx0 + 2];
+
+          if (a0 > 60) {
+            const brightness = (r0 * 0.299 + g0 * 0.587 + b0 * 0.114);
+            f0[y][x] = (brightness < 90) ? 'x' : '#';
+          }
+
+          if (isSheet) {
+            const x2 = x + 32;
+            const idx1 = (y * w + x2) * 4;
+            const a1 = data[idx1 + 3];
+            const r1 = data[idx1];
+            const g1 = data[idx1 + 1];
+            const b1 = data[idx1 + 2];
+            if (a1 > 60) {
+              const b1_val = (r1 * 0.299 + g1 * 0.587 + b1 * 0.114);
+              f1[y][x] = (b1_val < 90) ? 'x' : '#';
+            }
+          } else {
+            f1[y][x] = f0[y][x];
+          }
+        }
+      }
+
+      const f0_strings = f0.map(r => r.join(''));
+      const f1_strings = f1.map(r => r.join(''));
+
+      const cleanName = filename.replace(/\.[^/.]+$/, "").replace(/[-_]/g, ' ');
+      const titleName = cleanName.charAt(0).toUpperCase() + cleanName.slice(1);
+
+      activeCharSprite = {
+        name: titleName,
+        category: document.getElementById('selectCharCategory').value || 'animals',
+        color: simColor,
+        frame0: f0_strings,
+        frame1: f1_strings
+      };
+
+      document.getElementById('inputCharName').value = titleName;
+      document.getElementById('dropText').innerText = `✅ ${filename} yüklendi (${w}x${h} px)!`;
+      showToast(`✨ ${filename} 1-Bit matrisine dönüştürüldü!`);
+    }
+
+    async function saveAndPublishCharacter() {
+      if (!activeCharSprite || !activeCharSprite.frame0) {
+        showToast('⚠️ Lütfen önce bir PNG dosyası yükleyin!', '#ef4444');
+        return;
+      }
+
+      const name = document.getElementById('inputCharName').value.trim();
+      if (!name) {
+        showToast('⚠️ Lütfen karakter adı girin!', '#ef4444');
+        return;
+      }
+
+      const category = document.getElementById('selectCharCategory').value;
+      const icon = document.getElementById('inputCharIcon').value.trim() || '🐾';
+      const desc = document.getElementById('inputCharDesc').value.trim() || `${name} - 1-Bit Retro Sanal Bebek`;
+      const id = name.toLowerCase().replace(/[^a-z0-9]/g, '_') + '_' + Date.now().toString().slice(-4);
+
+      const payload = {
+        id,
+        name,
+        category,
+        icon,
+        color: simColor,
+        desc,
+        frame0: activeCharSprite.frame0,
+        frame1: activeCharSprite.frame1
+      };
+
+      try {
+        const res = await fetch('/api/v1/characters/save', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          showToast(`🎉 "${name}" başarıyla yayınlandı! Cihazlar otomatik eşitlenecek.`);
+          fetchCatalog();
+        } else {
+          showToast('Kayıt başarısız: ' + data.error, '#ef4444');
+        }
+      } catch (e) {
+        showToast('Sunucu hatası: ' + e.message, '#ef4444');
+      }
+    }
+
+    async function deleteCharacter(charId) {
+      if (!confirm(`"${charId}" karakterini silmek istediğinizden emin misiniz?\nBu işlem tüm cihazlardaki listeden de kaldırır.`)) return;
+
+      try {
+        const res = await fetch(`/api/v1/characters/${charId}`, { method: 'DELETE' });
+        const data = await res.json();
+        if (data.success) {
+          showToast(`🗑️ "${charId}" silindi.`);
+          fetchCatalog();
+        } else {
+          showToast('Silinemedi: ' + data.error, '#ef4444');
+        }
+      } catch (e) {
+        showToast('Hata: ' + e.message, '#ef4444');
+      }
+    }
+
+    function syncAllDevices() {
+      showToast('🚀 Cihazlara güncelleme sinyali gönderildi!');
+    }
+
+    function openAddCategoryModal() {
+      document.getElementById('categoryModal').style.display = 'flex';
+    }
+    function closeAddCategoryModal() {
+      document.getElementById('categoryModal').style.display = 'none';
+    }
+    async function submitCreateCategory() {
+      const name = document.getElementById('modalCatName').value.trim();
+      const icon = document.getElementById('modalCatIcon').value.trim() || '✨';
+      const id = document.getElementById('modalCatId').value.trim().toLowerCase() || name.toLowerCase().replace(/[^a-z0-9]/g, '_');
+
+      if (!name) {
+        showToast('⚠️ Lütfen kategori adı girin!', '#ef4444');
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/v1/categories/create', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id, name, icon })
+        });
+        const data = await res.json();
+        if (data.success) {
+          closeAddCategoryModal();
+          showToast(`🎉 "${name}" kategorisi oluşturuldu!`);
+          fetchCategories();
+        }
+      } catch (e) {
+        showToast('Hata: ' + e.message, '#ef4444');
+      }
+    }
+
+    function showToast(msg, bg = '#10b981') {
+      const t = document.getElementById('toast');
+      t.innerText = msg;
+      t.style.background = bg;
+      t.style.display = 'block';
+      setTimeout(() => { t.style.display = 'none'; }, 3500);
+    }
+  </script>
+</body>
+</html>

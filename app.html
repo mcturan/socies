@@ -26351,6 +26351,98 @@ const characters = {
       }
     }
 
+    // =========================================================================
+    // LIVEOPS OTA: DİNAMİK KARAKTER & KATEGORİ SENKRONİZASYON MOTORU
+    // =========================================================================
+    try {
+      const cachedCatalogStr = localStorage.getItem('socies_cached_catalog');
+      if (cachedCatalogStr) {
+        const cachedCatalog = JSON.parse(cachedCatalogStr);
+        for (const id in cachedCatalog) {
+          const c = cachedCatalog[id];
+          characters[id] = {
+            id: c.id || id,
+            name: c.name || id,
+            icon: c.icon || '🐾',
+            category: c.category || 'animals',
+            color: c.color || '#38bdf8',
+            desc: c.desc || '',
+            frame0: c.frame0,
+            frame1: c.frame1 || c.frame0,
+            grid: c.frame0
+          };
+        }
+      }
+    } catch(e) {
+      console.warn('[LIVEOPS] Önbellek yükleme hatası:', e);
+    }
+
+    async function fetchDynamicCharacterCatalog() {
+      if (!appData.serverUrl) return;
+      try {
+        const res = await fetch(`${appData.serverUrl}/api/v1/characters/catalog`, { signal: AbortSignal.timeout(3500) });
+        if (res.ok) {
+          const data = await res.json();
+          if (data.success && data.characters) {
+            for (const id in data.characters) {
+              const c = data.characters[id];
+              characters[id] = {
+                id: c.id || id,
+                name: c.name || id,
+                icon: c.icon || '🐾',
+                category: c.category || 'animals',
+                color: c.color || '#38bdf8',
+                desc: c.desc || '',
+                frame0: c.frame0,
+                frame1: c.frame1 || c.frame0,
+                grid: c.frame0
+              };
+            }
+            localStorage.setItem('socies_cached_catalog', JSON.stringify(data.characters));
+            console.log(`[LIVEOPS OTA] ${Object.keys(data.characters).length} dinamik karakter senkronize edildi.`);
+
+            const charModal = document.getElementById('characterSelectModal');
+            if (charModal && charModal.style.display === 'flex') {
+              const catFilter = document.getElementById('modalCategoryFilter')?.value || 'all';
+              openCharacterSelectModal(catFilter);
+            }
+            if (typeof initStudioCatalog === 'function') {
+              const studioFilter = document.getElementById('studioCategoryFilter')?.value || 'all';
+              initStudioCatalog(studioFilter);
+            }
+          }
+        }
+      } catch(e) {
+        console.warn('[LIVEOPS OTA] Karakter kataloğu alınamadı:', e.message);
+      }
+
+      // Dinamik kategorileri çek ve filtre dropdownlarına ekle
+      try {
+        const catRes = await fetch(`${appData.serverUrl}/api/v1/categories/list`, { signal: AbortSignal.timeout(3000) });
+        if (catRes.ok) {
+          const catData = await catRes.json();
+          if (catData.success && catData.categories) {
+            syncCategorySelectOptions('modalCategoryFilter', catData.categories);
+            syncCategorySelectOptions('studioCategoryFilter', catData.categories);
+          }
+        }
+      } catch(e) {}
+    }
+
+    function syncCategorySelectOptions(selectId, dynamicCategories) {
+      const sel = document.getElementById(selectId);
+      if (!sel || !dynamicCategories) return;
+      const existingValues = new Set(Array.from(sel.options).map(o => o.value));
+      for (const cat of dynamicCategories) {
+        if (!existingValues.has(cat.id)) {
+          const opt = document.createElement('option');
+          opt.value = cat.id;
+          opt.innerText = `${cat.icon || '✨'} ${cat.name}`;
+          sel.appendChild(opt);
+        }
+      }
+    }
+
     function getActiveCharacter() {
       const charId = (appData.petState && appData.petState.characterId) || 'cat';
       return characters[charId] || characters['cat'];
@@ -32880,6 +32972,7 @@ const characters = {
         syncDeviceRegistration();
         fetchLiveDevices();
         fetchLiveLeaderboard();
+        fetchDynamicCharacterCatalog();
       } else {
         updateServerBadge(false, appData.serverUrl);
         console.log('[NET] Sunucu henüz bulunamadı, yerel mod aktif.');
@@ -32898,9 +32991,10 @@ const characters = {
 
     async function saveServerUrl() {
       let val = document.getElementById('inputServerUrl').value.trim();
-      if (!val) return;
-      if (!val.startsWith('http://') && !val.startsWith('https://')) val = 'http://' + val;
-      showGlobalToast('🔍 Sunucu test ediliyor...');
+      if (!val) val = 'http://192.168.1.118:3000';
+      if (!val.startsWith('http://') && !val.startsWith('https://')) {
+        val = 'http://' + val;
+      }
       try {
         const res = await fetch(val + '/api/v1/ping', { signal: AbortSignal.timeout(3000) });
         if (res.ok) {
@@ -32912,6 +33006,7 @@ const characters = {
           syncDeviceRegistration();
           fetchLiveDevices();
           fetchLiveLeaderboard();
+          fetchDynamicCharacterCatalog();
         } else {
           showGlobalToast('❌ Sunucu yanıt vermedi (HTTP ' + res.status + ')');
         }

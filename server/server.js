@@ -23,6 +23,10 @@ const PORT = process.env.PORT || 3000;
 const { DatabaseSync } = require('node:sqlite');
 const dbPath = pathModule.join(__dirname, 'socies.db');
 const db = new DatabaseSync(dbPath);
+try {
+  db.exec("PRAGMA journal_mode = WAL;");
+  db.exec("PRAGMA busy_timeout = 5000;");
+} catch(e) {}
 
 // Tabloları Oluştur
 db.exec(`
@@ -151,6 +155,82 @@ try {
     );
   `);
 } catch(e) {}
+
+// =========================================================================
+// LIVEOPS CMS: KARAKTER & KATEGORİ CANLI YAYIN VERİTABANI
+// =========================================================================
+try {
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS custom_categories (
+      id TEXT PRIMARY KEY,
+      name TEXT,
+      icon TEXT,
+      created_at INTEGER
+    );
+    CREATE TABLE IF NOT EXISTS custom_characters (
+      id TEXT PRIMARY KEY,
+      name TEXT,
+      category TEXT,
+      icon TEXT,
+      color TEXT,
+      desc TEXT,
+      frame0_json TEXT,
+      frame1_json TEXT,
+      created_at INTEGER,
+      updated_at INTEGER
+    );
+  `);
+
+  // Varsayılan kategorileri ekle
+  const defaultCategories = [
+    { id: 'animals', name: 'Hayvanlar', icon: '🐾' },
+    { id: 'cute', name: 'Sevimli & Chibi', icon: '✨' },
+    { id: 'spooky', name: 'Korkunç & Canavar', icon: '🎃' },
+    { id: 'aliens', name: 'Uzaylılar & Galaksi', icon: '🛸' },
+    { id: 'robots', name: 'Robotlar & Sibernetik', icon: '🤖' },
+    { id: 'retro', name: 'Retro Efsaneler', icon: '👾' },
+    { id: 'rpg', name: 'RPG & Zindan', icon: '⚔️' }
+  ];
+
+  const insertCatStmt = db.prepare(`
+    INSERT OR IGNORE INTO custom_categories (id, name, icon, created_at)
+    VALUES (?, ?, ?, ?)
+  `);
+  for (const cat of defaultCategories) {
+    insertCatStmt.run(cat.id, cat.name, cat.icon, Date.now());
+  }
+
+  // Varsayılan çekirdek karakterleri custom_characters tablosuna tohumla
+  const charCount = db.prepare('SELECT COUNT(*) AS c FROM custom_characters').get().c;
+  if (charCount === 0) {
+    const seedPath = pathModule.join(__dirname, 'characters_seed.json');
+    if (fs.existsSync(seedPath)) {
+      const seedData = JSON.parse(fs.readFileSync(seedPath, 'utf8'));
+      const insertCharStmt = db.prepare(`
+        INSERT OR REPLACE INTO custom_characters (id, name, category, icon, color, desc, frame0_json, frame1_json, created_at, updated_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `);
+      const now = Date.now();
+      for (const [id, c] of Object.entries(seedData)) {
+        insertCharStmt.run(
+          id,
+          c.name || id,
+          c.category || 'animals',
+          c.icon || '🐾',
+          c.color || '#38bdf8',
+          c.desc || '',
+          JSON.stringify(c.frame0 || []),
+          JSON.stringify(c.frame1 || c.frame0 || []),
+          now,
+          now
+        );
+      }
+      console.log(`[CHARACTERS SEED] ${Object.keys(seedData).length} varsayılan karakter custom_characters tablosuna eklendi.`);
+    }
+  }
+} catch(e) {
+  console.error('[DB CHARACTERS/CATEGORIES SEED ERROR]', e);
+}
 
 // IN-MEMORY CACHE & WEBSOCKET KÖPRÜSÜ
 const database = {
@@ -448,6 +528,186 @@ const server = http.createServer((req, res) => {
         'Expires': '0'
       });
       return fs.createReadStream(appPath).pipe(res);
+    }
+  }
+
+  // 1.1 KARAKTER STÜDYOSU & CANLI CMS YÖNETİM MASASI (/studio)
+  if (path === '/studio' || path === '/studio/' || path === '/studio.html' || path === '/cms' || path === '/characters-admin') {
+    const studioPath = pathModule.join(__dirname, 'public/studio.html');
+    if (fs.existsSync(studioPath)) {
+      res.writeHead(200, {
+        'Content-Type': 'text/html; charset=utf-8',
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+      });
+      return fs.createReadStream(studioPath).pipe(res);
+    }
+  }
+
+  // 1.2 STATİK VARLIKLAR (PUBLIC KLASÖRÜ: /characters/..., /uploads/...)
+  if (path.startsWith('/characters/') || path.startsWith('/uploads/') || path.startsWith('/public/')) {
+    const relPath = path.replace(/^\/public\//, '/');
+    const filePath = pathModule.join(__dirname, 'public', relPath);
+    if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
+      const ext = pathModule.extname(filePath).toLowerCase();
+      const mimeTypes = {
+        '.png': 'image/png',
+        '.jpg': 'image/jpeg',
+        '.jpeg': 'image/jpeg',
+        '.gif': 'image/gif',
+        '.svg': 'image/svg+xml',
+        '.json': 'application/json',
+        '.html': 'text/html; charset=utf-8'
+      };
+      res.writeHead(200, {
+        'Content-Type': mimeTypes[ext] || 'application/octet-stream',
+        'Access-Control-Allow-Origin': '*'
+      });
+      return fs.createReadStream(filePath).pipe(res);
+    }
+  }
+
+  // =========================================================================
+  // LIVEOPS CMS: KATEGORİ VE KARAKTER REST API ENDPOINT'LERİ
+  // =========================================================================
+
+  // KATEGORİ LİSTESİ
+  if (path === '/api/v1/categories/list' && method === 'GET') {
+    try {
+      const categories = db.prepare('SELECT id, name, icon FROM custom_categories ORDER BY created_at ASC').all();
+      return sendJSON(res, 200, { success: true, categories });
+    } catch (e) {
+      return sendJSON(res, 500, { error: e.message });
+    }
+  }
+
+  // KATEGORİ OLUŞTURMA
+  if (path === '/api/v1/categories/create' && method === 'POST') {
+    return parseBody(req, (body) => {
+      const { id, name, icon } = body;
+      if (!name) return sendJSON(res, 400, { error: 'Kategori adı zorunludur' });
+      const catId = (id || name.toLowerCase().replace(/[^a-z0-9]/g, '_')).trim();
+      const catIcon = icon || '✨';
+      try {
+        db.prepare(`
+          INSERT INTO custom_categories (id, name, icon, created_at)
+          VALUES (?, ?, ?, ?)
+          ON CONFLICT(id) DO UPDATE SET name = excluded.name, icon = excluded.icon
+        `).run(catId, name, catIcon, Date.now());
+        return sendJSON(res, 200, { success: true, category: { id: catId, name, icon: catIcon } });
+      } catch (e) {
+        return sendJSON(res, 500, { error: e.message });
+      }
+    });
+  }
+
+  // KATEGORİ SİLME
+  if (path.startsWith('/api/v1/categories/') && method === 'DELETE') {
+    const catId = path.split('/')[4];
+    if (!catId) return sendJSON(res, 400, { error: 'Kategori ID belirtilmedi' });
+    try {
+      db.prepare('DELETE FROM custom_categories WHERE id = ?').run(catId);
+      return sendJSON(res, 200, { success: true, message: `"${catId}" kategorisi silindi.` });
+    } catch (e) {
+      return sendJSON(res, 500, { error: e.message });
+    }
+  }
+
+  // TÜM KARAKTER KATALOĞU (CİHAZLAR VE STÜDYO İÇİN DİNAMİK JSON)
+  if (path === '/api/v1/characters/catalog' && method === 'GET') {
+    try {
+      const rows = db.prepare('SELECT * FROM custom_characters ORDER BY created_at ASC').all();
+      const characters = {};
+      for (const r of rows) {
+        characters[r.id] = {
+          id: r.id,
+          name: r.name,
+          category: r.category,
+          icon: r.icon,
+          color: r.color,
+          desc: r.desc,
+          frame0: JSON.parse(r.frame0_json || '[]'),
+          frame1: JSON.parse(r.frame1_json || '[]'),
+          grid: JSON.parse(r.frame0_json || '[]'),
+          updatedAt: r.updated_at
+        };
+      }
+      return sendJSON(res, 200, {
+        success: true,
+        count: Object.keys(characters).length,
+        version: 'v1.0.30',
+        timestamp: Date.now(),
+        characters
+      });
+    } catch (e) {
+      return sendJSON(res, 500, { error: e.message });
+    }
+  }
+
+  // KARAKTER KAYDETME / YAYINLAMA
+  if (path === '/api/v1/characters/save' && method === 'POST') {
+    return parseBody(req, (body) => {
+      const { id, name, category, icon, color, desc, frame0, frame1 } = body;
+      if (!name || !frame0 || !Array.isArray(frame0) || frame0.length === 0) {
+        return sendJSON(res, 400, { error: 'Geçersiz karakter verisi veya eksik kare matrisi' });
+      }
+      const charId = (id || name.toLowerCase().replace(/[^a-z0-9]/g, '_')).trim();
+      const charName = name.trim();
+      const charCat = category || 'animals';
+      const charIcon = icon || '🐾';
+      const charColor = color || '#38bdf8';
+      const charDesc = desc || '';
+      const now = Date.now();
+
+      try {
+        db.prepare(`
+          INSERT INTO custom_characters (id, name, category, icon, color, desc, frame0_json, frame1_json, created_at, updated_at)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          ON CONFLICT(id) DO UPDATE SET
+            name = excluded.name,
+            category = excluded.category,
+            icon = excluded.icon,
+            color = excluded.color,
+            desc = excluded.desc,
+            frame0_json = excluded.frame0_json,
+            frame1_json = excluded.frame1_json,
+            updated_at = excluded.updated_at
+        `).run(
+          charId,
+          charName,
+          charCat,
+          charIcon,
+          charColor,
+          charDesc,
+          JSON.stringify(frame0),
+          JSON.stringify(frame1 || frame0),
+          now,
+          now
+        );
+
+        console.log(`[LIVEOPS CMS] Karakter yayınlandı: ${charId} (${charName})`);
+        return sendJSON(res, 200, {
+          success: true,
+          message: `"${charName}" karakteri başarıyla kaydedildi ve cihazlara sunuldu.`,
+          character: { id: charId, name: charName, category: charCat, icon: charIcon, color: charColor, desc: charDesc }
+        });
+      } catch (e) {
+        return sendJSON(res, 500, { error: 'Veritabanı hatası: ' + e.message });
+      }
+    });
+  }
+
+  // KARAKTER SİLME
+  if (path.startsWith('/api/v1/characters/') && method === 'DELETE') {
+    const charId = path.split('/')[4];
+    if (!charId) return sendJSON(res, 400, { error: 'Karakter ID belirtilmedi' });
+    try {
+      db.prepare('DELETE FROM custom_characters WHERE id = ?').run(charId);
+      console.log(`[LIVEOPS CMS] Karakter silindi: ${charId}`);
+      return sendJSON(res, 200, { success: true, message: `"${charId}" karakteri silindi.` });
+    } catch (e) {
+      return sendJSON(res, 500, { error: e.message });
     }
   }
 
@@ -1593,23 +1853,23 @@ const server = http.createServer((req, res) => {
     });
   }
 
-  // 8. GITHUB SÜRÜM / OTA KONTROLÜ (SemVer 2.0.0 v1.0.20)
+  // 8. GITHUB SÜRÜM / OTA KONTROLÜ (SemVer 2.0.0 v1.0.30)
   if (path === '/api/v1/version/check' && method === 'GET') {
     const host = req.headers.host || '192.168.1.118:3000';
     return sendJSON(res, 200, {
-      latestVersion: 'v1.0.29',
+      latestVersion: 'v1.0.30',
       semver: {
         major: 1,
         minor: 0,
-        patch: 29,
-        build: 30
+        patch: 30,
+        build: 31
       },
-      versionCode: 30,
-      latestCommitHash: 'socies-v1.0.29',
+      versionCode: 31,
+      latestCommitHash: 'socies-v1.0.30',
       mandatoryUpdate: false,
-      releaseNotes: 'v1.0.29: 5 Yeni Temiz 1-Bit Karakter (Kedi, Köpek, Tavşan, Panda, Penguen), Misafir Girişinin Kaldırılması & Çoklu Zorunlu Oturum (Google/Apple/E-posta/Telefon), Kanka Modu ve Çocuk Güvenliği Kalkanı.',
+      releaseNotes: 'v1.0.30: Web Karakter Stüdyosu (LiveOps CMS), PNG yükleme & 128x64 OLED canlı simülatör, APK güncellemesiz OTA anında dinamik karakter yayınlama.',
       apkDownloadUrl: `http://${host}/download/socies-app.apk`,
-      githubApkUrl: 'https://github.com/mcturan/socies/releases/download/v1.0.29/socies-app.apk'
+      githubApkUrl: 'https://github.com/mcturan/socies/releases/download/v1.0.30/socies-app.apk'
     });
   }
 
