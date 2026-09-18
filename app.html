@@ -1153,7 +1153,7 @@
         </div>
 
         <div style="font-size:0.72rem; color:#94A3B8; text-align:center;">
-          Socies v1.0.30 (Build 31) • OTA Güncel
+          Socies v1.0.31 (Build 32) • OTA Güncel
         </div>
       </div>
 
@@ -2085,7 +2085,7 @@
   </nav>
  
   <script>
-    let CURRENT_APP_VERSION = 'v1.0.30';
+    let CURRENT_APP_VERSION = 'v1.0.31';
     try {
       if (window.SociesNativeBridge && typeof window.SociesNativeBridge.getAppVersion === 'function') {
         const nVer = window.SociesNativeBridge.getAppVersion();
@@ -2488,20 +2488,25 @@
     try {
       const cachedCatalogStr = localStorage.getItem('socies_cached_catalog');
       if (cachedCatalogStr) {
-        const cachedCatalog = JSON.parse(cachedCatalogStr);
-        for (const id in cachedCatalog) {
-          const c = cachedCatalog[id];
-          characters[id] = {
-            id: c.id || id,
-            name: c.name || id,
-            icon: c.icon || '🐾',
-            category: c.category || 'animals',
-            color: c.color || '#38bdf8',
-            desc: c.desc || '',
-            frame0: c.frame0,
-            frame1: c.frame1 || c.frame0,
-            grid: c.frame0
-          };
+        if (cachedCatalogStr.includes('01_kedi') || cachedCatalogStr.includes('04_tilki') || cachedCatalogStr.includes('tilki') || cachedCatalogStr.includes('02_')) {
+          localStorage.removeItem('socies_cached_catalog');
+          console.log('[LIVEOPS] Eski karakter önbelleği kalıntıları temizlendi.');
+        } else {
+          const cachedCatalog = JSON.parse(cachedCatalogStr);
+          for (const id in cachedCatalog) {
+            const c = cachedCatalog[id];
+            characters[id] = {
+              id: c.id || id,
+              name: c.name || id,
+              icon: c.icon || '🐾',
+              category: c.category || 'animals',
+              color: c.color || '#38bdf8',
+              desc: c.desc || '',
+              frame0: c.frame0,
+              frame1: c.frame1 || c.frame0,
+              grid: c.frame0
+            };
+          }
         }
       }
     } catch(e) {
@@ -2949,8 +2954,8 @@
       hapticEnabled: localStorage.getItem('socies_haptic_enabled') !== '0',
       serverUrl: (function() {
         const saved = localStorage.getItem('socies_server_url');
-        if (saved && saved !== 'http://192.168.1.118:3000') return saved;
-        return 'http://46.1.173.159:3000';
+        if (saved) return saved;
+        return 'http://192.168.1.118:3000';
       })(),
       isServerConnected: false,
       rankMode: 'friends',
@@ -9262,6 +9267,11 @@
           appData.petState = Object.assign(appData.petState, s);
         } catch(e) {}
       }
+      if (appData.petState && appData.petState.characterId) {
+        if (!characters[appData.petState.characterId] || appData.petState.characterId.startsWith('0') || appData.petState.characterId === '04_tilki') {
+          appData.petState.characterId = 'cat';
+        }
+      }
 
       // 1.1 Aktif Dışarı / Mola Durumunu Geri Yükle
       try {
@@ -11861,6 +11871,11 @@
       const grid = document.getElementById('characterGridList');
       const filterSelect = document.getElementById('modalCategoryFilter');
       if (!modal || !grid) return;
+
+      // Arka planda sunucudan en güncel karakterleri anında tazele
+      if (typeof fetchDynamicCharacterCatalog === 'function' && appData && appData.serverUrl) {
+        fetchDynamicCharacterCatalog().catch(() => {});
+      }
 
       if (filterSelect && filterSelect.value !== filterCat) {
         filterSelect.value = filterCat;

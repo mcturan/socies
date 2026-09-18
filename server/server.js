@@ -636,7 +636,7 @@ const server = http.createServer((req, res) => {
       return sendJSON(res, 200, {
         success: true,
         count: Object.keys(characters).length,
-        version: 'v1.0.30',
+        version: 'v1.0.31',
         timestamp: Date.now(),
         characters
       });
@@ -793,7 +793,7 @@ const server = http.createServer((req, res) => {
     if (fs.existsSync(apkFile)) {
       res.writeHead(200, {
         'Content-Type': 'application/vnd.android.package-archive',
-        'Content-Disposition': 'attachment; filename="socies-v1.0.26.apk"',
+        'Content-Disposition': 'attachment; filename="socies-v1.0.31.apk"',
         'Access-Control-Allow-Origin': '*'
       });
       return fs.createReadStream(apkFile).pipe(res);
@@ -801,7 +801,7 @@ const server = http.createServer((req, res) => {
   }
 
   // 1.6 SUNUCU CANLILIK & PING KONTROLÜ (HEALTH / PING)
-  if (path === '/api/v1/ping' && method === 'GET') {
+  if (path === '/api/v1/ping' && (method === 'GET' || method === 'HEAD')) {
     return sendJSON(res, 200, {
       status: 'OK',
       serverTime: Date.now(),
@@ -1902,23 +1902,23 @@ const server = http.createServer((req, res) => {
     });
   }
 
-  // 8. GITHUB SÜRÜM / OTA KONTROLÜ (SemVer 2.0.0 v1.0.30)
+  // 8. GITHUB SÜRÜM / OTA KONTROLÜ (SemVer 2.0.0 v1.0.31)
   if (path === '/api/v1/version/check' && method === 'GET') {
     const host = req.headers.host || '192.168.1.118:3000';
     return sendJSON(res, 200, {
-      latestVersion: 'v1.0.30',
+      latestVersion: 'v1.0.31',
       semver: {
         major: 1,
         minor: 0,
-        patch: 30,
-        build: 31
+        patch: 31,
+        build: 32
       },
-      versionCode: 31,
-      latestCommitHash: 'socies-v1.0.30',
-      mandatoryUpdate: false,
-      releaseNotes: 'v1.0.30: Web Karakter Stüdyosu (LiveOps CMS), PNG yükleme & 128x64 OLED canlı simülatör, APK güncellemesiz OTA anında dinamik karakter yayınlama.',
+      versionCode: 32,
+      latestCommitHash: 'socies-v1.0.31',
+      mandatoryUpdate: true,
+      releaseNotes: 'v1.0.31: Eski karakter kalıntıları tamamen temizlendi, sadece Web Stüdyosu canlı kataloğu aktif edildi.',
       apkDownloadUrl: `http://${host}/download/socies-app.apk`,
-      githubApkUrl: 'https://github.com/mcturan/socies/releases/download/v1.0.30/socies-app.apk'
+      githubApkUrl: 'https://github.com/mcturan/socies/releases/download/v1.0.31/socies-app.apk'
     });
   }
 
@@ -2033,7 +2033,7 @@ function serveSociesNetworkPage(res) {
       <div class="nav-links">
         <a href="/dashboard" class="nav-btn">📊 Sunucu Paneli</a>
         <a href="/" class="nav-btn">🎮 Web Emülatörü</a>
-        <a href="/download/socies-app.apk" class="dl-btn">📥 APK İndir (v1.0.26)</a>
+        <a href="/download/socies-app.apk" class="dl-btn">📥 APK İndir (v1.0.31)</a>
       </div>
     </div>
 
@@ -2051,7 +2051,7 @@ function serveSociesNetworkPage(res) {
         <div class="kpi-lbl">${countries.join(', ')}</div>
       </div>
       <div class="kpi-card">
-        <div class="kpi-val" style="color:#ffe600;">v1.0.26</div>
+        <div class="kpi-val" style="color:#ffe600;">v1.0.31</div>
         <div class="kpi-lbl">Ağ Sürümü (SemVer 2.0.0)</div>
       </div>
     </div>
@@ -2096,7 +2096,7 @@ function serveSociesNetworkPage(res) {
       <div class="nav-links">
         <a href="/dashboard" class="nav-btn">📊 Sunucu Paneli</a>
         <a href="/" class="nav-btn">🎮 Web Emülatörü</a>
-        <a href="/download/socies-app.apk" class="dl-btn">📥 APK İndir (v1.0.13)</a>
+        <a href="/download/socies-app.apk" class="dl-btn">📥 APK İndir (v1.0.31)</a>
       </div>
     </div>
 
