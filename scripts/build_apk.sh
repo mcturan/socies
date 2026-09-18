@@ -79,7 +79,7 @@ zipalign -f -p 4 $BUILD_DIR/unaligned.apk $BUILD_DIR/aligned.apk
 
 echo "=== 5. APK Sign with apksigner ==="
 apksigner sign --ks $KEYSTORE --ks-pass pass:android --key-pass pass:android --out $SRC_DIR/downloads/socies-app.apk $BUILD_DIR/aligned.apk
-cp $SRC_DIR/downloads/socies-app.apk $SRC_DIR/downloads/socies-v1.0.29.apk
+cp $SRC_DIR/downloads/socies-app.apk $SRC_DIR/downloads/socies-v1.0.30.apk
 
 echo "=== 6. Verify APK Signature & Package Info ==="
 apksigner verify -v $SRC_DIR/downloads/socies-app.apk

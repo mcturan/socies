@@ -1153,7 +1153,7 @@
         </div>
 
         <div style="font-size:0.72rem; color:#94A3B8; text-align:center;">
-          Socies v1.0.29 (Build 30) • OTA Güncel
+          Socies v1.0.30 (Build 31) • OTA Güncel
         </div>
       </div>
 
@@ -2083,9 +2083,17 @@
       <span>Atölye</span>
     </div>
   </nav>
-
+ 
   <script>
-    const CURRENT_APP_VERSION = 'v1.0.29';
+    let CURRENT_APP_VERSION = 'v1.0.30';
+    try {
+      if (window.SociesNativeBridge && typeof window.SociesNativeBridge.getAppVersion === 'function') {
+        const nVer = window.SociesNativeBridge.getAppVersion();
+        if (nVer) {
+          CURRENT_APP_VERSION = nVer.startsWith('v') ? nVer : ('v' + nVer);
+        }
+      }
+    } catch(e) {}
 
 // =========================================================================
     // MODÜL 7.8: 21 GERÇEK PİKSEL KARAKTER & 8 DUYGU İFADE MOTORU (128x64 OLED)
@@ -35278,28 +35286,32 @@ const characters = {
         if (isVersionNewer(latest.latestVersion, CURRENT_APP_VERSION)) {
           pendingUpdateData = latest;
           document.getElementById('updVersionTag').innerText = `${latest.latestVersion} Yayında!`;
-          document.getElementById('updReleaseNotes').innerText = latest.releaseNotes || 'Yeni özellikler, hata düzeltmeleri ve otomatik kendini güncelleme motoru.';
+          document.getElementById('updReleaseNotes').innerText = latest.releaseNotes || 'Yeni özellikler, hata düzeltmeleri ve canlı stüdyo karakter desteği.';
           document.getElementById('updateModal').style.display = 'flex';
           beep(880, 0.2);
 
-          // Otomatik Geri Sayım: Kullanıcı dokunmasa dahi sistem kendi kendini indirir
-          let countdown = 3;
+          // Sadece zorunlu güncellemelerde otomatik geri sayım çalışır
           const countdownEl = document.getElementById('updAutoCountdown');
-          if (countdownEl) {
-            countdownEl.innerText = `⚡ Otomatik indirme ${countdown} saniye içinde başlayacak...`;
-          }
-          if (autoUpdateCountdownTimer) clearInterval(autoUpdateCountdownTimer);
-          autoUpdateCountdownTimer = setInterval(() => {
-            countdown--;
-            if (countdownEl) {
-              countdownEl.innerText = `⚡ Otomatik indirme ${countdown} saniye içinde başlayacak...`;
-            }
-            if (countdown <= 0) {
+          if (latest.mandatoryUpdate) {
+            let countdown = 5;
+            if (countdownEl) countdownEl.innerText = `⚡ Zorunlu güncelleme ${countdown} saniye içinde başlayacak...`;
+            if (autoUpdateCountdownTimer) clearInterval(autoUpdateCountdownTimer);
+            autoUpdateCountdownTimer = setInterval(() => {
+              countdown--;
+              if (countdownEl) countdownEl.innerText = `⚡ Zorunlu güncelleme ${countdown} saniye içinde başlayacak...`;
+              if (countdown <= 0) {
+                clearInterval(autoUpdateCountdownTimer);
+                autoUpdateCountdownTimer = null;
+                proceedAppUpdate();
+              }
+            }, 1000);
+          } else {
+            if (autoUpdateCountdownTimer) {
               clearInterval(autoUpdateCountdownTimer);
               autoUpdateCountdownTimer = null;
-              proceedAppUpdate();
             }
-          }, 1000);
+            if (countdownEl) countdownEl.innerText = 'Şimdi güncelleyebilir veya daha sonra profilden yükleyebilirsiniz.';
+          }
 
         } else {
           if (isManual) {
