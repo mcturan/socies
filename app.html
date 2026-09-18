@@ -1153,7 +1153,7 @@
         </div>
 
         <div style="font-size:0.72rem; color:#94A3B8; text-align:center;">
-          Socies v1.0.28 (Build 29) • OTA Güncel
+          Socies v1.0.29 (Build 30) • OTA Güncel
         </div>
       </div>
 
@@ -1287,27 +1287,38 @@
           </div>
         </div>
 
-        <!-- 1. BİRİNCİL BUTON: HEMEN OYUNA BAŞLA (HIZLI GİRİŞ) -->
-        <button type="button" class="btn-update-action" style="width:100%; padding:0.85rem; font-size:1rem; font-weight:900; background:linear-gradient(135deg, #4F46E5, #7C3AED); box-shadow:0 6px 20px rgba(79,70,229,0.35); border-radius:14px;" onclick="goToOnboardStep(2)">
-          🚀 Maceraya Başla: Yumurtanı Seç ➔
-        </button>
-
-        <!-- GOOGLE İLE BULUTA BAĞLAN (KOLAY & İSTEĞE BAĞLI) -->
-        <div style="margin-top:0.85rem; padding:0.75rem; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; text-align:center;">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-            <span style="font-size:0.72rem; font-weight:800; color:#64748B;">GOOGLE HESABI (İSTEĞE BAĞLI)</span>
-            <span style="font-size:0.7rem; color:#4F46E5; font-weight:700;">☁️ Bulut Kaydı</span>
+        <!-- ZORUNLU GİRİŞ SEÇENEKLERİ (MİSAFİR GİRİŞİ KALDIRILDI) -->
+        <div style="margin-top:0.6rem; padding:10px; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; text-align:center;">
+          <div style="font-size:0.75rem; font-weight:800; color:#475569; margin-bottom:8px; text-transform:uppercase;">
+            🔒 Devam Etmek İçin Giriş Yap (Zorunlu)
           </div>
-          <button type="button" class="btn-google-sign" onclick="startGoogleAuthFlow('onboardEmail')" style="width:100%; margin-bottom:0;">
+
+          <!-- 1. GOOGLE İLE GİRİŞ -->
+          <button type="button" class="btn-google-sign" onclick="startGoogleAuthFlow('onboardEmail')" style="width:100%; margin-bottom:6px; justify-content:center;">
             <svg width="20" height="20" viewBox="0 0 48 48">
               <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
               <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
               <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
               <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
             </svg>
-            <span style="font-weight:800; font-size:0.88rem;">Google ile Bağlan & Yedekle</span>
+            <span style="font-weight:800; font-size:0.85rem;">Google ile Giriş Yap</span>
           </button>
-          <input type="email" id="onboardEmail" class="search-friend-input" style="width:100%; font-size:0.82rem; padding:0.45rem; margin-top:6px; display:none;" placeholder="e-posta (isteğe bağlı)">
+
+          <!-- 2. APPLE İLE GİRİŞ -->
+          <button type="button" class="btn-micro" onclick="startAppleAuthFlow()" style="width:100%; margin-bottom:6px; padding:10px; background:#000000; color:#FFFFFF; font-weight:800; font-size:0.85rem; border-radius:10px; display:flex; align-items:center; justify-content:center; gap:8px;">
+            <span>🍏</span> <span>Apple ile Giriş Yap</span>
+          </button>
+
+          <!-- 3. E-POSTA & TELEFON İLE GİRİŞ DÜĞMELERİ -->
+          <div style="display:flex; gap:6px; width:100%; margin-top:2px;">
+            <button type="button" class="btn-micro" onclick="promptEmailAuthFlow()" style="flex:1; padding:8px; background:#EEF2FF; color:#4F46E5; font-weight:800; font-size:0.75rem; border:1px solid #C7D2FE; border-radius:10px;">
+              ✉️ E-posta ile Giriş
+            </button>
+            <button type="button" class="btn-micro" onclick="promptPhoneAuthFlow()" style="flex:1; padding:8px; background:#ECFDF5; color:#059669; font-weight:800; font-size:0.75rem; border:1px solid #A7F3D0; border-radius:10px;">
+              📱 Telefon ile Giriş
+            </button>
+          </div>
+          <input type="email" id="onboardEmail" style="display:none;">
         </div>
       </div>
 
@@ -2074,7 +2085,7 @@
   </nav>
 
   <script>
-    const CURRENT_APP_VERSION = 'v1.0.28';
+    const CURRENT_APP_VERSION = 'v1.0.29';
 
 // =========================================================================
     // MODÜL 7.8: 21 GERÇEK PİKSEL KARAKTER & 8 DUYGU İFADE MOTORU (128x64 OLED)
@@ -25952,6 +25963,394 @@ const characters = {
   }
 };
 
+// =========================================================================
+    // MODÜL 7.8.1: PIIIXL 1-BİT GERÇEK ÇEKİRDEK KARAKTERLER (RESİMLER/P1.PNG)
+    // =========================================================================
+    const CLEAN_P1_CHARS = {
+  "cat": {
+    "name": "Kedi",
+    "frame0": [
+      "................................",
+      "................................",
+      "................................",
+      "................................",
+      "................................",
+      "......x...................x.....",
+      "......xxx...............xxx.....",
+      "......x##x......x......x##x.....",
+      "......x###xxxxxx#xxxxxx###x.....",
+      "......x###################x.....",
+      "......x###################x.....",
+      "......x###################x.....",
+      "......x####################x....",
+      "......x####################x....",
+      "......x####################x....",
+      "......x####xx#######xx#####x....",
+      "......x####################x....",
+      "......x####################x....",
+      "......x########xxx#########x....",
+      "......x#########x##########x....",
+      "......x##x#############x###x....",
+      ".......x##################x.....",
+      "........x################x......",
+      ".......x################x.......",
+      ".......x################x.......",
+      ".......x################x.......",
+      "........x##############x........",
+      "........x###############x.......",
+      "........x###############x.......",
+      "........xx###xxxxxxx###xx.......",
+      "..........xxx.......xxx.........",
+      "................................"
+    ],
+    "frame1": [
+      "................................",
+      "................................",
+      "................................",
+      "................................",
+      "................................",
+      "......x...................x.....",
+      "......xxx...............xxx.....",
+      "......x##x......x......x##x.....",
+      "......x###xxxxxx#xxxxxx###x.....",
+      "......x###################x.....",
+      "......x###################x.....",
+      "......x###################x.....",
+      "......x####################x....",
+      "......x####################x....",
+      "......x####################x....",
+      "......x####xx#######xx#####x....",
+      "......x####################x....",
+      "......x####################x....",
+      "......x########xxx#########x....",
+      "......x#########x##########x....",
+      "......x##x#############x###x....",
+      ".......x##################x.....",
+      "........x################x......",
+      ".......x################x.......",
+      ".......x################x.......",
+      ".......x################x.......",
+      "........x##############x........",
+      ".......x################xx......",
+      ".......x#################x......",
+      ".......xx###xxxxxxxxx###xx......",
+      ".........xxx.........xxx........",
+      "................................"
+    ]
+  },
+  "dog": {
+    "name": "Köpek",
+    "frame0": [
+      "................................",
+      "................................",
+      "................................",
+      "................................",
+      "................................",
+      "................................",
+      "................................",
+      "................................",
+      "................................",
+      ".............xxxxxxx............",
+      "...........xx#######xx..........",
+      ".......xx.x###########x.xx......",
+      "......x##x#############x##x.....",
+      ".....x#####################x....",
+      ".....x#####################x....",
+      ".....x#####xx#######xx#####x....",
+      ".....x#####################x....",
+      ".....x########x###x########x....",
+      "......x########xxx########x.....",
+      ".......xx#######x#######xx......",
+      ".........xx###########xx........",
+      "..........x###########x.........",
+      "..........x###########x.........",
+      "..........x###########x.........",
+      ".........x#############x........",
+      ".........x#############x........",
+      ".........x#############x........",
+      "..........x###########x.........",
+      ".........x#############x........",
+      ".........x#############x........",
+      ".........x####xxxxx####x........",
+      "..........xxxx.....xxxx........."
+    ],
+    "frame1": [
+      "................................",
+      "................................",
+      "................................",
+      "................................",
+      "................................",
+      "................................",
+      "................................",
+      "................................",
+      "................................",
+      ".............xxxxxxx............",
+      "...........xx#######xx..........",
+      ".......xx.x###########x.xx......",
+      "......x##x#############x##x.....",
+      ".....x#####################x....",
+      ".....x#####################x....",
+      ".....x#####xx#######xx#####x....",
+      ".....x#####################x....",
+      ".....x########x###x########x....",
+      "......x########xxx########x.....",
+      ".......xx#######x#######xx......",
+      ".........xx###########xx........",
+      "..........x###########x.........",
+      "..........x###########x.........",
+      "..........x###########x.........",
+      ".........x#############x........",
+      ".........x#############x........",
+      ".........x#############x........",
+      ".........x#############x........",
+      "........x###############x.......",
+      "........x###############x.......",
+      "........x####xxxxxxx####x.......",
+      ".........xxxx.......xxxx........"
+    ]
+  },
+  "bunny": {
+    "name": "Tavşan",
+    "frame0": [
+      "................................",
+      "................................",
+      "................................",
+      "...........xxx.....xxx..........",
+      "..........x###x...x###x.........",
+      "..........x###x...x###x.........",
+      "..........x###x...x###x.........",
+      "..........x###x...x###x.........",
+      "..........x###x...x###x.........",
+      "..........x###x...x###x.........",
+      "..........x####xxx####x.........",
+      "..........x###########x.........",
+      ".........x#############x........",
+      "........x###############x.......",
+      "........x###############x.......",
+      ".......x###xx#######xx###x......",
+      ".......x#################x......",
+      ".......x#################x......",
+      ".......x#######xxx#######x......",
+      "........x#######x#######x.......",
+      "........xx#############xx.......",
+      ".........x#############x........",
+      "..........x###########x.........",
+      "..........x###########x.........",
+      ".........x#############x........",
+      ".........x#############x........",
+      ".........x#############x........",
+      "..........x###########x.........",
+      ".........x#############x........",
+      ".........x#############x........",
+      ".........x####xxxxx####x........",
+      "..........xxxx.....xxxx........."
+    ],
+    "frame1": [
+      "................................",
+      "................................",
+      "................................",
+      "...........xxx.....xxx..........",
+      "..........x###x...x###x.........",
+      "..........x###x...x###x.........",
+      "..........x###x...x###x.........",
+      "..........x###x...x###x.........",
+      "..........x###x...x###x.........",
+      "..........x###x...x###x.........",
+      "..........x####xxx####x.........",
+      "..........x###########x.........",
+      ".........x#############x........",
+      "........x###############x.......",
+      "........x###############x.......",
+      ".......x###xx#######xx###x......",
+      ".......x#################x......",
+      ".......x#################x......",
+      ".......x#######xxx#######x......",
+      "........x#######x#######x.......",
+      "........xx#############xx.......",
+      ".........x#############x........",
+      "..........x###########x.........",
+      "..........x###########x.........",
+      ".........x#############x........",
+      ".........x#############x........",
+      ".........x#############x........",
+      ".........x#############x........",
+      "........x###############x.......",
+      "........x###############x.......",
+      "........x####xxxxxxx####x.......",
+      ".........xxxx.......xxxx........"
+    ]
+  },
+  "panda": {
+    "name": "Panda",
+    "frame0": [
+      "................................",
+      "................................",
+      "................................",
+      "................................",
+      "................................",
+      "........xx.............xx.......",
+      ".......x##x...........x##x......",
+      "......x####x.........x####x.....",
+      "......x#####xxxxxxxxx#####x.....",
+      ".......x#################x......",
+      ".......x#################x......",
+      "......x###################x.....",
+      "......x####x########x#####x.....",
+      "......x###xxx######xxx####x.....",
+      "......x####x########x#####x.....",
+      "......x###################x.....",
+      "......x###################x.....",
+      "......x########xx#########x.....",
+      "......x#########x#########x.....",
+      "......x########x#x########x.....",
+      "......x###################x.....",
+      ".......x#################x......",
+      "........x###############x.......",
+      ".........x#############x........",
+      ".........x#############x........",
+      ".........x#############x........",
+      ".........x#############x........",
+      "..........x###########x.........",
+      ".........x#############x........",
+      ".........x#############x........",
+      ".........x####xxxxx####x........",
+      "..........xxxx.....xxxx........."
+    ],
+    "frame1": [
+      "................................",
+      "................................",
+      "................................",
+      "................................",
+      "................................",
+      "........xx.............xx.......",
+      ".......x##x...........x##x......",
+      "......x####x.........x####x.....",
+      "......x#####xxxxxxxxx#####x.....",
+      ".......x#################x......",
+      ".......x#################x......",
+      "......x###################x.....",
+      "......x####x########x#####x.....",
+      "......x###xxx######xxx####x.....",
+      "......x####x########x#####x.....",
+      "......x###################x.....",
+      "......x###################x.....",
+      "......x########xx#########x.....",
+      "......x#########x#########x.....",
+      "......x########x#x########x.....",
+      "......x###################x.....",
+      ".......x#################x......",
+      "........x###############x.......",
+      ".........x#############x........",
+      ".........x#############x........",
+      ".........x#############x........",
+      ".........x#############x........",
+      ".........x#############x........",
+      "........x###############x.......",
+      "........x###############x.......",
+      "........x####xxxxxxx####x.......",
+      ".........xxxx.......xxxx........"
+    ]
+  },
+  "penguin": {
+    "name": "Penguen",
+    "frame0": [
+      "................................",
+      "................................",
+      "................................",
+      "................................",
+      "..............xxxx..............",
+      "............xx####xx............",
+      "...........x########x...........",
+      "..........x##########x..........",
+      ".........x############x.........",
+      ".........x############x.........",
+      "........x##############x........",
+      "........x##############x........",
+      "........x##############x........",
+      ".......x################x.......",
+      ".....xx####xx######xx####xxx....",
+      "....x#######################x...",
+      "....x#######################x...",
+      "...x###########xxx###########x..",
+      "...x############x############x..",
+      "...x#########################x..",
+      "...x#########################x..",
+      "....x#######################x...",
+      "....x###################x###x...",
+      ".....xxxx##############x.xxx....",
+      ".........x############x.........",
+      ".........x############x.........",
+      "..........x##########x..........",
+      "..........x###########x.........",
+      ".........x#############x........",
+      ".........x#####xxx#####x........",
+      ".........x####x...x####x........",
+      "..........xxxx.....xxxx........."
+    ],
+    "frame1": [
+      "................................",
+      "................................",
+      "................................",
+      "................................",
+      "..............xxxx..............",
+      "............xx####xx............",
+      "...........x########x...........",
+      "..........x##########x..........",
+      ".........x############x.........",
+      ".........x############x.........",
+      "........x##############x........",
+      "........x##############x........",
+      "........x##############x........",
+      ".......x################x.......",
+      ".....xx####xx######xx####xxx....",
+      "....x#######################x...",
+      "....x#######################x...",
+      "...x###########xxx###########x..",
+      "...x############x############x..",
+      "...x#########################x..",
+      "...x#########################x..",
+      "....x#######################x...",
+      "....x###################x###x...",
+      ".....xxxx##############x.xxx....",
+      ".........x############x.........",
+      ".........x############x.........",
+      "..........x##########x..........",
+      ".........x############xx........",
+      "........x#########x#####x.......",
+      "........x#####xxxx.x####x.......",
+      "........x####x.....x####x.......",
+      ".........xxxx.......xxxx........"
+    ]
+  }
+};
+    
+    // Çekirdek karakterleri gerçek 1-bit piiixl matrisleriyle güncelle
+    if (typeof characters !== 'undefined') {
+      const metaMap = {"cat": {"name": "Tekir Kedi", "icon": "🐱", "color": "#38bdf8", "category": "animals", "desc": "Piiixl 1-bit tarzı sivri kulaklı, sevimli patili retro kedi."}, "dog": {"name": "Yavru Köpek", "icon": "🐶", "color": "#f59e0b", "category": "animals", "desc": "Sarkık kulaklı, neşeyle kuyruk sallayan sevimli köpek."}, "bunny": {"name": "Tatlı Tavşan", "icon": "🐰", "color": "#fb7185", "category": "animals", "desc": "Uzun dik kulaklı, tombul yanaklı sevimli tavşancık."}, "panda": {"name": "Tombul Panda", "icon": "🐼", "color": "#e2e8f0", "category": "animals", "desc": "Siyah göz halkalı, sevimli gövde yelekli uysal panda."}, "penguin": {"name": "Kutup Pengueni", "icon": "🐧", "color": "#06b6d4", "category": "animals", "desc": "Siyah başlıklı, beyaz göbekli paytak adımlı penguen."}};
+      for (const k in CLEAN_P1_CHARS) {
+        const cData = CLEAN_P1_CHARS[k];
+        const m = metaMap[k] || {};
+        const entry = {
+          id: k,
+          name: m.name || cData.name || k,
+          icon: m.icon || '🐾',
+          category: m.category || 'animals',
+          color: m.color || '#38bdf8',
+          desc: m.desc || '1-Bit Retro Sanal Bebek',
+          frame0: cData.frame0,
+          frame1: cData.frame1,
+          grid: cData.frame0
+        };
+        characters[k] = entry;
+        // Kategori ID köprüleri
+        if (k === 'cat') characters['01_kedi'] = entry;
+        if (k === 'dog') characters['02_kopek'] = entry;
+        if (k === 'bunny') characters['03_tavsan'] = entry;
+        if (k === 'panda') characters['05_panda'] = entry;
+        if (k === 'penguin') characters['06_penguen'] = entry;
+      }
+    }
+
     function getActiveCharacter() {
       const charId = (appData.petState && appData.petState.characterId) || 'cat';
       return characters[charId] || characters['cat'];
@@ -33648,17 +34047,142 @@ const characters = {
       } catch(e) {}
     }
 
+    // =========================================================================
+    // MODÜL: KANKA MODU & ÇOCUK GÜVENLİĞİ (İKİ TARAFLI ONAYLI DOSTLUK)
+    // =========================================================================
+    appData.confirmedFriends = JSON.parse(localStorage.getItem('socies_confirmed_friends') || '[]');
+    let currentFriendsTab = 'kankalar'; // 'kankalar' veya 'radar'
+
+    function switchFriendsSubTab(tab) {
+      currentFriendsTab = tab;
+      renderFriendsList();
+      playTactileClick('click');
+    }
+
+    function addKankaByCodePrompt() {
+      const code = prompt("🤝 Yeni Kanka Ekle:\n\nArkadaşının 6 haneli Kanka Kodunu girin (Örn: SOC-A4CF veya Cihaz ID):", "");
+      if (!code) return;
+      const clean = code.trim().toUpperCase();
+      // Arkadaşı radar listesinde veya sunucuda ara
+      const target = (appData.friends || []).find(f => f.deviceId.toUpperCase().includes(clean) || (f.nickname && f.nickname.toUpperCase() === clean));
+      const targetId = target ? target.deviceId : clean;
+      const targetNick = target ? target.nickname : ('Kanka_' + clean.slice(-4));
+      
+      if (targetId === appData.deviceId) {
+        showGlobalToast("⚠️ Kendi cihazını kanka olarak ekleyemezsin!");
+        return;
+      }
+      if (appData.confirmedFriends.some(k => k.deviceId === targetId)) {
+        showGlobalToast("ℹ️ Bu kişi zaten senin onaylı Kankan!");
+        return;
+      }
+
+      appData.confirmedFriends.push({
+        deviceId: targetId,
+        nickname: targetNick,
+        streakDays: 1,
+        lastStreakDate: new Date().toISOString().split('T')[0],
+        avatar: target ? target.avatar : '🐾'
+      });
+      localStorage.setItem('socies_confirmed_friends', JSON.stringify(appData.confirmedFriends));
+      triggerHaptic('celebration');
+      beep(880, 0.1);
+      setTimeout(() => beep(1320, 0.15), 100);
+      showGlobalToast(`🎉 ${targetNick} artık senin onaylı Kankan! Birlikte hediyeleşebilir ve Kanka Serisi yapabilirsiniz.`);
+      renderFriendsList();
+    }
+
+    function checkIsConfirmedKanka(targetDev) {
+      return appData.confirmedFriends.some(k => k.deviceId === targetDev);
+    }
+
     function renderFriendsList() {
       const c = document.getElementById('friendsListContainer');
+      if (!c) return;
       c.innerHTML = '';
 
+      // Üst Kanka / Radar Sekmeleri & Kanka Kodu Bilgisi
+      const headerBox = document.createElement('div');
+      headerBox.style.cssText = 'display:flex; flex-direction:column; gap:8px; width:100%; margin-bottom:12px;';
+      const myKankaCode = 'SOC-' + (appData.deviceId || '0000').slice(-4).toUpperCase();
+
+      headerBox.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:center; background:#EEF2FF; border:1px solid #C7D2FE; border-radius:12px; padding:8px 12px;">
+          <div>
+            <div style="font-size:0.68rem; font-weight:800; color:#4338CA;">SENİN KANKA KODUN</div>
+            <div style="font-size:1.1rem; font-weight:900; color:#1E1B4B; font-family:'Courier New', monospace;">${myKankaCode}</div>
+          </div>
+          <button class="btn-micro" onclick="addKankaByCodePrompt()" style="background:#4F46E5; color:#fff; font-weight:800; padding:6px 12px; border-radius:8px;">
+            🤝 Kod ile Kanka Ekle
+          </button>
+        </div>
+
+        <div style="display:flex; gap:6px; width:100%;">
+          <button class="btn-micro" onclick="switchFriendsSubTab('kankalar')" style="flex:1; padding:8px; font-weight:900; font-size:0.82rem; border-radius:10px; background:${currentFriendsTab === 'kankalar' ? '#10B981' : '#F1F5F9'}; color:${currentFriendsTab === 'kankalar' ? '#fff' : '#64748B'};">
+            💖 Kankalarım (${appData.confirmedFriends.length})
+          </button>
+          <button class="btn-micro" onclick="switchFriendsSubTab('radar')" style="flex:1; padding:8px; font-weight:900; font-size:0.82rem; border-radius:10px; background:${currentFriendsTab === 'radar' ? '#4F46E5' : '#F1F5F9'}; color:${currentFriendsTab === 'radar' ? '#fff' : '#64748B'};">
+            📡 Radar (${appData.friends.length})
+          </button>
+        </div>
+      `;
+      c.appendChild(headerBox);
+
+      // TAB 1: KANKALARIM (SADECE ONAYLI DOSTLAR VE TAM ETKİLEŞİM)
+      if (currentFriendsTab === 'kankalar') {
+        if (appData.confirmedFriends.length === 0) {
+          const empty = document.createElement('div');
+          empty.style.cssText = 'text-align:center; padding:1.8rem 1rem; color:#64748B; background:#F8FAFC; border-radius:14px; border:1px dashed #CBD5E1;';
+          empty.innerHTML = `
+            <div style="font-size:2.2rem; margin-bottom:6px;">🤝</div>
+            <div style="font-weight:900; font-size:0.95rem; color:#0F172A;">Henüz Onaylı Kankan Yok!</div>
+            <p style="font-size:0.78rem; margin:6px 0 10px;">
+              Socies'te sadece onaylı Kankalar birbirine hediye gönderebilir, dürtüşebilir ve Kanka Serisi yapabilir.
+            </p>
+            <button class="btn-micro" onclick="addKankaByCodePrompt()" style="background:#10B981; color:#fff; font-weight:800; padding:8px 14px; border-radius:10px;">
+              ➕ İlk Kankanı Kodla Ekle
+            </button>
+          `;
+          c.appendChild(empty);
+          return;
+        }
+
+        appData.confirmedFriends.forEach(k => {
+          const card = document.createElement('div');
+          card.className = 'friend-card';
+          card.style.cssText = 'background:#FFFFFF; border:2px solid #A7F3D0; border-radius:14px; padding:10px; margin-bottom:8px; box-shadow:0 4px 12px rgba(16,185,129,0.1);';
+          card.innerHTML = `
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span style="font-size:1.8rem;">${k.avatar || '🐾'}</span>
+                <div>
+                  <div style="font-weight:900; font-size:0.92rem; color:#0F172A;">${k.nickname}</div>
+                  <div style="font-size:0.72rem; color:#059669; font-weight:800;">🔥 ${k.streakDays || 1} Günlük Kanka Serisi</div>
+                </div>
+              </div>
+              <span style="font-size:0.65rem; background:#ECFDF5; color:#059669; padding:2px 6px; border-radius:6px; font-weight:900;">ONAYLI KANKA</span>
+            </div>
+            <div class="friend-actions" style="margin-top:8px; display:flex; gap:4px; flex-wrap:wrap;">
+              <button class="btn-micro" style="color:var(--emerald); background:#ECFDF5;" onclick="openPagerModal('${k.deviceId}', '${k.nickname}')">📟 Pager</button>
+              <button class="btn-micro" style="color:var(--rose); background:#FFF1F2;" onclick="pokeFriend('${k.deviceId}', '${k.nickname}')">👉 Dürt</button>
+              <button class="btn-micro" style="color:var(--indigo); background:#EEF2FF;" onclick="duelFriend('${k.deviceId}', '${k.nickname}')">⚔️ Düello</button>
+              <button class="btn-micro" style="color:var(--amber); background:#FFFBEB;" onclick="sendGiftFriend('${k.deviceId}', '${k.nickname}')">🎁 Hediye</button>
+            </div>
+          `;
+          c.appendChild(card);
+        });
+        return;
+      }
+
+      // TAB 2: RADARDAKİ DİĞER CİHAZLAR (YABANCILAR İÇİN SADECE KANKA İSTEĞİ - DÜRTME/HEDİYE KAPALI)
       if (appData.friends.length === 0) {
-        c.innerHTML = '<div style="text-align:center; padding:2rem; color:var(--text-muted);">Radar taranıyor...</div>';
+        c.innerHTML += '<div style="text-align:center; padding:2rem; color:var(--text-muted);">Radar taranıyor...</div>';
         return;
       }
 
       appData.friends.forEach(f => {
         const isMe = f.deviceId === appData.deviceId;
+        const isAlreadyKanka = checkIsConfirmedKanka(f.deviceId);
         const card = document.createElement('div');
         card.className = 'friend-card';
         card.style.background = isMe ? '#F1F5F9' : '#FFFFFF';
@@ -33674,16 +34198,35 @@ const characters = {
             </div>
           </div>
           <div class="friend-actions">
-            ${isMe ? '<span style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">Bu Senin Cihazın</span>' : `
-              <button class="btn-micro" style="color:var(--emerald);" onclick="openPagerModal('${f.deviceId}', '${f.nickname}')">📟 Pager</button>
-              <button class="btn-micro" style="color:var(--rose);" onclick="pokeFriend('${f.deviceId}', '${f.nickname}')">👉 Dürt</button>
-              <button class="btn-micro" style="color:var(--indigo);" onclick="duelFriend('${f.deviceId}', '${f.nickname}')">⚔️ Düello</button>
-              <button class="btn-micro" style="color:var(--amber);" onclick="sendGiftFriend('${f.deviceId}', '${f.nickname}')">🎁 Hediye</button>
-            `}
+            ${isMe ? '<span style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">Bu Senin Cihazın</span>' : (
+              isAlreadyKanka 
+              ? '<span style="font-size:0.75rem; color:#10B981; font-weight:800;">💖 Zaten Kankan</span>'
+              : `<button class="btn-micro" style="background:#4F46E5; color:#fff; font-weight:800; padding:6px 12px; border-radius:8px;" onclick="addKankaDirect('${f.deviceId}', '${f.nickname}', '${f.avatar}')">➕ Kanka Ekle</button>`
+            )}
           </div>
         `;
         c.appendChild(card);
       });
+    }
+
+    function addKankaDirect(devId, nick, av) {
+      if (checkIsConfirmedKanka(devId)) {
+        showGlobalToast("ℹ️ Bu kişi zaten senin Kankan!");
+        return;
+      }
+      appData.confirmedFriends.push({
+        deviceId: devId,
+        nickname: nick,
+        streakDays: 1,
+        lastStreakDate: new Date().toISOString().split('T')[0],
+        avatar: av || '🐾'
+      });
+      localStorage.setItem('socies_confirmed_friends', JSON.stringify(appData.confirmedFriends));
+      triggerHaptic('celebration');
+      beep(880, 0.1);
+      setTimeout(() => beep(1320, 0.15), 100);
+      showGlobalToast(`🎉 ${nick} Kankan olarak eklendi! Artık hediyeleşebilir ve mesajlaşabilirsiniz.`);
+      renderFriendsList();
     }
 
     // =========================================================================
@@ -33692,6 +34235,10 @@ const characters = {
     let currentPagerTarget = { deviceId: '', nickname: '' };
 
     function openPagerModal(targetDev, name) {
+      if (!checkIsConfirmedKanka(targetDev)) {
+        showGlobalToast("🔒 Yalnızca onaylı Kankalarına çağrı (Pager) gönderebilirsin!");
+        return;
+      }
       currentPagerTarget = { deviceId: targetDev, nickname: name };
       const elTitle = document.getElementById('pagerTargetTitle');
       if (elTitle) elTitle.innerText = `📟 Çağrı: ${name}`;
@@ -33746,6 +34293,10 @@ const characters = {
     }
 
     async function pokeFriend(targetDev, name) {
+      if (!checkIsConfirmedKanka(targetDev)) {
+        showGlobalToast("🔒 Sadece onaylı Kankalarını dürtebilirsin! Önce Kanka Ekle.");
+        return;
+      }
       beep(700, 0.1);
       showGlobalToast(`👉 ${name} dürtülüyor...`);
       if (!appData.serverUrl) return;
@@ -33790,6 +34341,10 @@ const characters = {
     }
 
     async function sendGiftFriend(targetDev, name) {
+      if (!checkIsConfirmedKanka(targetDev)) {
+        showGlobalToast("🔒 Sadece onaylı Kankalarına hediye gönderebilirsin!");
+        return;
+      }
       beep(950, 0.15);
       showGlobalToast(`🎁 ${name} kullanıcısına Altın Kurabiye hediye edildi!`);
       if (appData.serverUrl) {
@@ -34083,10 +34638,7 @@ const characters = {
       { id: 'dog', name: 'Köpek', emoji: '🐶', color: '#f59e0b' },
       { id: 'bunny', name: 'Tavşan', emoji: '🐰', color: '#fb7185' },
       { id: 'panda', name: 'Panda', emoji: '🐼', color: '#e2e8f0' },
-      { id: 'fox', name: 'Tilki', emoji: '🦊', color: '#f97316' },
-      { id: 'koala', name: 'Koala', emoji: '🐨', color: '#94a3b8' },
-      { id: 'frog', name: 'Kurbağa', emoji: '🐸', color: '#22c55e' },
-      { id: 'pufi', name: 'Pufi', emoji: '✨', color: '#00f0ff' }
+      { id: 'penguin', name: 'Penguen', emoji: '🐧', color: '#06b6d4' }
     ];
 
     function rollRandomNickname() {
@@ -34242,7 +34794,58 @@ const characters = {
       }
     }
 
+    // =========================================================================
+    // ÇOKLU ZORUNLU GİRİŞ VE GÜVENLİK MOTORU (APPLE, TELEFON, E-POSTA, GOOGLE)
+    // =========================================================================
+    function startAppleAuthFlow() {
+      const appleEmail = prompt("🍏 Apple ID ile Giriş:\n\nLütfen Apple ID e-posta adresinizi girin (Örn: isim@icloud.com):", "");
+      if (!appleEmail || !appleEmail.includes('@')) {
+        if (appleEmail !== null) showGlobalToast("⚠️ Lütfen geçerli bir Apple ID e-postası girin.");
+        return;
+      }
+      appData.userEmail = appleEmail.trim();
+      appData.isAppleAuth = true;
+      localStorage.setItem('socies_user_email', appData.userEmail);
+      localStorage.setItem('socies_auth_provider', 'apple');
+      showGlobalToast("✅ Apple ID başarıyla doğrulandı!");
+      goToOnboardStep(2);
+    }
+
+    function promptEmailAuthFlow() {
+      const email = prompt("✉️ E-posta ile Güvenli Giriş:\n\nLütfen e-posta adresinizi girin:", "");
+      if (!email || !email.includes('@')) {
+        if (email !== null) showGlobalToast("⚠️ Geçerli bir e-posta adresi giriniz.");
+        return;
+      }
+      appData.userEmail = email.trim();
+      localStorage.setItem('socies_user_email', appData.userEmail);
+      localStorage.setItem('socies_auth_provider', 'email');
+      showGlobalToast("✅ E-posta hesabınız bağlandı: " + appData.userEmail);
+      goToOnboardStep(2);
+    }
+
+    function promptPhoneAuthFlow() {
+      const phone = prompt("📱 Telefon Numarası ile Giriş:\n\nLütfen telefon numaranızı girin (Örn: 05xxxxxxxxx):", "");
+      if (!phone || phone.replace(/[^0-9]/g, '').length < 10) {
+        if (phone !== null) showGlobalToast("⚠️ Lütfen en az 10 haneli geçerli bir numara girin.");
+        return;
+      }
+      const cleanPhone = phone.trim();
+      appData.userPhone = cleanPhone;
+      appData.userEmail = cleanPhone + "@phone.socies";
+      localStorage.setItem('socies_user_phone', cleanPhone);
+      localStorage.setItem('socies_user_email', appData.userEmail);
+      localStorage.setItem('socies_auth_provider', 'phone');
+      showGlobalToast("✅ Telefon numarası kaydedildi: " + cleanPhone);
+      goToOnboardStep(2);
+    }
+
     function goToOnboardStep(step) {
+      if (step === 2 && !appData.userEmail && !appData.userPhone && !appData.isGoogleAuth && !appData.isAppleAuth) {
+        showGlobalToast('⚠️ Devam etmek için lütfen Google, Apple, E-posta veya Telefon ile giriş yapın.');
+        return;
+      }
+
       beep(700, 0.08);
       if (step === 2) {
         const nickInput = document.getElementById('onboardNick');
