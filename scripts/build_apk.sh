@@ -28,8 +28,8 @@ cat << 'EOM' > $BUILD_DIR/AndroidManifest.xml
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="io.socies.app"
-    android:versionCode="32"
-    android:versionName="1.0.31">
+    android:versionCode="33"
+    android:versionName="1.0.32">
 
     <uses-sdk android:minSdkVersion="21" android:targetSdkVersion="28" />
     <uses-permission android:name="android.permission.INTERNET" />

@@ -176,10 +176,12 @@ try {
       desc TEXT,
       frame0_json TEXT,
       frame1_json TEXT,
+      states_json TEXT,
       created_at INTEGER,
       updated_at INTEGER
     );
   `);
+  try { db.exec("ALTER TABLE custom_characters ADD COLUMN states_json TEXT"); } catch(e) {}
 
   // Varsayılan kategorileri ekle
   const defaultCategories = [
@@ -630,13 +632,14 @@ const server = http.createServer((req, res) => {
           frame0: JSON.parse(r.frame0_json || '[]'),
           frame1: JSON.parse(r.frame1_json || '[]'),
           grid: JSON.parse(r.frame0_json || '[]'),
+          states: r.states_json ? JSON.parse(r.states_json) : null,
           updatedAt: r.updated_at
         };
       }
       return sendJSON(res, 200, {
         success: true,
         count: Object.keys(characters).length,
-        version: 'v1.0.31',
+        version: 'v1.0.32',
         timestamp: Date.now(),
         characters
       });
@@ -648,7 +651,7 @@ const server = http.createServer((req, res) => {
   // KARAKTER KAYDETME / YAYINLAMA
   if (path === '/api/v1/characters/save' && method === 'POST') {
     return parseBody(req, (body) => {
-      const { id, name, category, icon, color, desc, frame0, frame1 } = body;
+      const { id, name, category, icon, color, desc, frame0, frame1, states } = body;
       if (!name || !frame0 || !Array.isArray(frame0) || frame0.length === 0) {
         return sendJSON(res, 400, { error: 'Geçersiz karakter verisi veya eksik kare matrisi' });
       }
@@ -662,8 +665,8 @@ const server = http.createServer((req, res) => {
 
       try {
         db.prepare(`
-          INSERT INTO custom_characters (id, name, category, icon, color, desc, frame0_json, frame1_json, created_at, updated_at)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          INSERT INTO custom_characters (id, name, category, icon, color, desc, frame0_json, frame1_json, states_json, created_at, updated_at)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
           ON CONFLICT(id) DO UPDATE SET
             name = excluded.name,
             category = excluded.category,
@@ -672,6 +675,7 @@ const server = http.createServer((req, res) => {
             desc = excluded.desc,
             frame0_json = excluded.frame0_json,
             frame1_json = excluded.frame1_json,
+            states_json = excluded.states_json,
             updated_at = excluded.updated_at
         `).run(
           charId,
@@ -682,6 +686,7 @@ const server = http.createServer((req, res) => {
           charDesc,
           JSON.stringify(frame0),
           JSON.stringify(frame1 || frame0),
+          states ? JSON.stringify(states) : null,
           now,
           now
         );
@@ -793,7 +798,7 @@ const server = http.createServer((req, res) => {
     if (fs.existsSync(apkFile)) {
       res.writeHead(200, {
         'Content-Type': 'application/vnd.android.package-archive',
-        'Content-Disposition': 'attachment; filename="socies-v1.0.31.apk"',
+        'Content-Disposition': 'attachment; filename="socies-v1.0.32.apk"',
         'Access-Control-Allow-Origin': '*'
       });
       return fs.createReadStream(apkFile).pipe(res);
@@ -1902,23 +1907,23 @@ const server = http.createServer((req, res) => {
     });
   }
 
-  // 8. GITHUB SÜRÜM / OTA KONTROLÜ (SemVer 2.0.0 v1.0.31)
+  // 8. GITHUB SÜRÜM / OTA KONTROLÜ (SemVer 2.0.0 v1.0.32)
   if (path === '/api/v1/version/check' && method === 'GET') {
     const host = req.headers.host || '192.168.1.118:3000';
     return sendJSON(res, 200, {
-      latestVersion: 'v1.0.31',
+      latestVersion: 'v1.0.32',
       semver: {
         major: 1,
         minor: 0,
-        patch: 31,
-        build: 32
+        patch: 32,
+        build: 33
       },
-      versionCode: 32,
-      latestCommitHash: 'socies-v1.0.31',
+      versionCode: 33,
+      latestCommitHash: 'socies-v1.0.32',
       mandatoryUpdate: true,
-      releaseNotes: 'v1.0.31: Eski karakter kalıntıları tamamen temizlendi, sadece Web Stüdyosu canlı kataloğu aktif edildi.',
+      releaseNotes: 'v1.0.32: 8 Duygu Karesi Stüdyo desteği, OLED durum çubuğu yenilikleri, diyalog kutusu konumlandırma ve aksesuar hizalaması.',
       apkDownloadUrl: `http://${host}/download/socies-app.apk`,
-      githubApkUrl: 'https://github.com/mcturan/socies/releases/download/v1.0.31/socies-app.apk'
+      githubApkUrl: 'https://github.com/mcturan/socies/releases/download/v1.0.32/socies-app.apk'
     });
   }
 
@@ -2033,7 +2038,7 @@ function serveSociesNetworkPage(res) {
       <div class="nav-links">
         <a href="/dashboard" class="nav-btn">📊 Sunucu Paneli</a>
         <a href="/" class="nav-btn">🎮 Web Emülatörü</a>
-        <a href="/download/socies-app.apk" class="dl-btn">📥 APK İndir (v1.0.31)</a>
+        <a href="/download/socies-app.apk" class="dl-btn">📥 APK İndir (v1.0.32)</a>
       </div>
     </div>
 
@@ -2051,7 +2056,7 @@ function serveSociesNetworkPage(res) {
         <div class="kpi-lbl">${countries.join(', ')}</div>
       </div>
       <div class="kpi-card">
-        <div class="kpi-val" style="color:#ffe600;">v1.0.31</div>
+        <div class="kpi-val" style="color:#ffe600;">v1.0.32</div>
         <div class="kpi-lbl">Ağ Sürümü (SemVer 2.0.0)</div>
       </div>
     </div>
@@ -2096,7 +2101,7 @@ function serveSociesNetworkPage(res) {
       <div class="nav-links">
         <a href="/dashboard" class="nav-btn">📊 Sunucu Paneli</a>
         <a href="/" class="nav-btn">🎮 Web Emülatörü</a>
-        <a href="/download/socies-app.apk" class="dl-btn">📥 APK İndir (v1.0.31)</a>
+        <a href="/download/socies-app.apk" class="dl-btn">📥 APK İndir (v1.0.32)</a>
       </div>
     </div>
 
@@ -2114,7 +2119,7 @@ function serveSociesNetworkPage(res) {
         <div class="kpi-lbl">${countries.join(', ')}</div>
       </div>
       <div class="kpi-card">
-        <div class="kpi-val" style="color:#ffe600;">v1.0.13</div>
+        <div class="kpi-val" style="color:#ffe600;">v1.0.32</div>
         <div class="kpi-lbl">Ağ Sürümü (SemVer 2.0.0)</div>
       </div>
     </div>

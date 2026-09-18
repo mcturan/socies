@@ -77,14 +77,19 @@
     .swatch { width: 22px; height: 22px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: transform 0.1s; }
     .swatch.active { border-color: #fff; transform: scale(1.2); }
 
-    /* DUAL FRAME UPLOAD */
-    .dual-upload-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 10px; }
-    .frame-box { background: #070a13; border: 2px dashed #334155; border-radius: 12px; padding: 12px; display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; transition: all 0.2s; cursor: pointer; }
+    /* EMOTION TABS & FRAME GRIDS */
+    .emotion-tabs { display: flex; gap: 6px; overflow-x: auto; padding: 2px; }
+    .emotion-tab { padding: 4px 10px; font-size: 0.72rem; font-weight: 800; border-radius: 8px; border: 1px solid #334155; background: #070a13; color: #94a3b8; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+    .emotion-tab:hover { border-color: var(--primary); color: #f8fafc; }
+    .emotion-tab.active { border-color: var(--primary); background: rgba(56,189,248,0.15); color: var(--primary); }
+    .dual-upload-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+    .all-eight-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 10px; }
+    .frame-box { background: #070a13; border: 2px dashed #334155; border-radius: 12px; padding: 10px 8px; display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; transition: all 0.2s; cursor: pointer; }
     .frame-box:hover, .frame-box.dragover { border-color: var(--primary); background: rgba(56,189,248,0.06); }
     .frame-box input[type="file"] { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
-    .frame-badge { font-size: 0.7rem; font-weight: 900; background: #1e293b; color: var(--primary); padding: 2px 8px; border-radius: 6px; margin-bottom: 6px; }
-    .frame-canvas { width: 64px; height: 64px; image-rendering: pixelated; background: #020617; border: 1px solid #1e293b; border-radius: 8px; margin-bottom: 6px; }
-    .frame-status { font-size: 0.72rem; color: var(--text-muted); font-weight: 700; }
+    .frame-badge { font-size: 0.65rem; font-weight: 900; background: #1e293b; color: var(--primary); padding: 2px 6px; border-radius: 6px; margin-bottom: 6px; white-space: nowrap; }
+    .frame-canvas { width: 56px; height: 56px; image-rendering: pixelated; background: #020617; border: 1px solid #1e293b; border-radius: 8px; margin-bottom: 4px; }
+    .frame-status { font-size: 0.68rem; color: var(--text-muted); font-weight: 700; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
     /* MASTER DROP ZONE */
     .master-drop-zone { border: 2px dashed #475569; border-radius: 12px; padding: 12px; text-align: center; background: rgba(30,41,59,0.3); cursor: pointer; transition: all 0.2s; position: relative; margin-bottom: 12px; }
@@ -170,10 +175,10 @@
           <canvas id="simOledCanvas" width="128" height="64"></canvas>
           
           <div class="sim-controls">
-            <button class="btn btn-secondary" style="padding:4px 10px; font-size:0.75rem;" onclick="setSimAction('WALK')">🚶 Yürü</button>
-            <button class="btn btn-secondary" style="padding:4px 10px; font-size:0.75rem;" onclick="setSimAction('HAPPY')">💖 Mutlu</button>
-            <button class="btn btn-secondary" style="padding:4px 10px; font-size:0.75rem;" onclick="setSimAction('JUMP')">⬆️ Zıpla</button>
-            <button class="btn btn-secondary" style="padding:4px 10px; font-size:0.75rem;" onclick="setSimAction('ROPE')">🪢 İp</button>
+            <button class="btn btn-secondary sim-btn active" id="btnSimWalk" style="padding:4px 10px; font-size:0.75rem;" onclick="setSimAction('WALK')">🚶 Normal (Yürü)</button>
+            <button class="btn btn-secondary sim-btn" id="btnSimHappy" style="padding:4px 10px; font-size:0.75rem;" onclick="setSimAction('HAPPY')">💖 Mutlu</button>
+            <button class="btn btn-secondary sim-btn" id="btnSimSad" style="padding:4px 10px; font-size:0.75rem;" onclick="setSimAction('SAD')">😢 Üzgün</button>
+            <button class="btn btn-secondary sim-btn" id="btnSimSleep" style="padding:4px 10px; font-size:0.75rem;" onclick="setSimAction('SLEEP')">😴 Uyku</button>
           </div>
 
           <!-- RENK PALETİ DEĞİŞTİRİCİ -->
@@ -190,35 +195,31 @@
 
         <!-- KARAKTER YÜKLEME VE YAYIN FORMU -->
         <div class="card">
-          <div class="card-header">
-            <div class="card-title">📤 Karakter Yükle (2 Kareli Animasyon)</div>
-            <span style="font-size:0.7rem; color:var(--text-muted);">Her Boyutta PNG Destekli</span>
+          <div class="card-header" style="flex-wrap:wrap; gap:8px;">
+            <div>
+              <div class="card-title">📤 Karakter & Duygu Yükleme (8 Kare)</div>
+              <span style="font-size:0.7rem; color:var(--text-muted);">Normal, Mutlu, Üzgün ve Uyku İfadeleri</span>
+            </div>
+            <!-- DUYGU SEKMELERİ -->
+            <div class="emotion-tabs">
+              <button class="emotion-tab active" id="tabBtn_idle" onclick="switchEmotionTab('idle')">🐾 Normal (2)</button>
+              <button class="emotion-tab" id="tabBtn_happy" onclick="switchEmotionTab('happy')">💖 Mutlu (2)</button>
+              <button class="emotion-tab" id="tabBtn_sad" onclick="switchEmotionTab('sad')">😢 Üzgün (2)</button>
+              <button class="emotion-tab" id="tabBtn_sleep" onclick="switchEmotionTab('sleep')">😴 Uyku (2)</button>
+              <button class="emotion-tab" id="tabBtn_all" onclick="switchEmotionTab('all')">🌟 Tüm 8 Kare</button>
+            </div>
           </div>
 
-          <!-- MASTER DROP ZONE (İKİ DOSYAYI BİRDEN VEYA SPRITESHEET ATMAK İÇİN) -->
+          <!-- MASTER DROP ZONE (1 ila 8 DOSYA VEYA SPRITESHEET ATMAK İÇİN) -->
           <div class="master-drop-zone" id="masterDropZone">
             <input type="file" multiple accept="image/png,image/gif" onchange="handleMasterFiles(event.target.files)">
-            <div class="master-drop-text">📂 Her İki Dosyayı Birden Buraya Sürükleyin (Örn: cat_frame0 + cat_frame1)</div>
-            <div class="master-drop-hint">Veya tek bir 64x32 Spritesheet bırakın. Otomatik Kare 0 ve Kare 1 olarak dağıtılır.</div>
+            <div class="master-drop-text">📂 1 ila 8 Dosyayı Birden Buraya Sürükleyin (veya Spritesheet)</div>
+            <div class="master-drop-hint">Otomatik eşleştirme: idle0/1, happy0/1, sad0/1, sleep0/1 veya 1'den 8'e sıralı dosyalar.</div>
           </div>
 
-          <!-- İKİLİ KARE AYRI YÜKLEME KUTULARI -->
-          <div class="dual-upload-grid">
-            <!-- KARE 0 -->
-            <div class="frame-box" id="frameBox0">
-              <input type="file" accept="image/png,image/gif" onchange="handleSingleFrameFile(event.target.files[0], 0)">
-              <div class="frame-badge">KARE 0 (1. ADIM / DURUŞ)</div>
-              <canvas id="canvasF0" class="frame-canvas" width="32" height="32"></canvas>
-              <div class="frame-status" id="statusF0">PNG Seç / Bırak</div>
-            </div>
-
-            <!-- KARE 1 -->
-            <div class="frame-box" id="frameBox1">
-              <input type="file" accept="image/png,image/gif" onchange="handleSingleFrameFile(event.target.files[0], 1)">
-              <div class="frame-badge">KARE 1 (2. ADIM / YÜRÜYÜŞ)</div>
-              <canvas id="canvasF1" class="frame-canvas" width="32" height="32"></canvas>
-              <div class="frame-status" id="statusF1">PNG Seç / Bırak</div>
-            </div>
+          <!-- 8 KARE YÜKLEME KUTULARI (DİNAMİK GÖSTERİM) -->
+          <div id="framesContainer" class="dual-upload-grid">
+            <!-- JS ile dinamik render edilir: idle0/1, happy0/1, sad0/1, sleep0/1 -->
           </div>
 
           <!-- YARDIMCI BUTONLAR & AYARLAR -->
@@ -228,11 +229,14 @@
               <span>✨ Gövdeyi Otomatik Doldur</span>
             </label>
             <div style="display:flex; gap:6px;">
-              <button class="btn btn-secondary" style="padding:4px 8px; font-size:0.72rem;" onclick="copyFrame0ToFrame1()" title="Kare 0'ı Kare 1'e Kopyala">
+              <button class="btn btn-secondary" style="padding:4px 8px; font-size:0.72rem;" onclick="copyActiveK0ToK1()" title="Seçili sekmenin Kare 0'ını Kare 1'e Kopyala">
                 📋 K0 ➔ K1
               </button>
-              <button class="btn btn-secondary" style="padding:4px 8px; font-size:0.72rem;" onclick="swapFrames()" title="Kareleri Değiş-Tokuş Et">
+              <button class="btn btn-secondary" style="padding:4px 8px; font-size:0.72rem;" onclick="swapActiveFrames()" title="Seçili sekmedeki kareleri Değiş-Tokuş Et">
                 🔄 Değiş
+              </button>
+              <button class="btn btn-secondary" style="padding:4px 8px; font-size:0.72rem; color:#ef4444;" onclick="clearAllFrames()" title="Tüm 8 kareyi temizle">
+                🗑️ Temizle
               </button>
             </div>
           </div>
@@ -298,7 +302,7 @@
 
   <script>
     // =========================================================================
-    // STUDIO ENGINE & LIVE OLED SIMULATOR
+    // STUDIO ENGINE & LIVE OLED SIMULATOR (8-FRAME EMOTION ECOSYSTEM)
     // =========================================================================
     let catalog = {};
     let categories = [
@@ -313,195 +317,336 @@
     ];
 
     let currentFilter = 'all';
+    let currentEmotionTab = 'idle'; // 'idle', 'happy', 'sad', 'sleep', 'all'
     let simAction = 'WALK';
     let simColor = '#38bdf8';
     let simFrame = 0;
 
-    let rawImage0 = null;
-    let rawImage1 = null;
+    const FRAME_KEYS = [
+      'idle0', 'idle1',
+      'happy0', 'happy1',
+      'sad0', 'sad1',
+      'sleep0', 'sleep1'
+    ];
+
+    const FRAME_INFO = {
+      idle0:  { emotion: 'idle',  frame: 0, label: 'Normal Kare 0 (Duruş)', icon: '🐾', hint: 'Karakter ayakta sabit dururken' },
+      idle1:  { emotion: 'idle',  frame: 1, label: 'Normal Kare 1 (Adım)',  icon: '🐾', hint: 'Yürüyüş ve hareket 2. karesi' },
+      happy0: { emotion: 'happy', frame: 0, label: 'Mutlu Kare 0 (Sevinç)', icon: '💖', hint: 'Beslendiğinde veya sevildiğinde' },
+      happy1: { emotion: 'happy', frame: 1, label: 'Mutlu Kare 1 (Zıplama)',icon: '💖', hint: 'Dans ve sevinç zıplaması 2. karesi' },
+      sad0:   { emotion: 'sad',   frame: 0, label: 'Üzgün Kare 0 (Hüzün)',  icon: '😢', hint: 'Canı sıkkın veya açken' },
+      sad1:   { emotion: 'sad',   frame: 1, label: 'Üzgün Kare 1 (Ağlama)', icon: '😢', hint: 'Gözyaşı / titreme 2. karesi' },
+      sleep0: { emotion: 'sleep', frame: 0, label: 'Uyku Kare 0 (Yatma)',   icon: '😴', hint: 'Gözler kapalı uyku duruşu' },
+      sleep1: { emotion: 'sleep', frame: 1, label: 'Uyku Kare 1 (Nefes)',   icon: '😴', hint: 'Derin uyku / Zzz nefes 2. karesi' }
+    };
+
+    let rawImages = {
+      idle0: null, idle1: null,
+      happy0: null, happy1: null,
+      sad0: null, sad1: null,
+      sleep0: null, sleep1: null
+    };
+
+    let processedMatrices = {
+      idle0: null, idle1: null,
+      happy0: null, happy1: null,
+      sad0: null, sad1: null,
+      sleep0: null, sleep1: null
+    };
+
     let activeCharSprite = null;
 
     const oledCanvas = document.getElementById('simOledCanvas');
     const oledCtx = oledCanvas.getContext('2d');
-    const cvsF0 = document.getElementById('canvasF0');
-    const ctxF0 = cvsF0.getContext('2d');
-    const cvsF1 = document.getElementById('canvasF1');
-    const ctxF1 = cvsF1.getContext('2d');
 
     window.addEventListener('DOMContentLoaded', () => {
       fetchCategories();
       fetchCatalog();
+      renderFrameBoxesUI();
       startOledSimLoop();
-      setupDragAndDrop();
+      setupMasterDropZone();
     });
 
-    function setupDragAndDrop() {
-      const setupZone = (el, onFiles) => {
-        el.addEventListener('dragover', (e) => { e.preventDefault(); el.classList.add('dragover'); });
-        el.addEventListener('dragleave', () => el.classList.remove('dragover'));
-        el.addEventListener('drop', (e) => {
+    // =========================================================================
+    // DİNAMİK 8 KARE YÜKLEME ARAYÜZÜ (RENDER & ETKİLEŞİM)
+    // =========================================================================
+    function renderFrameBoxesUI() {
+      const container = document.getElementById('framesContainer');
+      if (!container) return;
+
+      let keysToRender = [];
+      if (currentEmotionTab === 'all') {
+        container.className = 'all-eight-grid';
+        keysToRender = [...FRAME_KEYS];
+      } else {
+        container.className = 'dual-upload-grid';
+        keysToRender = [currentEmotionTab + '0', currentEmotionTab + '1'];
+      }
+
+      container.innerHTML = '';
+
+      keysToRender.forEach(k => {
+        const meta = FRAME_INFO[k];
+        const box = document.createElement('div');
+        box.className = 'frame-box';
+        box.id = `frameBox_${k}`;
+
+        const isLoaded = !!processedMatrices[k];
+        const statusText = isLoaded ? '✅ Hazır' : 'Dosya Seç / Sürükle';
+
+        box.innerHTML = `
+          <input type="file" accept="image/png,image/gif,image/jpeg" onchange="handleSingleFrameUpload(event.target.files[0], '${k}')">
+          <div class="frame-badge">${meta.icon} ${meta.label}</div>
+          <canvas id="canvas_${k}" class="frame-canvas" width="32" height="32"></canvas>
+          <div class="frame-status" id="status_${k}">${statusText}</div>
+        `;
+
+        // Drag & Drop listeners
+        box.addEventListener('dragover', (e) => { e.preventDefault(); box.classList.add('dragover'); });
+        box.addEventListener('dragleave', () => box.classList.remove('dragover'));
+        box.addEventListener('drop', (e) => {
           e.preventDefault();
-          el.classList.remove('dragover');
+          box.classList.remove('dragover');
           if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-            onFiles(e.dataTransfer.files);
+            handleSingleFrameUpload(e.dataTransfer.files[0], k);
           }
         });
-      };
 
-      setupZone(document.getElementById('masterDropZone'), handleMasterFiles);
-      setupZone(document.getElementById('frameBox0'), (files) => handleSingleFrameFile(files[0], 0));
-      setupZone(document.getElementById('frameBox1'), (files) => handleSingleFrameFile(files[0], 1));
+        container.appendChild(box);
+
+        // Var olan matrisi canvas'a çiz
+        setTimeout(() => {
+          const cvs = document.getElementById(`canvas_${k}`);
+          if (cvs && processedMatrices[k]) {
+            const ctx = cvs.getContext('2d');
+            renderMatrixToContext(ctx, processedMatrices[k], 0, 0, simColor);
+          }
+        }, 0);
+      });
     }
 
-    function handleMasterFiles(files) {
+    function switchEmotionTab(tabId) {
+      currentEmotionTab = tabId;
+      document.querySelectorAll('.emotion-tab').forEach(btn => {
+        if (btn.id === `tabBtn_${tabId}`) btn.classList.add('active');
+        else btn.classList.remove('active');
+      });
+
+      // Simülatör eylemini sekme ile senkronize et
+      if (tabId === 'idle') setSimAction('WALK');
+      else if (tabId === 'happy') setSimAction('HAPPY');
+      else if (tabId === 'sad') setSimAction('SAD');
+      else if (tabId === 'sleep') setSimAction('SLEEP');
+
+      renderFrameBoxesUI();
+    }
+
+    function setupMasterDropZone() {
+      const el = document.getElementById('masterDropZone');
+      if (!el) return;
+      el.addEventListener('dragover', (e) => { e.preventDefault(); el.classList.add('dragover'); });
+      el.addEventListener('dragleave', () => el.classList.remove('dragover'));
+      el.addEventListener('drop', (e) => {
+        e.preventDefault();
+        el.classList.remove('dragover');
+        if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+          handleMasterFiles(e.dataTransfer.files);
+        }
+      });
+    }
+
+    // =========================================================================
+    // AKILLI DOSYA İŞLEME & EŞLEŞTİRME (1 ila 8 Dosya veya Spritesheet)
+    // =========================================================================
+    async function handleMasterFiles(files) {
       if (!files || files.length === 0) return;
 
-      if (files.length === 1) {
-        const file = files[0];
+      const fileList = Array.from(files);
+
+      // TEK DOSYA DURUMU
+      if (fileList.length === 1) {
+        const file = fileList[0];
+        const img = await loadImageFromFile(file);
+        if (img.width >= img.height * 1.6) {
+          // Çiftli Spritesheet (Sol yarısı K0, Sağ yarısı K1)
+          splitSpritesheetIntoActiveTab(img, file.name);
+        } else {
+          const targetKey = (currentEmotionTab === 'all') ? 'idle0' : (currentEmotionTab + '0');
+          const targetKey1 = (currentEmotionTab === 'all') ? 'idle1' : (currentEmotionTab + '1');
+          rawImages[targetKey] = img;
+          if (!rawImages[targetKey1]) rawImages[targetKey1] = img;
+
+          const cleanName = cleanFilenameToTitle(file.name);
+          if (!document.getElementById('inputCharName').value) {
+            document.getElementById('inputCharName').value = cleanName;
+          }
+          reprocessCurrentFrames();
+          showToast(`✨ ${file.name} yüklendi (${targetKey})!`);
+        }
+        return;
+      }
+
+      // ÇOKLU DOSYA DURUMU (2 ila 8 Dosya)
+      // Dosya adlarında duygu ve kare ipuçlarını analiz et
+      const matched = {};
+      const unmatched = [];
+
+      for (const f of fileList) {
+        const fn = f.name.toLowerCase();
+        let emo = null;
+        let frameIdx = null;
+
+        if (fn.includes('happy') || fn.includes('mutlu') || fn.includes('joy')) emo = 'happy';
+        else if (fn.includes('sad') || fn.includes('uzgun') || fn.includes('üzgün') || fn.includes('cry')) emo = 'sad';
+        else if (fn.includes('sleep') || fn.includes('uyku') || fn.includes('uyur') || fn.includes('bed')) emo = 'sleep';
+        else if (fn.includes('idle') || fn.includes('walk') || fn.includes('normal') || fn.includes('yuru') || fn.includes('stand')) emo = 'idle';
+
+        if (fn.includes('frame1') || fn.includes('_1.') || fn.includes('-1.') || fn.includes('1.png') || fn.includes('_b.') || fn.includes('step')) frameIdx = 1;
+        else if (fn.includes('frame0') || fn.includes('_0.') || fn.includes('-0.') || fn.includes('0.png') || fn.includes('_a.') || fn.includes('stand')) frameIdx = 0;
+
+        if (emo !== null && frameIdx !== null) {
+          matched[emo + frameIdx] = f;
+        } else {
+          unmatched.push(f);
+        }
+      }
+
+      // İsimden eşleşmeyenleri mevcut sekme veya sıra sırasına göre yerleştir
+      if (unmatched.length > 0) {
+        if (currentEmotionTab !== 'all' && unmatched.length <= 2) {
+          // Aktif sekmeye yerleştir (örn: Mutlu sekmesinde 2 dosya bırakılmışsa)
+          if (!matched[currentEmotionTab + '0'] && unmatched[0]) matched[currentEmotionTab + '0'] = unmatched.shift();
+          if (!matched[currentEmotionTab + '1'] && unmatched[0]) matched[currentEmotionTab + '1'] = unmatched.shift();
+        } else {
+          // Sırayla boş slotlara doldur
+          for (const k of FRAME_KEYS) {
+            if (!matched[k] && unmatched.length > 0) {
+              matched[k] = unmatched.shift();
+            }
+          }
+        }
+      }
+
+      // Dosyaları yükle
+      let loadedCount = 0;
+      let firstFileName = '';
+
+      for (const [k, f] of Object.entries(matched)) {
+        if (!firstFileName) firstFileName = f.name;
+        const img = await loadImageFromFile(f);
+        rawImages[k] = img;
+        loadedCount++;
+      }
+
+      if (firstFileName && !document.getElementById('inputCharName').value) {
+        const clean = cleanFilenameToTitle(firstFileName.replace(/_?(idle|happy|sad|sleep|frame|0|1)+/gi, ''));
+        if (clean) document.getElementById('inputCharName').value = clean;
+      }
+
+      reprocessCurrentFrames();
+      showToast(`🎉 Toplam ${loadedCount} kare başarıyla yüklendi!`);
+    }
+
+    async function handleSingleFrameUpload(file, key) {
+      if (!file) return;
+      const img = await loadImageFromFile(file);
+      rawImages[key] = img;
+
+      // Eğer çift karelerden biri henüz boşsa otomatik kopyalayarak animasyon bütünlüğü sağla
+      const counterpart = key.endsWith('0') ? key.replace('0', '1') : key.replace('1', '0');
+      if (!rawImages[counterpart] && key.endsWith('0')) {
+        rawImages[counterpart] = img;
+      }
+
+      if (!document.getElementById('inputCharName').value) {
+        document.getElementById('inputCharName').value = cleanFilenameToTitle(file.name.replace(/_?(idle|happy|sad|sleep|frame|0|1)+/gi, ''));
+      }
+
+      reprocessCurrentFrames();
+      showToast(`✅ ${FRAME_INFO[key].label} yüklendi!`);
+    }
+
+    function loadImageFromFile(file) {
+      return new Promise((resolve) => {
         const reader = new FileReader();
         reader.onload = (e) => {
           const img = new Image();
-          img.onload = () => {
-            if (img.width >= img.height * 1.6) {
-              splitSpritesheetIntoFrames(img, file.name);
-            } else {
-              rawImage0 = img;
-              rawImage1 = img;
-              const cleanName = cleanFilenameToTitle(file.name);
-              document.getElementById('inputCharName').value = cleanName;
-              reprocessCurrentFrames();
-              document.getElementById('statusF0').innerText = `✅ ${file.name}`;
-              document.getElementById('statusF1').innerText = `(Kare 0'dan Kopyalandı)`;
-              showToast(`✨ ${file.name} yüklendi!`);
-            }
-          };
+          img.onload = () => resolve(img);
           img.src = e.target.result;
         };
         reader.readAsDataURL(file);
-      } else if (files.length >= 2) {
-        let file0 = null;
-        let file1 = null;
-
-        for (let i = 0; i < files.length; i++) {
-          const fn = files[i].name.toLowerCase();
-          if (fn.includes('frame0') || fn.includes('_0.') || fn.includes('0.')) {
-            file0 = files[i];
-          } else if (fn.includes('frame1') || fn.includes('_1.') || fn.includes('1.')) {
-            file1 = files[i];
-          }
-        }
-
-        if (!file0 || !file1) {
-          file0 = files[0];
-          file1 = files[1];
-        }
-
-        loadBothFilesTogether(file0, file1);
-      }
+      });
     }
 
-    function loadBothFilesTogether(f0, f1) {
-      const reader0 = new FileReader();
-      reader0.onload = (e0) => {
-        const img0 = new Image();
-        img0.onload = () => {
-          rawImage0 = img0;
-          document.getElementById('statusF0').innerText = `✅ ${f0.name}`;
-
-          const reader1 = new FileReader();
-          reader1.onload = (e1) => {
-            const img1 = new Image();
-            img1.onload = () => {
-              rawImage1 = img1;
-              document.getElementById('statusF1').innerText = `✅ ${f1.name}`;
-              const cleanName = cleanFilenameToTitle(f0.name.replace(/_frame0|_0|frame0/gi, ''));
-              document.getElementById('inputCharName').value = cleanName;
-              reprocessCurrentFrames();
-              showToast(`🎉 Her iki kare de yüklendi (${cleanName})!`);
-            };
-            img1.src = e1.target.result;
-          };
-          reader1.readAsDataURL(f1);
-        };
-        img0.src = e0.target.result;
-      };
-      reader0.readAsDataURL(f0);
-    }
-
-    function handleSingleFrameFile(file, frameIndex) {
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const img = new Image();
-        img.onload = () => {
-          if (frameIndex === 0) {
-            rawImage0 = img;
-            document.getElementById('statusF0').innerText = `✅ ${file.name}`;
-            if (!rawImage1) {
-              rawImage1 = img;
-              document.getElementById('statusF1').innerText = `(Kare 0'dan Kopyalandı)`;
-            }
-            if (!document.getElementById('inputCharName').value) {
-              document.getElementById('inputCharName').value = cleanFilenameToTitle(file.name.replace(/_frame0|_0|frame0/gi, ''));
-            }
-          } else {
-            rawImage1 = img;
-            document.getElementById('statusF1').innerText = `✅ ${file.name}`;
-          }
-          reprocessCurrentFrames();
-          showToast(`Kare ${frameIndex} yüklendi (${img.width}x${img.height} px)`);
-        };
-        img.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function splitSpritesheetIntoFrames(sheetImg, filename) {
+    function splitSpritesheetIntoActiveTab(sheetImg, filename) {
       const halfW = Math.floor(sheetImg.width / 2);
       const h = sheetImg.height;
+      const k0 = (currentEmotionTab === 'all') ? 'idle0' : (currentEmotionTab + '0');
+      const k1 = (currentEmotionTab === 'all') ? 'idle1' : (currentEmotionTab + '1');
 
       const c0 = document.createElement('canvas');
       c0.width = halfW; c0.height = h;
       c0.getContext('2d').drawImage(sheetImg, 0, 0, halfW, h, 0, 0, halfW, h);
       const img0 = new Image();
       img0.onload = () => {
-        rawImage0 = img0;
-        document.getElementById('statusF0').innerText = `✅ Sol Yarısı (${halfW}x${h})`;
-
+        rawImages[k0] = img0;
         const c1 = document.createElement('canvas');
         c1.width = halfW; c1.height = h;
         c1.getContext('2d').drawImage(sheetImg, halfW, 0, halfW, h, 0, 0, halfW, h);
         const img1 = new Image();
         img1.onload = () => {
-          rawImage1 = img1;
-          document.getElementById('statusF1').innerText = `✅ Sağ Yarısı (${halfW}x${h})`;
+          rawImages[k1] = img1;
           document.getElementById('inputCharName').value = cleanFilenameToTitle(filename);
           reprocessCurrentFrames();
-          showToast(`✨ Spritesheet 2 kareye bölündü!`);
+          showToast(`✨ Spritesheet 2 kareye bölündü (${FRAME_INFO[k0].label} & ${FRAME_INFO[k1].label})!`);
         };
         img1.src = c1.toDataURL();
       };
       img0.src = c0.toDataURL();
     }
 
-    function copyFrame0ToFrame1() {
-      if (!rawImage0) {
+    // =========================================================================
+    // YARDIMCI BUTONLAR (KOPYALA, DEĞİŞTİR, TEMİZLE)
+    // =========================================================================
+    function copyActiveK0ToK1() {
+      const targetTab = (currentEmotionTab === 'all') ? 'idle' : currentEmotionTab;
+      const k0 = targetTab + '0';
+      const k1 = targetTab + '1';
+      if (!rawImages[k0] && !processedMatrices[k0]) {
         showToast('⚠️ Önce Kare 0 yükleyin!', '#ef4444');
         return;
       }
-      rawImage1 = rawImage0;
-      document.getElementById('statusF1').innerText = `(Kare 0'dan Kopyalandı)`;
+      rawImages[k1] = rawImages[k0];
+      processedMatrices[k1] = processedMatrices[k0];
       reprocessCurrentFrames();
-      showToast('Kare 0, Kare 1 olarak kopyalandı.');
+      showToast(`${FRAME_INFO[targetTab + '0'].icon} Kare 0, Kare 1'e kopyalandı.`);
     }
 
-    function swapFrames() {
-      if (!rawImage0 && !rawImage1) return;
-      const tmp = rawImage0;
-      rawImage0 = rawImage1;
-      rawImage1 = tmp;
+    function swapActiveFrames() {
+      const targetTab = (currentEmotionTab === 'all') ? 'idle' : currentEmotionTab;
+      const k0 = targetTab + '0';
+      const k1 = targetTab + '1';
+      const tmpRaw = rawImages[k0];
+      rawImages[k0] = rawImages[k1];
+      rawImages[k1] = tmpRaw;
+
+      const tmpMat = processedMatrices[k0];
+      processedMatrices[k0] = processedMatrices[k1];
+      processedMatrices[k1] = tmpMat;
+
       reprocessCurrentFrames();
-      showToast('Kare 0 ve Kare 1 yer değiştirdi.');
+      showToast(`${FRAME_INFO[targetTab + '0'].icon} Kare 0 ve Kare 1 yer değiştirdi.`);
+    }
+
+    function clearAllFrames() {
+      if (!confirm('Tüm 8 kareyi temizlemek istediğinize emin misiniz?')) return;
+      FRAME_KEYS.forEach(k => {
+        rawImages[k] = null;
+        processedMatrices[k] = null;
+      });
+      activeCharSprite = null;
+      reprocessCurrentFrames();
+      showToast('🗑️ Tüm kareler temizlendi.');
     }
 
     function cleanFilenameToTitle(filename) {
@@ -509,30 +654,57 @@
       return clean.charAt(0).toUpperCase() + clean.slice(1);
     }
 
+    // =========================================================================
+    // PİKSEL MATRİS DÖNÜŞTÜRÜCÜ & ÇİZİM
+    // =========================================================================
     function reprocessCurrentFrames() {
       const autoFill = document.getElementById('chkAutoFill').checked;
 
-      let m0 = null;
-      let m1 = null;
+      FRAME_KEYS.forEach(k => {
+        if (rawImages[k]) {
+          processedMatrices[k] = convertImageToPixelMatrix(rawImages[k], autoFill);
+        }
+      });
 
-      if (rawImage0) {
-        m0 = convertImageToPixelMatrix(rawImage0, autoFill);
-        renderMatrixToContext(ctxF0, m0, 0, 0, simColor);
-      }
-      if (rawImage1) {
-        m1 = convertImageToPixelMatrix(rawImage1, autoFill);
-        renderMatrixToContext(ctxF1, m1, 0, 0, simColor);
-      }
+      // Canvas'ları güncelle
+      FRAME_KEYS.forEach(k => {
+        const cvs = document.getElementById(`canvas_${k}`);
+        const statusEl = document.getElementById(`status_${k}`);
+        if (cvs && processedMatrices[k]) {
+          const ctx = cvs.getContext('2d');
+          renderMatrixToContext(ctx, processedMatrices[k], 0, 0, simColor);
+          if (statusEl) statusEl.innerText = '✅ Hazır';
+        } else if (statusEl && !processedMatrices[k]) {
+          statusEl.innerText = 'Dosya Seç / Sürükle';
+        }
+      });
 
-      if (m0) {
+      const frame0 = processedMatrices.idle0 || Object.values(processedMatrices).find(m => !!m);
+      const frame1 = processedMatrices.idle1 || frame0;
+
+      if (frame0) {
         activeCharSprite = {
           name: document.getElementById('inputCharName').value.trim() || 'Yeni Karakter',
           category: document.getElementById('selectCharCategory').value || 'animals',
           icon: document.getElementById('inputCharIcon').value.trim() || '🐾',
           color: simColor,
           desc: document.getElementById('inputCharDesc').value.trim() || '',
-          frame0: m0,
-          frame1: m1 || m0
+          frame0: frame0,
+          frame1: frame1,
+          states: {
+            happy: {
+              frame0: processedMatrices.happy0 || frame0,
+              frame1: processedMatrices.happy1 || processedMatrices.happy0 || frame1
+            },
+            sad: {
+              frame0: processedMatrices.sad0 || frame0,
+              frame1: processedMatrices.sad1 || processedMatrices.sad0 || frame1
+            },
+            sleep: {
+              frame0: processedMatrices.sleep0 || frame0,
+              frame1: processedMatrices.sleep1 || processedMatrices.sleep0 || frame1
+            }
+          }
         };
       }
     }
@@ -661,46 +833,112 @@
       oledCtx.fillStyle = '#020617';
       oledCtx.fillRect(0, 0, 128, 64);
 
+      // ÜST STATUS BAR (Y=0..9)
+      oledCtx.fillStyle = '#0a0f1d';
+      oledCtx.fillRect(0, 0, 128, 9);
       oledCtx.fillStyle = '#1e293b';
-      oledCtx.fillRect(0, 56, 128, 1);
-      oledCtx.fillStyle = '#0f172a';
-      oledCtx.fillRect(0, 57, 128, 7);
+      oledCtx.fillRect(0, 9, 128, 1);
 
-      oledCtx.fillStyle = '#334155';
-      oledCtx.font = '6px "JetBrains Mono", monospace';
-      oledCtx.fillText('SOCIES RETRO OLED 128x64', 6, 8);
+      // Bluetooth Icon (X=3, Y=2)
+      oledCtx.fillStyle = '#38bdf8';
+      oledCtx.fillRect(4, 2, 2, 6);
+      oledCtx.fillRect(5, 3, 2, 1);
+      oledCtx.fillRect(5, 6, 2, 1);
+
+      // Wi-Fi Icon (X=12, Y=2)
+      oledCtx.fillStyle = '#38bdf8';
+      oledCtx.fillRect(12, 6, 5, 2);
+      oledCtx.fillRect(13, 4, 3, 1);
+      oledCtx.fillRect(14, 2, 1, 1);
+
+      // Cloud / Online Icon (X=21, Y=2)
       oledCtx.fillStyle = '#10b981';
-      oledCtx.fillText('CANLI CMS', 92, 8);
+      oledCtx.fillRect(21, 4, 6, 3);
+      oledCtx.fillRect(23, 3, 3, 1);
+
+      // Başlık
+      oledCtx.fillStyle = '#475569';
+      oledCtx.font = '6px "JetBrains Mono", monospace';
+      oledCtx.fillText('SOCIES OLED', 34, 7);
+
+      // Pil Göstergesi (X=112, Y=2) - Sarı yanıp sönen nokta ve saat kaldırıldı
+      oledCtx.strokeStyle = '#38bdf8';
+      oledCtx.lineWidth = 1;
+      oledCtx.strokeRect(112, 2, 11, 6);
+      oledCtx.fillStyle = '#38bdf8';
+      oledCtx.fillRect(123, 4, 1, 2);
+      oledCtx.fillStyle = '#10b981';
+      oledCtx.fillRect(114, 4, 7, 2);
+
+      // ZEMİN ÇİZGİSİ (Y=60..61)
+      oledCtx.fillStyle = '#1e293b';
+      oledCtx.fillRect(0, 60, 128, 1);
+      oledCtx.fillStyle = '#0f172a';
+      oledCtx.fillRect(0, 61, 128, 3);
 
       if (!activeCharSprite) return;
 
-      const isFrame1 = (Math.floor(simFrame / 22) % 2 === 1);
-      const grid = (isFrame1 && activeCharSprite.frame1) ? activeCharSprite.frame1 : activeCharSprite.frame0;
+      // 2 KARE ARASINDA GEÇİŞ (32 frame döngüsü)
+      const isFrame1 = (Math.floor(simFrame / 18) % 2 === 1);
+
+      // HANGİ DUYGU KARELERİ KULLANILACAK?
+      let grid = activeCharSprite.frame0;
+      let badgeLabel = 'KARE 0';
+
+      if (simAction === 'HAPPY' && activeCharSprite.states && activeCharSprite.states.happy) {
+        grid = isFrame1 ? activeCharSprite.states.happy.frame1 : activeCharSprite.states.happy.frame0;
+        badgeLabel = isFrame1 ? '💖 MUTLU (K1)' : '💖 MUTLU (K0)';
+      } else if (simAction === 'SAD' && activeCharSprite.states && activeCharSprite.states.sad) {
+        grid = isFrame1 ? activeCharSprite.states.sad.frame1 : activeCharSprite.states.sad.frame0;
+        badgeLabel = isFrame1 ? '😢 ÜZGÜN (K1)' : '😢 ÜZGÜN (K0)';
+      } else if (simAction === 'SLEEP' && activeCharSprite.states && activeCharSprite.states.sleep) {
+        grid = isFrame1 ? activeCharSprite.states.sleep.frame1 : activeCharSprite.states.sleep.frame0;
+        badgeLabel = isFrame1 ? '😴 UYKU (K1)' : '😴 UYKU (K0)';
+      } else {
+        // Normal / Walk / Jump / Rope
+        grid = (isFrame1 && activeCharSprite.frame1) ? activeCharSprite.frame1 : activeCharSprite.frame0;
+        badgeLabel = isFrame1 ? '🐾 NORMAL (ADIM)' : '🐾 NORMAL (DURUŞ)';
+      }
 
       const badge = document.getElementById('simAnimBadge');
-      if (badge) badge.innerText = isFrame1 ? 'KARE 1 (ADIM)' : 'KARE 0 (DURUŞ)';
+      if (badge) badge.innerText = badgeLabel;
 
       let px = 48;
-      let py = 24;
+      let py = 29; // Zemin baseline Y=60..61 ile ayaklar tam oturur (29 + 31 = 60)
 
       if (simAction === 'WALK') {
-        px = Math.round(48 + Math.sin(simFrame * 0.05) * 20);
+        px = Math.round(48 + Math.sin(simFrame * 0.035) * 20);
       } else if (simAction === 'JUMP') {
-        py = Math.round(24 - Math.abs(Math.sin(simFrame * 0.15)) * 14);
+        py = Math.round(29 - Math.abs(Math.sin(simFrame * 0.12)) * 14);
       } else if (simAction === 'HAPPY') {
-        py = Math.round(24 - Math.abs(Math.sin(simFrame * 0.25)) * 5);
+        py = Math.round(29 - Math.abs(Math.sin(simFrame * 0.2)) * 4);
+        // Kalp efekti
+        const hy = py - 6 - (simFrame % 22);
         oledCtx.fillStyle = '#f43f5e';
-        const hy = py - 4 - (simFrame % 20);
-        oledCtx.fillRect(px + 14, hy, 4, 3);
+        oledCtx.fillRect(px + 20, hy, 4, 3);
+        oledCtx.fillRect(px + 21, hy + 3, 2, 1);
+      } else if (simAction === 'SAD') {
+        py = 30; // Hafif çökme
+        // Gözyaşı damlası
+        const ty = py + 12 + (simFrame % 14);
+        oledCtx.fillStyle = '#38bdf8';
+        oledCtx.fillRect(px + 22, ty, 1, 2);
+      } else if (simAction === 'SLEEP') {
+        py = 30;
+        // Zzz baloncukları
+        const zy = py - 4 - ((simFrame % 30) * 0.4);
+        oledCtx.fillStyle = '#a855f7';
+        oledCtx.font = '7px monospace';
+        oledCtx.fillText('Zzz', px + 22, zy);
       } else if (simAction === 'ROPE') {
         const ropePhase = (simFrame % 36) / 36;
         const isJump = (ropePhase > 0.4 && ropePhase < 0.75);
-        py = isJump ? 17 : 24;
+        py = isJump ? 20 : 29;
         oledCtx.strokeStyle = '#fde047';
         oledCtx.lineWidth = 1;
         oledCtx.beginPath();
-        if (isJump) oledCtx.arc(px + 16, 40, 18, 0, Math.PI);
-        else oledCtx.arc(px + 16, 25, 18, Math.PI, 0);
+        if (isJump) oledCtx.arc(px + 16, 44, 18, 0, Math.PI);
+        else oledCtx.arc(px + 16, 28, 18, Math.PI, 0);
         oledCtx.stroke();
       }
 
@@ -727,6 +965,10 @@
 
     function setSimAction(action) {
       simAction = action;
+      document.querySelectorAll('.sim-btn').forEach(b => b.classList.remove('active'));
+      const btnId = 'btnSim' + action.charAt(0) + action.slice(1).toLowerCase();
+      const btn = document.getElementById(btnId);
+      if (btn) btn.classList.add('active');
     }
 
     function setSimColor(col, el) {
@@ -737,6 +979,9 @@
       reprocessCurrentFrames();
     }
 
+    // =========================================================================
+    // KATEGORİLER & KATALOG YÖNETİMİ
+    // =========================================================================
     async function fetchCategories() {
       try {
         const res = await fetch('/api/v1/categories/list');
@@ -848,13 +1093,28 @@
       document.getElementById('inputCharIcon').value = charData.icon || '🐾';
       document.getElementById('inputCharDesc').value = charData.desc || '';
 
-      if (charData.frame0) {
-        renderMatrixToContext(ctxF0, charData.frame0, 0, 0, simColor);
-        document.getElementById('statusF0').innerText = '✅ Kataloğa Yüklü';
-      }
-      if (charData.frame1) {
-        renderMatrixToContext(ctxF1, charData.frame1, 0, 0, simColor);
-        document.getElementById('statusF1').innerText = '✅ Kataloğa Yüklü';
+      // Matrisleri sıfırla ve doldur
+      FRAME_KEYS.forEach(k => {
+        processedMatrices[k] = null;
+        rawImages[k] = null;
+      });
+
+      processedMatrices.idle0 = charData.frame0 || null;
+      processedMatrices.idle1 = charData.frame1 || charData.frame0 || null;
+
+      if (charData.states) {
+        if (charData.states.happy) {
+          processedMatrices.happy0 = charData.states.happy.frame0 || null;
+          processedMatrices.happy1 = charData.states.happy.frame1 || null;
+        }
+        if (charData.states.sad) {
+          processedMatrices.sad0 = charData.states.sad.frame0 || null;
+          processedMatrices.sad1 = charData.states.sad.frame1 || null;
+        }
+        if (charData.states.sleep) {
+          processedMatrices.sleep0 = charData.states.sleep.frame0 || null;
+          processedMatrices.sleep1 = charData.states.sleep.frame1 || null;
+        }
       }
 
       document.querySelectorAll('.swatch').forEach(s => {
@@ -862,13 +1122,18 @@
         else s.classList.remove('active');
       });
 
+      renderFrameBoxesUI();
       renderCharacterGrid();
-      showToast(`🔍 ${charData.name} OLED simülatörüne yüklendi.`);
+      showToast(`🔍 ${charData.name} (8 Kare & Duygu) OLED simülatörüne yüklendi.`);
     }
 
+    // =========================================================================
+    // YAYINLAMA & SİLME (LIVEOPS OTA SYNC)
+    // =========================================================================
     async function saveAndPublishCharacter() {
-      if (!activeCharSprite || !activeCharSprite.frame0) {
-        showToast('⚠️ Lütfen önce bir resim yükleyin!', '#ef4444');
+      const frame0 = processedMatrices.idle0 || Object.values(processedMatrices).find(m => !!m);
+      if (!frame0) {
+        showToast('⚠️ Lütfen en az bir adet resim yükleyin!', '#ef4444');
         return;
       }
 
@@ -881,7 +1146,7 @@
       const category = document.getElementById('selectCharCategory').value;
       const icon = document.getElementById('inputCharIcon').value.trim() || '🐾';
       const desc = document.getElementById('inputCharDesc').value.trim() || `${name} - 1-Bit Retro Sanal Bebek`;
-      const id = activeCharSprite.id || (name.toLowerCase().replace(/[^a-z0-9]/g, '_') + '_' + Date.now().toString().slice(-4));
+      const id = activeCharSprite && activeCharSprite.id ? activeCharSprite.id : (name.toLowerCase().replace(/[^a-z0-9]/g, '_') + '_' + Date.now().toString().slice(-4));
 
       const payload = {
         id,
@@ -890,8 +1155,22 @@
         icon,
         color: simColor,
         desc,
-        frame0: activeCharSprite.frame0,
-        frame1: activeCharSprite.frame1 || activeCharSprite.frame0
+        frame0: frame0,
+        frame1: processedMatrices.idle1 || frame0,
+        states: {
+          happy: {
+            frame0: processedMatrices.happy0 || frame0,
+            frame1: processedMatrices.happy1 || processedMatrices.happy0 || processedMatrices.idle1 || frame0
+          },
+          sad: {
+            frame0: processedMatrices.sad0 || frame0,
+            frame1: processedMatrices.sad1 || processedMatrices.sad0 || processedMatrices.idle1 || frame0
+          },
+          sleep: {
+            frame0: processedMatrices.sleep0 || frame0,
+            frame1: processedMatrices.sleep1 || processedMatrices.sleep0 || processedMatrices.idle1 || frame0
+          }
+        }
       };
 
       try {
@@ -903,7 +1182,7 @@
 
         const data = await res.json();
         if (data.success) {
-          showToast(`🎉 "${name}" başarıyla yayınlandı! Cihazlar otomatik eşitlenecek.`);
+          showToast(`🎉 "${name}" (Tüm 8 Duygu Karesiyle) yayınlandı!`);
           fetchCatalog();
         } else {
           showToast('Kayıt başarısız: ' + data.error, '#ef4444');
