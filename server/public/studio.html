@@ -228,6 +228,10 @@
               <input type="checkbox" id="chkAutoFill" checked onchange="reprocessCurrentFrames()">
               <span>✨ Gövdeyi Otomatik Doldur</span>
             </label>
+            <label class="toggle-label" title="ChatGPT gibi araçların ürettiği PNG için: Siyah piksel = karakter gövdesi. Kapatırsan Beyaz piksel = karakter.">
+              <input type="checkbox" id="chkPngMode" checked onchange="reprocessCurrentFrames()">
+              <span>🎨 PNG Modu (Siyah=Karakter)</span>
+            </label>
             <div style="display:flex; gap:6px;">
               <button class="btn btn-secondary" style="padding:4px 8px; font-size:0.72rem;" onclick="copyActiveK0ToK1()" title="Seçili sekmenin Kare 0'ını Kare 1'e Kopyala">
                 📋 K0 ➔ K1
@@ -397,7 +401,17 @@
         box.innerHTML = `
           <input type="file" accept="image/png,image/gif,image/jpeg" onchange="handleSingleFrameUpload(event.target.files[0], '${k}')">
           <div class="frame-badge">${meta.icon} ${meta.label}</div>
-          <canvas id="canvas_${k}" class="frame-canvas" width="32" height="32"></canvas>
+          <div style="display:flex; gap:4px; align-items:center; justify-content:center;">
+            <div style="text-align:center;">
+              <div style="font-size:0.55rem; color:#64748b; margin-bottom:2px;">ORİJİNAL</div>
+              <canvas id="raw_canvas_${k}" class="frame-canvas" width="32" height="32"
+                style="opacity:0.7; border-color:#334155;"></canvas>
+            </div>
+            <div style="text-align:center;">
+              <div style="font-size:0.55rem; color:var(--primary); margin-bottom:2px;">DÖNÜŞTÜRÜLMÜŞ</div>
+              <canvas id="canvas_${k}" class="frame-canvas" width="32" height="32"></canvas>
+            </div>
+          </div>
           <div class="frame-status" id="status_${k}">${statusText}</div>
         `;
 
@@ -420,6 +434,15 @@
           if (cvs && processedMatrices[k]) {
             const ctx = cvs.getContext('2d');
             renderMatrixToContext(ctx, processedMatrices[k], 0, 0, simColor);
+          }
+          const rawCvs = document.getElementById(`raw_canvas_${k}`);
+          if (rawCvs && rawImages[k]) {
+            const rawCtx = rawCvs.getContext('2d');
+            rawCtx.clearRect(0, 0, 32, 32);
+            rawCtx.fillStyle = '#fff';
+            rawCtx.fillRect(0, 0, 32, 32);
+            rawCtx.imageSmoothingEnabled = false;
+            rawCtx.drawImage(rawImages[k], 0, 0, 32, 32);
           }
         }, 0);
       });
@@ -467,13 +490,15 @@
       if (fileList.length === 1) {
         const file = fileList[0];
         const img = await loadImageFromFile(file);
-        if (img.width >= img.height * 1.6) {
-          // Çiftli Spritesheet (Sol yarısı K0, Sağ yarısı K1)
+        // Spritesheet tespiti: genişlik yüksekliğin 1.8 katından fazlaysa
+        // iki kare yan yana (K0 sol, K1 sağ) olarak böl
+        if (img.width >= img.height * 1.8) {
           splitSpritesheetIntoActiveTab(img, file.name);
         } else {
           const targetKey = (currentEmotionTab === 'all') ? 'idle0' : (currentEmotionTab + '0');
           const targetKey1 = (currentEmotionTab === 'all') ? 'idle1' : (currentEmotionTab + '1');
           rawImages[targetKey] = img;
+          // idle1 yoksa kopyala (animasyon en azından tek kareli çalışsın)
           if (!rawImages[targetKey1]) rawImages[targetKey1] = img;
 
           const cleanName = cleanFilenameToTitle(file.name);
@@ -481,7 +506,7 @@
             document.getElementById('inputCharName').value = cleanName;
           }
           reprocessCurrentFrames();
-          showToast(`✨ ${file.name} yüklendi (${targetKey})!`);
+          showToast(`✨ ${file.name} → ${targetKey} olarak yüklendi!`);
         }
         return;
       }
@@ -679,6 +704,22 @@
         }
       });
 
+      // Orijinal PNG önizlemesini güncelle
+      FRAME_KEYS.forEach(k => {
+        const rawCvs = document.getElementById(`raw_canvas_${k}`);
+        if (rawCvs && rawImages[k]) {
+          const rawCtx = rawCvs.getContext('2d');
+          rawCtx.clearRect(0, 0, 32, 32);
+          rawCtx.fillStyle = '#fff';
+          rawCtx.fillRect(0, 0, 32, 32);
+          rawCtx.imageSmoothingEnabled = false;
+          rawCtx.drawImage(rawImages[k], 0, 0, 32, 32);
+        } else if (rawCvs) {
+          const rawCtx = rawCvs.getContext('2d');
+          rawCtx.clearRect(0, 0, 32, 32);
+        }
+      });
+
       const frame0 = processedMatrices.idle0 || Object.values(processedMatrices).find(m => !!m);
       const frame1 = processedMatrices.idle1 || frame0;
 
@@ -710,8 +751,8 @@
     }
 
     function convertImageToPixelMatrix(img, autoFill = true) {
-      const targetMax = (img.width <= 32 && img.height <= 32) ? Math.max(img.width, img.height) : 28;
-      const scale = Math.min(targetMax / img.width, targetMax / img.height);
+      // DÜZELTME A: targetMax her zaman 32 olmalı (28 küçültüp kırpıyordu)
+      const scale = Math.min(32 / img.width, 32 / img.height);
       const nw = Math.max(1, Math.round(img.width * scale));
       const nh = Math.max(1, Math.round(img.height * scale));
       const ox = Math.floor((32 - nw) / 2);
@@ -721,14 +762,22 @@
       canvas.width = 32;
       canvas.height = 32;
       const ctx = canvas.getContext('2d', { willReadFrequently: true });
-      ctx.imageSmoothingEnabled = (img.width > 40 || img.height > 40);
+
+      // DÜZELTME B: Pixel art için smoothing KAPATILMALI (anti-aliasing
+      // gri pikseller üretir, bunlar eşiğin ortasına düşer ve kaybolur)
+      ctx.imageSmoothingEnabled = false;
       ctx.drawImage(img, ox, oy, nw, nh);
 
       const imgData = ctx.getImageData(0, 0, 32, 32);
       const data = imgData.data;
 
-      const outline = Array(32).fill(null).map(() => Array(32).fill(false));
-      const preFilled = Array(32).fill(null).map(() => Array(32).fill(false));
+      const pngMode = document.getElementById('chkPngMode') ?
+                      document.getElementById('chkPngMode').checked : true;
+
+      // DÜZELTME C: Siyah = karakter gövdesi ('#'), Beyaz = boşluk ('.')
+      // ChatGPT beyaz arka plan + siyah piksel üretiyor.
+      // Eski kod bunları TERSINE okuyordu (siyah → 'x', beyaz → '#').
+      const isCharPixel = Array(32).fill(null).map(() => Array(32).fill(false));
 
       for (let y = 0; y < 32; y++) {
         for (let x = 0; x < 32; x++) {
@@ -739,59 +788,58 @@
           const a = data[idx + 3];
           const brightness = (r * 0.299 + g * 0.587 + b * 0.114);
 
-          if (a > 75) {
-            if (brightness < 125) {
-              outline[y][x] = true;
-            } else {
-              preFilled[y][x] = true;
-            }
+          // Alpha > 50 VE koyu piksel → karakter parçası
+          // Eşiği 200'e çektik: anti-aliasing gri pikseller de dahil olsun
+          // pngMode=true: Siyah piksel=karakter (ChatGPT/Photoshop beyaz zemin)
+          // pngMode=false: Beyaz piksel=karakter (OLED direkt çizim)
+          if (a > 50 && (pngMode ? brightness < 200 : brightness > 55)) {
+            isCharPixel[y][x] = true;
           }
         }
       }
 
+      // Flood-fill: kenarlara ulaşılabilen boş alanları 'outside' olarak işaretle
       const outside = Array(32).fill(null).map(() => Array(32).fill(false));
       const queue = [];
 
-      for (let r = 0; r < 32; r++) {
-        for (const c of [0, 31]) {
-          if (!outline[r][c] && !outside[r][c]) {
-            outside[r][c] = true;
-            queue.push([r, c]);
+      for (let i = 0; i < 32; i++) {
+        [[i, 0], [i, 31], [0, i], [31, i]].forEach(([row, col]) => {
+          if (!isCharPixel[row][col] && !outside[row][col]) {
+            outside[row][col] = true;
+            queue.push([row, col]);
           }
-        }
-      }
-      for (let c = 0; c < 32; c++) {
-        for (const r of [0, 31]) {
-          if (!outline[r][c] && !outside[r][c]) {
-            outside[r][c] = true;
-            queue.push([r, c]);
-          }
-        }
+        });
       }
 
       while (queue.length > 0) {
         const [cr, cc] = queue.shift();
-        const neighbors = [[cr - 1, cc], [cr + 1, cc], [cr, cc - 1], [cr, cc + 1]];
-        for (const [nr, nc] of neighbors) {
+        [[cr - 1, cc], [cr + 1, cc], [cr, cc - 1], [cr, cc + 1]].forEach(([nr, nc]) => {
           if (nr >= 0 && nr < 32 && nc >= 0 && nc < 32) {
-            if (!outline[nr][nc] && !outside[nr][nc]) {
+            if (!isCharPixel[nr][nc] && !outside[nr][nc]) {
               outside[nr][nc] = true;
               queue.push([nr, nc]);
             }
           }
-        }
+        });
       }
 
+      // Matrix oluştur:
+      //   '#' → karakter pikseli veya iç alan (renkli gövde)
+      //   '.' → dış alan (şeffaf/arka plan)
+      // Not: 'x' (OLED siyahı detay) artık otomatik üretilmiyor çünkü
+      // ChatGPT tek renkli (siyah/beyaz) pixel art üretiyor; 'x' sadece
+      // içi dolgulu ve dışı siyah çizgili resimler için anlamlı.
       const matrix = [];
       for (let y = 0; y < 32; y++) {
         let row = '';
         for (let x = 0; x < 32; x++) {
-          if (outline[y][x]) {
-            row += 'x';
-          } else if (outside[y][x]) {
-            row += '.';
+          if (isCharPixel[y][x]) {
+            row += '#';
+          } else if (!outside[y][x] && autoFill) {
+            // İç alan (gövde içindeki boşluklar) → autoFill açıksa doldur
+            row += '#';
           } else {
-            row += (autoFill || preFilled[y][x]) ? '#' : '.';
+            row += '.';
           }
         }
         matrix.push(row);
