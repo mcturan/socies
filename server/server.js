@@ -639,7 +639,7 @@ const server = http.createServer((req, res) => {
       return sendJSON(res, 200, {
         success: true,
         count: Object.keys(characters).length,
-        version: 'v1.0.32',
+        version: 'v1.0.33',
         timestamp: Date.now(),
         characters
       });
@@ -653,7 +653,10 @@ const server = http.createServer((req, res) => {
     return parseBody(req, (body) => {
       const { id, name, category, icon, color, desc, frame0, frame1, states } = body;
       if (!name || !frame0 || !Array.isArray(frame0) || frame0.length === 0) {
-        return sendJSON(res, 400, { error: 'Geçersiz karakter verisi veya eksik kare matrisi' });
+        return sendJSON(res, 400, { error: 'Geçersiz karakter verisi (name ve frame0 zorunludur)' });
+      }
+      if (name.length > 50 || (id && id.length > 50)) {
+        return sendJSON(res, 400, { error: 'Karakter adı veya ID 50 karakterden uzun olamaz' });
       }
       const charId = (id || name.toLowerCase().replace(/[^a-z0-9]/g, '_')).trim();
       const charName = name.trim();
@@ -798,7 +801,7 @@ const server = http.createServer((req, res) => {
     if (fs.existsSync(apkFile)) {
       res.writeHead(200, {
         'Content-Type': 'application/vnd.android.package-archive',
-        'Content-Disposition': 'attachment; filename="socies-v1.0.32.apk"',
+        'Content-Disposition': 'attachment; filename="socies-v1.0.33.apk"',
         'Access-Control-Allow-Origin': '*'
       });
       return fs.createReadStream(apkFile).pipe(res);
@@ -1907,23 +1910,23 @@ const server = http.createServer((req, res) => {
     });
   }
 
-  // 8. GITHUB SÜRÜM / OTA KONTROLÜ (SemVer 2.0.0 v1.0.32)
+  // 8. GITHUB SÜRÜM / OTA KONTROLÜ (SemVer 2.0.0 v1.0.33)
   if (path === '/api/v1/version/check' && method === 'GET') {
     const host = req.headers.host || '192.168.1.118:3000';
     return sendJSON(res, 200, {
-      latestVersion: 'v1.0.32',
+      latestVersion: 'v1.0.33',
       semver: {
         major: 1,
         minor: 0,
-        patch: 32,
-        build: 33
+        patch: 33,
+        build: 34
       },
-      versionCode: 33,
-      latestCommitHash: 'socies-v1.0.32',
+      versionCode: 34,
+      latestCommitHash: 'socies-v1.0.33',
       mandatoryUpdate: true,
-      releaseNotes: 'v1.0.32: 8 Duygu Karesi Stüdyo desteği, OLED durum çubuğu yenilikleri, diyalog kutusu konumlandırma ve aksesuar hizalaması.',
+      releaseNotes: 'v1.0.33: 13 Retro Mini Oyun (Catcher ve Parachute ayrımı), Stacker kamera kaydırma, polimorfik stüdyo durum desteği ve haptic/ses optimizasyonları.',
       apkDownloadUrl: `http://${host}/download/socies-app.apk`,
-      githubApkUrl: 'https://github.com/mcturan/socies/releases/download/v1.0.32/socies-app.apk'
+      githubApkUrl: 'https://github.com/mcturan/socies/releases/download/v1.0.33/socies-app.apk'
     });
   }
 
@@ -1931,11 +1934,20 @@ const server = http.createServer((req, res) => {
   sendJSON(res, 404, { error: 'Uç nokta bulunamadı', requestedPath: path });
 });
 
-// BODY PARSER
+// BODY PARSER (DoS & Payload Sınırı Korumalı)
 function parseBody(req, callback) {
   let body = '';
-  req.on('data', chunk => body += chunk);
+  let tooLarge = false;
+  req.on('data', chunk => {
+    if (tooLarge) return;
+    body += chunk;
+    if (body.length > 5 * 1024 * 1024) { // 5MB limit
+      tooLarge = true;
+      req.destroy();
+    }
+  });
   req.on('end', () => {
+    if (tooLarge) return callback({});
     try {
       const parsed = JSON.parse(body || '{}');
       callback(parsed);
@@ -2038,7 +2050,7 @@ function serveSociesNetworkPage(res) {
       <div class="nav-links">
         <a href="/dashboard" class="nav-btn">📊 Sunucu Paneli</a>
         <a href="/" class="nav-btn">🎮 Web Emülatörü</a>
-        <a href="/download/socies-app.apk" class="dl-btn">📥 APK İndir (v1.0.32)</a>
+        <a href="/download/socies-app.apk" class="dl-btn">📥 APK İndir (v1.0.33)</a>
       </div>
     </div>
 
@@ -2056,7 +2068,7 @@ function serveSociesNetworkPage(res) {
         <div class="kpi-lbl">${countries.join(', ')}</div>
       </div>
       <div class="kpi-card">
-        <div class="kpi-val" style="color:#ffe600;">v1.0.32</div>
+        <div class="kpi-val" style="color:#ffe600;">v1.0.33</div>
         <div class="kpi-lbl">Ağ Sürümü (SemVer 2.0.0)</div>
       </div>
     </div>
@@ -2101,7 +2113,7 @@ function serveSociesNetworkPage(res) {
       <div class="nav-links">
         <a href="/dashboard" class="nav-btn">📊 Sunucu Paneli</a>
         <a href="/" class="nav-btn">🎮 Web Emülatörü</a>
-        <a href="/download/socies-app.apk" class="dl-btn">📥 APK İndir (v1.0.32)</a>
+        <a href="/download/socies-app.apk" class="dl-btn">📥 APK İndir (v1.0.33)</a>
       </div>
     </div>
 
@@ -2119,7 +2131,7 @@ function serveSociesNetworkPage(res) {
         <div class="kpi-lbl">${countries.join(', ')}</div>
       </div>
       <div class="kpi-card">
-        <div class="kpi-val" style="color:#ffe600;">v1.0.32</div>
+        <div class="kpi-val" style="color:#ffe600;">v1.0.33</div>
         <div class="kpi-lbl">Ağ Sürümü (SemVer 2.0.0)</div>
       </div>
     </div>
