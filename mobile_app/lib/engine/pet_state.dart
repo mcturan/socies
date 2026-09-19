@@ -66,6 +66,7 @@ class PetState extends ChangeNotifier {
 
   Timer? _ticker;
   final Random _rand = Random();
+  int _decayCount = 0;
 
   PetState() {
     _loadLocal();
@@ -130,6 +131,9 @@ class PetState extends ChangeNotifier {
   }
 
   void _decayTick() {
+    _decayCount++;
+    if (_decayCount % 10 == 0) _saveLocal();
+
     if (isSleeping) {
       sleep = min(100.0, sleep + 0.8);
       hunger = max(0.0, hunger - 0.05);
@@ -185,6 +189,7 @@ class PetState extends ChangeNotifier {
     if (_rand.nextDouble() < 0.35 && breed != PetBreed.bitki) {
       toilet = max(10.0, toilet - 30.0);
     }
+    _saveLocal();
     notifyListeners();
   }
 
@@ -195,6 +200,7 @@ class PetState extends ChangeNotifier {
     fun = min(100.0, fun + 10.0);
     score += 15;
     setDialogue("Mırr... Çok seviyorum seni!", 40);
+    _saveLocal();
     notifyListeners();
   }
 
@@ -210,6 +216,7 @@ class PetState extends ChangeNotifier {
       clean = 100.0;
       setDialogue("Zaten mis gibi!", 30);
     }
+    _saveLocal();
     notifyListeners();
   }
 
@@ -221,6 +228,7 @@ class PetState extends ChangeNotifier {
     } else {
       setDialogue("Günaydın! Harika bir gün!", 40);
     }
+    _saveLocal();
     notifyListeners();
   }
 
@@ -233,11 +241,13 @@ class PetState extends ChangeNotifier {
     ballVx = 1.0;
     ballVy = 0.0;
     setDialogue("Karakter: ${breed.name.toUpperCase()}!", 50);
+    _saveLocal();
     notifyListeners();
   }
 
   // Mini Oyun 1: Taş-Kağıt-Makas Başlat
   void startRPS() {
+    if (gameMode != AppGameMode.normal) return;
     gameMode = AppGameMode.rpsCountdown;
     rpsCountdownSec = 3;
     playerRpsChoice = RPSChoice.none;
@@ -403,7 +413,7 @@ class PetState extends ChangeNotifier {
       "device_metrics": {
         "battery_percent": batteryPct,
         "total_steps": steps,
-        "firmware_version": "v1.0.4-app"
+        "firmware_version": "v1.0.34-flutter"
       }
     };
   }
@@ -418,6 +428,18 @@ class PetState extends ChangeNotifier {
       if (breedStr != null) {
         breed = PetBreed.values.firstWhere((b) => b.name == breedStr, orElse: () => PetBreed.top);
       }
+      hunger = prefs.getDouble('hunger') ?? hunger;
+      fun = prefs.getDouble('fun') ?? fun;
+      love = prefs.getDouble('love') ?? love;
+      sleep = prefs.getDouble('sleep') ?? sleep;
+      toilet = prefs.getDouble('toilet') ?? toilet;
+      clean = prefs.getDouble('clean') ?? clean;
+      social = prefs.getDouble('social') ?? social;
+      hasPoop = prefs.getBool('hasPoop') ?? hasPoop;
+      isSleeping = prefs.getBool('isSleeping') ?? isSleeping;
+      ageDays = prefs.getInt('ageDays') ?? ageDays;
+      stage = prefs.getInt('stage') ?? stage;
+      notifyListeners();
     } catch (_) {}
   }
 
@@ -428,6 +450,17 @@ class PetState extends ChangeNotifier {
       await prefs.setInt('streakDays', streakDays);
       await prefs.setInt('steps', steps);
       await prefs.setString('breed', breed.name);
+      await prefs.setDouble('hunger', hunger);
+      await prefs.setDouble('fun', fun);
+      await prefs.setDouble('love', love);
+      await prefs.setDouble('sleep', sleep);
+      await prefs.setDouble('toilet', toilet);
+      await prefs.setDouble('clean', clean);
+      await prefs.setDouble('social', social);
+      await prefs.setBool('hasPoop', hasPoop);
+      await prefs.setBool('isSleeping', isSleeping);
+      await prefs.setInt('ageDays', ageDays);
+      await prefs.setInt('stage', stage);
     } catch (_) {}
   }
 

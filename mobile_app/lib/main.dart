@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'engine/pet_state.dart';
 import 'services/server_client.dart';
 import 'ui/virtual_device_screen.dart';
@@ -17,11 +18,18 @@ void main() async {
     ),
   );
 
+  final prefs = await SharedPreferences.getInstance();
+  String? deviceId = prefs.getString('device_id');
+  if (deviceId == null || deviceId.isEmpty) {
+    deviceId = 'SOCIES-AND-${DateTime.now().millisecondsSinceEpoch.toString().substring(7)}';
+    await prefs.setString('device_id', deviceId);
+  }
+  final userEmail = prefs.getString('user_email') ?? '';
+
   final petState = PetState();
   final serverClient = ServerClient(
-    serverUrl: 'http://10.0.2.2:3000',
-    deviceId: 'SOCIES-AND-9941A',
-    userEmail: 'turan@socies.io',
+    deviceId: deviceId,
+    userEmail: userEmail,
   );
 
   runApp(SociesApp(petState: petState, serverClient: serverClient));
@@ -214,6 +222,17 @@ class _PermissionGateWrapperState extends State<PermissionGateWrapper> with Widg
                   style: TextStyle(fontSize: 11),
                 ),
                 onPressed: openAppSettings,
+              ),
+              const SizedBox(height: 8),
+              TextButton(
+                onPressed: () => setState(() {
+                  _allPermissionsGranted = true; // Sınırlı mod — BLE ve sensör çalışmaz
+                }),
+                child: const Text(
+                  "Sınırlı Modda Devam Et (BLE & Sensör Devre Dışı)",
+                  style: TextStyle(color: Colors.white38, fontSize: 10),
+                  textAlign: TextAlign.center,
+                ),
               ),
             ],
           ),

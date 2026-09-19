@@ -2,9 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="io.socies.app"
     android:versionCode="34"
-    android:versionName="1.0.33">
+    android:versionName="1.0.34">
 
-    <uses-sdk android:minSdkVersion="21" android:targetSdkVersion="28" />
+    <uses-sdk android:minSdkVersion="23" android:targetSdkVersion="34" />
 
     <!-- 1. İNTERNET & SUNUCU HABERLEŞMESİ -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -17,6 +17,22 @@
     <!-- 3. OTOMATİK GÜNCELLEME -->
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
+
+    <!-- 4. DONANIM & SENSÖR İZİNLERİ (BLUETOOTH, KAMERA, SES, REHBER, ARKA PLAN) -->
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN"
+        android:usesPermissionFlags="neverForLocation" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.BODY_SENSORS" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
     <application
         android:label="@string/app_name"

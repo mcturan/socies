@@ -4,6 +4,8 @@ import 'package:http/http.dart' as http;
 import '../engine/pet_state.dart';
 
 class ServerClient {
+  static const String _prodServerUrl = 'http://192.168.1.118:3000';
+
   String serverUrl;
   String deviceId;
   String userEmail;
@@ -13,7 +15,7 @@ class ServerClient {
   Timer? _inboxTimer;
 
   ServerClient({
-    this.serverUrl = 'http://10.0.2.2:3000', // Android emülatör için localhost köprüsü veya IP
+    this.serverUrl = _prodServerUrl,
     this.deviceId = 'SOCIES-AND-9941A',
     this.userEmail = 'user@socies.io',
     this.hardwareMac = 'B8:27:EB:AA:51:72',

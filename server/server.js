@@ -1910,23 +1910,23 @@ const server = http.createServer((req, res) => {
     });
   }
 
-  // 8. GITHUB SÜRÜM / OTA KONTROLÜ (SemVer 2.0.0 v1.0.33)
+  // 8. GITHUB SÜRÜM / OTA KONTROLÜ (SemVer 2.0.0 v1.0.34)
   if (path === '/api/v1/version/check' && method === 'GET') {
     const host = req.headers.host || '192.168.1.118:3000';
     return sendJSON(res, 200, {
-      latestVersion: 'v1.0.33',
+      latestVersion: 'v1.0.34',
       semver: {
         major: 1,
         minor: 0,
-        patch: 33,
+        patch: 34,
         build: 34
       },
       versionCode: 34,
-      latestCommitHash: 'socies-v1.0.33',
+      latestCommitHash: 'socies-v1.0.34',
       mandatoryUpdate: true,
-      releaseNotes: 'v1.0.33: 13 Retro Mini Oyun (Catcher ve Parachute ayrımı), Stacker kamera kaydırma, polimorfik stüdyo durum desteği ve haptic/ses optimizasyonları.',
+      releaseNotes: 'v1.0.34: Kritik güvenlik, izin, sürüm ve sensör optimizasyonları.',
       apkDownloadUrl: `http://${host}/download/socies-app.apk`,
-      githubApkUrl: 'https://github.com/mcturan/socies/releases/download/v1.0.33/socies-app.apk'
+      githubApkUrl: 'https://github.com/mcturan/socies/releases/download/v1.0.34/socies-app.apk'
     });
   }
 

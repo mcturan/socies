@@ -9,7 +9,7 @@ class OledPainter extends CustomPainter {
 
   static const Color yellowColor = Color(0xFFFFD700);
   static const Color blueColor = Color(0xFF00E5FF);
-  static const Color blackColor = Color(0xFF040608);
+  static const Color blackColor = Color(0xFF000000);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -148,7 +148,9 @@ class OledPainter extends CustomPainter {
 
     // Konuşma Baloncuğu
     if (state.activeDialogue.isNotEmpty) {
-      _drawSpeechBubble(canvas, state.activeDialogue, 8, 19);
+      // Karakter sol yarıdaysa (ballX < 64) balon sağda; sağdaysa solda
+      final bubbleX = state.ballX < 64 ? 42.0 : 4.0;
+      _drawSpeechBubble(canvas, state.activeDialogue, bubbleX, 19);
     }
   }
 
@@ -227,6 +229,16 @@ class OledPainter extends CustomPainter {
         canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(cx - 14, cy - 6, 28, 10), const Radius.circular(5)), p);
         canvas.drawRect(Rect.fromLTWH(cx - 12, cy + 4, 3, 4), p); // Ön bacak
         canvas.drawRect(Rect.fromLTWH(cx + 9, cy + 4, 3, 4), p);  // Arka bacak
+        // Gözler
+        canvas.drawCircle(Offset(cx - 4, cy - 2), 1.5,
+            Paint()..color = blackColor..style = PaintingStyle.fill);
+        canvas.drawCircle(Offset(cx + 4, cy - 2), 1.5,
+            Paint()..color = blackColor..style = PaintingStyle.fill);
+        // Gülümseme
+        final mouthPath = Path()
+          ..arcTo(Rect.fromLTWH(cx - 3, cy, 6, 4), 0, 3.14159, false);
+        canvas.drawPath(mouthPath,
+            Paint()..color = blackColor..style = PaintingStyle.stroke..strokeWidth = 1.0);
         break;
 
       default:
@@ -341,5 +353,7 @@ class OledPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant OledPainter oldDelegate) => true;
+  bool shouldRepaint(covariant OledPainter oldDelegate) {
+    return oldDelegate.state != state;
+  }
 }

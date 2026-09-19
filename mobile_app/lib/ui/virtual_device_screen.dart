@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 import '../engine/pet_state.dart';
 import '../services/server_client.dart';
@@ -24,6 +26,7 @@ class VirtualDeviceScreen extends StatefulWidget {
 class _VirtualDeviceScreenState extends State<VirtualDeviceScreen> {
   StreamSubscription? _accelerometerSub;
   double _lastAccelMagnitude = 0.0;
+  String _appVersion = 'v1.0.34';
   final TextEditingController _msgTargetCtrl = TextEditingController(text: 'SOCIES-ESP32-84920A');
   final TextEditingController _msgTextCtrl = TextEditingController(text: 'Selam! Parka gidelim mi?');
   final TextEditingController _emailCtrl = TextEditingController(text: 'turan@socies.io');
@@ -31,15 +34,28 @@ class _VirtualDeviceScreenState extends State<VirtualDeviceScreen> {
   @override
   void initState() {
     super.initState();
+    _initVersion();
     _initShakeSensor();
     _initServerBackground();
+  }
+
+  Future<void> _initVersion() async {
+    try {
+      final info = await PackageInfo.fromPlatform();
+      if (mounted) {
+        setState(() {
+          _appVersion = 'v${info.version}';
+        });
+      }
+    } catch (_) {}
   }
 
   void _initShakeSensor() {
     try {
       _accelerometerSub = accelerometerEventStream().listen((event) {
-        final magnitude = (event.x * event.x + event.y * event.y + event.z * event.z);
-        if (magnitude > 180 && (_lastAccelMagnitude - magnitude).abs() > 40) {
+        final magnitude = math.sqrt(
+            event.x * event.x + event.y * event.y + event.z * event.z);
+        if (magnitude > 15.0 && (_lastAccelMagnitude - magnitude).abs() > 3.0) {
           widget.petState.onShakeSensor();
           HapticFeedback.mediumImpact();
         }
@@ -170,9 +186,9 @@ class _VirtualDeviceScreenState extends State<VirtualDeviceScreen> {
                     borderRadius: BorderRadius.circular(6),
                     border: Border.all(color: const Color(0xFF00E5FF).withOpacity(0.4)),
                   ),
-                  child: const Text(
-                    "SOCIES v1.0.4",
-                    style: TextStyle(fontFamily: 'monospace', fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF00E5FF)),
+                  child: Text(
+                    "SOCIES $_appVersion",
+                    style: const TextStyle(fontFamily: 'monospace', fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF00E5FF)),
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -671,8 +687,18 @@ class _VirtualDeviceScreenState extends State<VirtualDeviceScreen> {
               onPressed: () async {
                 final backup = await widget.serverClient.cloudRestore(_emailCtrl.text.trim());
                 if (backup != null && mounted) {
-                  widget.petState.score = backup['totalScore'] ?? widget.petState.score;
-                  widget.petState.streakDays = backup['streakDays'] ?? widget.petState.streakDays;
+                  final ps = widget.petState;
+                  ps.score      = backup['totalScore']  ?? ps.score;
+                  ps.streakDays = backup['streakDays']  ?? ps.streakDays;
+                  final pState = backup['petState'] is Map ? backup['petState'] as Map : null;
+                  ps.ageDays    = backup['ageDays']     ?? pState?['ageDays'] ?? ps.ageDays;
+                  ps.stage      = backup['stage']       ?? pState?['stage'] ?? ps.stage;
+                  final breedStr = (backup['breed'] ?? pState?['breed']) as String?;
+                  if (breedStr != null) {
+                    ps.breed = PetBreed.values.firstWhere(
+                      (b) => b.name == breedStr, orElse: () => ps.breed);
+                  }
+                  ps.notifyListeners();
                   Navigator.pop(ctx);
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text("Oturum buluttan başarıyla geri yüklendi!")),
