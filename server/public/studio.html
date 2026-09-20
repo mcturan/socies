@@ -20,7 +20,7 @@
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
     body { background: var(--bg); color: var(--text); padding: 1.5rem; min-height: 100vh; }
-    .container { max-width: 1440px; margin: 0 auto; }
+    .container { max-width: 1560px; margin: 0 auto; width: 100%; }
 
     /* HEADER */
     .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--card-border); padding-bottom: 1.2rem; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
@@ -39,13 +39,13 @@
     .btn-danger { background: #ef4444; color: #fff; }
     .btn-danger:hover { background: #dc2626; }
 
-    /* LAYOUT */
-    .main-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 1.5rem; align-items: start; }
+    /* LAYOUT: Sol panel kenar çubuğu (340px), Sağ çalışma alanı geniş ve ferah (1fr) */
+    .main-grid { display: grid; grid-template-columns: 340px 1fr; gap: 1.5rem; align-items: start; }
     @media (max-width: 1040px) { .main-grid { grid-template-columns: 1fr; } }
 
     /* CARDS */
     .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 1.25rem; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
-    .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; border-bottom: 1px solid #f1f5f9; padding-bottom: 0.75rem; flex-wrap: wrap; gap: 8px; }
+    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; border-bottom: 1px solid #f1f5f9; padding-bottom: 0.85rem; flex-wrap: wrap; gap: 12px; }
     .card-title { font-size: 1rem; font-weight: 800; color: #0f172a; display: flex; align-items: center; gap: 8px; }
 
     /* CATEGORIES PILLS */
@@ -66,31 +66,91 @@
     .char-del-btn:hover { opacity: 1; background: #ef4444; color: #fff; }
 
     /* UPLOAD & SIMULATOR (RIGHT PANEL) */
-    .sim-panel { display: flex; flex-direction: column; gap: 1.25rem; }
-    /* OLED ekran kasıtlı olarak siyah kalıyor — retro ekran simülasyonu */
-    .oled-box { background: #020617; border: 3px solid #334155; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; align-items: center; box-shadow: 0 8px 30px rgba(0,0,0,0.2), inset 0 0 20px rgba(0,0,0,0.8); }
-    .oled-header { width: 100%; display: flex; justify-content: space-between; font-size: 0.72rem; color: #64748b; font-weight: 800; margin-bottom: 8px; font-family: 'JetBrains Mono', monospace; }
-    #simOledCanvas { image-rendering: pixelated; width: 100%; max-width: 384px; aspect-ratio: 2/1; background: #020617; border: 2px solid #00f0ff33; border-radius: 8px; box-shadow: 0 0 15px rgba(0,240,255,0.15); }
-    .sim-controls { display: flex; gap: 6px; margin-top: 10px; width: 100%; justify-content: center; flex-wrap: wrap; }
-
-    /* PALETTE SELECTOR */
-    .palette-box { display: flex; gap: 8px; align-items: center; justify-content: center; margin-top: 8px; flex-wrap: wrap; }
+    .sim-panel { display: flex; flex-direction: column; gap: 1.5rem; }
+    .oled-box {
+      background: #020617;
+      border: 3px solid #334155;
+      border-radius: 16px;
+      padding: 18px 24px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.2), inset 0 0 20px rgba(0,0,0,0.8);
+      flex-wrap: wrap;
+    }
+    .oled-screen-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 384px;
+    }
+    .oled-header {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.72rem;
+      color: #64748b;
+      font-weight: 800;
+      margin-bottom: 8px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    #simOledCanvas {
+      image-rendering: pixelated;
+      width: 100%;
+      max-width: 384px;
+      aspect-ratio: 2/1;
+      background: #020617;
+      border: 2px solid #00f0ff33;
+      border-radius: 8px;
+      box-shadow: 0 0 15px rgba(0,240,255,0.15);
+    }
+    .oled-ctrl-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+      min-width: 260px;
+    }
+    .sim-controls {
+      display: flex;
+      gap: 6px;
+      width: 100%;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .palette-box {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
     .swatch { width: 24px; height: 24px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: transform 0.1s; box-shadow: 0 1px 4px rgba(0,0,0,0.2); }
     .swatch.active { border-color: #334155; transform: scale(1.2); box-shadow: 0 0 0 2px #fff, 0 0 0 4px #334155; }
 
     /* EMOTION TABS & FRAME GRIDS */
-    .emotion-tabs { display: flex; gap: 6px; flex-wrap: wrap; padding: 2px 0; }
-    .emotion-tab { padding: 4px 10px; font-size: 0.72rem; font-weight: 800; border-radius: 8px; border: 1.5px solid #e2e8f0; background: #f8fafc; color: #64748b; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+    .emotion-tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+    .emotion-tab { padding: 6px 12px; font-size: 0.78rem; font-weight: 800; border-radius: 8px; border: 1.5px solid #e2e8f0; background: #f8fafc; color: #64748b; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
     .emotion-tab:hover { border-color: var(--primary); color: #0f172a; }
     .emotion-tab.active { border-color: var(--primary); background: #e0f2fe; color: var(--primary); }
-    .dual-upload-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
-    .all-eight-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 10px; }
-    .frame-box { background: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 12px; padding: 8px 6px; display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; transition: all 0.2s; cursor: pointer; overflow: hidden; min-height: 110px; }
-    .frame-box:hover, .frame-box.dragover { border-color: var(--primary); background: #f0f9ff; }
+    .dual-upload-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; margin-bottom: 14px; }
+    .all-eight-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin-bottom: 14px; }
+    .frame-box { background: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 14px; padding: 10px 8px; display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; transition: all 0.2s; cursor: pointer; min-height: 152px; justify-content: space-between; gap: 6px; }
+    .frame-box:hover, .frame-box.dragover { border-color: var(--primary); background: #f0f9ff; box-shadow: 0 4px 14px rgba(14,165,233,0.12); }
     .frame-box input[type="file"] { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; z-index: 2; }
-    .frame-badge { font-size: 0.6rem; font-weight: 900; background: #e0f2fe; color: #0369a1; padding: 2px 5px; border-radius: 6px; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
-    .frame-canvas { width: 48px; height: 48px; image-rendering: pixelated; background: #020617; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 3px; flex-shrink: 0; }
-    .frame-status { font-size: 0.6rem; color: #94a3b8; font-weight: 700; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .frame-badge { font-size: 0.68rem; font-weight: 800; background: #e0f2fe; color: #0369a1; padding: 3px 8px; border-radius: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; letter-spacing: 0.02em; }
+    .frame-duo { display: flex; gap: 8px; align-items: center; justify-content: center; width: 100%; margin: 2px 0; }
+    .frame-col { display: flex; flex-direction: column; align-items: center; gap: 3px; flex: 1; min-width: 0; }
+    .frame-tag { font-size: 0.62rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; padding: 2px 6px; border-radius: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+    .frame-tag-raw { color: #64748b; background: #e2e8f0; }
+    .frame-tag-conv { color: #0284c7; background: #e0f2fe; }
+    .frame-canvas { width: 48px; height: 48px; image-rendering: pixelated; background: #020617; border: 1.5px solid #cbd5e1; border-radius: 6px; flex-shrink: 0; transition: border-color 0.15s; }
+    .frame-status { font-size: 0.68rem; color: #64748b; font-weight: 700; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; background: #f1f5f9; padding: 2px 8px; border-radius: 6px; width: 100%; }
+    .frame-status.ready { background: #dcfce7; color: #15803d; font-weight: 800; }
 
     /* MASTER DROP ZONE */
     .master-drop-zone { border: 2px dashed #94a3b8; border-radius: 12px; padding: 14px 12px; text-align: center; background: #f8fafc; cursor: pointer; transition: all 0.2s; position: relative; margin-bottom: 12px; }
@@ -100,8 +160,11 @@
     .master-drop-hint { font-size: 0.7rem; color: #64748b; margin-top: 3px; line-height: 1.4; }
 
     /* SETTINGS BAR */
-    .settings-bar { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 12px; display: flex; gap: 10px; align-items: center; justify-content: space-between; flex-wrap: wrap; margin-bottom: 12px; }
-    .toggle-label { display: flex; align-items: center; gap: 6px; font-size: 0.75rem; font-weight: 800; color: #334155; cursor: pointer; }
+    .settings-bar { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 14px; display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap; margin-bottom: 14px; }
+    .settings-toggles { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    .settings-actions { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+    .toggle-label { display: inline-flex; align-items: center; gap: 7px; font-size: 0.78rem; font-weight: 700; color: #334155; cursor: pointer; background: #fff; padding: 6px 10px; border-radius: 8px; border: 1px solid #e2e8f0; transition: all 0.15s; user-select: none; }
+    .toggle-label:hover { border-color: var(--primary); background: #f0f9ff; }
 
     /* INPUTS */
     .form-group { margin-bottom: 0.85rem; text-align: left; }
@@ -175,28 +238,33 @@
         
         <!-- CANLI 128x64 RETRO OLED MONİTÖR -->
         <div class="oled-box">
-          <div class="oled-header">
-            <span>📺 128x64 CANLI OLED SİMÜLATÖRÜ</span>
-            <span id="simAnimBadge" style="color:var(--primary);">KARE 0</span>
+          <div class="oled-screen-col">
+            <div class="oled-header">
+              <span>📺 128x64 CANLI OLED SİMÜLATÖRÜ</span>
+              <span id="simAnimBadge" style="color:var(--primary);">KARE 0</span>
+            </div>
+            <canvas id="simOledCanvas" width="128" height="64"></canvas>
           </div>
-          <canvas id="simOledCanvas" width="128" height="64"></canvas>
           
-          <div class="sim-controls">
-            <button class="btn btn-secondary sim-btn active" id="btnSimWalk" style="padding:4px 10px; font-size:0.75rem;" onclick="setSimAction('WALK')">🚶 Normal (Yürü)</button>
-            <button class="btn btn-secondary sim-btn" id="btnSimHappy" style="padding:4px 10px; font-size:0.75rem;" onclick="setSimAction('HAPPY')">💖 Mutlu</button>
-            <button class="btn btn-secondary sim-btn" id="btnSimSad" style="padding:4px 10px; font-size:0.75rem;" onclick="setSimAction('SAD')">😢 Üzgün</button>
-            <button class="btn btn-secondary sim-btn" id="btnSimSleep" style="padding:4px 10px; font-size:0.75rem;" onclick="setSimAction('SLEEP')">😴 Uyku</button>
-          </div>
+          <div class="oled-ctrl-col">
+            <div style="font-size:0.75rem; color:#94a3b8; font-weight:800; text-transform:uppercase; letter-spacing:0.04em; text-align:center;">Canlı Önizleme Eylemi & Rengi</div>
+            <div class="sim-controls">
+              <button class="btn btn-secondary sim-btn active" id="btnSimWalk" style="padding:6px 12px; font-size:0.78rem;" onclick="setSimAction('WALK')">🚶 Normal (Yürü)</button>
+              <button class="btn btn-secondary sim-btn" id="btnSimHappy" style="padding:6px 12px; font-size:0.78rem;" onclick="setSimAction('HAPPY')">💖 Mutlu</button>
+              <button class="btn btn-secondary sim-btn" id="btnSimSad" style="padding:6px 12px; font-size:0.78rem;" onclick="setSimAction('SAD')">😢 Üzgün</button>
+              <button class="btn btn-secondary sim-btn" id="btnSimSleep" style="padding:6px 12px; font-size:0.78rem;" onclick="setSimAction('SLEEP')">😴 Uyku</button>
+            </div>
 
-          <!-- RENK PALETİ DEĞİŞTİRİCİ -->
-          <div class="palette-box">
-            <span style="font-size:0.7rem; color:var(--text-muted); font-weight:800; margin-right:4px;">RENK:</span>
-            <div class="swatch active" style="background:#38bdf8;" onclick="setSimColor('#38bdf8', this)" title="Gökyüzü Mavisi"></div>
-            <div class="swatch" style="background:#f472b6;" onclick="setSimColor('#f472b6', this)" title="Şeker Pembe"></div>
-            <div class="swatch" style="background:#fde047;" onclick="setSimColor('#fde047', this)" title="Güneş Sarısı"></div>
-            <div class="swatch" style="background:#4ade80;" onclick="setSimColor('#4ade80', this)" title="Zümrüt Yeşil"></div>
-            <div class="swatch" style="background:#fb923c;" onclick="setSimColor('#fb923c', this)" title="Piksel Turuncu"></div>
-            <div class="swatch" style="background:#c084fc;" onclick="setSimColor('#c084fc', this)" title="Sihirli Mor"></div>
+            <!-- RENK PALETİ DEĞİŞTİRİCİ -->
+            <div class="palette-box">
+              <span style="font-size:0.72rem; color:#94a3b8; font-weight:800; margin-right:6px;">RENK:</span>
+              <div class="swatch active" style="background:#38bdf8;" onclick="setSimColor('#38bdf8', this)" title="Gökyüzü Mavisi"></div>
+              <div class="swatch" style="background:#f472b6;" onclick="setSimColor('#f472b6', this)" title="Şeker Pembe"></div>
+              <div class="swatch" style="background:#fde047;" onclick="setSimColor('#fde047', this)" title="Güneş Sarısı"></div>
+              <div class="swatch" style="background:#4ade80;" onclick="setSimColor('#4ade80', this)" title="Zümrüt Yeşil"></div>
+              <div class="swatch" style="background:#fb923c;" onclick="setSimColor('#fb923c', this)" title="Piksel Turuncu"></div>
+              <div class="swatch" style="background:#c084fc;" onclick="setSimColor('#c084fc', this)" title="Sihirli Mor"></div>
+            </div>
           </div>
         </div>
 
@@ -231,29 +299,31 @@
 
           <!-- YARDIMCI BUTONLAR & AYARLAR -->
           <div class="settings-bar">
-            <label class="toggle-label" title="Şeffaf arka planlı çizimlerde gövdeyi otomatik doldurur">
-              <input type="checkbox" id="chkAutoFill" checked onchange="reprocessCurrentFrames()">
-              <span>✨ Gövdeyi Otomatik Doldur</span>
-            </label>
-            <label class="toggle-label" title="ChatGPT gibi araçların ürettiği PNG için: Siyah piksel = karakter gövdesi. Kapatırsan Beyaz piksel = karakter.">
-              <input type="checkbox" id="chkPngMode" checked onchange="reprocessCurrentFrames()">
-              <span>🎨 PNG Modu (Siyah=Karakter)</span>
-            </label>
-            <div style="display:flex; gap:6px;">
-              <button class="btn btn-secondary" style="padding:4px 8px; font-size:0.72rem;" onclick="copyActiveK0ToK1()" title="Seçili sekmenin Kare 0'ını Kare 1'e Kopyala">
+            <div class="settings-toggles">
+              <label class="toggle-label" title="Şeffaf arka planlı çizimlerde gövdeyi otomatik doldurur">
+                <input type="checkbox" id="chkAutoFill" checked onchange="reprocessCurrentFrames()">
+                <span>✨ Gövdeyi Otomatik Doldur</span>
+              </label>
+              <label class="toggle-label" title="ChatGPT gibi araçların ürettiği PNG için: Siyah piksel = karakter gövdesi. Kapatırsan Beyaz piksel = karakter.">
+                <input type="checkbox" id="chkPngMode" checked onchange="reprocessCurrentFrames()">
+                <span>🎨 PNG Modu (Siyah=Karakter)</span>
+              </label>
+            </div>
+            <div class="settings-actions">
+              <button class="btn btn-secondary" style="padding:6px 10px; font-size:0.75rem;" onclick="copyActiveK0ToK1()" title="Seçili sekmenin Kare 0'ını Kare 1'e Kopyala">
                 📋 K0 ➔ K1
               </button>
-              <button class="btn btn-secondary" style="padding:4px 8px; font-size:0.72rem;" onclick="swapActiveFrames()" title="Seçili sekmedeki kareleri Değiş-Tokuş Et">
+              <button class="btn btn-secondary" style="padding:6px 10px; font-size:0.75rem;" onclick="swapActiveFrames()" title="Seçili sekmedeki kareleri Değiş-Tokuş Et">
                 🔄 Değiş
               </button>
-              <button class="btn btn-secondary" style="padding:4px 8px; font-size:0.72rem; color:#ef4444;" onclick="clearAllFrames()" title="Tüm 8 kareyi temizle">
+              <button class="btn btn-secondary" style="padding:6px 10px; font-size:0.75rem; color:#ef4444;" onclick="clearAllFrames()" title="Tüm 8 kareyi temizle">
                 🗑️ Temizle
               </button>
             </div>
           </div>
 
           <!-- METADATA FORMU -->
-          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+          <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:12px;">
             <div class="form-group">
               <label class="form-label">Karakter Adı</label>
               <input type="text" id="inputCharName" class="form-input" placeholder="Örn: Tekir Kedi">
@@ -264,9 +334,6 @@
                 <!-- JS ile doldurulur -->
               </select>
             </div>
-          </div>
-
-          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
             <div class="form-group">
               <label class="form-label">Emojisi / Simgesi</label>
               <input type="text" id="inputCharIcon" class="form-input" placeholder="🐱" value="🐱">
@@ -404,22 +471,23 @@
 
         const isLoaded = !!processedMatrices[k];
         const statusText = isLoaded ? '✅ Hazır' : 'Dosya Seç / Sürükle';
+        const statusClass = isLoaded ? 'frame-status ready' : 'frame-status';
 
         box.innerHTML = `
           <input type="file" accept="image/png,image/gif,image/jpeg" onchange="handleSingleFrameUpload(event.target.files[0], '${k}')">
           <div class="frame-badge">${meta.icon} ${meta.label}</div>
-          <div style="display:flex; gap:4px; align-items:center; justify-content:center;">
-            <div style="text-align:center;">
-              <div style="font-size:0.55rem; color:#64748b; margin-bottom:2px;">ORİJİNAL</div>
+          <div class="frame-duo">
+            <div class="frame-col">
+              <span class="frame-tag frame-tag-raw">ORİJİNAL</span>
               <canvas id="raw_canvas_${k}" class="frame-canvas" width="32" height="32"
-                style="opacity:0.7; border-color:#334155;"></canvas>
+                style="opacity:0.8; border-color:#334155;"></canvas>
             </div>
-            <div style="text-align:center;">
-              <div style="font-size:0.55rem; color:var(--primary); margin-bottom:2px;">DÖNÜŞTÜRÜLMÜŞ</div>
+            <div class="frame-col">
+              <span class="frame-tag frame-tag-conv">DÖNÜŞÜM</span>
               <canvas id="canvas_${k}" class="frame-canvas" width="32" height="32"></canvas>
             </div>
           </div>
-          <div class="frame-status" id="status_${k}">${statusText}</div>
+          <div class="${statusClass}" id="status_${k}">${statusText}</div>
         `;
 
         // Drag & Drop listeners
@@ -705,9 +773,13 @@
         if (cvs && processedMatrices[k]) {
           const ctx = cvs.getContext('2d');
           renderMatrixToContext(ctx, processedMatrices[k], 0, 0, simColor);
-          if (statusEl) statusEl.innerText = '✅ Hazır';
+          if (statusEl) {
+            statusEl.innerText = '✅ Hazır';
+            statusEl.className = 'frame-status ready';
+          }
         } else if (statusEl && !processedMatrices[k]) {
           statusEl.innerText = 'Dosya Seç / Sürükle';
+          statusEl.className = 'frame-status';
         }
       });
 
